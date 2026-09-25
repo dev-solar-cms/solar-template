@@ -5,7 +5,7 @@
  * Author: David ROMERA <d.romera.11@gmail.com>
  * Purpose: Render the full-viewport hero (eyebrow label, three-line heading, subtitle, both CTAs,
  *          trust badges, media block with a floating "highlight" card), from
- *          solar_template_hero_config() in functions.php.
+ *          Solar_Template\FrontPage\Hero::config().
  *
  * @package Solar_Template
  */
@@ -14,26 +14,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$hero = solar_template_hero_config();
+use Solar_Template\FrontPage\Hero;
+use Solar_Template\Support\PriceFormatter;
 
-/**
- * Formats a price the same way the design handoff's placeholder data does ("129,00 €").
- *
- * Superseded by WooCommerce's own `wc_price()` once this section is wired to a real featured
- * product; kept intentionally minimal here since this step only renders editorial content (see
- * solar_template_hero_config()). Duplicated (not shared) with product-card.php's identical
- * helper on purpose: both are guarded by function_exists() and this template-part must keep
- * working whether or not the product card partial has already been included on the same page.
- *
- * @param float  $amount          Amount to format.
- * @param string $currency_symbol Currency symbol appended after the amount.
- * @return string Formatted, escaped price.
- */
-if ( ! function_exists( 'solar_template_format_placeholder_price' ) ) {
-	function solar_template_format_placeholder_price( float $amount, string $currency_symbol ): string {
-		return number_format( $amount, 2, ',', ' ' ) . '&nbsp;' . $currency_symbol;
-	}
-}
+$hero = Hero::config();
 ?>
 <section class="hero">
 	<div class="hero__content">
@@ -102,10 +86,10 @@ if ( ! function_exists( 'solar_template_format_placeholder_price' ) ) {
 
 				<?php if ( $has_price ) : ?>
 					<p class="hero__highlight-price">
-						<?php echo wp_kses_post( solar_template_format_placeholder_price( (float) $highlight['price'], $highlight['currency_symbol'] ) ); ?>
+						<?php echo wp_kses_post( PriceFormatter::format( (float) $highlight['price'], $highlight['currency_symbol'] ) ); ?>
 						<?php if ( null !== $highlight['regular_price'] && $highlight['regular_price'] > $highlight['price'] ) : ?>
 							<span class="hero__highlight-price-original">
-								<?php echo wp_kses_post( solar_template_format_placeholder_price( (float) $highlight['regular_price'], $highlight['currency_symbol'] ) ); ?>
+								<?php echo wp_kses_post( PriceFormatter::format( (float) $highlight['regular_price'], $highlight['currency_symbol'] ) ); ?>
 							</span>
 						<?php endif; ?>
 					</p>

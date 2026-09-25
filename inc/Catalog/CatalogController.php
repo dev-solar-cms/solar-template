@@ -73,23 +73,22 @@ final class CatalogController {
 
 	/**
 	 * Handles the catalog filter bar's AJAX request (`solar_template_catalog_filter` action):
-	 * sanitizes the submitted filters, runs them as the page's main product query (so WooCommerce's
-	 * own visibility/stock/ordering logic — only ever applied to the main query — still applies,
-	 * exactly as on a plain page load), and responds with the re-rendered results markup
-	 * (template-parts/catalog-results.php) the front-end (assets/js/catalog.js) swaps into the page.
-	 *
-	 * Nonce verification happens in the calling wrapper (functions.php), before this method is ever
-	 * invoked.
+	 * verifies the nonce, sanitizes the submitted filters, runs them as the page's main product
+	 * query (so WooCommerce's own visibility/stock/ordering logic — only ever applied to the main
+	 * query — still applies, exactly as on a plain page load), and responds with the re-rendered
+	 * results markup (template-parts/catalog-results.php) the front-end (assets/js/catalog.js) swaps
+	 * into the page.
 	 *
 	 * @return void
 	 */
 	public static function handle_filter_request(): void {
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- verified by the calling wrapper (functions.php) before this method is invoked.
+		check_ajax_referer( 'solar_template_catalog_filter', 'nonce' );
+
 		$filters   = CatalogFilters::sanitize( wp_unslash( $_POST ) );
-		$paged     = isset( $_POST['paged'] ) ? max( 1, absint( $_POST['paged'] ) ) : 1; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- see above.
-		$page_url  = isset( $_POST['pageUrl'] ) ? esc_url_raw( wp_unslash( $_POST['pageUrl'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- see above.
+		$paged     = isset( $_POST['paged'] ) ? max( 1, absint( $_POST['paged'] ) ) : 1;
+		$page_url  = isset( $_POST['pageUrl'] ) ? esc_url_raw( wp_unslash( $_POST['pageUrl'] ) ) : '';
 		$base_url  = '' !== $page_url ? $page_url : null;
-		$is_append = isset( $_POST['mode'] ) && 'append' === $_POST['mode']; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- see above.
+		$is_append = isset( $_POST['mode'] ) && 'append' === $_POST['mode'];
 
 		$args = array_merge(
 			array(

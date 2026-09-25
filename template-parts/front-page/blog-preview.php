@@ -5,8 +5,8 @@
  *       (template-parts/front-page/blog-preview.php).
  * Author: David ROMERA <d.romera.11@gmail.com>
  * Purpose: Render the 3-column grid of the latest published blog posts, using the reusable blog
- *          card template-part (see solar_template_get_blog_preview_posts() in functions.php).
- *          Renders nothing when the site has no published post yet.
+ *          card template-part (see Solar_Template\FrontPage\BlogPreview::posts()). Renders
+ *          nothing when the site has no published post yet.
  *
  * @package Solar_Template
  */
@@ -15,13 +15,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$blog_posts = solar_template_get_blog_preview_posts();
+use Solar_Template\FrontPage\BlogPreview;
+
+$blog_posts = BlogPreview::posts();
 
 if ( empty( $blog_posts ) ) {
 	return;
 }
 
-$section_heading = solar_template_blog_preview_heading();
+$section_heading = BlogPreview::heading();
 ?>
 <section class="blog-preview">
 	<div class="blog-preview__inner">

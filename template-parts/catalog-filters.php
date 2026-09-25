@@ -6,8 +6,8 @@
  * Purpose: Render the sticky filter bar (Category/Price/Color/Size/Rating, and a sort dropdown
  *          aligned to the end of the bar) as a plain native `<form method="get">` — it still
  *          works with JavaScript disabled, submitting a normal page load that
- *          solar_template_apply_catalog_filters_to_main_query() already filters/sorts —
- *          progressively enhanced by assets/js/catalog.js into an AJAX request. The Category/
+ *          Solar_Template\Catalog\CatalogController::apply_filters_to_main_query() already
+ *          filters/sorts — progressively enhanced by assets/js/catalog.js into an AJAX request. The Category/
  *          Price/Color/Size groups are each only rendered when they actually have options to
  *          offer (same graceful-degradation convention as the rest of the theme, e.g. no "Color"
  *          filter when the store has no color attribute), so the bar quietly shrinks rather than
@@ -21,12 +21,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$active_filters = solar_template_get_active_catalog_filters();
-$price_bounds   = solar_template_get_catalog_price_bounds();
+use Solar_Template\Catalog\CatalogFilters;
+use Solar_Template\Catalog\CatalogOptions;
+
+$active_filters = CatalogFilters::active();
+$price_bounds   = CatalogOptions::price_bounds();
 
 $filter_groups = array();
 
-$category_options = solar_template_get_catalog_category_options();
+$category_options = CatalogOptions::category_options();
 
 if ( ! empty( $category_options ) ) {
 	$filter_groups[] = array(
@@ -61,7 +64,7 @@ if ( $price_bounds['max'] > 0 ) {
 	);
 }
 
-$color_options = solar_template_get_catalog_attribute_options( solar_template_catalog_color_attribute_slug() );
+$color_options = CatalogOptions::attribute_options( CatalogOptions::color_attribute_slug() );
 
 if ( ! empty( $color_options ) ) {
 	$filter_groups[] = array(
@@ -82,7 +85,7 @@ if ( ! empty( $color_options ) ) {
 	);
 }
 
-$size_options = solar_template_get_catalog_attribute_options( solar_template_catalog_size_attribute_slug() );
+$size_options = CatalogOptions::attribute_options( CatalogOptions::size_attribute_slug() );
 
 if ( ! empty( $size_options ) ) {
 	$filter_groups[] = array(
@@ -117,18 +120,18 @@ $filter_groups[] = array(
 				'label' => $option['label'],
 			);
 		},
-		solar_template_get_catalog_rating_options()
+		CatalogOptions::rating_options()
 	),
 	'active'  => array_map( 'strval', $active_filters['rating'] ),
 );
 
 ?>
-<form id="catalog-filters" class="catalog-filters catalog-filters--<?php echo esc_attr( solar_template_catalog_filters_position() ); ?>" method="get">
+<form id="catalog-filters" class="catalog-filters catalog-filters--<?php echo esc_attr( CatalogOptions::filters_position() ); ?>" method="get">
 	<div class="catalog-filters__inner">
 	<div class="catalog-filters__bar">
 		<?php foreach ( $filter_groups as $group ) : ?>
 			<?php
-			$group_is_active   = solar_template_catalog_filter_group_is_active( $group );
+			$group_is_active   = CatalogFilters::group_is_active( $group );
 			$group_has_counter = 'checkbox' === $group['type'] && $group_is_active;
 			?>
 			<div class="catalog-filters__group" data-filter-group="<?php echo esc_attr( $group['key'] ); ?>">
@@ -197,7 +200,7 @@ $filter_groups[] = array(
 		<label class="catalog-filters__sort">
 			<span class="screen-reader-text"><?php esc_html_e( 'Sort by', 'solar-template' ); ?></span>
 			<select name="catalog_orderby">
-				<?php foreach ( solar_template_get_catalog_sort_options() as $sort_option ) : ?>
+				<?php foreach ( CatalogOptions::sort_options() as $sort_option ) : ?>
 					<option value="<?php echo esc_attr( $sort_option['value'] ); ?>" <?php echo selected( $active_filters['orderby'], $sort_option['value'], false ); ?>>
 						<?php echo esc_html( $sort_option['label'] ); ?>
 					</option>

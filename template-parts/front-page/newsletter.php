@@ -6,7 +6,7 @@
  * Author: David ROMERA <d.romera.11@gmail.com>
  * Purpose: Render the newsletter sign-up form (email input + submit button, on a dark background),
  *          submitted via AJAX by assets/js/newsletter.js against
- *          solar_template_handle_newsletter_subscription() in functions.php.
+ *          Solar_Template\Newsletter\NewsletterController::handle_subscription().
  *
  * @package Solar_Template
  */
@@ -15,7 +15,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$newsletter = solar_template_newsletter_config();
+use Solar_Template\FrontPage\Newsletter;
+
+$newsletter = Newsletter::config();
 ?>
 <section class="home-newsletter">
 	<div class="home-newsletter__inner">

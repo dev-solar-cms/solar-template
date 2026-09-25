@@ -4,8 +4,8 @@
  * Role: Front page categories section template-part (template-parts/front-page/categories.php).
  * Author: David ROMERA <d.romera.11@gmail.com>
  * Purpose: Render the asymmetric dark grid of WooCommerce product categories (see
- *          solar_template_get_home_categories() in functions.php). Renders nothing when there is
- *          no category to show (WooCommerce missing/inactive, or no populated category yet).
+ *          Solar_Template\FrontPage\Categories::categories()). Renders nothing when there is no
+ *          category to show (WooCommerce missing/inactive, or no populated category yet).
  *
  * @package Solar_Template
  */
@@ -14,13 +14,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$categories = solar_template_get_home_categories();
+use Solar_Template\FrontPage\Categories;
+
+$categories = Categories::categories();
 
 if ( empty( $categories ) ) {
 	return;
 }
 
-$section_heading = solar_template_categories_heading();
+$section_heading = Categories::heading();
 ?>
 <section class="home-categories">
 	<div class="home-categories__inner">

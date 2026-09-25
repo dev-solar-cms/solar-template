@@ -47,21 +47,7 @@ $defaults = array(
 
 $product = wp_parse_args( $args ?? array(), $defaults );
 
-/**
- * Formats a price the same way the design handoff's placeholder data does ("89,00 €").
- *
- * Superseded by WooCommerce's own `wc_price()` once this card is wired to real product data;
- * kept intentionally minimal here since this step only renders fake data.
- *
- * @param float  $amount          Amount to format.
- * @param string $currency_symbol Currency symbol appended after the amount.
- * @return string Formatted, escaped price.
- */
-if ( ! function_exists( 'solar_template_format_placeholder_price' ) ) {
-	function solar_template_format_placeholder_price( float $amount, string $currency_symbol ): string {
-		return number_format( $amount, 2, ',', ' ' ) . '&nbsp;' . $currency_symbol;
-	}
-}
+use Solar_Template\Support\PriceFormatter;
 ?>
 <div class="product-card">
 	<div class="product-card__media">
@@ -105,10 +91,10 @@ if ( ! function_exists( 'solar_template_format_placeholder_price' ) ) {
 
 		<?php if ( null !== $product['price'] ) : ?>
 			<p class="product-card__price">
-				<?php echo wp_kses_post( solar_template_format_placeholder_price( (float) $product['price'], $product['currency_symbol'] ) ); ?>
+				<?php echo wp_kses_post( PriceFormatter::format( (float) $product['price'], $product['currency_symbol'] ) ); ?>
 				<?php if ( null !== $product['regular_price'] && $product['regular_price'] > $product['price'] ) : ?>
 					<span class="product-card__price-original">
-						<?php echo wp_kses_post( solar_template_format_placeholder_price( (float) $product['regular_price'], $product['currency_symbol'] ) ); ?>
+						<?php echo wp_kses_post( PriceFormatter::format( (float) $product['regular_price'], $product['currency_symbol'] ) ); ?>
 					</span>
 					<?php if ( null !== $product['discount_percent'] ) : ?>
 						<span class="badge badge--discount">

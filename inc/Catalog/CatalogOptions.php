@@ -113,7 +113,7 @@ final class CatalogOptions {
 	/**
 	 * Returns the product categories available as catalog filter options (slug, name, product count).
 	 *
-	 * Same graceful-degradation convention as solar_template_get_home_categories(): an empty array
+	 * Same graceful-degradation convention as Solar_Template\FrontPage\Categories::categories(): an empty array
 	 * when WooCommerce is missing/inactive or the store has no populated category, so the calling
 	 * template-part can skip rendering this filter group entirely.
 	 *

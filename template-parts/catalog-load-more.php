@@ -16,7 +16,8 @@
  *
  * @package Solar_Template
  * @var array $args {
- *     @type string|null $base_url See solar_template_catalog_filters_url()'s $base_url parameter.
+ *     @type string|null $base_url See Solar_Template\Catalog\CatalogFilters::url()'s $base_url
+ *                                   parameter.
  * }
  */
 
@@ -24,10 +25,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use Solar_Template\Catalog\CatalogPagination;
+
 global $wp_query;
 
 $load_more_args = wp_parse_args( $args ?? array(), array( 'base_url' => null ) );
-$load_more      = solar_template_get_catalog_load_more_config( $wp_query, $load_more_args['base_url'] );
+$load_more      = CatalogPagination::load_more_config( $wp_query, $load_more_args['base_url'] );
 ?>
 <div class="catalog__load-more" id="catalog-load-more">
 	<?php if ( null !== $load_more ) : ?>

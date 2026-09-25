@@ -6,7 +6,7 @@
  * Purpose: Open the document (`<html>`/`<head>`/`<body>`) and render the sticky site header: a
  *          top bar (social links, brand, search/account/cart icons) and a primary navigation bar
  *          with a "Collections" mega menu (open/close behaviour in assets/js/header.js; real
- *          category content is out of scope, see solar_template_mega_menu_columns()). Also renders
+ *          category content is out of scope, see Solar_Template\Header\MegaMenu::columns()). Also renders
  *          the full-screen search overlay toggled by the search icon, wrapping the theme's own
  *          searchform.php — a native WordPress search, which already includes WooCommerce
  *          products in its results once it's active. The AJAX-driven cart badge is added by a
@@ -35,7 +35,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div class="site-header__topbar">
 		<div class="site-header__topbar-inner">
 			<div class="site-header__social">
-				<?php foreach ( solar_template_social_links() as $network => $social_link ) : ?>
+				<?php foreach ( \Solar_Template\Header\SocialLinks::links() as $network => $social_link ) : ?>
 					<a
 						href="<?php echo esc_url( $social_link['url'] ); ?>"
 						class="site-header__social-link"
@@ -63,11 +63,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
 				</button>
 
-				<a class="site-header__action" href="<?php echo esc_url( solar_template_account_url() ); ?>" aria-label="<?php esc_attr_e( 'My account', 'solar-template' ); ?>">
+				<a class="site-header__action" href="<?php echo esc_url( \Solar_Template\Header\Cart::account_url() ); ?>" aria-label="<?php esc_attr_e( 'My account', 'solar-template' ); ?>">
 					<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
 				</a>
 
-				<a class="site-header__action site-header__cart" href="<?php echo esc_url( solar_template_cart_url() ); ?>" aria-label="<?php esc_attr_e( 'Cart', 'solar-template' ); ?>">
+				<a class="site-header__action site-header__cart" href="<?php echo esc_url( \Solar_Template\Header\Cart::cart_url() ); ?>" aria-label="<?php esc_attr_e( 'Cart', 'solar-template' ); ?>">
 					<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
 					<?php get_template_part( 'template-parts/cart-badge' ); ?>
 				</a>
@@ -83,13 +83,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 					'theme_location' => 'primary',
 					'container'      => false,
 					'menu_class'     => 'site-header__menu',
-					'fallback_cb'    => 'solar_template_primary_nav_fallback',
+					'fallback_cb'    => array( \Solar_Template\Header\Nav::class, 'render_fallback' ),
 				)
 			);
 			?>
 		</div>
 
-		<?php if ( solar_template_mega_menu_enabled() ) : ?>
+		<?php if ( \Solar_Template\Header\MegaMenu::enabled() ) : ?>
 			<?php get_template_part( 'template-parts/mega-menu' ); ?>
 		<?php endif; ?>
 	</nav>

@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$cart_count = solar_template_cart_count();
+$cart_count = \Solar_Template\Header\Cart::cart_count();
 ?>
 <span class="site-header__cart-count<?php echo $cart_count > 0 ? '' : ' is-hidden'; ?>">
 	<?php echo esc_html( (string) $cart_count ); ?>

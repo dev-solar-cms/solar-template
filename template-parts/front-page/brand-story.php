@@ -4,7 +4,7 @@
  * Role: Front page brand story section template-part (template-parts/front-page/brand-story.php).
  * Author: David ROMERA <d.romera.11@gmail.com>
  * Purpose: Render the "Our story" section (image with a floating stat card, heading, paragraphs, a
- *          row of three stats, a CTA), from solar_template_brand_story_config() in functions.php.
+ *          row of three stats, a CTA), from Solar_Template\FrontPage\BrandStory::config().
  *
  * @package Solar_Template
  */
@@ -13,7 +13,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$brand_story = solar_template_brand_story_config();
+use Solar_Template\FrontPage\BrandStory;
+
+$brand_story = BrandStory::config();
 ?>
 <section class="brand-story">
 	<div class="brand-story__inner">

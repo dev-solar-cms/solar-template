@@ -5,10 +5,10 @@
  * Author: David ROMERA <d.romera.11@gmail.com>
  * Purpose: Render the footer (brand/shop/information/legal columns, a newsletter sign-up form,
  *          payment method badges, copyright line) and close the document opened by header.php.
- *          Content comes from filterable configuration (solar_template_footer_config() and
- *          friends in functions.php) rather than hardcoded values, ready for the future Group 10
- *          administration screen to hook into. The newsletter form is markup only — no submission
- *          handling, out of scope for this step.
+ *          Content comes from filterable configuration (Solar_Template\Footer\Footer::config() and
+ *          friends) rather than hardcoded values, ready for the future Group 10 administration
+ *          screen to hook into. The newsletter form is markup only — no submission handling, out
+ *          of scope for this step.
  *
  * @package Solar_Template
  */
@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$footer_config = solar_template_footer_config();
+$footer_config = \Solar_Template\Footer\Footer::config();
 ?>
 <footer class="site-footer">
 	<div class="site-footer__inner">
@@ -26,7 +26,7 @@ $footer_config = solar_template_footer_config();
 				<span class="site-footer__brand"><?php echo esc_html( $footer_config['brand']['name'] ); ?></span>
 				<p class="site-footer__brand-description"><?php echo esc_html( $footer_config['brand']['description'] ); ?></p>
 				<div class="site-footer__social">
-					<?php foreach ( solar_template_social_links() as $social_link ) : ?>
+					<?php foreach ( \Solar_Template\Header\SocialLinks::links() as $social_link ) : ?>
 						<a
 							href="<?php echo esc_url( $social_link['url'] ); ?>"
 							class="site-footer__social-link"
@@ -73,9 +73,9 @@ $footer_config = solar_template_footer_config();
 		</div>
 
 		<div class="site-footer__bottom">
-			<span class="site-footer__copyright"><?php echo esc_html( solar_template_footer_copyright() ); ?></span>
+			<span class="site-footer__copyright"><?php echo esc_html( \Solar_Template\Footer\Footer::copyright() ); ?></span>
 			<div class="site-footer__payment-icons">
-				<?php foreach ( solar_template_footer_payment_icons() as $payment_icon ) : ?>
+				<?php foreach ( \Solar_Template\Footer\Footer::payment_icons() as $payment_icon ) : ?>
 					<span class="site-footer__payment-icon"><?php echo esc_html( $payment_icon ); ?></span>
 				<?php endforeach; ?>
 			</div>

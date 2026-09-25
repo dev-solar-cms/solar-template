@@ -5,8 +5,8 @@
  *       (template-parts/front-page/testimonials.php).
  * Author: David ROMERA <d.romera.11@gmail.com>
  * Purpose: Render the 3-column grid of customer testimonials (see
- *          solar_template_get_testimonials() in functions.php), with the middle card rendered in
- *          an inverted (dark) style per the design handoff.
+ *          Solar_Template\FrontPage\Testimonials::testimonials()), with the middle card rendered
+ *          in an inverted (dark) style per the design handoff.
  *
  * @package Solar_Template
  */
@@ -15,13 +15,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$testimonials = solar_template_get_testimonials();
+use Solar_Template\FrontPage\Testimonials;
+
+$testimonials = Testimonials::testimonials();
 
 if ( empty( $testimonials ) ) {
 	return;
 }
 
-$section_heading = solar_template_testimonials_heading();
+$section_heading = Testimonials::heading();
 ?>
 <section class="testimonials">
 	<div class="testimonials__inner">

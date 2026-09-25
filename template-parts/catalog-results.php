@@ -7,18 +7,19 @@
  *          result count, the product grid (template-parts/catalog-cards.php) and the empty state,
  *          plus the "load more" status/progress bar/button
  *          (template-parts/catalog-load-more.php) for the resulting first page. Shared by
- *          archive-product.php (initial page load) and solar_template_handle_catalog_filter()
- *          (AJAX re-render, "replace" mode), rendered against whichever `$wp_query` is currently
- *          the main query, so both call sites stay pixel-identical without duplicating this
- *          markup. Not used by that same handler's "append" ("load more") mode, which renders
+ *          archive-product.php (initial page load) and
+ *          Solar_Template\Catalog\CatalogController::handle_filter_request() (AJAX re-render,
+ *          "replace" mode), rendered against whichever `$wp_query` is currently the main query, so
+ *          both call sites stay pixel-identical without duplicating this markup. Not used by that
+ *          same handler's "append" ("load more") mode, which renders
  *          template-parts/catalog-cards.php/catalog-load-more.php directly instead — appending
  *          more cards to an existing grid is a different operation than (re)rendering the whole
  *          results block.
  *
  * @package Solar_Template
  * @var array $args {
- *     @type string|null $base_url See solar_template_catalog_filters_url()'s $base_url parameter,
- *                                   forwarded to template-parts/catalog-load-more.php.
+ *     @type string|null $base_url See Solar_Template\Catalog\CatalogFilters::url()'s $base_url
+ *                                   parameter, forwarded to template-parts/catalog-load-more.php.
  * }
  */
 
@@ -26,16 +27,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use Solar_Template\Catalog\CatalogOptions;
+
 $results_args = wp_parse_args( $args ?? array(), array( 'base_url' => null ) );
 
 global $wp_query;
 
-$catalog_columns = solar_template_catalog_columns();
+$catalog_columns = CatalogOptions::columns();
 $product_count   = (int) $wp_query->found_posts;
 ?>
 <div id="catalog-results" class="catalog__results">
 	<?php if ( $product_count > 0 ) : ?>
-		<p class="catalog__count"><?php echo esc_html( solar_template_catalog_result_count_label( $product_count ) ); ?></p>
+		<p class="catalog__count"><?php echo esc_html( CatalogOptions::result_count_label( $product_count ) ); ?></p>
 	<?php endif; ?>
 
 	<?php if ( have_posts() ) : ?>
