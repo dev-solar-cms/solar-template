@@ -31,7 +31,8 @@ solar-template/
 │   ├── Support/         # Implémentations par défaut des interfaces génériques
 │   ├── I18n/            # Système de traduction multilingue (catalogue + compilation .mo)
 │   ├── Database/        # Schéma et installation des tables `wp_solar_template_*`
-│   └── Newsletter/      # Stockage des inscrits à la newsletter (SubscriberRepository)
+│   ├── Newsletter/      # Stockage des inscrits à la newsletter (SubscriberRepository)
+│   └── Catalog/         # Options/filtres/pagination/contrôleurs du catalogue produits
 ├── template-parts/      # Fragments de gabarit réutilisables (`get_template_part()`)
 │   ├── product-card.php # Carte produit (image, badge, wishlist, overlay panier, prix, swatches)
 │   ├── blog-card.php    # Carte article de blog (image 16:10, badge catégorie, meta, titre, extrait, auteur)
@@ -166,6 +167,30 @@ solar-template/
   thème n'utilise pas ; il est donc mis en file explicitement
   (`solar_template_enqueue_cart_fragments()`) pour que le mécanisme fonctionne avec le badge
   personnalisé de l'en-tête.
+
+### Catalogue produits (`inc/Catalog/`)
+
+- La logique du catalogue (grille, barre de filtres, chips actifs, tri, chargement progressif —
+  `archive-product.php` et `template-parts/catalog-*.php`) vit dans quatre classes, suivant la même
+  convention MVC que le reste du thème (`inc/Support/WooCommerceStatus`, `inc/Database/Installer`) :
+  méthodes toutes statiques, aucune n'ayant de dépendance à injecter.
+  - `CatalogOptions` — données descriptives en lecture seule, indépendantes de la sélection en
+    cours (colonnes de la grille, produits par page, slugs d'attribut Couleur/Taille, listes
+    d'options catégorie/attribut/note/tri, bornes de prix, position de la barre de filtres,
+    libellé du compteur de résultats).
+  - `CatalogFilters` — validation d'une sélection de filtres/tri brute, lecture depuis l'URL de
+    requête, construction des URLs de filtre/suppression/effacement et des chips actifs,
+    conversion en arguments `WP_Query`.
+  - `CatalogPagination` — calcule l'état « charger plus » (progression, page suivante) à partir
+    d'une `WP_Query` déjà exécutée.
+  - `CatalogController` — les « contrôleurs » au sens de l'architecture MVC du projet : le handler
+    `pre_get_posts`, le handler AJAX de l'action `solar_template_catalog_filter`, et l'enqueue du
+    script de la barre de filtres. Ne contient aucune logique métier propre — délègue aux trois
+    classes ci-dessus et rend les vues `template-parts/catalog-*.php` existantes, inchangées.
+  - `functions.php` ne garde que de fins wrappers procéduraux (appelés par nom depuis un gabarit,
+    ou enregistrés comme callback de hook), chacun repliant sur la valeur par défaut documentée de
+    la fonction d'origine si le loader Composer n'est pas disponible — réorganisation interne sans
+    changement de comportement.
 
 ### Pied de page du thème (`footer.php`, `assets/scss/_footer.scss`)
 
