@@ -80,3 +80,19 @@ describe('design system: product card', () => {
 		expect(css).toMatch(/\.product-card__wishlist\s*{[^}]*border-radius:\s*50%/);
 	});
 });
+
+describe('design system: blog card', () => {
+	it('gives the media block the card radius and a 16:10 aspect ratio', () => {
+		expect(css).toMatch(/\.blog-card__media\s*{[^}]*border-radius:\s*6px/);
+		expect(css).toMatch(/\.blog-card__media\s*{[^}]*aspect-ratio:\s*16\/10/);
+	});
+
+	it('clamps the excerpt to three lines', () => {
+		expect(css).toMatch(/\.blog-card__excerpt\s*{[^}]*-webkit-line-clamp:\s*3/);
+	});
+
+	it('sizes the author avatar as a 24px circle', () => {
+		expect(css).toMatch(/\.blog-card__author-avatar\s*{[^}]*width:\s*24px/);
+		expect(css).toMatch(/\.blog-card__author-avatar\s*{[^}]*border-radius:\s*50%/);
+	});
+});

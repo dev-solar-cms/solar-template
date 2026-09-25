@@ -1,0 +1,88 @@
+// Created: 2026-09-25 05:39 CEST
+// Role: Blog post card component partial (assets/scss/_blog-card.scss).
+// Author: David ROMERA <d.romera.11@gmail.com>
+// Purpose: Reusable blog post card (16:10 image, category badge, meta, title, excerpt, author),
+//          consumed by `template-parts/blog-card.php`. Built from the shared design tokens and the
+//          badge partial; a small number of values are specific to this card's own typographic
+//          treatment and are declared locally, same convention as the other card/component
+//          partials.
+
+@use 'tokens' as *;
+
+$blog-card-meta-font-size: 12.5px;
+$blog-card-excerpt-font-size: 14px;
+$blog-card-author-avatar-size: 24px;
+
+.blog-card {
+	display: flex;
+	flex-direction: column;
+}
+
+.blog-card__media {
+	position: relative;
+	overflow: hidden;
+	border-radius: $radius-card;
+	aspect-ratio: 16 / 10;
+	background: $color-hover;
+}
+
+.blog-card__image {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.blog-card__badge {
+	position: absolute;
+	top: 12px;
+	left: 12px;
+	z-index: 1;
+}
+
+.blog-card__body {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	gap: 10px;
+	padding-top: 16px;
+}
+
+.blog-card__meta {
+	color: $color-muted;
+	font-size: $blog-card-meta-font-size;
+	font-weight: $font-weight-medium;
+}
+
+.blog-card__title {
+	@include type-h3;
+	color: $color-dark;
+	text-decoration: none;
+}
+
+.blog-card__excerpt {
+	overflow: hidden;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 3;
+	margin: 0;
+	color: $color-muted;
+	font-size: $blog-card-excerpt-font-size;
+	line-height: 1.7;
+}
+
+.blog-card__author {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-top: auto;
+	color: $color-dark;
+	@include type-small($font-weight-semibold);
+}
+
+.blog-card__author-avatar {
+	width: $blog-card-author-avatar-size;
+	height: $blog-card-author-avatar-size;
+	border-radius: 50%;
+	object-fit: cover;
+}

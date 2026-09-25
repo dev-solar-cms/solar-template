@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.2.2`.
+Version actuelle : `0.2.3`.
 
 ## Avant une release
 
@@ -30,6 +30,21 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.2.3 — composant carte article de blog
+
+- Ajout d'un composant réutilisable « carte article » (image 16:10, badge de catégorie, ligne
+  date/durée de lecture, titre, extrait limité à trois lignes, auteur), affiché avec des données
+  factices — le branchement aux articles réels est prévu pour une étape ultérieure.
+- Décision technique : la ligne date/durée de lecture est acceptée comme texte déjà formaté plutôt
+  que par champs séparés, pour éviter d'introduire une chaîne traduisible/pluralisable sans donnée
+  réelle pour la piloter ; ce composant n'introduit d'ailleurs aucune chaîne propre (tout le texte
+  affiché est fourni par le gabarit appelant).
+- Bug évité avant qu'il ne se produise : une variable interne du composant portait le même nom
+  qu'une variable globale de WordPress, ce que la norme de code du projet interdit précisément pour
+  ce risque ; corrigé avant la mise en production.
+- **Le système de design commun du thème (tokens, boutons/badges/pills, carte produit, carte
+  article) est désormais complet** et prêt à être utilisé par les prochaines pages du thème.
 
 ### 0.2.2 — composant carte produit
 

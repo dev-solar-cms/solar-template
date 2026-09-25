@@ -128,6 +128,28 @@
 			file — confirming the whole chain (catalog → compiled file → WordPress' own gettext
 			loading → template output) end to end, not just the card's markup in isolation.
 		</p>
+
+		<h2 id="blog-card">Blog post card</h2>
+		<p>
+			<code>template-parts/blog-card.php</code> renders a single blog post card (16:10 image,
+			category badge, meta line, title, excerpt clamped to three lines, author) from a plain
+			<code>$args</code> array, styled by <code>assets/scss/_blog-card.scss</code>. Like the
+			product card, it is shaped like WordPress post data on purpose but does not read a
+			<code>WP_Post</code> yet.
+		</p>
+		<p>
+			The meta line (date + reading time, e.g. "Jan 12, 2026 · 5 min read") is accepted as a
+			single pre-formatted string rather than separate fields: the exact wording of that
+			combination is a content decision for whichever template composes it, and — once wired
+			to real posts — the reading-time part will need its own translatable, plural-aware
+			format string. Inventing that string now, without a real post/reading-time source to
+			drive it, was judged out of scope for a step that only renders this card with fake data.
+		</p>
+		<p>
+			This card introduces no string of its own: every piece of text it renders (title,
+			excerpt, meta, author name, badge label) is supplied by whichever template calls it, so
+			there is nothing new to register in the translation catalog for this component.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

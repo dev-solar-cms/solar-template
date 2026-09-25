@@ -137,6 +137,30 @@
 			compilé → chargement gettext de WordPress → sortie du gabarit) de bout en bout, pas
 			seulement le balisage de la carte isolément.
 		</p>
+
+		<h2 id="carte-article">Carte article de blog</h2>
+		<p>
+			<code>template-parts/blog-card.php</code> affiche une carte article (image 16:10, badge
+			de catégorie, ligne meta, titre, extrait limité à trois lignes, auteur) à partir d'un
+			simple tableau <code>$args</code>, stylée par <code>assets/scss/_blog-card.scss</code>.
+			Comme la carte produit, elle est volontairement calquée sur la forme des données
+			WordPress (articles) sans encore lire de `WP_Post` réel.
+		</p>
+		<p>
+			La ligne meta (date + durée de lecture, ex. « 12 janv. 2026 · 5 min de lecture ») est
+			acceptée comme une chaîne unique déjà formatée plutôt que des champs séparés : le
+			libellé exact de cette combinaison est une décision de contenu propre au gabarit qui la
+			compose, et — une fois branchée sur de vrais articles — la partie durée de lecture
+			nécessitera sa propre chaîne de format traduisible et pluralisable. Inventer cette
+			chaîne maintenant, sans véritable source d'article/durée de lecture pour l'alimenter, a
+			été jugé hors périmètre pour une étape qui n'affiche cette carte qu'avec des données
+			factices.
+		</p>
+		<p>
+			Cette carte n'introduit aucune chaîne propre : chaque texte qu'elle affiche (titre,
+			extrait, meta, nom d'auteur, libellé de badge) est fourni par le gabarit qui l'appelle —
+			rien de nouveau à enregistrer dans le catalogue de traduction pour ce composant.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>
