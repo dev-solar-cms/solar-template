@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.1.2`.
+Version actuelle : `0.1.3`.
 
 ## Avant une release
 
@@ -28,6 +28,23 @@ Ce dépôt est public (`github.com/dev-solar-cms/solar-template`) et versionné 
 3. Créer une release GitHub à partir du tag, avec un changelog résumant les changements.
 
 ## Changelog
+
+### 0.1.3 — fondations du système de traduction multilingue
+
+- Ajout de deux tables dédiées : les langues installées (code, libellé, drapeau, active/défaut) et
+  le catalogue de traductions (clé → singulier/pluriel par langue), avec `fr_FR` et `en_US`
+  pré-remplies.
+- Le thème continue d'appeler les fonctions de traduction natives de WordPress (`__()`/`_e()`/`_n()`)
+  partout : ce catalogue ne fait que fournir une source éditable, compilée en fichiers `.mo`
+  standards que WordPress charge lui-même.
+- Ajout d'une liste statique de langues proposables (au-delà des deux fournies par défaut), prête
+  à alimenter le futur menu d'ajout de langue.
+- **Bug rencontré et corrigé** : les fichiers `.mo` compilés dans le dossier de langues propre au
+  thème doivent être nommés `{locale}.mo` (sans le préfixe du domaine de traduction) — le
+  chargement « juste à temps » des traductions de WordPress attend ce format précis pour le
+  dossier `languages/` d'un thème, contrairement au dossier de langues global où le préfixe est
+  nécessaire. Vérifié par un test de bout en bout dans l'environnement Docker réel (chaîne avec
+  espace réservé et pluriel, résolue correctement en français et en anglais).
 
 ### 0.1.2 — dépendances PHP et interfaces de base
 

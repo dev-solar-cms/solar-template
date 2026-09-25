@@ -21,7 +21,10 @@ solar-template/
 ├── package.json       # Métadonnées placeholder (aucun script/dépendance)
 ├── inc/                # Classes PHP du thème, autoloadées en PSR-4 sous `Solar_Template\`
 │   ├── Contracts/       # Interfaces consommées par le code métier (jamais une lib tierce directement)
-│   └── Support/         # Implémentations par défaut de ces interfaces
+│   ├── Support/         # Implémentations par défaut des interfaces génériques
+│   ├── I18n/            # Système de traduction multilingue (catalogue + compilation .mo)
+│   └── Database/        # Schéma et installation des tables `wp_solar_template_*`
+├── languages/           # Fichiers `.mo` compilés (générés, ignorés par git sauf `.gitkeep`)
 ├── doc/                # Documentation du projet (site statique HTML/JS, FR + EN)
 │   ├── en/, fr/         # Pages par langue (index.html, infrastructure.html, ...)
 │   └── assets/          # CSS/JS partagés par la documentation
@@ -37,6 +40,22 @@ solar-template/
   défaut : `Support\DotenvEnvironmentLoader`, basée sur `vlucas/phpdotenv`).
 - `CacheInterface` — cache court terme (implémentation par défaut : `Support\TransientCache`,
   basée sur l'API des transients WordPress, aucune dépendance externe).
+- `TranslatorInterface` — gestion des langues et du catalogue de traductions (implémentation par
+  défaut : `I18n\DatabaseTranslator`, basée sur les tables `wp_solar_template_languages`/
+  `wp_solar_template_translations`).
+- `MoCompilerInterface` — compilation d'un catalogue en fichier `.mo` (implémentation par défaut :
+  `I18n\GettextMoCompiler`, basée sur `gettext/gettext`).
+
+### Système de traduction (`inc/I18n/`)
+
+- Les gabarits du thème continuent d'appeler `__()`/`_e()`/`_n()` avec le text-domain
+  `solar-template` : le catalogue en base ne fait que fournir une source éditable, compilée en
+  `.mo` standards que WordPress charge lui-même (`load_theme_textdomain()`, câblé dans
+  `functions.php`).
+- `LanguageCatalog` liste les langues qu'un futur écran d'administration pourra proposer
+  d'ajouter (avec leur règle de pluriel), indépendamment des langues réellement installées.
+- Important : les `.mo` du dossier `languages/` propre au thème doivent être nommés `{locale}.mo`
+  (sans préfixe de domaine) — c'est ce que produit `DatabaseTranslator::compile()`.
 
 ### À noter
 

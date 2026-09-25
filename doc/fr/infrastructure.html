@@ -79,6 +79,38 @@ composer format    # corrige automatiquement ce qui peut l'être (phpcbf)</code>
 			lancer <code>composer install</code> plutôt que de provoquer une erreur fatale.
 		</p>
 
+		<h2 id="traductions">Système de traduction</h2>
+		<p>
+			Les gabarits du thème continuent d'appeler partout les fonctions de traduction natives
+			de WordPress — <code>__()</code>, <code>_e()</code>, <code>_n()</code> — avec le
+			text-domain <code>solar-template</code>, comme n'importe quel autre thème. Ce qui est
+			spécifique, c'est l'origine du texte traduit : plutôt que de livrer des fichiers
+			<code>.po</code>/<code>.mo</code> édités à la main, le thème stocke chaque chaîne dans
+			deux tables de base de données (<code>wp_solar_template_languages</code>,
+			<code>wp_solar_template_translations</code>) modifiables depuis les futurs écrans
+			d'administration du thème, et les compile en fichiers <code>.mo</code> standards à
+			chaque modification. WordPress charge ensuite ces fichiers normalement — rien ne
+			change dans la façon dont les gabarits lisent les traductions.
+		</p>
+		<p>Le français (<code>fr_FR</code>) et l'anglais (<code>en_US</code>) sont pré-installés ;
+			ajouter une autre langue ne nécessite jamais de toucher au code du thème.</p>
+		<table>
+			<thead>
+				<tr><th>Table</th><th>Rôle</th></tr>
+			</thead>
+			<tbody>
+				<tr><td><code>wp_solar_template_languages</code></td><td>Langues installées : code, libellé, drapeau, active/défaut</td></tr>
+				<tr><td><code>wp_solar_template_translations</code></td><td>Catalogue : clé → texte singulier/pluriel par langue</td></tr>
+			</tbody>
+		</table>
+		<p>
+			<strong>À noter :</strong> le dossier <code>languages/</code> propre à un thème attend
+			des fichiers <code>.mo</code> nommés <code>{locale}.mo</code> (ex.
+			<code>fr_FR.mo</code>) — pas <code>{text-domain}-{locale}.mo</code>, format requis
+			uniquement pour le dossier partagé <code>wp-content/languages/themes/</code>. C'est ce
+			que produit <code>DatabaseTranslator::compile()</code>.
+		</p>
+
 		<h2 id="woocommerce">Détection de WooCommerce</h2>
 		<p>
 			Le thème ne nécessite pas WooCommerce pour s'activer. Si WooCommerce est absent ou

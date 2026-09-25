@@ -7,3 +7,5 @@ vendor/
 .env
 /.claude
 CLAUDE.md
+/languages/*.mo
+/languages/*.po

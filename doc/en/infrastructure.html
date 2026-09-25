@@ -76,6 +76,37 @@ composer format    # auto-fix what can be auto-fixed (phpcbf)</code></pre>
 			<code>composer install</code> instead of causing a fatal error.
 		</p>
 
+		<h2 id="translations">Translation system</h2>
+		<p>
+			The theme's templates keep calling WordPress' own translation functions everywhere —
+			<code>__()</code>, <code>_e()</code>, <code>_n()</code> — with the
+			<code>solar-template</code> text domain, exactly like any other theme. What is custom
+			is where the translated text comes from: instead of shipping hand-edited
+			<code>.po</code>/<code>.mo</code> files, the theme stores every string in two database
+			tables (<code>wp_solar_template_languages</code>, <code>wp_solar_template_translations</code>)
+			editable from the theme's own administration screens (a later milestone), and compiles
+			them into standard <code>.mo</code> files whenever they change. WordPress then loads
+			those files the normal way — nothing about how templates read translations changes.
+		</p>
+		<p>French (<code>fr_FR</code>) and English (<code>en_US</code>) are pre-installed; adding
+			another language never requires touching the theme's code.</p>
+		<table>
+			<thead>
+				<tr><th>Table</th><th>Purpose</th></tr>
+			</thead>
+			<tbody>
+				<tr><td><code>wp_solar_template_languages</code></td><td>Installed languages: code, label, flag, active/default</td></tr>
+				<tr><td><code>wp_solar_template_translations</code></td><td>Catalog: key → singular/plural text per language</td></tr>
+			</tbody>
+		</table>
+		<p>
+			<strong>Note:</strong> a theme's own <code>languages/</code> directory expects `.mo`
+			files named <code>{locale}.mo</code> (e.g. <code>fr_FR.mo</code>) — not
+			<code>{textdomain}-{locale}.mo</code>, which is only required for the shared
+			<code>wp-content/languages/themes/</code> directory. This is what
+			<code>DatabaseTranslator::compile()</code> writes.
+		</p>
+
 		<h2 id="woocommerce">WooCommerce detection</h2>
 		<p>
 			The theme does not require WooCommerce to activate. If WooCommerce is missing or
