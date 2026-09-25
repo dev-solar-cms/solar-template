@@ -121,6 +121,48 @@
 			button styling stay in sync with the URL after a page reload. No PHP warning or error
 			observed.
 		</p>
+
+		<h2 id="active-filters">Active filters</h2>
+		<p>
+			<code>template-parts/catalog-active-filters.php</code> renders, below the filter bar, a
+			row of chips summarizing each actively filtered value (category/color/size name, rating,
+			or the whole price range — a single chip rather than two, since one control removes it) —
+			an individual remove button on each chip, plus a "Clear all" link. Always rendered inside
+			its own <code>#catalog-active-filters</code> container, even when empty, so
+			<code>assets/js/catalog.js</code> can always replace it wholesale after an AJAX update
+			without having to handle inserting/removing it separately.
+		</p>
+		<p>
+			Each chip and the "Clear all" link are plain links first
+			(<code>solar_template_catalog_filter_remove_url()</code>/
+			<code>solar_template_catalog_clear_filters_url()</code> in <code>functions.php</code>) —
+			functional without JavaScript, since the plain page load is already filtered
+			server-side — then intercepted by <code>assets/js/catalog.js</code>: the target URL's
+			query string is applied directly onto the filter bar's own controls (checkboxes checked/
+			unchecked, price fields updated), before submitting the form via AJAX instead of
+			navigating.
+		</p>
+		<p>
+			Technical decision: chip URLs must be built relative to the real catalog page, not
+			<code>admin-ajax.php</code> (the current request's URL during an AJAX call) — the client
+			page therefore sends its own URL (<code>window.location.href</code>) along with the AJAX
+			request, which the endpoint reuses as the base instead of the current request URL.
+		</p>
+		<p>
+			Bug encountered and fixed during development: an event listener accumulation was caught
+			by the JS test suite (a scenario where <code>initCatalogFilters()</code> would run more
+			than once on the same page triggered a growing number of AJAX requests per click). Fixed
+			by explicitly tracking and removing the two listeners bound to the document before
+			re-attaching new ones on every call, instead of letting them accumulate.
+		</p>
+		<p>
+			Verified end to end in the real Docker environment with WooCommerce active: chips
+			correctly reflect each active filter (including the price range, natively formatted via
+			<code>wc_price()</code>), their remove link removes only the matching value while keeping
+			every other active filter, and "Clear all" removes everything — verified through both a
+			plain page load and the AJAX request (base URL correctly based on the real catalog page
+			either way), in both installed languages. No PHP warning or error observed.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.4.1`.
+Version actuelle : `0.4.2`.
 
 ## Avant une release
 
@@ -30,6 +30,15 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.4.2 — filtres actifs du catalogue
+
+- Ajout d'une rangée de « filtres actifs » sous la barre de filtres du catalogue : un chip par
+  valeur active (catégorie, couleur, taille, note, ou la plage de prix entière en un seul chip),
+  chacun avec son propre bouton de suppression, plus un lien « Effacer tout ».
+- Chaque chip et le lien « Effacer tout » sont de vrais liens (fonctionnent sans JavaScript,
+  puisque le filtrage du chargement de page normal existait déjà), interceptés pour resynchroniser
+  la barre de filtres et se soumettre en AJAX plutôt que de recharger la page.
 
 ### 0.4.1 — barre de filtres du catalogue
 

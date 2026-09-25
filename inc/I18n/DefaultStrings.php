@@ -490,6 +490,30 @@ final class DefaultStrings {
 					'en_US' => '%d stars',
 				),
 			),
+			'Active filters:'                             => array(
+				'fr_FR' => 'Filtres actifs :',
+				'en_US' => 'Active filters:',
+			),
+			'Remove filter: %s'                           => array(
+				'fr_FR' => 'Retirer le filtre : %s',
+				'en_US' => 'Remove filter: %s',
+			),
+			'Clear all'                                   => array(
+				'fr_FR' => 'Effacer tout',
+				'en_US' => 'Clear all',
+			),
+			'%1$s – %2$s'                                 => array(
+				'fr_FR' => '%1$s – %2$s',
+				'en_US' => '%1$s – %2$s',
+			),
+			'From %s'                                     => array(
+				'fr_FR' => 'À partir de %s',
+				'en_US' => 'From %s',
+			),
+			'Up to %s'                                    => array(
+				'fr_FR' => "Jusqu'à %s",
+				'en_US' => 'Up to %s',
+			),
 		);
 	}
 

@@ -1632,6 +1632,179 @@ function solar_template_get_active_catalog_filters(): array {
 }
 
 /**
+ * Returns the URL for the current catalog view with the given, already-sanitized filter
+ * selection applied as query args (`filter_category`/`min_price`/etc.), replacing whatever
+ * filters are currently in the request URL rather than adding to them.
+ *
+ * @param array       $filters  See solar_template_sanitize_catalog_filters()'s return type.
+ * @param string|null $base_url Catalog page URL to build from; the current request URL (correct
+ *                                for a plain page load) when null. The AJAX handler passes the
+ *                                real catalog page URL explicitly instead, since the current
+ *                                request URL there is `admin-ajax.php`, not a page a chip should
+ *                                ever link back to.
+ * @return string
+ */
+function solar_template_catalog_filters_url( array $filters, ?string $base_url = null ): string {
+	$base_url = solar_template_catalog_clear_filters_url( $base_url );
+
+	$query_args = array();
+
+	foreach ( array( 'category', 'color', 'size', 'rating' ) as $dimension ) {
+		if ( ! empty( $filters[ $dimension ] ) ) {
+			$query_args[ 'filter_' . $dimension ] = $filters[ $dimension ];
+		}
+	}
+
+	if ( null !== $filters['min_price'] ) {
+		$query_args['min_price'] = $filters['min_price'];
+	}
+
+	if ( null !== $filters['max_price'] ) {
+		$query_args['max_price'] = $filters['max_price'];
+	}
+
+	return empty( $query_args ) ? $base_url : add_query_arg( $query_args, $base_url );
+}
+
+/**
+ * Returns the current catalog view's URL with every filter query arg removed, used as the
+ * "Clear all" link and as the base URL for solar_template_catalog_filters_url().
+ *
+ * @param string|null $base_url See solar_template_catalog_filters_url()'s $base_url parameter.
+ * @return string
+ */
+function solar_template_catalog_clear_filters_url( ?string $base_url = null ): string {
+	$keys = array( 'filter_category', 'filter_color', 'filter_size', 'filter_rating', 'min_price', 'max_price' );
+
+	return null !== $base_url ? remove_query_arg( $keys, $base_url ) : remove_query_arg( $keys );
+}
+
+/**
+ * Returns the URL that removes a single active filter value (one category/color/size/rating
+ * choice, or the whole price range as one unit — it has a single chip/removal control), keeping
+ * every other currently active filter untouched.
+ *
+ * @param array       $filters   See solar_template_sanitize_catalog_filters()'s return type.
+ * @param string      $dimension One of `category`, `color`, `size`, `rating`, `price`.
+ * @param string|int  $value     The value to remove; ignored when $dimension is `price`.
+ * @param string|null $base_url  See solar_template_catalog_filters_url()'s $base_url parameter.
+ * @return string
+ */
+function solar_template_catalog_filter_remove_url( array $filters, string $dimension, $value, ?string $base_url = null ): string {
+	if ( 'price' === $dimension ) {
+		$filters['min_price'] = null;
+		$filters['max_price'] = null;
+	} elseif ( isset( $filters[ $dimension ] ) && is_array( $filters[ $dimension ] ) ) {
+		$filters[ $dimension ] = array_values( array_diff( $filters[ $dimension ], array( $value ) ) );
+	}
+
+	return solar_template_catalog_filters_url( $filters, $base_url );
+}
+
+/**
+ * Formats the "Price" filter's active chip label ("20,00 € – 150,00 €", "From 20,00 €", or
+ * "Up to 150,00 €" depending on which bound is set), using WooCommerce's own `wc_price()` for
+ * locale-correct formatting.
+ *
+ * @param float|null $min_price Minimum price, or null when unset.
+ * @param float|null $max_price Maximum price, or null when unset.
+ * @return string
+ */
+function solar_template_catalog_price_filter_chip_label( ?float $min_price, ?float $max_price ): string {
+	if ( null !== $min_price && null !== $max_price ) {
+		return sprintf(
+			/* translators: 1: minimum price, 2: maximum price. */
+			__( '%1$s – %2$s', 'solar-template' ),
+			wp_strip_all_tags( wc_price( $min_price ) ),
+			wp_strip_all_tags( wc_price( $max_price ) )
+		);
+	}
+
+	if ( null !== $min_price ) {
+		return sprintf(
+			/* translators: %s: minimum price. */
+			__( 'From %s', 'solar-template' ),
+			wp_strip_all_tags( wc_price( $min_price ) )
+		);
+	}
+
+	return sprintf(
+		/* translators: %s: maximum price. */
+		__( 'Up to %s', 'solar-template' ),
+		wp_strip_all_tags( wc_price( $max_price ) )
+	);
+}
+
+/**
+ * Returns the catalog's currently active filters as a flat list of removable chips (label +
+ * the URL that removes just that one value), for template-parts/catalog-active-filters.php.
+ *
+ * @param array|null  $filters  Already-sanitized filters to build chips for; reads the current
+ *                                request URL (via solar_template_get_active_catalog_filters())
+ *                                when null — the AJAX handler passes its own `$_POST`-derived
+ *                                filters instead, since they never reach `$_GET`.
+ * @param string|null $base_url See solar_template_catalog_filters_url()'s $base_url parameter.
+ * @return array<int, array{label: string, url: string}>
+ */
+function solar_template_get_active_catalog_filter_chips( ?array $filters = null, ?string $base_url = null ): array {
+	$filters = $filters ?? solar_template_get_active_catalog_filters();
+	$chips   = array();
+
+	$category_names = wp_list_pluck( solar_template_get_catalog_category_options(), 'name', 'slug' );
+
+	foreach ( $filters['category'] as $slug ) {
+		if ( isset( $category_names[ $slug ] ) ) {
+			$chips[] = array(
+				'label' => $category_names[ $slug ],
+				'url'   => solar_template_catalog_filter_remove_url( $filters, 'category', $slug, $base_url ),
+			);
+		}
+	}
+
+	$color_names = wp_list_pluck( solar_template_get_catalog_attribute_options( solar_template_catalog_color_attribute_slug() ), 'name', 'slug' );
+
+	foreach ( $filters['color'] as $slug ) {
+		if ( isset( $color_names[ $slug ] ) ) {
+			$chips[] = array(
+				'label' => $color_names[ $slug ],
+				'url'   => solar_template_catalog_filter_remove_url( $filters, 'color', $slug, $base_url ),
+			);
+		}
+	}
+
+	$size_names = wp_list_pluck( solar_template_get_catalog_attribute_options( solar_template_catalog_size_attribute_slug() ), 'name', 'slug' );
+
+	foreach ( $filters['size'] as $slug ) {
+		if ( isset( $size_names[ $slug ] ) ) {
+			$chips[] = array(
+				'label' => $size_names[ $slug ],
+				'url'   => solar_template_catalog_filter_remove_url( $filters, 'size', $slug, $base_url ),
+			);
+		}
+	}
+
+	$rating_labels = wp_list_pluck( solar_template_get_catalog_rating_options(), 'label', 'value' );
+
+	foreach ( $filters['rating'] as $stars ) {
+		if ( isset( $rating_labels[ $stars ] ) ) {
+			$chips[] = array(
+				'label' => $rating_labels[ $stars ],
+				'url'   => solar_template_catalog_filter_remove_url( $filters, 'rating', $stars, $base_url ),
+			);
+		}
+	}
+
+	if ( null !== $filters['min_price'] || null !== $filters['max_price'] ) {
+		$chips[] = array(
+			'label' => solar_template_catalog_price_filter_chip_label( $filters['min_price'], $filters['max_price'] ),
+			'url'   => solar_template_catalog_filter_remove_url( $filters, 'price', '', $base_url ),
+		);
+	}
+
+	return $chips;
+}
+
+/**
  * Builds `WP_Query` `tax_query`/`meta_query` arguments for the given, already-sanitized filter
  * selection. Shared by solar_template_apply_catalog_filters_to_main_query() (the initial page
  * load) and solar_template_handle_catalog_filter_request() (the AJAX re-render), so both always
@@ -1788,8 +1961,9 @@ add_action( 'pre_get_posts', 'solar_template_apply_catalog_filters_to_main_query
 function solar_template_handle_catalog_filter_request(): void {
 	check_ajax_referer( 'solar_template_catalog_filter', 'nonce' );
 
-	$filters = solar_template_sanitize_catalog_filters( wp_unslash( $_POST ) );
-	$paged   = isset( $_POST['paged'] ) ? max( 1, absint( $_POST['paged'] ) ) : 1;
+	$filters  = solar_template_sanitize_catalog_filters( wp_unslash( $_POST ) );
+	$paged    = isset( $_POST['paged'] ) ? max( 1, absint( $_POST['paged'] ) ) : 1;
+	$page_url = isset( $_POST['pageUrl'] ) ? esc_url_raw( wp_unslash( $_POST['pageUrl'] ) ) : '';
 
 	$args = array_merge(
 		array(
@@ -1814,10 +1988,26 @@ function solar_template_handle_catalog_filter_request(): void {
 	get_template_part( 'template-parts/catalog-results' );
 	$results_html = ob_get_clean();
 
+	ob_start();
+	get_template_part(
+		'template-parts/catalog-active-filters',
+		null,
+		array(
+			'filters'  => $filters,
+			'base_url' => '' !== $page_url ? $page_url : null,
+		)
+	);
+	$active_filters_html = ob_get_clean();
+
 	$wp_query     = $previous_query; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 	$wp_the_query = $previous_main_query; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 
-	wp_send_json_success( array( 'html' => $results_html ) );
+	wp_send_json_success(
+		array(
+			'html'              => $results_html,
+			'activeFiltersHtml' => $active_filters_html,
+		)
+	);
 }
 add_action( 'wp_ajax_solar_template_catalog_filter', 'solar_template_handle_catalog_filter_request' );
 add_action( 'wp_ajax_nopriv_solar_template_catalog_filter', 'solar_template_handle_catalog_filter_request' );

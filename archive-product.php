@@ -7,7 +7,8 @@
  *       `taxonomy-product_cat.php`/`taxonomy-product_tag.php`).
  * Author: David ROMERA <d.romera.11@gmail.com>
  * Purpose: Render the product catalog: breadcrumb, title, the native AJAX filter bar
- *          (template-parts/catalog-filters.php) and the result count/grid/pagination
+ *          (template-parts/catalog-filters.php), its "Active filters" chip row
+ *          (template-parts/catalog-active-filters.php) and the result count/grid/pagination
  *          (template-parts/catalog-results.php), fed with real WooCommerce data. Deliberately
  *          does not build the grid/list view toggle shown in the design handoff's mockup — it has
  *          no behaviour specified beyond the mockup itself, so it is left out rather than adding
@@ -47,6 +48,7 @@ get_header();
 	<?php get_template_part( 'template-parts/catalog-filters' ); ?>
 
 	<div class="catalog__inner">
+		<?php get_template_part( 'template-parts/catalog-active-filters' ); ?>
 		<?php get_template_part( 'template-parts/catalog-results' ); ?>
 	</div>
 </main>

@@ -128,6 +128,52 @@
 			cases et le style actif des boutons de la barre restent synchronisés avec l'URL après un
 			rechargement de page. Aucun avertissement ni erreur PHP relevé.
 		</p>
+
+		<h2 id="filtres-actifs">Filtres actifs</h2>
+		<p>
+			<code>template-parts/catalog-active-filters.php</code> affiche, sous la barre de filtres,
+			une rangée de chips résumant chaque valeur activement filtrée (nom de catégorie, de
+			couleur, de taille, note, ou la plage de prix entière — représentée par un seul chip
+			plutôt que deux, puisqu'un seul contrôle la supprime) — bouton de suppression individuel
+			sur chaque chip, plus un lien « Effacer tout ». Toujours rendue dans son propre conteneur
+			<code>#catalog-active-filters</code>, même vide, pour qu'<code>assets/js/catalog.js</code>
+			puisse toujours le remplacer intégralement après une mise à jour AJAX sans avoir à gérer
+			son insertion/suppression séparément.
+		</p>
+		<p>
+			Chaque chip et le lien « Effacer tout » sont d'abord de vrais liens
+			(<code>solar_template_catalog_filter_remove_url()</code>/
+			<code>solar_template_catalog_clear_filters_url()</code> dans <code>functions.php</code>) —
+			fonctionnels sans JavaScript, puisque le chargement de page classique est déjà filtré
+			côté serveur — puis interceptés par <code>assets/js/catalog.js</code> : la chaîne de
+			requête de l'URL cible est appliquée directement sur les contrôles de la barre de filtres
+			(cases cochées/décochées, champs de prix mis à jour), avant de soumettre le formulaire en
+			AJAX plutôt que de naviguer.
+		</p>
+		<p>
+			Décision technique : les URL des chips doivent être construites par rapport à la vraie
+			page du catalogue, pas <code>admin-ajax.php</code> (l'URL de la requête en cours pendant
+			un appel AJAX) — la page cliente transmet donc sa propre URL
+			(<code>window.location.href</code>) dans la requête AJAX, que le point d'entrée
+			réutilise comme base plutôt que l'URL de la requête en cours.
+		</p>
+		<p>
+			Bug rencontré et corrigé pendant le développement : une accumulation d'écouteurs
+			d'évènements a été détectée par la suite de tests JS (un scénario où
+			<code>initCatalogFilters()</code> serait appelé plusieurs fois sur la même page
+			déclenchait un nombre croissant de requêtes AJAX à chaque clic). Corrigé en suivant et en
+			retirant explicitement les deux écouteurs attachés au document avant d'en réattacher de
+			nouveaux à chaque appel, plutôt que de les laisser s'accumuler.
+		</p>
+		<p>
+			Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif : les
+			chips reflètent correctement chaque filtre actif (y compris la plage de prix formatée
+			nativement via <code>wc_price()</code>), leur lien de suppression retire bien uniquement
+			la valeur correspondante en conservant les autres filtres actifs, et « Effacer tout »
+			retire tout — vérifié à la fois via un chargement de page classique et via la requête
+			AJAX (URL de base correctement basée sur la page réelle du catalogue dans les deux cas),
+			dans les deux langues installées. Aucun avertissement ni erreur PHP relevé.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

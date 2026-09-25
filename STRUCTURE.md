@@ -39,6 +39,7 @@ solar-template/
 │   ├── mega-menu.php    # Panneau du mega menu « Collections », contenu factice pour l'instant
 │   ├── catalog-filters.php # Barre de filtres du catalogue (Catégorie/Prix/Couleur/Taille/Note), formulaire natif progressivement amélioré en AJAX
 │   ├── catalog-results.php # Compteur/grille/pagination du catalogue, partagé entre le chargement de page et le ré-affichage AJAX
+│   ├── catalog-active-filters.php # Rangée de chips des filtres actifs (retrait individuel + « Effacer tout »)
 │   └── front-page/      # Sections de la page d'accueil, une par fichier
 │       ├── hero.php     # Hero plein écran (accroche, titre 3 lignes, CTA, trust badges, carte flottante)
 │       ├── featured-products.php # Grille masonry des produits WooCommerce marqués « en vedette »

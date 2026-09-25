@@ -26,7 +26,7 @@ function renderCatalogFixture() {
 					<span class="catalog-filters__toggle-count" hidden></span>
 				</button>
 				<div class="catalog-filters__panel" hidden>
-					<label><input type="checkbox" name="filter_category[]" value="watches" /></label>
+					<label><input type="checkbox" name="filter_category[]" value="watches" checked /></label>
 					<label><input type="checkbox" name="filter_category[]" value="jewelry" /></label>
 				</div>
 			</div>
@@ -42,6 +42,13 @@ function renderCatalogFixture() {
 			</div>
 		</form>
 		<div id="catalog-results"><p>9 products available</p></div>
+		<div id="catalog-active-filters">
+			<span class="catalog-active-filters__chip">
+				Watches
+				<a class="catalog-active-filters__remove" href="https://example.test/shop/?min_price=200">×</a>
+			</span>
+			<a class="catalog-active-filters__clear" href="https://example.test/shop/">Clear all</a>
+		</div>
 	`;
 }
 
@@ -169,5 +176,60 @@ describe('assets/js/catalog.js', () => {
 		expect(document.getElementById('catalog-results').classList.contains('is-loading')).toBe(
 			false,
 		);
+	});
+
+	it('applies a chip removal link onto the form and submits via AJAX instead of navigating', async () => {
+		const fetchMock = vi.fn().mockResolvedValue({
+			json: () =>
+				Promise.resolve({
+					success: true,
+					data: {
+						html: '<div id="catalog-results"><p>4 products available</p></div>',
+						activeFiltersHtml: '<div id="catalog-active-filters"></div>',
+					},
+				}),
+		});
+		vi.stubGlobal('fetch', fetchMock);
+
+		initCatalogFilters();
+
+		const removeLink = document.querySelector('.catalog-active-filters__remove');
+		const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
+		removeLink.dispatchEvent(clickEvent);
+
+		expect(clickEvent.defaultPrevented).toBe(true);
+		expect(document.querySelector('input[value="watches"]').checked).toBe(false);
+		expect(document.querySelector('input[name="min_price"]').value).toBe('200');
+
+		await vi.waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+		await new Promise((resolve) => setTimeout(resolve, 0));
+
+		const [, requestInit] = fetchMock.mock.calls[0];
+		expect(String(requestInit.body)).not.toContain('filter_category');
+		expect(String(requestInit.body)).toContain('min_price=200');
+		expect(document.getElementById('catalog-active-filters').outerHTML).toBe(
+			'<div id="catalog-active-filters"></div>',
+		);
+	});
+
+	it('applies "Clear all" by resetting every form control and submitting via AJAX', async () => {
+		const fetchMock = vi.fn().mockResolvedValue({
+			json: () =>
+				Promise.resolve({
+					success: true,
+					data: { html: '<div id="catalog-results"><p>9 products available</p></div>' },
+				}),
+		});
+		vi.stubGlobal('fetch', fetchMock);
+
+		initCatalogFilters();
+
+		document
+			.querySelector('.catalog-active-filters__clear')
+			.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+
+		expect(document.querySelector('input[value="watches"]').checked).toBe(false);
+
+		await vi.waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
 	});
 });

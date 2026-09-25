@@ -6,14 +6,27 @@
  *          click/Escape, same pattern as the header's mega menu), reflect the active
  *          selection on its toggle button, and submit the whole `#catalog-filters` form via AJAX
  *          to `solar_template_catalog_filter` (see functions.php) whenever a filter control
- *          changes, swapping the returned markup into `#catalog-results` without a full page
- *          reload. Reads the AJAX endpoint/nonce from `window.solarTemplateCatalog`, localized by
- *          `wp_localize_script()`. Does nothing (and throws no error) on a page without the
- *          filter bar, e.g. because WooCommerce is inactive.
+ *          changes, swapping the returned markup into `#catalog-results` and
+ *          `#catalog-active-filters` without a full page reload. A click on an "Active filters"
+ *          chip's remove link or "Clear all" (template-parts/catalog-active-filters.php) is
+ *          intercepted the same way: its `href` already encodes the resulting filter state (a
+ *          plain link works without JavaScript), which is applied back onto the form's own
+ *          controls before submitting, so the two stay in sync either way. Reads the AJAX
+ *          endpoint/nonce from `window.solarTemplateCatalog`, localized by `wp_localize_script()`.
+ *          Does nothing (and throws no error) on a page without the filter bar, e.g. because
+ *          WooCommerce is inactive.
  */
 
+// Tracks the two listeners bound directly to `document` (rather than to an element scoped to this
+// page's own filter bar), so a repeated call re-wires them instead of accumulating duplicates —
+// production only ever calls this once (on `DOMContentLoaded`), but each call still fully rewires
+// as if it were the first, which the test suite relies on against a fresh fixture per test.
+let outsideClickHandler = null;
+let chipsClickHandler = null;
+
 /**
- * Wires up every filter group's dropdown panel and change handling on `#catalog-filters`.
+ * Wires up every filter group's dropdown panel, the "Active filters" chip row, and change
+ * handling on `#catalog-filters`.
  *
  * @return {void}
  */
@@ -39,11 +52,16 @@ export function initCatalogFilters() {
 		});
 	});
 
-	document.addEventListener('click', (event) => {
+	if (outsideClickHandler) {
+		document.removeEventListener('click', outsideClickHandler);
+	}
+
+	outsideClickHandler = (event) => {
 		if (!form.contains(event.target)) {
 			closeAllPanels(groups);
 		}
-	});
+	};
+	document.addEventListener('click', outsideClickHandler);
 
 	form.addEventListener('keydown', (event) => {
 		if (event.key === 'Escape') {
@@ -55,6 +73,8 @@ export function initCatalogFilters() {
 		event.preventDefault();
 		submitFilters(form, config);
 	});
+
+	wireActiveFilterChips(form, groups, config);
 }
 
 /**
@@ -139,8 +159,81 @@ function updateGroupActiveState(group) {
 }
 
 /**
+ * Intercepts clicks on the "Active filters" chip row (a chip's remove link, or "Clear all"),
+ * applying the link's target `href` query string onto the filter form's own controls instead of
+ * following it, then submitting via AJAX — the chip row itself is replaced wholesale on every
+ * response, so its links are (re)found by delegating from a stable ancestor rather than bound
+ * once at page load.
+ *
+ * @param {HTMLFormElement}                  form   The `#catalog-filters` form.
+ * @param {Element[]}                        groups Every filter group on the page.
+ * @param {{ajaxUrl: string, nonce: string}} config Localized AJAX endpoint/nonce.
+ * @return {void}
+ */
+function wireActiveFilterChips(form, groups, config) {
+	if (chipsClickHandler) {
+		document.removeEventListener('click', chipsClickHandler);
+	}
+
+	chipsClickHandler = (event) => {
+		const link = event.target.closest(
+			'#catalog-active-filters .catalog-active-filters__remove, #catalog-active-filters .catalog-active-filters__clear',
+		);
+
+		if (!link) {
+			return;
+		}
+
+		event.preventDefault();
+		applyUrlToForm(form, link.href);
+		groups.forEach((group) => updateGroupActiveState(group));
+		submitFilters(form, config);
+	};
+	document.addEventListener('click', chipsClickHandler);
+}
+
+/**
+ * Applies a target URL's filter query string onto the form's own controls (checkboxes checked to
+ * match, price inputs set/cleared), so submitting the form afterwards reproduces that exact
+ * state.
+ *
+ * @param {HTMLFormElement} form Target URL that already encodes the desired filter state (as
+ *                                 built by solar_template_catalog_filters_url() in functions.php).
+ * @param {string}          url  URL to read filter values from.
+ * @return {void}
+ */
+function applyUrlToForm(form, url) {
+	const params = new URL(url, window.location.href).searchParams;
+
+	form.querySelectorAll('input[type="checkbox"]').forEach((checkbox) => {
+		const baseName = checkbox.name.replace(/\[\]$/, '');
+		checkbox.checked = getArrayParamValues(params, baseName).includes(checkbox.value);
+	});
+
+	form.querySelectorAll('input[type="number"]').forEach((input) => {
+		input.value = params.get(input.name) || '';
+	});
+}
+
+/**
+ * Reads every value submitted for an array-shaped query parameter, regardless of whether it was
+ * encoded as `name[]=a&name[]=b` or `name[0]=a&name[1]=b` (both are valid PHP array-parsing
+ * conventions, and `add_query_arg()` in functions.php produces the latter).
+ *
+ * @param {URLSearchParams} params   Parsed query string.
+ * @param {string}          baseName Parameter name without any `[...]` suffix.
+ * @return {string[]}
+ */
+function getArrayParamValues(params, baseName) {
+	return Array.from(params.entries())
+		.filter(([key]) => key === `${baseName}[]` || key.startsWith(`${baseName}[`))
+		.map(([, value]) => value);
+}
+
+/**
  * Submits the filter bar's current state via AJAX and swaps the returned markup into
- * `#catalog-results`, looked up fresh each call since the previous element is replaced wholesale.
+ * `#catalog-results`/`#catalog-active-filters`, looked up fresh each call since the previous
+ * elements are replaced wholesale.
  *
  * @param {HTMLFormElement}                  form   The `#catalog-filters` form.
  * @param {{ajaxUrl: string, nonce: string}} config Localized AJAX endpoint/nonce.
@@ -159,6 +252,7 @@ async function submitFilters(form, config) {
 		const params = new URLSearchParams(new FormData(form));
 		params.set('action', 'solar_template_catalog_filter');
 		params.set('nonce', config.nonce);
+		params.set('pageUrl', window.location.href);
 
 		const response = await fetch(config.ajaxUrl, {
 			method: 'POST',
@@ -171,6 +265,12 @@ async function submitFilters(form, config) {
 
 		if (result.success && result.data && typeof result.data.html === 'string') {
 			resultsContainer.outerHTML = result.data.html;
+
+			const activeFiltersContainer = document.getElementById('catalog-active-filters');
+
+			if (activeFiltersContainer && typeof result.data.activeFiltersHtml === 'string') {
+				activeFiltersContainer.outerHTML = result.data.activeFiltersHtml;
+			}
 		} else {
 			resultsContainer.classList.remove('is-loading');
 		}
