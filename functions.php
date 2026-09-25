@@ -1326,3 +1326,39 @@ function solar_template_get_blog_preview_posts( int $limit = 3 ): array {
 
 	return array_map( 'solar_template_map_post_to_card_args', $posts );
 }
+
+/**
+ * Returns the number of columns the product catalog grid (archive-product.php) renders.
+ *
+ * Defaults to 4, matching the design handoff, clamped to the 2–6 range it documents as valid
+ * regardless of what a filter returns. Filterable so a future "Products" administration tab
+ * (Group 10 of the project roadmap) can expose it as a site owner setting without touching this
+ * function.
+ *
+ * @return int Column count, between 2 and 6 inclusive.
+ */
+function solar_template_catalog_columns(): int {
+	/**
+	 * Filters the product catalog grid's column count.
+	 *
+	 * @param int $columns Column count, expected between 2 and 6.
+	 */
+	$columns = (int) apply_filters( 'solar_template_catalog_columns', 4 );
+
+	return max( 2, min( 6, $columns ) );
+}
+
+/**
+ * Returns the product catalog's result count label ("N products available"), with correct
+ * singular/plural agreement.
+ *
+ * @param int $count Number of products currently matching the catalog query.
+ * @return string Translated, ready-to-escape label.
+ */
+function solar_template_catalog_result_count_label( int $count ): string {
+	return sprintf(
+		/* translators: %d: number of products currently shown in the catalog. */
+		_n( '%d product available', '%d products available', $count, 'solar-template' ),
+		$count
+	);
+}

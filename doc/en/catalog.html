@@ -1,0 +1,78 @@
+<!--
+	Created: 2026-09-25 09:52 CEST
+	Role: English documentation page describing the theme's product catalog, built step by step.
+	Author: David ROMERA <d.romera.11@gmail.com>
+	Purpose: Document, in English, every product catalog feature as it is built.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Product catalog — Solar Template documentation</title>
+	<link rel="stylesheet" href="../assets/doc.css" />
+</head>
+<body>
+	<aside class="doc-sidebar">
+		<a class="doc-brand" href="index.html">Solar Template</a>
+		<nav>
+			<ul>
+				<li><a href="index.html">Home</a></li>
+				<li><a href="infrastructure.html">Infrastructure</a></li>
+				<li><a href="design-system.html">Design system</a></li>
+				<li><a href="structure-commune.html">Common structure</a></li>
+				<li><a href="page-accueil.html">Home page</a></li>
+				<li><a href="catalog.html">Product catalog</a></li>
+			</ul>
+		</nav>
+		<div class="doc-lang-switch">
+			<a class="is-active" href="catalog.html">EN</a>
+			<a href="../fr/catalogue.html">FR</a>
+		</div>
+	</aside>
+	<main class="doc-content">
+		<h1>Product catalog</h1>
+		<p>
+			<code>archive-product.php</code> renders the product catalog: the shop page, but also
+			product category/tag archives, since WooCommerce automatically loads this same template
+			as long as no dedicated
+			<code>taxonomy-product_cat.php</code>/<code>taxonomy-product_tag.php</code> exists.
+		</p>
+
+		<h2 id="product-grid">Product grid</h2>
+		<p>
+			The breadcrumb and page title reuse WooCommerce's own native functions
+			(<code>woocommerce_breadcrumb()</code>, <code>woocommerce_page_title()</code>) instead of
+			rebuilding a custom version: they already adapt correctly to the shop, a category or a
+			tag with no extra code. The subtitle shows the number of products actually found by the
+			current WooCommerce query (<code>solar_template_catalog_result_count_label()</code> in
+			<code>functions.php</code>, correct singular/plural).
+		</p>
+		<p>
+			The grid reuses the standard WordPress/WooCommerce loop
+			(<code>have_posts()</code>/<code>the_post()</code>/<code>wc_get_product()</code>) and the
+			product card component already in place, mapped from a real <code>WC_Product</code>
+			(<code>solar_template_map_product_to_card_args()</code>, already used by the home page's
+			"Featured products" section). The column count is configurable
+			(<code>solar_template_catalog_columns()</code>, <code>solar_template_catalog_columns</code>
+			filter, clamped between 2 and 6), ready for the future "Products" administration tab.
+		</p>
+		<p>
+			Technical decision: the grid keeps the design handoff's masonry vertical offset
+			(positional top margins on certain cards, unrelated to their content), but only for the
+			default 4-column layout — same known limitation as the home page's featured products
+			grid. The quick category tag row and the grid/list toggle button shown in the mockup are
+			deliberately not built here: the former overlaps with the next step's category filter,
+			the latter has no behaviour specified beyond the mockup itself.
+		</p>
+		<p>
+			Verified end to end in the real Docker environment with WooCommerce active: nine test
+			products spread across three categories confirm the grid, breadcrumb, title and result
+			count (singular and plural) on the shop page and on a category archive, in both installed
+			languages; a category with no product confirms the translated empty-state message. No PHP
+			warning or error observed.
+		</p>
+	</main>
+	<script src="../assets/doc.js"></script>
+</body>
+</html>

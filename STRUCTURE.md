@@ -18,6 +18,7 @@ solar-template/
 ├── footer.php         # Pied de page global (colonnes, newsletter, copyright, icônes de paiement)
 ├── searchform.php     # Formulaire de recherche natif personnalisé, chargé par get_search_form()
 ├── front-page.php     # Page d'accueil, assemblée section par section (template-parts/front-page/*)
+├── archive-product.php # Catalogue produits (boutique + archives de catégorie/étiquette), grille de cartes produit
 ├── index.php          # Gabarit de repli ; appelle get_header()/get_footer()
 ├── screenshot.png     # 1200x900, requis par WordPress pour l'aperçu du thème
 ├── composer.json      # Dépendances PHP + autoload PSR-4 (Solar_Template\)
@@ -64,6 +65,7 @@ solar-template/
 │   ├── scss/_testimonials.scss # Grille de témoignages de la page d'accueil
 │   ├── scss/_blog-preview.scss # Grille de l'aperçu du blog de la page d'accueil
 │   ├── scss/_home-newsletter.scss # Section newsletter de la page d'accueil
+│   ├── scss/_catalog.scss # Catalogue produits (fil d'Ariane, titre/compteur, grille masonry, pagination)
 │   ├── js/main.js        # Point d'entrée JS (importe le SCSS, initialise les modules de comportement)
 │   ├── js/header.js      # Comportement de l'en-tête (mega menu, bascule de recherche)
 │   ├── js/newsletter.js  # Soumission AJAX des formulaires newsletter (`.js-newsletter-form`)

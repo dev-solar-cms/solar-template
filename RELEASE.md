@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.3.6`.
+Version actuelle : `0.4.0`.
 
 ## Avant une release
 
@@ -30,6 +30,24 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.4.0 — grille du catalogue produits
+
+- Ajout du gabarit du catalogue produits (boutique, et par extension les archives de
+  catégorie/étiquette produit, WooCommerce chargeant automatiquement ce même gabarit tant qu'aucun
+  gabarit de taxonomie dédié n'existe) : fil d'Ariane, titre et compteur de résultats (singulier/
+  pluriel correct), grille masonry réutilisant le composant carte produit déjà en place, cette fois
+  branché sur de vraies données WooCommerce plutôt que des données factices.
+- Nombre de colonnes de la grille rendu configurable via un filtre WordPress dédié, prêt pour le
+  futur onglet d'administration dédié aux produits, sans construire cet onglet maintenant.
+- Décision technique : la rangée de tags catégorie rapides et le bouton de bascule grille/liste
+  visibles dans la maquette ne sont volontairement pas construits à ce stade — le premier chevauche
+  le filtre catégorie d'une prochaine version, le second n'a aucun comportement spécifié au-delà de
+  la maquette elle-même.
+- Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif et des produits de
+  test répartis sur plusieurs catégories : grille, fil d'Ariane, titre et compteur corrects sur la
+  boutique et sur une archive de catégorie, dans les deux langues installées ; état vide traduit
+  confirmé sur une catégorie sans produit.
 
 ### 0.3.6 — section newsletter de la page d'accueil
 

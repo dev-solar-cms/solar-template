@@ -46,91 +46,91 @@ final class DefaultStrings {
 				'fr_FR' => "Solar Template est conçu pour WooCommerce. Merci d'<a href=\"%s\">installer et d'activer WooCommerce</a> pour activer les fonctionnalités boutique.",
 				'en_US' => 'Solar Template is designed for WooCommerce. Please <a href="%s">install and activate WooCommerce</a> to enable the storefront features.',
 			),
-			'Add to wishlist'                           => array(
+			'Add to wishlist'                             => array(
 				'fr_FR' => 'Ajouter à la liste de souhaits',
 				'en_US' => 'Add to wishlist',
 			),
-			'Add to cart'                               => array(
+			'Add to cart'                                 => array(
 				'fr_FR' => 'Ajouter au panier',
 				'en_US' => 'Add to cart',
 			),
-			'−%d%%'                                     => array(
+			'−%d%%'                                       => array(
 				'fr_FR' => '−%d %%',
 				'en_US' => '−%d%%',
 			),
-			'Skip to content'                           => array(
+			'Skip to content'                             => array(
 				'fr_FR' => 'Aller au contenu',
 				'en_US' => 'Skip to content',
 			),
-			'Instagram'                                 => array(
+			'Instagram'                                   => array(
 				'fr_FR' => 'Instagram',
 				'en_US' => 'Instagram',
 			),
-			'Facebook'                                  => array(
+			'Facebook'                                    => array(
 				'fr_FR' => 'Facebook',
 				'en_US' => 'Facebook',
 			),
-			'X (Twitter)'                               => array(
+			'X (Twitter)'                                 => array(
 				'fr_FR' => 'X (Twitter)',
 				'en_US' => 'X (Twitter)',
 			),
-			'Search'                                    => array(
+			'Search'                                      => array(
 				'fr_FR' => 'Rechercher',
 				'en_US' => 'Search',
 			),
-			'My account'                                => array(
+			'My account'                                  => array(
 				'fr_FR' => 'Mon compte',
 				'en_US' => 'My account',
 			),
-			'Cart'                                      => array(
+			'Cart'                                        => array(
 				'fr_FR' => 'Panier',
 				'en_US' => 'Cart',
 			),
-			'Primary Navigation'                        => array(
+			'Primary Navigation'                          => array(
 				'fr_FR' => 'Navigation principale',
 				'en_US' => 'Primary Navigation',
 			),
-			'Shop'                                      => array(
+			'Shop'                                        => array(
 				'fr_FR' => 'Boutique',
 				'en_US' => 'Shop',
 			),
-			'New In'                                    => array(
+			'New In'                                      => array(
 				'fr_FR' => 'Nouveautés',
 				'en_US' => 'New In',
 			),
-			'Collections'                               => array(
+			'Collections'                                 => array(
 				'fr_FR' => 'Collections',
 				'en_US' => 'Collections',
 			),
-			'Sale'                                      => array(
+			'Sale'                                        => array(
 				'fr_FR' => 'Promotions',
 				'en_US' => 'Sale',
 			),
-			'Blog'                                      => array(
+			'Blog'                                        => array(
 				'fr_FR' => 'Blog',
 				'en_US' => 'Blog',
 			),
-			'Contact'                                   => array(
+			'Contact'                                     => array(
 				'fr_FR' => 'Contact',
 				'en_US' => 'Contact',
 			),
-			'Shop by category'                          => array(
+			'Shop by category'                            => array(
 				'fr_FR' => 'Acheter par catégorie',
 				'en_US' => 'Shop by category',
 			),
-			'Best Sellers'                              => array(
+			'Best Sellers'                                => array(
 				'fr_FR' => 'Meilleures ventes',
 				'en_US' => 'Best Sellers',
 			),
-			'Limited Edition'                           => array(
+			'Limited Edition'                             => array(
 				'fr_FR' => 'Édition limitée',
 				'en_US' => 'Limited Edition',
 			),
-			'Featured'                                  => array(
+			'Featured'                                    => array(
 				'fr_FR' => 'En vedette',
 				'en_US' => 'Featured',
 			),
-			'View All Collections'                      => array(
+			'View All Collections'                        => array(
 				'fr_FR' => 'Voir toutes les collections',
 				'en_US' => 'View All Collections',
 			),
@@ -138,55 +138,55 @@ final class DefaultStrings {
 				'fr_FR' => 'Thème WooCommerce moderne et configurable pour valoriser vos produits.',
 				'en_US' => 'A modern, configurable WooCommerce theme to showcase your products.',
 			),
-			'All Products'                              => array(
+			'All Products'                                => array(
 				'fr_FR' => 'Tous les produits',
 				'en_US' => 'All Products',
 			),
-			'Information'                               => array(
+			'Information'                                 => array(
 				'fr_FR' => 'Informations',
 				'en_US' => 'Information',
 			),
-			'About'                                     => array(
+			'About'                                       => array(
 				'fr_FR' => 'À propos',
 				'en_US' => 'About',
 			),
-			'Legal'                                     => array(
+			'Legal'                                       => array(
 				'fr_FR' => 'Légal',
 				'en_US' => 'Legal',
 			),
-			'Terms & Conditions'                        => array(
+			'Terms & Conditions'                          => array(
 				'fr_FR' => 'C.G.V.',
 				'en_US' => 'Terms & Conditions',
 			),
-			'Privacy Policy'                            => array(
+			'Privacy Policy'                              => array(
 				'fr_FR' => 'Confidentialité',
 				'en_US' => 'Privacy Policy',
 			),
-			'Legal Notice'                              => array(
+			'Legal Notice'                                => array(
 				'fr_FR' => 'Mentions légales',
 				'en_US' => 'Legal Notice',
 			),
-			'Cookies'                                   => array(
+			'Cookies'                                     => array(
 				'fr_FR' => 'Cookies',
 				'en_US' => 'Cookies',
 			),
-			'Newsletter'                                => array(
+			'Newsletter'                                  => array(
 				'fr_FR' => 'Newsletter',
 				'en_US' => 'Newsletter',
 			),
-			'Get exclusive offers first.'               => array(
+			'Get exclusive offers first.'                 => array(
 				'fr_FR' => 'Offres exclusives en avant-première.',
 				'en_US' => 'Get exclusive offers first.',
 			),
-			'Email address'                             => array(
+			'Email address'                               => array(
 				'fr_FR' => 'Adresse e-mail',
 				'en_US' => 'Email address',
 			),
-			'email@example.com'                         => array(
+			'email@example.com'                           => array(
 				'fr_FR' => 'email@exemple.com',
 				'en_US' => 'email@example.com',
 			),
-			'Subscribe'                                 => array(
+			'Subscribe'                                   => array(
 				'fr_FR' => "S'abonner",
 				'en_US' => 'Subscribe',
 			),
@@ -194,31 +194,31 @@ final class DefaultStrings {
 				'fr_FR' => '© {year} %s — Thème WordPress WooCommerce · Tous droits réservés',
 				'en_US' => '© {year} %s — WordPress WooCommerce theme · All rights reserved',
 			),
-			'Search this site'                          => array(
+			'Search this site'                            => array(
 				'fr_FR' => 'Rechercher sur ce site',
 				'en_US' => 'Search this site',
 			),
-			'Search products, articles…'                => array(
+			'Search products, articles…'                  => array(
 				'fr_FR' => 'Rechercher des produits, des articles…',
 				'en_US' => 'Search products, articles…',
 			),
-			'Close search'                              => array(
+			'Close search'                                => array(
 				'fr_FR' => 'Fermer la recherche',
 				'en_US' => 'Close search',
 			),
-			'Spring · Summer 2025 Collection'           => array(
+			'Spring · Summer 2025 Collection'             => array(
 				'fr_FR' => 'Collection Printemps · Été 2025',
 				'en_US' => 'Spring · Summer 2025 Collection',
 			),
-			'The essentials,'                           => array(
+			'The essentials,'                             => array(
 				'fr_FR' => "L'essentiel,",
 				'en_US' => 'The essentials,',
 			),
-			'reimagined'                                => array(
+			'reimagined'                                  => array(
 				'fr_FR' => 'repensé',
 				'en_US' => 'reimagined',
 			),
-			'for you.'                                  => array(
+			'for you.'                                    => array(
 				'fr_FR' => 'pour vous.',
 				'en_US' => 'for you.',
 			),
@@ -226,67 +226,67 @@ final class DefaultStrings {
 				'fr_FR' => 'Découvrez notre sélection premium de produits soigneusement choisis pour allier qualité, design et durabilité.',
 				'en_US' => 'Discover our premium selection of products, carefully chosen to combine quality, design and durability.',
 			),
-			'Explore the shop'                          => array(
+			'Explore the shop'                            => array(
 				'fr_FR' => 'Explorer la boutique',
 				'en_US' => 'Explore the shop',
 			),
-			'See what’s new →'                          => array(
+			'See what’s new →'                            => array(
 				'fr_FR' => 'Voir les nouveautés →',
 				'en_US' => 'See what’s new →',
 			),
-			'Free shipping from €60'                    => array(
+			'Free shipping from €60'                      => array(
 				'fr_FR' => 'Livraison offerte dès 60€',
 				'en_US' => 'Free shipping from €60',
 			),
-			'Returns within 30 days'                    => array(
+			'Returns within 30 days'                      => array(
 				'fr_FR' => 'Retours sous 30 jours',
 				'en_US' => 'Returns within 30 days',
 			),
-			'Secure payment'                            => array(
+			'Secure payment'                              => array(
 				'fr_FR' => 'Paiement sécurisé',
 				'en_US' => 'Secure payment',
 			),
-			'Favorite pick'                             => array(
+			'Favorite pick'                               => array(
 				'fr_FR' => 'Coup de cœur',
 				'en_US' => 'Favorite pick',
 			),
-			'Summer 2025 Collection'                    => array(
+			'Summer 2025 Collection'                      => array(
 				'fr_FR' => 'Collection Été 2025',
 				'en_US' => 'Summer 2025 Collection',
 			),
-			'38% already claimed · Limited stock'       => array(
+			'38% already claimed · Limited stock'         => array(
 				'fr_FR' => '38% déjà vendus · Stock limité',
 				'en_US' => '38% already claimed · Limited stock',
 			),
-			'Selection'                                 => array(
+			'Selection'                                   => array(
 				'fr_FR' => 'Sélection',
 				'en_US' => 'Selection',
 			),
-			'Favorites'                                 => array(
+			'Favorites'                                   => array(
 				'fr_FR' => 'Coups de cœur',
 				'en_US' => 'Favorites',
 			),
-			'View all →'                                => array(
+			'View all →'                                  => array(
 				'fr_FR' => 'Voir tout →',
 				'en_US' => 'View all →',
 			),
-			'On Sale'                                   => array(
+			'On Sale'                                     => array(
 				'fr_FR' => 'Promo',
 				'en_US' => 'On Sale',
 			),
-			'View the full collection'                  => array(
+			'View the full collection'                    => array(
 				'fr_FR' => 'Voir toute la collection',
 				'en_US' => 'View the full collection',
 			),
-			'Explore our worlds'                        => array(
+			'Explore our worlds'                          => array(
 				'fr_FR' => 'Explorer nos univers',
 				'en_US' => 'Explore our worlds',
 			),
-			'Discover'                                  => array(
+			'Discover'                                    => array(
 				'fr_FR' => 'Découvrir',
 				'en_US' => 'Discover',
 			),
-			'Our story'                                 => array(
+			'Our story'                                   => array(
 				'fr_FR' => 'Notre histoire',
 				'en_US' => 'Our story',
 			),
@@ -302,51 +302,51 @@ final class DefaultStrings {
 				'fr_FR' => "Chaque article est choisi avec soin, en accordant une attention particulière aux matériaux, à la fabrication et à l'impact environnemental.",
 				'en_US' => 'Every item is chosen with care, paying close attention to materials, manufacturing and environmental impact.',
 			),
-			'10+'                                       => array(
+			'10+'                                         => array(
 				'fr_FR' => '10+',
 				'en_US' => '10+',
 			),
-			'years of expertise'                        => array(
+			'years of expertise'                          => array(
 				'fr_FR' => "ans d'expertise",
 				'en_US' => 'years of expertise',
 			),
-			'50K+'                                      => array(
+			'50K+'                                        => array(
 				'fr_FR' => '50K+',
 				'en_US' => '50K+',
 			),
-			'Happy customers'                           => array(
+			'Happy customers'                             => array(
 				'fr_FR' => 'Clients satisfaits',
 				'en_US' => 'Happy customers',
 			),
-			'200+'                                      => array(
+			'200+'                                        => array(
 				'fr_FR' => '200+',
 				'en_US' => '200+',
 			),
-			'Products available'                        => array(
+			'Products available'                          => array(
 				'fr_FR' => 'Produits disponibles',
 				'en_US' => 'Products available',
 			),
-			'4.9★'                                      => array(
+			'4.9★'                                        => array(
 				'fr_FR' => '4,9★',
 				'en_US' => '4.9★',
 			),
-			'Average rating'                            => array(
+			'Average rating'                              => array(
 				'fr_FR' => 'Note moyenne',
 				'en_US' => 'Average rating',
 			),
-			'Learn more'                                => array(
+			'Learn more'                                  => array(
 				'fr_FR' => 'En savoir plus',
 				'en_US' => 'Learn more',
 			),
-			'Testimonials'                              => array(
+			'Testimonials'                                => array(
 				'fr_FR' => 'Témoignages',
 				'en_US' => 'Testimonials',
 			),
-			'What our customers say'                    => array(
+			'What our customers say'                      => array(
 				'fr_FR' => 'Ce que disent nos clients',
 				'en_US' => 'What our customers say',
 			),
-			'%d out of 5 stars'                         => array(
+			'%d out of 5 stars'                           => array(
 				'fr_FR' => '%d étoiles sur 5',
 				'en_US' => '%d out of 5 stars',
 			),
@@ -354,11 +354,11 @@ final class DefaultStrings {
 				'fr_FR' => 'Livraison ultra rapide et produit exactement conforme à mes attentes. Le service client est remarquable. Je recommande vivement !',
 				'en_US' => 'Ultra-fast delivery and the product exactly matched my expectations. Customer service is outstanding. Highly recommend!',
 			),
-			'Marie L.'                                  => array(
+			'Marie L.'                                    => array(
 				'fr_FR' => 'Marie L.',
 				'en_US' => 'Marie L.',
 			),
-			'Customer since 2023'                       => array(
+			'Customer since 2023'                         => array(
 				'fr_FR' => 'Cliente depuis 2023',
 				'en_US' => 'Customer since 2023',
 			),
@@ -366,11 +366,11 @@ final class DefaultStrings {
 				'fr_FR' => "Qualité exceptionnelle pour un prix très raisonnable. Client fidèle depuis 2 ans et je n'ai jamais été déçu. Des produits qui durent.",
 				'en_US' => 'Exceptional quality for a very reasonable price. A loyal customer for 2 years and never disappointed. Products that last.',
 			),
-			'Thomas R.'                                 => array(
+			'Thomas R.'                                   => array(
 				'fr_FR' => 'Thomas R.',
 				'en_US' => 'Thomas R.',
 			),
-			'Customer since 2022'                       => array(
+			'Customer since 2022'                         => array(
 				'fr_FR' => 'Client depuis 2022',
 				'en_US' => 'Customer since 2022',
 			),
@@ -378,31 +378,31 @@ final class DefaultStrings {
 				'fr_FR' => "Service client réactif et produits d'une qualité irréprochable. Mon achat a largement dépassé mes espérances. Très satisfaite !",
 				'en_US' => 'Responsive customer service and impeccable product quality. My purchase far exceeded my expectations. Very satisfied!',
 			),
-			'Sophie M.'                                 => array(
+			'Sophie M.'                                   => array(
 				'fr_FR' => 'Sophie M.',
 				'en_US' => 'Sophie M.',
 			),
-			'Customer since 2024'                       => array(
+			'Customer since 2024'                         => array(
 				'fr_FR' => 'Cliente depuis 2024',
 				'en_US' => 'Customer since 2024',
 			),
-			'News'                                      => array(
+			'News'                                        => array(
 				'fr_FR' => 'Actualités',
 				'en_US' => 'News',
 			),
-			'Inspiration & tips'                        => array(
+			'Inspiration & tips'                          => array(
 				'fr_FR' => 'Inspirations & conseils',
 				'en_US' => 'Inspiration & tips',
 			),
-			'View all articles →'                       => array(
+			'View all articles →'                         => array(
 				'fr_FR' => 'Voir tous les articles →',
 				'en_US' => 'View all articles →',
 			),
-			'%1$s · %2$d min read'                      => array(
+			'%1$s · %2$d min read'                        => array(
 				'fr_FR' => '%1$s · %2$d min de lecture',
 				'en_US' => '%1$s · %2$d min read',
 			),
-			'Stay in the loop'                          => array(
+			'Stay in the loop'                            => array(
 				'fr_FR' => 'Restez dans la boucle',
 				'en_US' => 'Stay in the loop',
 			),
@@ -410,29 +410,45 @@ final class DefaultStrings {
 				'fr_FR' => 'Recevez nos nouveautés, offres exclusives et inspirations directement dans votre boîte mail.',
 				'en_US' => 'Get our new arrivals, exclusive offers and inspiration straight to your inbox.',
 			),
-			'your@email.com'                            => array(
+			'your@email.com'                              => array(
 				'fr_FR' => 'votre@email.com',
 				'en_US' => 'your@email.com',
 			),
-			'Unsubscribe at any time. No spam, ever.'   => array(
+			'Unsubscribe at any time. No spam, ever.'     => array(
 				'fr_FR' => 'Désinscription à tout moment. Aucun spam, promis.',
 				'en_US' => 'Unsubscribe at any time. No spam, ever.',
 			),
-			'Thank you for subscribing!'                => array(
+			'Thank you for subscribing!'                  => array(
 				'fr_FR' => 'Merci pour votre inscription !',
 				'en_US' => 'Thank you for subscribing!',
 			),
-			'This email address is already subscribed.' => array(
+			'This email address is already subscribed.'   => array(
 				'fr_FR' => 'Cette adresse e-mail est déjà inscrite.',
 				'en_US' => 'This email address is already subscribed.',
 			),
-			'Please enter a valid email address.'       => array(
+			'Please enter a valid email address.'         => array(
 				'fr_FR' => 'Merci de saisir une adresse e-mail valide.',
 				'en_US' => 'Please enter a valid email address.',
 			),
-			'Something went wrong. Please try again.'   => array(
+			'Something went wrong. Please try again.'     => array(
 				'fr_FR' => "Une erreur s'est produite. Merci de réessayer.",
 				'en_US' => 'Something went wrong. Please try again.',
+			),
+			'Breadcrumb'                                  => array(
+				'fr_FR' => "Fil d'Ariane",
+				'en_US' => 'Breadcrumb',
+			),
+			'No products currently match this selection.' => array(
+				'fr_FR' => 'Aucun produit ne correspond actuellement à cette sélection.',
+				'en_US' => 'No products currently match this selection.',
+			),
+			'%d product available'                        => array(
+				'fr_FR'  => '%d produit disponible',
+				'en_US'  => '%d product available',
+				'plural' => array(
+					'fr_FR' => '%d produits disponibles',
+					'en_US' => '%d products available',
+				),
 			),
 		);
 	}

@@ -1,0 +1,82 @@
+<!--
+	Créé le : 2026-09-25 09:52 CEST
+	Rôle : Page de documentation en français décrivant le catalogue produits du thème, construit
+	       étape par étape.
+	Auteur : David ROMERA <d.romera.11@gmail.com>
+	Objectif : Documenter, en français, chaque fonctionnalité du catalogue produits au fur et à
+	           mesure de sa construction.
+-->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Catalogue produits — Documentation Solar Template</title>
+	<link rel="stylesheet" href="../assets/doc.css" />
+</head>
+<body>
+	<aside class="doc-sidebar">
+		<a class="doc-brand" href="index.html">Solar Template</a>
+		<nav>
+			<ul>
+				<li><a href="index.html">Accueil</a></li>
+				<li><a href="infrastructure.html">Infrastructure</a></li>
+				<li><a href="design-system.html">Système de design</a></li>
+				<li><a href="structure-commune.html">Structure commune</a></li>
+				<li><a href="page-accueil.html">Page d'accueil</a></li>
+				<li><a href="catalogue.html">Catalogue produits</a></li>
+			</ul>
+		</nav>
+		<div class="doc-lang-switch">
+			<a href="../en/catalog.html">EN</a>
+			<a class="is-active" href="catalogue.html">FR</a>
+		</div>
+	</aside>
+	<main class="doc-content">
+		<h1>Catalogue produits</h1>
+		<p>
+			<code>archive-product.php</code> affiche le catalogue produits : boutique, mais aussi
+			archives de catégorie/étiquette produit, WooCommerce chargeant automatiquement ce même
+			gabarit tant qu'aucun <code>taxonomy-product_cat.php</code>/<code>taxonomy-product_tag.php</code>
+			dédié n'existe.
+		</p>
+
+		<h2 id="grille-produits">Grille produits</h2>
+		<p>
+			Le fil d'Ariane et le titre de page réutilisent les fonctions natives WooCommerce
+			(<code>woocommerce_breadcrumb()</code>, <code>woocommerce_page_title()</code>) plutôt que
+			d'en reconstruire une version maison : elles s'adaptent déjà correctement à la boutique,
+			à une catégorie ou à une étiquette sans code supplémentaire. Le sous-titre affiche le
+			nombre de produits réellement trouvés par la requête WooCommerce en cours
+			(<code>solar_template_catalog_result_count_label()</code> dans <code>functions.php</code>,
+			singulier/pluriel correct).
+		</p>
+		<p>
+			La grille réutilise la boucle WordPress/WooCommerce standard (<code>have_posts()</code>/
+			<code>the_post()</code>/<code>wc_get_product()</code>) et le composant carte produit déjà
+			en place, mappé depuis un vrai <code>WC_Product</code>
+			(<code>solar_template_map_product_to_card_args()</code>, déjà utilisée par la section
+			« Produits vedettes » de la page d'accueil). Le nombre de colonnes est configurable
+			(<code>solar_template_catalog_columns()</code>, filtre <code>solar_template_catalog_columns</code>,
+			borné entre 2 et 6), prêt pour le futur onglet d'administration « Produits ».
+		</p>
+		<p>
+			Décision technique : la grille reprend le décalage vertical masonry de la maquette
+			(marges hautes positionnelles sur certaines cartes, pas liées à leur contenu), mais
+			uniquement pour la disposition par défaut à 4 colonnes — même limitation connue que la
+			grille des produits vedettes de la page d'accueil. Le rangée de tags catégorie rapides et
+			le bouton grille/liste visibles dans la maquette ne sont volontairement pas construits ici
+			: le premier chevauche le filtre catégorie de l'étape suivante, le second n'a aucun
+			comportement spécifié au-delà de la maquette elle-même.
+		</p>
+		<p>
+			Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif : neuf
+			produits de test répartis sur trois catégories confirment la grille, le fil d'Ariane, le
+			titre et le compteur (singulier et pluriel) sur la boutique et sur une archive de
+			catégorie, dans les deux langues installées ; une catégorie sans produit confirme le
+			message d'état vide traduit. Aucun avertissement ni erreur PHP relevé.
+		</p>
+	</main>
+	<script src="../assets/doc.js"></script>
+</body>
+</html>

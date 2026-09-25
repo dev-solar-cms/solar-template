@@ -1,0 +1,140 @@
+// Created: 2026-09-25 09:48 CEST
+// Role: Product catalog component partial (assets/scss/_catalog.scss).
+// Author: David ROMERA <d.romera.11@gmail.com>
+// Purpose: Style archive-product.php: breadcrumb, title/result count header, and the masonry-style
+//          product grid built from the shared product card component. The staggered offsets below
+//          are a direct, static transcription of the design handoff's mockup (position-based, not
+//          content-aware) — a known limitation revisited by a later correction step once real,
+//          variable-length product content is in the grid.
+
+@use 'tokens' as *;
+
+.catalog__inner {
+	max-width: $container-max-width;
+	margin: 0 auto;
+	padding: 28px $container-padding-x 96px;
+}
+
+.catalog__breadcrumb {
+	display: flex;
+	align-items: center;
+	gap: 7px;
+	margin-bottom: 32px;
+	color: $color-muted;
+	font-size: 12.5px;
+}
+
+.catalog__breadcrumb a {
+	color: $color-muted;
+	text-decoration: none;
+	transition: color 0.2s ease;
+}
+
+.catalog__breadcrumb a:hover {
+	color: $color-dark;
+}
+
+.catalog__breadcrumb-sep {
+	display: inline-flex;
+	opacity: 0.6;
+}
+
+.catalog__header {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 16px;
+	margin-bottom: 32px;
+}
+
+.catalog__title {
+	margin: 0 0 6px;
+	@include type-h1;
+	color: $color-dark;
+}
+
+.catalog__count {
+	margin: 0;
+	color: $color-muted;
+	font-size: 14px;
+}
+
+.catalog__grid {
+	display: grid;
+	grid-template-columns: repeat(var(--catalog-columns, 4), 1fr);
+	gap: $spacing-grid-gap-products;
+	align-items: start;
+}
+
+// Masonry-style offsets, matching the design handoff's staggered card layout — only applied to
+// the default 4-column layout, same convention as .featured-products__grid.
+.catalog__grid--masonry .product-card:nth-child(4n + 2) {
+	margin-top: 40px;
+}
+
+.catalog__grid--masonry .product-card:nth-child(4n + 3) {
+	margin-top: 16px;
+}
+
+.catalog__grid--masonry .product-card:nth-child(4n + 4) {
+	margin-top: 24px;
+}
+
+.catalog__empty {
+	padding: 64px 0;
+	color: $color-muted;
+	font-size: 14px;
+	text-align: center;
+}
+
+.catalog__pagination {
+	margin-top: 64px;
+	text-align: center;
+}
+
+.catalog__pagination .page-numbers {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 36px;
+	height: 36px;
+	margin: 0 3px;
+	padding: 0 10px;
+	border: 1.5px solid $color-border;
+	border-radius: $radius-button;
+	color: $color-dark;
+	font-size: 13px;
+	font-weight: $font-weight-semibold;
+	text-decoration: none;
+	transition:
+		background-color 0.2s ease,
+		color 0.2s ease,
+		border-color 0.2s ease;
+}
+
+.catalog__pagination .page-numbers:hover {
+	border-color: $color-dark;
+}
+
+.catalog__pagination .page-numbers.current {
+	border-color: $color-dark;
+	background: $color-dark;
+	color: $color-surface;
+}
+
+@media (max-width: 1100px) {
+	.catalog__grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	.catalog__grid--masonry .product-card {
+		margin-top: 0;
+	}
+}
+
+@media (max-width: 600px) {
+	.catalog__grid {
+		grid-template-columns: 1fr;
+	}
+}
