@@ -139,6 +139,27 @@
 			vers l'archive de catégorie), et leur suppression fait bien disparaître la section
 			entière — catégories et produits de test supprimés après vérification.
 		</p>
+
+		<h2 id="brand-story">Notre histoire</h2>
+		<p>
+			<code>template-parts/front-page/brand-story.php</code> affiche une image éditoriale avec
+			une carte statistique flottante (« 10+ ans d'expertise », fond sombre, chiffre en or), un
+			texte de présentation en deux paragraphes, une ligne de trois statistiques (clients
+			satisfaits, produits disponibles, note moyenne) et un appel à l'action.
+		</p>
+		<p>
+			Même convention que le hero : tout le contenu vient d'une aide filtrable unique,
+			<code>solar_template_brand_story_config()</code> dans <code>functions.php</code> —
+			contenu éditorial de remplacement, aucune donnée réelle branchée à cette étape. Le
+			bouton d'appel à l'action réutilise <code>solar_template_page_url_by_slug('about')</code>
+			(déjà utilisée par le pied de page), avec repli vers l'accueil tant qu'aucune page de
+			slug « about » n'existe.
+		</p>
+		<p>
+			Vérifié dans l'environnement Docker réel, dans les deux langues installées : la section
+			s'affiche sans avertissement ni erreur, entièrement traduite selon la langue active du
+			site.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

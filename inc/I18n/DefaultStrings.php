@@ -286,6 +286,58 @@ final class DefaultStrings {
 				'fr_FR' => 'Découvrir',
 				'en_US' => 'Discover',
 			),
+			'Our story'                           => array(
+				'fr_FR' => 'Notre histoire',
+				'en_US' => 'Our story',
+			),
+			'Craftsmanship, quality and contemporary design.' => array(
+				'fr_FR' => 'Savoir-faire, qualité et design contemporain.',
+				'en_US' => 'Craftsmanship, quality and contemporary design.',
+			),
+			'For over a decade, we have been selecting and offering products that combine artisanal quality, durability and modern aesthetics.' => array(
+				'fr_FR' => "Depuis plus d'une décennie, nous sélectionnons et proposons des produits qui allient qualité artisanale, durabilité et esthétique moderne.",
+				'en_US' => 'For over a decade, we have been selecting and offering products that combine artisanal quality, durability and modern aesthetics.',
+			),
+			'Every item is chosen with care, paying close attention to materials, manufacturing and environmental impact.' => array(
+				'fr_FR' => "Chaque article est choisi avec soin, en accordant une attention particulière aux matériaux, à la fabrication et à l'impact environnemental.",
+				'en_US' => 'Every item is chosen with care, paying close attention to materials, manufacturing and environmental impact.',
+			),
+			'10+'                                 => array(
+				'fr_FR' => '10+',
+				'en_US' => '10+',
+			),
+			'years of expertise'                  => array(
+				'fr_FR' => "ans d'expertise",
+				'en_US' => 'years of expertise',
+			),
+			'50K+'                                => array(
+				'fr_FR' => '50K+',
+				'en_US' => '50K+',
+			),
+			'Happy customers'                     => array(
+				'fr_FR' => 'Clients satisfaits',
+				'en_US' => 'Happy customers',
+			),
+			'200+'                                => array(
+				'fr_FR' => '200+',
+				'en_US' => '200+',
+			),
+			'Products available'                  => array(
+				'fr_FR' => 'Produits disponibles',
+				'en_US' => 'Products available',
+			),
+			'4.9★'                                => array(
+				'fr_FR' => '4,9★',
+				'en_US' => '4.9★',
+			),
+			'Average rating'                      => array(
+				'fr_FR' => 'Note moyenne',
+				'en_US' => 'Average rating',
+			),
+			'Learn more'                          => array(
+				'fr_FR' => 'En savoir plus',
+				'en_US' => 'Learn more',
+			),
 		);
 	}
 

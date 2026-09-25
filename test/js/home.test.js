@@ -68,3 +68,21 @@ describe('front page: categories', () => {
 		);
 	});
 });
+
+describe('front page: brand story', () => {
+	it('gives the image the content card radius and a 4:5 aspect ratio', () => {
+		expect(css).toMatch(/\.brand-story__image\s*{[^}]*border-radius:\s*8px/);
+		expect(css).toMatch(/\.brand-story__image\s*{[^}]*aspect-ratio:\s*4\/5/);
+	});
+
+	it('renders the floating stat highlight in gold on a dark card', () => {
+		expect(css).toMatch(/\.brand-story__highlight\s*{[^}]*background:\s*#0d0d0d/);
+		expect(css).toMatch(/\.brand-story__highlight-value\s*{[^}]*color:\s*#c9a96e/);
+	});
+
+	it('lays out the three stats in an even grid', () => {
+		expect(css).toMatch(
+			/\.brand-story__stats\s*{[^}]*grid-template-columns:\s*repeat\(3,\s*1fr\)/,
+		);
+	});
+});

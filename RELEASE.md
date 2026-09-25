@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.3.2`.
+Version actuelle : `0.3.3`.
 
 ## Avant une release
 
@@ -30,6 +30,19 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.3.3 — section « notre histoire » de la page d'accueil
+
+- Ajout de la quatrième section de la page d'accueil : image éditoriale avec une carte statistique
+  flottante (« 10+ ans d'expertise »), texte de présentation en deux paragraphes, une ligne de
+  trois statistiques (clients, produits, note moyenne) et un appel à l'action.
+- Décision technique : même convention que le hero — contenu entièrement éditorial via une aide
+  filtrable unique (`solar_template_brand_story_config()`), aucune donnée réelle branchée. Le
+  bouton pointe vers une page de slug « about » si elle existe (même aide déjà utilisée par le
+  pied de page), avec repli vers l'accueil sinon.
+- Vérifié de bout en bout dans l'environnement Docker réel, dans les deux langues installées : la
+  section s'affiche sans avertissement ni erreur, entièrement traduite selon la langue active du
+  site.
 
 ### 0.3.2 — section catégories de la page d'accueil
 

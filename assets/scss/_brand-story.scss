@@ -1,0 +1,120 @@
+// Created: 2026-09-25 11:00 CEST
+// Role: Front page brand story component partial (assets/scss/_brand-story.scss).
+// Author: David ROMERA <d.romera.11@gmail.com>
+// Purpose: Style the "Our story" section rendered by template-parts/front-page/brand-story.php,
+//          built entirely from the shared design tokens and the button partial.
+
+@use 'tokens' as *;
+
+.brand-story {
+	padding: 120px 0;
+	background: $color-bg;
+}
+
+.brand-story__inner {
+	display: grid;
+	max-width: $container-max-width;
+	margin: 0 auto;
+	padding: 0 $container-padding-x;
+	grid-template-columns: 1fr 1fr;
+	align-items: center;
+	gap: 100px;
+}
+
+.brand-story__media {
+	position: relative;
+}
+
+.brand-story__image {
+	aspect-ratio: 4 / 5;
+	overflow: hidden;
+	background: $color-hover;
+	border-radius: $radius-content-card;
+}
+
+.brand-story__image-tag {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.brand-story__highlight {
+	position: absolute;
+	right: -32px;
+	bottom: -32px;
+	padding: 28px 36px;
+	background: $color-dark;
+	border-radius: $radius-content-card;
+}
+
+.brand-story__highlight-value {
+	display: block;
+	color: $color-gold;
+	font-size: 44px;
+	font-weight: $font-weight-extrabold;
+	line-height: 1;
+}
+
+.brand-story__highlight-label {
+	display: block;
+	margin-top: 4px;
+	color: rgba(255, 255, 255, 0.55);
+	font-size: 13px;
+}
+
+.brand-story__eyebrow {
+	margin: 0 0 16px;
+	color: $color-gold;
+	@include type-caption;
+	letter-spacing: 0.18em;
+}
+
+.brand-story__heading {
+	margin: 0 0 28px;
+	color: $color-dark;
+	@include type-h2;
+}
+
+.brand-story__paragraph {
+	margin: 0 0 20px;
+	color: $color-muted;
+	font-size: 15.5px;
+	line-height: 1.85;
+}
+
+.brand-story__stats {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 28px;
+	margin: 24px 0 44px;
+	padding: 28px 0;
+	border-top: 1px solid $color-border;
+	border-bottom: 1px solid $color-border;
+}
+
+.brand-story__stat-value {
+	display: block;
+	margin-bottom: 4px;
+	color: $color-dark;
+	font-size: 32px;
+	font-weight: $font-weight-extrabold;
+}
+
+.brand-story__stat-label {
+	display: block;
+	color: $color-muted;
+	font-size: 12.5px;
+}
+
+@media (max-width: 900px) {
+	.brand-story__inner {
+		grid-template-columns: 1fr;
+		gap: 56px;
+	}
+
+	.brand-story__highlight {
+		right: 16px;
+		bottom: -24px;
+	}
+}

@@ -129,6 +129,26 @@
 			archive), and deleting them makes the whole section disappear — test categories and
 			products deleted after verification.
 		</p>
+
+		<h2 id="brand-story">Brand story</h2>
+		<p>
+			<code>template-parts/front-page/brand-story.php</code> renders an editorial image with a
+			floating stat highlight card ("10+ years of expertise", dark background, gold figure), a
+			two-paragraph introduction, a row of three stats (happy customers, products available,
+			average rating) and a call to action.
+		</p>
+		<p>
+			Same convention as the hero: all of its content comes from a single filterable helper,
+			<code>solar_template_brand_story_config()</code> in <code>functions.php</code> —
+			placeholder editorial content, no real data wired in at this step. The CTA button reuses
+			<code>solar_template_page_url_by_slug('about')</code> (already used by the footer),
+			falling back to the home page as long as no page with the "about" slug exists.
+		</p>
+		<p>
+			Verified in the real Docker environment, in both installed languages: the section
+			renders without any warning or error, fully translated according to the site's active
+			language.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>
