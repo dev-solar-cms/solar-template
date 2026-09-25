@@ -51,6 +51,9 @@ solar-template/
 - `TranslatorInterface` — gestion des langues et du catalogue de traductions (implémentation par
   défaut : `I18n\DatabaseTranslator`, basée sur les tables `wp_solar_template_languages`/
   `wp_solar_template_translations`).
+- `Support\WooCommerceStatus::is_active()` — détection centralisée de WooCommerce (`class_exists('WooCommerce')`),
+  utilisée pour dégrader gracieusement (notice d'admin + support WooCommerce conditionnel) plutôt
+  que de fataliser en son absence.
 - `MoCompilerInterface` — compilation d'un catalogue en fichier `.mo` (implémentation par défaut :
   `I18n\GettextMoCompiler`, basée sur `gettext/gettext`).
 

@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.1.6`.
+Version actuelle : `0.1.7`.
 
 ## Avant une release
 
@@ -28,6 +28,17 @@ Ce dépôt est public (`github.com/dev-solar-cms/solar-template`) et versionné 
 3. Créer une release GitHub à partir du tag, avec un changelog résumant les changements.
 
 ## Changelog
+
+### 0.1.7 — dégradation gracieuse sans WooCommerce
+
+- Le thème détecte l'absence/inactivité de WooCommerce et affiche une notice d'administration
+  claire invitant à l'installer/l'activer, au lieu de fataliser ou de laisser des fonctionnalités
+  boutique silencieusement cassées.
+- Le support WooCommerce du thème (`add_theme_support('woocommerce')`) n'est déclaré que lorsque le
+  plugin est réellement actif.
+- Toutes les chaînes d'administration introduites depuis le début de cette série de travaux
+  (notices Composer, build des assets, WooCommerce) sont désormais enregistrées dans le catalogue
+  de traduction et traduites en français et en anglais.
 
 ### 0.1.6 — tables de configuration et activation du thème
 

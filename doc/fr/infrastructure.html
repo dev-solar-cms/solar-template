@@ -160,10 +160,12 @@ npm run format    # formate assets/**/*.{js,scss} avec Prettier</code></pre>
 
 		<h2 id="woocommerce">Détection de WooCommerce</h2>
 		<p>
-			Le thème ne nécessite pas WooCommerce pour s'activer. Si WooCommerce est absent ou
-			inactif, une notice d'administration invite l'administrateur du site à
-			l'installer/l'activer, et le support WooCommerce spécifique du thème est
-			gracieusement ignoré plutôt que de provoquer une erreur fatale.
+			Le thème ne nécessite pas WooCommerce pour s'activer. <code>Solar_Template\Support\WooCommerceStatus::is_active()</code>
+			(une fine enveloppe autour de <code>class_exists('WooCommerce')</code>) est l'unique
+			point que le reste du thème vérifie. Si WooCommerce est absent ou inactif, une notice
+			d'administration invite l'administrateur du site à l'installer/l'activer, et
+			<code>add_theme_support('woocommerce')</code> n'est déclaré que lorsqu'il est
+			réellement actif — sans jamais provoquer d'erreur fatale dans un cas comme dans l'autre.
 		</p>
 	</main>
 	<script src="../assets/doc.js"></script>

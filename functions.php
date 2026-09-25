@@ -91,8 +91,40 @@ function solar_template_setup(): void {
 	add_theme_support( 'title-tag' );
 	add_theme_support( 'post-thumbnails' );
 	load_theme_textdomain( 'solar-template', get_template_directory() . '/languages' );
+
+	if ( solar_template_load_autoloader() && \Solar_Template\Support\WooCommerceStatus::is_active() ) {
+		add_theme_support( 'woocommerce' );
+	}
 }
 add_action( 'after_setup_theme', 'solar_template_setup' );
+
+/**
+ * Warns the site administrator when WooCommerce is missing or inactive.
+ *
+ * The theme still activates and renders normally without WooCommerce (see solar_template_setup(),
+ * which only declares `woocommerce` theme support when the plugin is actually active); this only
+ * makes the situation visible in wp-admin instead of silently skipping storefront features.
+ *
+ * @return void
+ */
+function solar_template_woocommerce_notice(): void {
+	if ( ! solar_template_load_autoloader() || \Solar_Template\Support\WooCommerceStatus::is_active() ) {
+		return;
+	}
+
+	printf(
+		'<div class="notice notice-warning"><p>%s</p></div>',
+		wp_kses(
+			sprintf(
+				/* translators: %s: link to the "Add plugins" screen. */
+				__( 'Solar Template is designed for WooCommerce. Please <a href="%s">install and activate WooCommerce</a> to enable the storefront features.', 'solar-template' ),
+				esc_url( admin_url( 'plugin-install.php?s=woocommerce&tab=search&type=term' ) )
+			),
+			array( 'a' => array( 'href' => true ) )
+		)
+	);
+}
+add_action( 'admin_notices', 'solar_template_woocommerce_notice' );
 
 /**
  * Creates the theme's dedicated database tables and seeds their default data on activation.
