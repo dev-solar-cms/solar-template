@@ -10,6 +10,7 @@
 @use 'pills';
 @use 'product-card';
 @use 'blog-card';
+@use 'header';
 
 :root {
 	color-scheme: light;
@@ -37,4 +38,34 @@ h1,
 h2,
 h3 {
 	margin: 0;
+}
+
+// Visually hides text while keeping it available to assistive technology (aria-labels already
+// cover icon-only controls; this covers the handful of elements that need real text content
+// instead, such as the "Skip to content" link).
+.screen-reader-text {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	padding: 0;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+.skip-link.screen-reader-text:focus {
+	position: fixed;
+	top: 8px;
+	left: 8px;
+	width: auto;
+	height: auto;
+	clip: auto;
+	z-index: 1000;
+	padding: 12px 20px;
+	background: $color-dark;
+	color: $color-surface;
+	border-radius: $radius-button;
+	font-weight: $font-weight-semibold;
 }

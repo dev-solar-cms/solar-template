@@ -4,7 +4,7 @@
 
 Thème WordPress classique (non block/FSE) destiné à l'écosystème **dev-solar-cms**.
 
-> État actuel : scaffold initial. Le thème n'a pas encore de gabarits (`header.php`/`footer.php` manquants) ni de styles réels — voir [STRUCTURE.md](./STRUCTURE.md) pour le détail des fichiers.
+> État actuel : système de design commun en place (tokens, boutons/badges/pills, cartes produit/article) et en-tête sticky global (`header.php`) — `footer.php` et les gabarits de page restent à construire. Voir [STRUCTURE.md](./STRUCTURE.md) pour le détail des fichiers.
 
 ## Prérequis
 

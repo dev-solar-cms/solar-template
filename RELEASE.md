@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.2.3`.
+Version actuelle : `0.2.4`.
 
 ## Avant une release
 
@@ -30,6 +30,28 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.2.4 — en-tête sticky global
+
+- Ajout de `header.php` : le thème dispose désormais d'un en-tête global (barre supérieure avec
+  réseaux sociaux/marque/icônes recherche-compte-panier, barre de navigation principale collante),
+  affiché sur toutes les pages qui appellent `get_header()`.
+- La navigation principale utilise `wp_nav_menu()` (emplacement assignable depuis Apparence >
+  Menus) avec des éléments par défaut tant qu'aucun menu n'est assigné, chacun résolu vers
+  l'équivalent le plus proche déjà disponible dans une installation WordPress/WooCommerce standard
+  plutôt qu'une vue dédiée qui reste à construire.
+- Les icônes compte/panier résolvent vers les pages WooCommerce réelles quand WooCommerce est
+  actif, avec une dégradation gracieuse sinon — vérifié de bout en bout dans l'environnement Docker
+  réel avec WooCommerce actif (aucun avertissement ni erreur liés à l'en-tête).
+- Décision technique : les URLs de réseaux sociaux et les éléments de navigation par défaut sont
+  exposés via des filtres WordPress plutôt que codés en dur, en prévision du futur écran
+  d'administration qui les pilotera — sans construire cet écran maintenant.
+- Décision technique : le badge du nombre d'articles au panier est toujours présent dans le DOM
+  (masqué en CSS à zéro article plutôt qu'omis du balisage), pour qu'un futur rafraîchissement
+  AJAX du panier puisse cibler cet élément sans avoir à l'insérer lui-même.
+- Bug évité avant qu'il ne se produise : un nom de variable de boucle réutilisait un nom de
+  variable globale historique de WordPress, ce que la norme de code du projet interdit
+  précisément pour ce risque ; corrigé avant la mise en production.
 
 ### 0.2.3 — composant carte article de blog
 

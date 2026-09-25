@@ -13,8 +13,9 @@ Ce dépôt n'a aucun lien d'historique git avec le repo parent : il vit dans `wp
 ```
 solar-template/
 ├── style.css        # En-tête du thème (nom, version, text-domain) — pas de styles réels encore
-├── functions.php     # Déclare le support title-tag et post-thumbnails
-├── index.php          # Seul gabarit présent ; appelle get_header()/get_footer()
+├── functions.php     # Support title-tag/post-thumbnails, menus, hooks, aides header (réseaux, compte, panier, nav)
+├── header.php         # En-tête sticky global (barre supérieure + navigation principale)
+├── index.php          # Seul gabarit de contenu présent ; appelle get_header()/get_footer()
 ├── screenshot.png     # 1200x900, requis par WordPress pour l'aperçu du thème
 ├── composer.json      # Dépendances PHP + autoload PSR-4 (Solar_Template\)
 ├── phpcs.xml.dist      # Norme de code PHP (WordPress-Extra), utilisée par `composer lint`/`format`
@@ -28,7 +29,8 @@ solar-template/
 │   └── Database/        # Schéma et installation des tables `wp_solar_template_*`
 ├── template-parts/      # Fragments de gabarit réutilisables (`get_template_part()`)
 │   ├── product-card.php # Carte produit (image, badge, wishlist, overlay panier, prix, swatches)
-│   └── blog-card.php    # Carte article de blog (image 16:10, badge catégorie, meta, titre, extrait, auteur)
+│   ├── blog-card.php    # Carte article de blog (image 16:10, badge catégorie, meta, titre, extrait, auteur)
+│   └── cart-badge.php   # Badge du nombre d'articles au panier, utilisé par l'en-tête
 ├── languages/           # Fichiers `.mo` compilés (générés, ignorés par git sauf `.gitkeep`)
 ├── vite.config.js       # Configuration du pipeline de build des assets
 ├── .prettierrc.json     # Norme de formatage JS/SCSS, utilisée par `npm run format`
@@ -40,6 +42,7 @@ solar-template/
 │   ├── scss/_pills.scss   # Composant pills/chips de filtre (.pill + état actif, bouton de suppression)
 │   ├── scss/_product-card.scss # Composant carte produit (media, badge, wishlist, overlay panier, prix, swatches)
 │   ├── scss/_blog-card.scss # Composant carte article de blog (media 16:10, badge, meta, titre, extrait, auteur)
+│   ├── scss/_header.scss # En-tête sticky (barre supérieure, actions, navigation principale)
 │   ├── js/main.js        # Point d'entrée JS (importe le SCSS pour une compilation unifiée)
 │   └── dist/             # Sortie compilée (générée par `npm run build`/`dev`, ignorée par git)
 ├── phpunit.xml.dist     # Configuration PHPUnit, utilisée par `composer test`
@@ -91,9 +94,27 @@ solar-template/
   crée les trois tables (`dbDelta`, idempotent), seed les valeurs par défaut si absentes, puis
   compile le catalogue de traduction existant en `.mo`.
 
-### À noter
+### En-tête du thème (`header.php`, `assets/scss/_header.scss`)
 
-- `header.php` et `footer.php` **n'existent pas encore** : `index.php` les appelle déjà, le thème produira donc une erreur/warning tant qu'ils ne sont pas créés.
+- Barre supérieure (réseaux sociaux, marque du site, icônes recherche/compte/panier) et barre de
+  navigation principale sticky, conformes à la maquette.
+- La navigation principale utilise `wp_nav_menu()` sur l'emplacement `primary` (assignable depuis
+  Apparence > Menus) ; tant qu'aucun menu n'y est assigné, `solar_template_primary_nav_fallback()`
+  affiche des éléments par défaut (Boutique/Nouveautés/Collections/Promotions/Blog/Contact)
+  pointant vers l'équivalent le plus proche déjà disponible (page boutique/panier/compte
+  WooCommerce, page des articles, page « contact » si elle existe) plutôt que vers des vues
+  dédiées qui restent à construire (étapes suivantes de la feuille de route).
+- Les icônes compte/panier pointent vers les pages WooCommerce réelles quand WooCommerce est actif
+  (dégradation gracieuse vers la connexion WordPress / l'accueil sinon).
+- Le badge du panier (`template-parts/cart-badge.php`) est toujours présent dans le DOM (masqué en
+  CSS si le compte est à 0) pour pouvoir être ciblé par un futur rafraîchissement AJAX
+  (`woocommerce_add_to_cart_fragments`), sans nouvelle logique JS à cette étape.
+- Les URLs des réseaux sociaux sont un filtre (`solar_template_social_links`), pas encore une
+  option d'administration — celle-ci arrive avec l'onglet « En-tête » du Groupe 10.
+
+### À noter
+- `footer.php` **n'existe pas encore** : `index.php` l'appelle déjà, le thème produira donc un
+  avertissement de dépréciation tant qu'il n'est pas créé (`header.php`, lui, existe désormais).
 - `template-claude-code.html` (s'il est présent à la racine) est une maquette HTML exportée, ignorée par git — à utiliser comme référence visuelle/structurelle pour construire les vrais gabarits, jamais comme code à exécuter ou copier tel quel.
 - `.claude/` et `CLAUDE.md` sont exclus du dépôt via `.gitignore` (configuration locale de l'assistant, non versionnée).
 - `composer.json` définit les dépendances PHP et l'autoload PSR-4 (`composer install` requis après

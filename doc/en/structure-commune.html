@@ -1,0 +1,93 @@
+<!--
+	Created: 2026-09-25 08:00 CEST
+	Role: English documentation page describing the theme's common structure (header, footer,
+	      navigation, search, cart).
+	Author: David ROMERA <d.romera.11@gmail.com>
+	Purpose: Document, in English, the template files and partials shared across every page of the
+	         theme.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Common structure — Solar Template Documentation</title>
+	<link rel="stylesheet" href="../assets/doc.css" />
+</head>
+<body>
+	<aside class="doc-sidebar">
+		<a class="doc-brand" href="index.html">Solar Template</a>
+		<nav>
+			<ul>
+				<li><a href="index.html">Home</a></li>
+				<li><a href="infrastructure.html">Infrastructure</a></li>
+				<li><a href="design-system.html">Design system</a></li>
+				<li><a href="structure-commune.html">Common structure</a></li>
+			</ul>
+		</nav>
+		<div class="doc-lang-switch">
+			<a class="is-active" href="structure-commune.html">EN</a>
+			<a href="../fr/structure-commune.html">FR</a>
+		</div>
+	</aside>
+	<main class="doc-content">
+		<h1>Common structure</h1>
+		<p>
+			The template files shared across every page of the theme — header
+			(<code>header.php</code>), footer, navigation, search and cart — documented as they are
+			built.
+		</p>
+
+		<h2 id="header">Sticky header</h2>
+		<p>
+			<code>header.php</code> opens the document and renders the theme's header: a top bar
+			(social links, site brand, search/account/cart icons) and a primary navigation bar, both
+			made sticky (<code>position: sticky</code>) via <code>assets/scss/_header.scss</code>,
+			built entirely from the shared design tokens — see
+			<a href="design-system.html">Design system</a>.
+		</p>
+		<p>
+			The primary navigation is powered by <code>wp_nav_menu()</code> on the <code>primary</code>
+			location: a site administrator can assign it a custom menu from Appearance &gt; Menus.
+			Until a menu is assigned there, <code>solar_template_primary_nav_fallback()</code> (in
+			<code>functions.php</code>) renders the design's default items (Shop, New In, Collections,
+			Sale, Blog, Contact), each pointing at the closest equivalent already available in a stock
+			WordPress/WooCommerce install (the WooCommerce shop/cart/account page, the posts page, a
+			page whose slug is "contact" if one exists) rather than a dedicated view — those views
+			(filtered archives, a real contact page…) are built by later steps of the project roadmap.
+		</p>
+		<p>
+			The account and cart icons point at the real WooCommerce pages
+			(<code>wc_get_page_permalink()</code>) when WooCommerce is active, degrading gracefully to
+			the WordPress login screen / the site's front page otherwise — consistent with the
+			centralized detection already in place (<a href="infrastructure.html#woocommerce">Infrastructure
+			— WooCommerce</a>).
+		</p>
+		<p>
+			The cart badge (<code>template-parts/cart-badge.php</code>) is always present in the DOM,
+			even at zero items (visually hidden via an <code>is-hidden</code> CSS class rather than
+			omitted from the markup): a future AJAX cart refresh
+			(<code>woocommerce_add_to_cart_fragments</code>) needs to be able to target that exact
+			element instead of having to insert it into the DOM itself.
+		</p>
+		<p>
+			The social network URLs shown in the top bar come from a WordPress filter
+			(<code>solar_template_social_links</code>), with a generic placeholder link for each
+			network by default: there is no administration screen to configure them yet (planned for
+			the "Header" tab of Group 10 of the roadmap), so the filter is the intended extension point
+			for that future screen.
+		</p>
+		<p>
+			The top bar's search button only toggles its <code>aria-expanded</code> state at this
+			stage — the search overlay itself is added by a later step of the common structure.
+		</p>
+		<p>
+			Verified in the real Docker environment with WooCommerce active: the theme activates
+			without any header-related warning or error, the account/cart icons resolve to the
+			install's real WooCommerce pages, and the fallback navigation renders correctly when no
+			menu is assigned.
+		</p>
+	</main>
+	<script src="../assets/doc.js"></script>
+</body>
+</html>

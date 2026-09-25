@@ -1,0 +1,95 @@
+<!--
+	Créé le : 2026-09-25 08:00 CEST
+	Rôle : Page de documentation en français décrivant la structure commune du thème (en-tête, pied
+	       de page, navigation, recherche, panier).
+	Auteur : David ROMERA <d.romera.11@gmail.com>
+	Objectif : Documenter, en français, les gabarits et gabarits partiels partagés par toutes les
+	           pages du thème.
+-->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Structure commune — Documentation Solar Template</title>
+	<link rel="stylesheet" href="../assets/doc.css" />
+</head>
+<body>
+	<aside class="doc-sidebar">
+		<a class="doc-brand" href="index.html">Solar Template</a>
+		<nav>
+			<ul>
+				<li><a href="index.html">Accueil</a></li>
+				<li><a href="infrastructure.html">Infrastructure</a></li>
+				<li><a href="design-system.html">Système de design</a></li>
+				<li><a href="structure-commune.html">Structure commune</a></li>
+			</ul>
+		</nav>
+		<div class="doc-lang-switch">
+			<a href="../en/structure-commune.html">EN</a>
+			<a class="is-active" href="structure-commune.html">FR</a>
+		</div>
+	</aside>
+	<main class="doc-content">
+		<h1>Structure commune</h1>
+		<p>
+			Les gabarits partagés par toutes les pages du thème — en-tête (<code>header.php</code>),
+			pied de page, navigation, recherche et panier — au fur et à mesure de leur construction.
+		</p>
+
+		<h2 id="en-tete">En-tête sticky</h2>
+		<p>
+			<code>header.php</code> ouvre le document et affiche l'en-tête du thème : une barre
+			supérieure (réseaux sociaux, marque du site, icônes recherche/compte/panier) et une barre
+			de navigation principale, toutes deux rendues collantes (<code>position: sticky</code>)
+			via <code>assets/scss/_header.scss</code>, construit entièrement à partir des tokens de
+			design partagés — voir <a href="design-system.html">Système de design</a>.
+		</p>
+		<p>
+			La navigation principale s'appuie sur <code>wp_nav_menu()</code> avec l'emplacement
+			<code>primary</code> : un administrateur peut lui assigner un menu personnalisé depuis
+			Apparence &gt; Menus. Tant qu'aucun menu n'y est assigné,
+			<code>solar_template_primary_nav_fallback()</code> (dans <code>functions.php</code>)
+			affiche les éléments par défaut de la maquette (Boutique, Nouveautés, Collections,
+			Promotions, Blog, Contact), chacun pointant vers l'équivalent le plus proche déjà
+			disponible dans une installation WordPress/WooCommerce standard (page boutique/panier/
+			compte WooCommerce, page des articles, page dont le slug est « contact » si elle existe)
+			plutôt que vers une vue dédiée — ces vues (archives filtrées, page de contact réelle...)
+			sont construites par des étapes ultérieures de la feuille de route du projet.
+		</p>
+		<p>
+			Les icônes compte et panier pointent vers les pages WooCommerce réelles
+			(<code>wc_get_page_permalink()</code>) quand WooCommerce est actif, avec une dégradation
+			gracieuse vers l'écran de connexion WordPress / l'accueil du site sinon — cohérent avec la
+			détection centralisée déjà en place (<a href="infrastructure.html#woocommerce">Infrastructure
+			— WooCommerce</a>).
+		</p>
+		<p>
+			Le badge du panier (<code>template-parts/cart-badge.php</code>) est toujours présent dans
+			le DOM, y compris à zéro article (masqué visuellement via une classe CSS
+			<code>is-hidden</code> plutôt qu'omis du balisage) : un futur rafraîchissement AJAX du
+			panier (<code>woocommerce_add_to_cart_fragments</code>) doit pouvoir cibler exactement le
+			même élément plutôt que d'avoir à l'insérer lui-même dans le DOM.
+		</p>
+		<p>
+			Les URLs des réseaux sociaux affichés dans la barre supérieure sont fournies par un filtre
+			WordPress (<code>solar_template_social_links</code>), avec un lien générique par défaut
+			pour chaque réseau : il n'existe pas encore d'écran d'administration pour les configurer
+			(prévu à l'onglet « En-tête » du Groupe 10 de la feuille de route), le filtre est donc le
+			point d'extension prévu pour ce futur écran.
+		</p>
+		<p>
+			Le bouton de recherche de la barre supérieure ne fait, à ce stade, que basculer son état
+			<code>aria-expanded</code> — l'overlay de recherche lui-même est ajouté par une étape
+			ultérieure de la structure commune.
+		</p>
+		<p>
+			Vérifié dans l'environnement Docker réel avec WooCommerce actif : le thème s'active sans
+			avertissement ni erreur liés à l'en-tête, les icônes compte/panier résolvent vers les
+			pages WooCommerce réelles de l'installation, et la navigation de secours s'affiche
+			correctement en l'absence de menu assigné.
+		</p>
+	</main>
+	<script src="../assets/doc.js"></script>
+</body>
+</html>

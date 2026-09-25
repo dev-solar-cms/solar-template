@@ -1,0 +1,159 @@
+// Created: 2026-09-25 08:00 CEST
+// Role: Site header component partial (assets/scss/_header.scss).
+// Author: David ROMERA <d.romera.11@gmail.com>
+// Purpose: Style the sticky header rendered by header.php — top bar (social links, brand,
+//          search/account/cart icons) and primary navigation bar — built entirely from the
+//          shared design tokens in _tokens.scss.
+
+@use 'tokens' as *;
+
+$header-topbar-height: 60px;
+$header-nav-height: 44px;
+
+.site-header {
+	position: sticky;
+	top: 0;
+	z-index: 100;
+}
+
+.site-header__topbar {
+	background: $color-bg;
+	box-shadow: 0 1px 0 $color-border;
+}
+
+.site-header__topbar-inner {
+	max-width: $container-max-width;
+	margin: 0 auto;
+	padding: 0 $container-padding-x;
+	height: $header-topbar-height;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.site-header__social {
+	display: flex;
+	gap: 18px;
+	align-items: center;
+}
+
+.site-header__social-link {
+	color: $color-dark;
+	opacity: 0.45;
+	line-height: 0;
+	transition: opacity 0.2s ease;
+
+	&:hover,
+	&:focus-visible {
+		opacity: 1;
+	}
+}
+
+.site-header__brand {
+	font-size: 16px;
+	font-weight: $font-weight-extrabold;
+	letter-spacing: 0.24em;
+	text-transform: uppercase;
+	color: $color-dark;
+}
+
+.site-header__actions {
+	display: flex;
+	gap: 20px;
+	align-items: center;
+}
+
+.site-header__action {
+	background: none;
+	border: none;
+	padding: 0;
+	color: $color-dark;
+	opacity: 0.5;
+	line-height: 0;
+	cursor: pointer;
+	position: relative;
+	transition: opacity 0.2s ease;
+
+	&:hover,
+	&:focus-visible {
+		opacity: 1;
+	}
+}
+
+.site-header__cart-count {
+	position: absolute;
+	top: -5px;
+	right: -7px;
+	background: $color-gold;
+	color: $color-surface;
+	font-size: 9px;
+	font-weight: $font-weight-extrabold;
+	border-radius: 50%;
+	width: 16px;
+	height: 16px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	line-height: 1;
+
+	&.is-hidden {
+		display: none;
+	}
+}
+
+.site-header__nav {
+	background: $color-dark-nav;
+}
+
+.site-header__nav-inner {
+	max-width: $container-max-width;
+	margin: 0 auto;
+	padding: 0 $container-padding-x;
+	display: flex;
+	align-items: center;
+	height: $header-nav-height;
+}
+
+.site-header__menu {
+	display: flex;
+	align-items: center;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.site-header__menu-item {
+	height: 100%;
+	display: flex;
+	align-items: center;
+	position: relative;
+}
+
+.site-header__menu-link {
+	display: flex;
+	align-items: center;
+	height: 100%;
+	padding: 0 16px;
+	color: rgba(255, 255, 255, 0.6);
+	font-size: 11.5px;
+	font-weight: $font-weight-medium;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	border-bottom: 2px solid transparent;
+	transition: color 0.2s ease;
+
+	&:hover,
+	&:focus-visible {
+		color: $color-surface;
+	}
+}
+
+.site-header__menu-item.is-current,
+.site-header__menu-item.current-menu-item {
+	.site-header__menu-link {
+		color: $color-gold;
+		font-weight: $font-weight-bold;
+		border-bottom-color: $color-gold;
+	}
+}

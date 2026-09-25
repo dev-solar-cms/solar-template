@@ -46,17 +46,73 @@ final class DefaultStrings {
 				'fr_FR' => "Solar Template est conçu pour WooCommerce. Merci d'<a href=\"%s\">installer et d'activer WooCommerce</a> pour activer les fonctionnalités boutique.",
 				'en_US' => 'Solar Template is designed for WooCommerce. Please <a href="%s">install and activate WooCommerce</a> to enable the storefront features.',
 			),
-			'Add to wishlist' => array(
+			'Add to wishlist'    => array(
 				'fr_FR' => 'Ajouter à la liste de souhaits',
 				'en_US' => 'Add to wishlist',
 			),
-			'Add to cart'     => array(
+			'Add to cart'        => array(
 				'fr_FR' => 'Ajouter au panier',
 				'en_US' => 'Add to cart',
 			),
-			'−%d%%'           => array(
+			'−%d%%'              => array(
 				'fr_FR' => '−%d %%',
 				'en_US' => '−%d%%',
+			),
+			'Skip to content'    => array(
+				'fr_FR' => 'Aller au contenu',
+				'en_US' => 'Skip to content',
+			),
+			'Instagram'          => array(
+				'fr_FR' => 'Instagram',
+				'en_US' => 'Instagram',
+			),
+			'Facebook'           => array(
+				'fr_FR' => 'Facebook',
+				'en_US' => 'Facebook',
+			),
+			'X (Twitter)'        => array(
+				'fr_FR' => 'X (Twitter)',
+				'en_US' => 'X (Twitter)',
+			),
+			'Search'             => array(
+				'fr_FR' => 'Rechercher',
+				'en_US' => 'Search',
+			),
+			'My account'         => array(
+				'fr_FR' => 'Mon compte',
+				'en_US' => 'My account',
+			),
+			'Cart'               => array(
+				'fr_FR' => 'Panier',
+				'en_US' => 'Cart',
+			),
+			'Primary Navigation' => array(
+				'fr_FR' => 'Navigation principale',
+				'en_US' => 'Primary Navigation',
+			),
+			'Shop'               => array(
+				'fr_FR' => 'Boutique',
+				'en_US' => 'Shop',
+			),
+			'New In'             => array(
+				'fr_FR' => 'Nouveautés',
+				'en_US' => 'New In',
+			),
+			'Collections'        => array(
+				'fr_FR' => 'Collections',
+				'en_US' => 'Collections',
+			),
+			'Sale'               => array(
+				'fr_FR' => 'Promotions',
+				'en_US' => 'Sale',
+			),
+			'Blog'               => array(
+				'fr_FR' => 'Blog',
+				'en_US' => 'Blog',
+			),
+			'Contact'            => array(
+				'fr_FR' => 'Contact',
+				'en_US' => 'Contact',
 			),
 		);
 	}
