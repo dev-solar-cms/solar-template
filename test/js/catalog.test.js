@@ -40,6 +40,10 @@ function renderCatalogFixture() {
 					<input type="number" name="max_price" value="" />
 				</div>
 			</div>
+			<select name="catalog_orderby">
+				<option value="menu_order">Relevance</option>
+				<option value="price-asc">Price: low to high</option>
+			</select>
 		</form>
 		<div id="catalog-results"><p>9 products available</p></div>
 		<div id="catalog-active-filters">
@@ -231,5 +235,45 @@ describe('assets/js/catalog.js', () => {
 		expect(document.querySelector('input[value="watches"]').checked).toBe(false);
 
 		await vi.waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+	});
+
+	it('submits the form via AJAX when the sort dropdown changes', async () => {
+		const fetchMock = vi.fn().mockResolvedValue({
+			json: () =>
+				Promise.resolve({
+					success: true,
+					data: { html: '<div id="catalog-results"><p>9 products available</p></div>' },
+				}),
+		});
+		vi.stubGlobal('fetch', fetchMock);
+
+		initCatalogFilters();
+
+		const select = document.querySelector('select[name="catalog_orderby"]');
+		select.value = 'price-asc';
+		select.dispatchEvent(new Event('change', { bubbles: true }));
+
+		await vi.waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+		const [, requestInit] = fetchMock.mock.calls[0];
+		expect(String(requestInit.body)).toContain('catalog_orderby=price-asc');
+	});
+
+	it('syncs the sort dropdown when applying a chip removal URL that carries an orderby value', () => {
+		vi.stubGlobal(
+			'fetch',
+			vi.fn().mockResolvedValue({ json: () => Promise.resolve({ success: false }) }),
+		);
+
+		document
+			.querySelector('.catalog-active-filters__remove')
+			.setAttribute('href', 'https://example.test/shop/?catalog_orderby=price-asc');
+
+		initCatalogFilters();
+
+		document
+			.querySelector('.catalog-active-filters__remove')
+			.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+
+		expect(document.querySelector('select[name="catalog_orderby"]').value).toBe('price-asc');
 	});
 });

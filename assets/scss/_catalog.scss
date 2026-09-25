@@ -265,6 +265,30 @@
 	color: $color-dark;
 }
 
+.catalog-filters__spacer {
+	flex: 1;
+}
+
+.catalog-filters__sort select {
+	padding: 8px 32px 8px 14px;
+	border: 1.5px solid $color-border;
+	border-radius: $radius-button;
+	background: $color-surface;
+	color: $color-dark;
+	font-size: 12.5px;
+	font-weight: $font-weight-medium;
+	cursor: pointer;
+	appearance: none;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230D0D0D' stroke-width='2.5'%3E%3Cpath d='m6 9 6 6 6-6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: right 10px center;
+	background-size: 11px;
+}
+
+.catalog-filters__sort select:hover {
+	border-color: $color-dark;
+}
+
 // Active filters chip row (template-parts/catalog-active-filters.php).
 
 .catalog-active-filters--has-chips {

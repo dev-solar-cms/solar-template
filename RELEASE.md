@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.4.2`.
+Version actuelle : `0.4.3`.
 
 ## Avant une release
 
@@ -30,6 +30,19 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.4.3 — tri du catalogue
+
+- Ajout d'un sélecteur de tri natif à la barre de filtres du catalogue (Pertinence, Prix croissant,
+  Prix décroissant, Nouveautés, Meilleures ventes), branché sur les mêmes mécanismes de
+  chargement de page classique/AJAX que le reste de la barre de filtres, et préservé lorsqu'un
+  filtre est retiré via un chip.
+- Bug rencontré et corrigé pendant le développement : le tri « Meilleures ventes » donnait un
+  ordre incorrect sur un chargement de page classique (mais correct via la requête AJAX) — la
+  fonctionnalité de tri native de WooCommerce lit le même paramètre d'URL que celui utilisé ici et
+  réinjecte son propre ordre de tri par-dessus par effet de bord, pour certaines options de tri
+  seulement. Corrigé en utilisant un paramètre d'URL dédié, distinct de celui de WooCommerce,
+  supprimant toute interférence entre les deux mécanismes.
 
 ### 0.4.2 — filtres actifs du catalogue
 

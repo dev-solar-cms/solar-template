@@ -174,6 +174,45 @@
 			AJAX (URL de base correctement basée sur la page réelle du catalogue dans les deux cas),
 			dans les deux langues installées. Aucun avertissement ni erreur PHP relevé.
 		</p>
+
+		<h2 id="tri">Tri</h2>
+		<p>
+			Un sélecteur natif <code>&lt;select&gt;</code>, à l'extrémité de la barre de filtres,
+			propose cinq options (Pertinence, Prix croissant, Prix décroissant, Nouveautés,
+			Meilleures ventes) — <code>solar_template_get_catalog_sort_options()</code> dans
+			<code>functions.php</code>. Le tri fait partie du même formulaire et suit exactement le
+			même chemin (chargement de page classique déjà trié côté serveur, amélioré en AJAX) que
+			les filtres eux-mêmes ; il est préservé (pas réinitialisé) lorsqu'un chip de filtre actif
+			est retiré.
+		</p>
+		<p>
+			Décision technique : chaque option de tri est traduite en de vrais arguments
+			<code>WP_Query</code> (<code>solar_template_catalog_sort_query_args()</code>) plutôt que
+			de s'appuyer sur le tri natif de WooCommerce (<code>WC_Query::get_catalog_ordering_args()</code>)
+			— « Prix » et « Meilleures ventes » utilisent directement <code>orderby=meta_value_num</code>
+			sur de vraies métadonnées WooCommerce (<code>_price</code>, <code>total_sales</code>),
+			une fonctionnalité native de <code>WP_Query</code> qui ne dépend d'aucun hook
+			supplémentaire.
+		</p>
+		<p>
+			Bug rencontré et corrigé pendant le développement : le tri « Meilleures ventes » donnait
+			un ordre correct via la requête AJAX mais incorrect sur un chargement de page classique.
+			En cause : le mécanisme de tri natif de WooCommerce lit directement le paramètre d'URL
+			<code>orderby</code> — exactement le même nom que celui utilisé initialement ici — et
+			l'utilise pour enregistrer son propre filtre d'ordre de tri en effet de bord, écrasant
+			ainsi le tri voulu pour certaines options (celles où WooCommerce ordonne via une jointure
+			sur sa propre table de cache plutôt que directement sur les métadonnées). Corrigé en
+			utilisant un paramètre d'URL dédié (<code>catalog_orderby</code>), sans aucun rapport
+			avec celui de WooCommerce, supprimant l'interférence à la source plutôt que d'essayer de
+			la contourner.
+		</p>
+		<p>
+			Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif, des
+			prix et un nombre de ventes de test variés : chaque option de tri (seule et combinée à
+			un filtre catégorie) confirmée avec le même résultat via un chargement de page classique
+			et via la requête AJAX, dans les deux langues installées. Aucun avertissement ni erreur
+			PHP relevé.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

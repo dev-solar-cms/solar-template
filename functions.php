@@ -1547,6 +1547,7 @@ function solar_template_get_catalog_price_bounds(): array {
  *     rating: int[],
  *     min_price: float|null,
  *     max_price: float|null,
+ *     orderby: string,
  * }
  */
 function solar_template_sanitize_catalog_filters( array $raw ): array {
@@ -1580,6 +1581,15 @@ function solar_template_sanitize_catalog_filters( array $raw ): array {
 		'rating'    => array_values( array_unique( $requested_rating ) ),
 		'min_price' => $min_price,
 		'max_price' => $max_price,
+		// Read from its own `catalog_orderby` request key, deliberately not WooCommerce's native
+		// `orderby` (`$_GET['orderby']`): that name is also read directly by
+		// `WC_Query::get_catalog_ordering_args()` (called from its own `pre_get_posts` handling on
+		// every product archive query, independently of anything this theme sets), which registers
+		// its own `posts_clauses` ordering callbacks for "price"/"popularity"/"rating" as a side
+		// effect — a callback that would silently override this function's own, more reliable
+		// `orderby`/`meta_key` handling (see solar_template_catalog_sort_query_args()) whenever the
+		// two names collided.
+		'orderby'   => solar_template_sanitize_catalog_sort( (string) ( $raw['catalog_orderby'] ?? '' ) ),
 	);
 }
 
@@ -1601,6 +1611,101 @@ function solar_template_catalog_filters_position(): string {
 	 * @param string $position `sticky-top` by default.
 	 */
 	return (string) apply_filters( 'solar_template_catalog_filters_position', 'sticky-top' );
+}
+
+/**
+ * Returns the catalog's sort dropdown options (value + label), in display order. The first option
+ * (`menu_order`) is also the default when no valid `orderby` is requested.
+ *
+ * @return array<int, array{value: string, label: string}>
+ */
+function solar_template_get_catalog_sort_options(): array {
+	return array(
+		array(
+			'value' => 'menu_order',
+			'label' => __( 'Relevance', 'solar-template' ),
+		),
+		array(
+			'value' => 'price-asc',
+			'label' => __( 'Price: low to high', 'solar-template' ),
+		),
+		array(
+			'value' => 'price-desc',
+			'label' => __( 'Price: high to low', 'solar-template' ),
+		),
+		array(
+			'value' => 'date',
+			'label' => __( 'Newest', 'solar-template' ),
+		),
+		array(
+			'value' => 'popularity',
+			'label' => __( 'Best sellers', 'solar-template' ),
+		),
+	);
+}
+
+/**
+ * Normalizes and validates a raw `orderby` request value against
+ * solar_template_get_catalog_sort_options()'s real option values, defaulting to the first one
+ * (`menu_order`) for anything else (missing, tampered with, or simply not one of the options).
+ *
+ * @param string $raw Raw `orderby` request value.
+ * @return string A valid sort option value.
+ */
+function solar_template_sanitize_catalog_sort( string $raw ): string {
+	$valid_values = wp_list_pluck( solar_template_get_catalog_sort_options(), 'value' );
+
+	return in_array( $raw, $valid_values, true ) ? $raw : $valid_values[0];
+}
+
+/**
+ * Maps a validated sort option value (see solar_template_sanitize_catalog_sort()) to the
+ * `WP_Query` args that apply it. Deliberately not WooCommerce's own
+ * `WC_Query::get_catalog_ordering_args()` for "price"/"popularity": that relies on `posts_clauses`
+ * callbacks gated on `$wp_query->is_main_query()`, which — like WooCommerce's native price filter
+ * (see solar_template_build_catalog_query_args()) — does not reliably re-engage for the AJAX
+ * handler's programmatically-built query. Ordering by a plain, real WooCommerce meta key
+ * (`_price`, `total_sales`) via `WP_Query`'s own native `meta_value_num` support needs no such
+ * hook, so it behaves identically in both call sites.
+ *
+ * @param string $sort A valid sort option value.
+ * @return array{orderby: string, order: string, meta_key?: string}
+ */
+function solar_template_catalog_sort_query_args( string $sort ): array {
+	switch ( $sort ) {
+		case 'price-asc':
+			return array(
+				'orderby'  => 'meta_value_num',
+				'order'    => 'ASC',
+				'meta_key' => '_price', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- sort dropdown deliberately orders by price meta.
+			);
+
+		case 'price-desc':
+			return array(
+				'orderby'  => 'meta_value_num',
+				'order'    => 'DESC',
+				'meta_key' => '_price', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- sort dropdown deliberately orders by price meta.
+			);
+
+		case 'date':
+			return array(
+				'orderby' => 'date',
+				'order'   => 'DESC',
+			);
+
+		case 'popularity':
+			return array(
+				'orderby'  => 'meta_value_num',
+				'order'    => 'DESC',
+				'meta_key' => 'total_sales', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- sort dropdown deliberately orders by WooCommerce's own sales count meta.
+			);
+
+		default:
+			return array(
+				'orderby' => 'menu_order title',
+				'order'   => 'ASC',
+			);
+	}
 }
 
 /**
@@ -1661,6 +1766,11 @@ function solar_template_catalog_filters_url( array $filters, ?string $base_url =
 
 	if ( null !== $filters['max_price'] ) {
 		$query_args['max_price'] = $filters['max_price'];
+	}
+
+	// Omitted from the URL entirely when it's the default sort (`solar_template_sanitize_catalog_sort('')`'s own fallback), for a clean, sort-less URL until the visitor actually picks one.
+	if ( isset( $filters['orderby'] ) && solar_template_sanitize_catalog_sort( '' ) !== $filters['orderby'] ) {
+		$query_args['catalog_orderby'] = $filters['orderby'];
 	}
 
 	return empty( $query_args ) ? $base_url : add_query_arg( $query_args, $base_url );
@@ -1805,22 +1915,23 @@ function solar_template_get_active_catalog_filter_chips( ?array $filters = null,
 }
 
 /**
- * Builds `WP_Query` `tax_query`/`meta_query` arguments for the given, already-sanitized filter
- * selection. Shared by solar_template_apply_catalog_filters_to_main_query() (the initial page
- * load) and solar_template_handle_catalog_filter_request() (the AJAX re-render), so both always
- * filter identically — this is deliberately self-contained rather than relying on WooCommerce's
- * own `$_GET`-reading native price/rating filtering (`price_filter_post_clauses()`/
- * `rating_filter` handling in `WC_Query::get_tax_query()`): both are wired deep into
- * `WC_Query::pre_get_posts()`'s own detection of "is this really a product archive query" and
- * do not reliably engage for a query built programmatically the way the AJAX re-render's is,
- * whereas a plain `meta_query`/`tax_query` on the query itself always applies regardless of how
- * the query was constructed. The "Rating" filter still reuses WooCommerce's real
- * `product_visibility` "rated-N" terms (`wc_get_product_visibility_term_ids()`) — the same data
- * its own widget filters on — rather than a `_wc_average_rating` meta comparison, which would not
- * reflect how WooCommerce itself buckets/caches ratings.
+ * Builds `WP_Query` `tax_query`/`meta_query`/ordering arguments for the given, already-sanitized
+ * filter selection. Shared by solar_template_apply_catalog_filters_to_main_query() (the initial
+ * page load) and solar_template_handle_catalog_filter_request() (the AJAX re-render), so both
+ * always filter/sort identically — this is deliberately self-contained rather than relying on
+ * WooCommerce's own `$_GET`-reading native price/rating filtering (`price_filter_post_clauses()`/
+ * `rating_filter` handling in `WC_Query::get_tax_query()`) or its `posts_clauses`-based catalog
+ * ordering (`WC_Query::get_catalog_ordering_args()`'s "price"/"popularity" cases): all three are
+ * wired deep into `WC_Query::pre_get_posts()`'s own detection of "is this really a product archive
+ * query" and do not reliably engage for a query built programmatically the way the AJAX
+ * re-render's is, whereas plain `meta_query`/`tax_query`/`orderby` args on the query itself always
+ * apply regardless of how the query was constructed. The "Rating" filter still reuses
+ * WooCommerce's real `product_visibility` "rated-N" terms (`wc_get_product_visibility_term_ids()`)
+ * — the same data its own widget filters on — rather than a `_wc_average_rating` meta comparison,
+ * which would not reflect how WooCommerce itself buckets/caches ratings.
  *
  * @param array $filters See solar_template_sanitize_catalog_filters()'s return type.
- * @return array{tax_query?: array, meta_query?: array}
+ * @return array{tax_query?: array, meta_query?: array, orderby: string, order: string, meta_key?: string}
  */
 function solar_template_build_catalog_query_args( array $filters ): array {
 	$args = array();
@@ -1902,13 +2013,14 @@ function solar_template_build_catalog_query_args( array $filters ): array {
 		$args['meta_query'] = array( $price_query ); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- filter bar deliberately queries by price meta.
 	}
 
-	return $args;
+	return array_merge( $args, solar_template_catalog_sort_query_args( $filters['orderby'] ?? '' ) );
 }
 
 /**
- * Merges the currently active catalog filters into the shop/product-taxonomy page's main query,
- * so a plain page load (no JavaScript, a shared/bookmarked filtered URL) already returns filtered
- * results — the AJAX handler only has to re-render the same query for an in-page update.
+ * Merges the currently active catalog filters and sort selection into the shop/product-taxonomy
+ * page's main query, so a plain page load (no JavaScript, a shared/bookmarked filtered URL)
+ * already returns filtered, correctly-ordered results — the AJAX handler only has to re-render
+ * the same query for an in-page update.
  *
  * When a "Category" filter is active, it fully replaces the archive's own taxonomy scope (rather
  * than narrowing it further): picking a category from the filter bar can move a visitor already
@@ -1945,6 +2057,10 @@ function solar_template_apply_catalog_filters_to_main_query( \WP_Query $query ):
 	if ( isset( $args['meta_query'] ) ) {
 		$query->set( 'meta_query', array_merge( (array) $query->get( 'meta_query', array() ), $args['meta_query'] ) );
 	}
+
+	$query->set( 'orderby', $args['orderby'] );
+	$query->set( 'order', $args['order'] );
+	$query->set( 'meta_key', $args['meta_key'] ?? '' );
 }
 add_action( 'pre_get_posts', 'solar_template_apply_catalog_filters_to_main_query' );
 

@@ -3,15 +3,16 @@
  * Created: 2026-09-25 10:20 CEST
  * Role: Catalog filter bar template-part (template-parts/catalog-filters.php).
  * Author: David ROMERA <d.romera.11@gmail.com>
- * Purpose: Render the sticky filter bar (Category/Price/Color/Size/Rating) as a plain native
- *          `<form method="get">` — it still works with JavaScript disabled, submitting a normal
- *          page load that solar_template_apply_catalog_filters_to_main_query() already filters —
+ * Purpose: Render the sticky filter bar (Category/Price/Color/Size/Rating, and a sort dropdown
+ *          aligned to the end of the bar) as a plain native `<form method="get">` — it still
+ *          works with JavaScript disabled, submitting a normal page load that
+ *          solar_template_apply_catalog_filters_to_main_query() already filters/sorts —
  *          progressively enhanced by assets/js/catalog.js into an AJAX request. The Category/
  *          Price/Color/Size groups are each only rendered when they actually have options to
  *          offer (same graceful-degradation convention as the rest of the theme, e.g. no "Color"
  *          filter when the store has no color attribute), so the bar quietly shrinks rather than
- *          showing an empty/broken control. "Rating" has fixed options with no such data
- *          dependency, so it is always offered.
+ *          showing an empty/broken control. "Rating" and the sort dropdown have fixed options
+ *          with no such data dependency, so they are always offered.
  *
  * @package Solar_Template
  */
@@ -190,6 +191,19 @@ $filter_groups[] = array(
 				</div>
 			</div>
 		<?php endforeach; ?>
+
+		<div class="catalog-filters__spacer"></div>
+
+		<label class="catalog-filters__sort">
+			<span class="screen-reader-text"><?php esc_html_e( 'Sort by', 'solar-template' ); ?></span>
+			<select name="catalog_orderby">
+				<?php foreach ( solar_template_get_catalog_sort_options() as $sort_option ) : ?>
+					<option value="<?php echo esc_attr( $sort_option['value'] ); ?>" <?php echo selected( $active_filters['orderby'], $sort_option['value'], false ); ?>>
+						<?php echo esc_html( $sort_option['label'] ); ?>
+					</option>
+				<?php endforeach; ?>
+			</select>
+		</label>
 	</div>
 	</div>
 </form>

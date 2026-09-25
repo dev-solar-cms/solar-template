@@ -5,8 +5,8 @@
  * Purpose: Open/close each filter group's dropdown panel (one at a time, closed on outside
  *          click/Escape, same pattern as the header's mega menu), reflect the active
  *          selection on its toggle button, and submit the whole `#catalog-filters` form via AJAX
- *          to `solar_template_catalog_filter` (see functions.php) whenever a filter control
- *          changes, swapping the returned markup into `#catalog-results` and
+ *          to `solar_template_catalog_filter` (see functions.php) whenever a filter control or
+ *          the sort dropdown changes, swapping the returned markup into `#catalog-results` and
  *          `#catalog-active-filters` without a full page reload. A click on an "Active filters"
  *          chip's remove link or "Clear all" (template-parts/catalog-active-filters.php) is
  *          intercepted the same way: its `href` already encodes the resulting filter state (a
@@ -73,6 +73,12 @@ export function initCatalogFilters() {
 		event.preventDefault();
 		submitFilters(form, config);
 	});
+
+	const sortSelect = form.querySelector('select[name="catalog_orderby"]');
+
+	if (sortSelect) {
+		sortSelect.addEventListener('change', () => submitFilters(form, config));
+	}
 
 	wireActiveFilterChips(form, groups, config);
 }
@@ -213,6 +219,12 @@ function applyUrlToForm(form, url) {
 	form.querySelectorAll('input[type="number"]').forEach((input) => {
 		input.value = params.get(input.name) || '';
 	});
+
+	const sortSelect = form.querySelector('select[name="catalog_orderby"]');
+
+	if (sortSelect) {
+		sortSelect.value = params.get('catalog_orderby') || sortSelect.options[0].value;
+	}
 }
 
 /**

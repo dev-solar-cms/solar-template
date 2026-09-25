@@ -37,7 +37,7 @@ solar-template/
 │   ├── blog-card.php    # Carte article de blog (image 16:10, badge catégorie, meta, titre, extrait, auteur)
 │   ├── cart-badge.php   # Badge du nombre d'articles au panier, utilisé par l'en-tête
 │   ├── mega-menu.php    # Panneau du mega menu « Collections », contenu factice pour l'instant
-│   ├── catalog-filters.php # Barre de filtres du catalogue (Catégorie/Prix/Couleur/Taille/Note), formulaire natif progressivement amélioré en AJAX
+│   ├── catalog-filters.php # Barre de filtres du catalogue (Catégorie/Prix/Couleur/Taille/Note) + tri, formulaire natif progressivement amélioré en AJAX
 │   ├── catalog-results.php # Compteur/grille/pagination du catalogue, partagé entre le chargement de page et le ré-affichage AJAX
 │   ├── catalog-active-filters.php # Rangée de chips des filtres actifs (retrait individuel + « Effacer tout »)
 │   └── front-page/      # Sections de la page d'accueil, une par fichier

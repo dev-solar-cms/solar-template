@@ -514,6 +514,30 @@ final class DefaultStrings {
 				'fr_FR' => "Jusqu'à %s",
 				'en_US' => 'Up to %s',
 			),
+			'Sort by'                                     => array(
+				'fr_FR' => 'Trier par',
+				'en_US' => 'Sort by',
+			),
+			'Relevance'                                   => array(
+				'fr_FR' => 'Pertinence',
+				'en_US' => 'Relevance',
+			),
+			'Price: low to high'                          => array(
+				'fr_FR' => 'Prix croissant',
+				'en_US' => 'Price: low to high',
+			),
+			'Price: high to low'                          => array(
+				'fr_FR' => 'Prix décroissant',
+				'en_US' => 'Price: high to low',
+			),
+			'Newest'                                      => array(
+				'fr_FR' => 'Nouveautés',
+				'en_US' => 'Newest',
+			),
+			'Best sellers'                                => array(
+				'fr_FR' => 'Meilleures ventes',
+				'en_US' => 'Best sellers',
+			),
 		);
 	}
 

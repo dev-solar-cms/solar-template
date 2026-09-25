@@ -163,6 +163,40 @@
 			plain page load and the AJAX request (base URL correctly based on the real catalog page
 			either way), in both installed languages. No PHP warning or error observed.
 		</p>
+
+		<h2 id="sorting">Sorting</h2>
+		<p>
+			A plain native <code>&lt;select&gt;</code>, at the end of the filter bar, offers five
+			options (Relevance, Price: low to high, Price: high to low, Newest, Best sellers) —
+			<code>solar_template_get_catalog_sort_options()</code> in <code>functions.php</code>.
+			Sorting is part of the same form and follows exactly the same path (plain page load
+			already sorted server-side, enhanced into AJAX) as the filters themselves; it is
+			preserved (not reset) when an active filter chip is removed.
+		</p>
+		<p>
+			Technical decision: every sort option maps to plain, real <code>WP_Query</code> args
+			(<code>solar_template_catalog_sort_query_args()</code>) rather than relying on
+			WooCommerce's own native sorting (<code>WC_Query::get_catalog_ordering_args()</code>) —
+			"Price" and "Best sellers" use <code>orderby=meta_value_num</code> directly against real
+			WooCommerce meta (<code>_price</code>, <code>total_sales</code>), a native
+			<code>WP_Query</code> capability that needs no extra hook.
+		</p>
+		<p>
+			Bug encountered and fixed during development: "Best sellers" sorted correctly through
+			the AJAX request but incorrectly on a plain page load. Cause: WooCommerce's own native
+			sorting reads the URL's <code>orderby</code> parameter directly — the exact same name
+			this used at first — and uses it to register its own ordering filter as a side effect,
+			silently overriding the intended sort for the options where WooCommerce orders through a
+			join against its own cache table rather than the meta directly. Fixed by using a
+			dedicated URL parameter (<code>catalog_orderby</code>), unrelated to WooCommerce's own,
+			removing the interference at the source rather than trying to work around it.
+		</p>
+		<p>
+			Verified end to end in the real Docker environment with WooCommerce active, with varied
+			test prices and sales counts: every sort option (alone and combined with a category
+			filter) confirmed with the same result through both a plain page load and the AJAX
+			request, in both installed languages. No PHP warning or error observed.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>
