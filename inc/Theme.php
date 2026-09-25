@@ -19,6 +19,7 @@ use Solar_Template\Database\Installer;
 use Solar_Template\Header\Cart;
 use Solar_Template\Header\Nav;
 use Solar_Template\Newsletter\NewsletterController;
+use Solar_Template\Product\ProductController;
 use Solar_Template\Support\WooCommerceStatus;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -44,6 +45,7 @@ final class Theme {
 		add_action( 'wp_enqueue_scripts', array( Cart::class, 'enqueue_cart_fragments' ), 20 );
 		add_action( 'wp_enqueue_scripts', array( NewsletterController::class, 'enqueue_script' ), 20 );
 		add_action( 'wp_enqueue_scripts', array( CatalogController::class, 'enqueue_script' ), 20 );
+		add_action( 'wp_enqueue_scripts', array( ProductController::class, 'enqueue_script' ), 20 );
 
 		add_filter( 'woocommerce_add_to_cart_fragments', array( Cart::class, 'cart_fragments' ) );
 		add_filter( 'nav_menu_css_class', array( Nav::class, 'primary_nav_item_classes' ), 10, 3 );

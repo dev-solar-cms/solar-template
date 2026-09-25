@@ -4,11 +4,16 @@
  * Role: Product panel template-part (template-parts/single-product/panel.php).
  * Author: David ROMERA <d.romera.11@gmail.com>
  * Purpose: Render the product page's right-hand, sticky panel: badges, title, rating/stock status,
- *          short description, trust badges and the shipping/size/care accordion — everything fed
- *          as plain, already-computed data (single-product.php calls
- *          Solar_Template\Product\ProductBadges/ProductStock/ProductPanel), same convention as
- *          template-parts/single-product/gallery.php. Grows further (variations/price, engraving)
- *          alongside single-product.php.
+ *          price, Color/Size selectors + "Add to cart" form, short description, trust badges and
+ *          the shipping/size/care accordion — everything fed as plain, already-computed data
+ *          (single-product.php calls Solar_Template\Product\ProductBadges/ProductStock/
+ *          ProductPanel/ProductCartForm), same convention as
+ *          template-parts/single-product/gallery.php. The price display and the "Add to cart"
+ *          button stay separate elements (rather than the mockup's single "Add · {price}" button
+ *          text) so assets/js/product.js only ever recomputes one canonical price location.
+ *          Selecting a Color/Size resolves the matching real WooCommerce variation
+ *          (initProductVariations()), updating the price, the hidden `variation_id`, and the "Add
+ *          to cart" button's disabled state accordingly.
  *
  * @package Solar_Template
  * @var array $args {
@@ -17,6 +22,7 @@
  *     @type array  $rating            See Solar_Template\Product\ProductPanel::rating_summary().
  *     @type array  $stock             See Solar_Template\Product\ProductStock::for_product().
  *     @type string $short_description Pre-filtered, already-safe HTML.
+ *     @type array  $cart_form         See Solar_Template\Product\ProductCartForm::for_product().
  *     @type array  $trust_badges      See Solar_Template\Product\ProductPanel::trust_badges().
  *     @type array  $accordion_sections See Solar_Template\Product\ProductPanel::accordion_sections().
  * }
@@ -41,6 +47,13 @@ $panel = wp_parse_args(
 			'modifier' => 'in-stock',
 		),
 		'short_description'  => '',
+		'cart_form'          => array(
+			'product_id'       => 0,
+			'is_variable'      => false,
+			'price_html'       => '',
+			'can_add_to_cart'  => false,
+			'variation_groups' => array(),
+		),
 		'trust_badges'       => array(),
 		'accordion_sections' => array(),
 	)
@@ -82,8 +95,88 @@ $panel = wp_parse_args(
 		</span>
 	</div>
 
+	<?php if ( '' !== $panel['cart_form']['price_html'] ) : ?>
+		<div class="product-panel__price">
+			<span class="product-panel__price-amount" data-product-price><?php echo wp_kses_post( $panel['cart_form']['price_html'] ); ?></span>
+		</div>
+	<?php endif; ?>
+
 	<?php if ( '' !== $panel['short_description'] ) : ?>
 		<div class="product-panel__description"><?php echo wp_kses_post( $panel['short_description'] ); ?></div>
+	<?php endif; ?>
+
+	<?php if ( $panel['cart_form']['product_id'] ) : ?>
+		<div class="product-panel__divider"></div>
+
+		<?php if ( ! empty( $panel['cart_form']['variation_groups'] ) ) : ?>
+			<div class="product-panel__variations">
+				<?php foreach ( $panel['cart_form']['variation_groups'] as $variation_group ) : ?>
+					<div class="product-panel__variation-group" data-attribute="<?php echo esc_attr( $variation_group['taxonomy'] ); ?>" data-type="<?php echo esc_attr( $variation_group['type'] ); ?>">
+						<div class="product-panel__variation-label">
+							<?php echo esc_html( $variation_group['label'] ); ?>
+							<?php if ( 'color' === $variation_group['type'] ) : ?>
+								<span class="product-panel__variation-value" data-selected-label></span>
+							<?php endif; ?>
+						</div>
+
+						<?php if ( 'color' === $variation_group['type'] ) : ?>
+							<div class="product-panel__swatches">
+								<?php foreach ( $variation_group['options'] as $option ) : ?>
+									<button
+										type="button"
+										class="product-panel__swatch<?php echo $option['available'] ? '' : ' is-unavailable'; ?>"
+										data-value="<?php echo esc_attr( $option['slug'] ); ?>"
+										data-label="<?php echo esc_attr( $option['name'] ); ?>"
+										style="background-color: <?php echo esc_attr( $option['color'] ); ?>"
+										title="<?php echo esc_attr( $option['name'] ); ?>"
+										aria-label="<?php echo esc_attr( sprintf( /* translators: %s: color name. */ __( 'Color: %s', 'solar-template' ), $option['name'] ) ); ?>"
+										<?php echo $option['available'] ? '' : ' disabled'; ?>
+									></button>
+								<?php endforeach; ?>
+							</div>
+						<?php else : ?>
+							<div class="product-panel__size-options">
+								<?php foreach ( $variation_group['options'] as $option ) : ?>
+									<button
+										type="button"
+										class="product-panel__size-option<?php echo $option['available'] ? '' : ' is-unavailable'; ?>"
+										data-value="<?php echo esc_attr( $option['slug'] ); ?>"
+										<?php echo $option['available'] ? '' : ' disabled'; ?>
+									><?php echo esc_html( $option['name'] ); ?></button>
+								<?php endforeach; ?>
+							</div>
+						<?php endif; ?>
+					</div>
+				<?php endforeach; ?>
+			</div>
+
+			<p class="product-panel__variation-message" data-variation-message hidden></p>
+		<?php endif; ?>
+
+		<form class="product-panel__cart-form" method="post" enctype="multipart/form-data" action="<?php echo esc_url( get_permalink( $panel['cart_form']['product_id'] ) ); ?>">
+			<?php foreach ( $panel['cart_form']['variation_groups'] as $variation_group ) : ?>
+				<input type="hidden" name="attribute_<?php echo esc_attr( $variation_group['taxonomy'] ); ?>" value="" />
+			<?php endforeach; ?>
+			<?php if ( $panel['cart_form']['is_variable'] ) : ?>
+				<input type="hidden" class="product-panel__variation-id" name="variation_id" value="0" />
+			<?php endif; ?>
+
+			<div class="product-panel__quantity">
+				<button type="button" class="product-panel__qty-decrease" aria-label="<?php echo esc_attr__( 'Decrease quantity', 'solar-template' ); ?>">&minus;</button>
+				<input type="number" class="product-panel__qty-input" name="quantity" value="1" min="1" inputmode="numeric" aria-label="<?php echo esc_attr__( 'Quantity', 'solar-template' ); ?>" />
+				<button type="button" class="product-panel__qty-increase" aria-label="<?php echo esc_attr__( 'Increase quantity', 'solar-template' ); ?>">+</button>
+			</div>
+
+			<button
+				type="submit"
+				name="add-to-cart"
+				value="<?php echo esc_attr( $panel['cart_form']['product_id'] ); ?>"
+				class="product-panel__add-to-cart"
+				<?php echo $panel['cart_form']['can_add_to_cart'] ? '' : ' disabled'; ?>
+			>
+				<?php esc_html_e( 'Add to cart', 'solar-template' ); ?>
+			</button>
+		</form>
 	<?php endif; ?>
 
 	<?php if ( ! empty( $panel['trust_badges'] ) ) : ?>

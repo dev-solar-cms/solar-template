@@ -622,6 +622,30 @@ final class DefaultStrings {
 				'fr_FR' => 'Lavage à la main recommandé. Ne pas sécher en machine. Repasser à basse température si nécessaire.',
 				'en_US' => 'Hand washing recommended. Do not tumble dry. Iron on a low heat setting if needed.',
 			),
+			'Color: %s'                                   => array(
+				'fr_FR' => 'Couleur : %s',
+				'en_US' => 'Color: %s',
+			),
+			'Decrease quantity'                           => array(
+				'fr_FR' => 'Diminuer la quantité',
+				'en_US' => 'Decrease quantity',
+			),
+			'Quantity'                                    => array(
+				'fr_FR' => 'Quantité',
+				'en_US' => 'Quantity',
+			),
+			'Increase quantity'                           => array(
+				'fr_FR' => 'Augmenter la quantité',
+				'en_US' => 'Increase quantity',
+			),
+			'This combination is currently unavailable.'  => array(
+				'fr_FR' => "Cette combinaison n'est actuellement pas disponible.",
+				'en_US' => 'This combination is currently unavailable.',
+			),
+			'This combination is currently out of stock.' => array(
+				'fr_FR' => 'Cette combinaison est actuellement en rupture de stock.',
+				'en_US' => 'This combination is currently out of stock.',
+			),
 		);
 	}
 

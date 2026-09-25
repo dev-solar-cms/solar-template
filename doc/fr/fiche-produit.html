@@ -110,6 +110,57 @@
 			et la traduction complète du panneau — produit de test supprimé après vérification. Aucun
 			avertissement ni erreur PHP relevé.
 		</p>
+
+		<h2 id="variations-et-prix-dynamique">Variations et prix dynamique</h2>
+		<p>
+			Pour un produit variable WooCommerce, le panneau affiche des sélecteurs Couleur et Taille —
+			cercles de couleur et boutons de taille — branchés sur les vraies variations du produit,
+			plutôt que les menus déroulants natifs de WooCommerce. Chaque option grisée et désactivée
+			indique qu'aucune variation en stock n'existe pour cette valeur, toutes autres dimensions
+			confondues (même traitement statique que la maquette pour sa taille XXL, indépendant de la
+			couleur choisie).
+		</p>
+		<p>
+			<code>Solar_Template\Product\ProductVariations</code> construit ces groupes de sélecteurs et
+			la liste de variations transmise en JavaScript, en réutilisant les mêmes slugs d'attribut
+			Couleur/Taille filtrables que la barre de filtres du catalogue
+			(<code>Catalog\CatalogOptions::color_attribute_slug()</code>/<code>size_attribute_slug()</code>)
+			— une boutique ne configure ce nom d'attribut qu'une seule fois pour tout le thème. La
+			couleur du cercle vient de <code>Product\ColorSwatch::hex_for_term()</code> : une meta de
+			terme optionnelle en priorité, sinon une table de correspondance nom/slug → hexadécimal
+			filtrable, sinon un gris neutre — en attendant un futur écran d'administration pour la
+			configurer terme par terme.
+		</p>
+		<p>
+			<code>assets/js/product.js</code> (<code>initProductVariations()</code>) résout la sélection
+			courante contre la vraie liste de variations localisée par
+			<code>Product\ProductController::enqueue_script()</code>
+			(<code>window.solarTemplateProduct</code>), et met à jour en conséquence : le prix affiché
+			(reformaté selon les réglages réels d'affichage des prix de la boutique — décimales,
+			séparateurs, position du symbole — et non une valeur codée en dur), le champ caché
+			<code>variation_id</code> du formulaire d'ajout au panier, et l'état désactivé du bouton
+			« Ajouter au panier ».
+		</p>
+		<p>
+			Décision technique : contrairement à la maquette, dont le bouton d'ajout au panier affiche
+			lui-même le prix (« Ajouter · {prix} »), le prix affiché et le bouton restent deux éléments
+			séparés — un seul emplacement de prix à recalculer plutôt que deux endroits à garder
+			synchronisés. Le formulaire d'ajout au panier reste un formulaire natif WooCommerce standard
+			(soumission classique, sans rechargement en AJAX) : les champs <code>attribute_*</code>
+			habituellement de vrais menus déroulants sont ici des champs cachés, synchronisés par ce
+			script à chaque clic sur un cercle de couleur ou un bouton de taille — WooCommerce reçoit
+			donc exactement la même requête qu'avec des menus déroulants natifs.
+		</p>
+		<p>
+			Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif, dans les
+			deux langues installées : un produit variable de test (deux couleurs, deux tailles, une
+			combinaison volontairement en rupture de stock) confirme l'affichage correct des sélecteurs,
+			la plage de prix initiale, puis une requête d'ajout au panier identique à celle que
+			soumettrait le formulaire une fois une combinaison valide résolue confirme que le panier
+			WooCommerce reçoit bien la variante et la quantité exactes (total du panier vérifié) —
+			produit et variations de test supprimés après vérification. Aucun avertissement ni erreur PHP
+			relevé.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

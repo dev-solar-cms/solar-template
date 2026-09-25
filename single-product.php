@@ -17,6 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use Solar_Template\Product\ProductBadges;
+use Solar_Template\Product\ProductCartForm;
 use Solar_Template\Product\ProductGallery;
 use Solar_Template\Product\ProductPanel;
 use Solar_Template\Product\ProductStock;
@@ -50,6 +51,7 @@ while ( have_posts() ) :
 		'rating'             => ProductPanel::rating_summary( $solar_product ),
 		'stock'              => ProductStock::for_product( $solar_product ),
 		'short_description'  => apply_filters( 'woocommerce_short_description', $solar_product->get_short_description() ),
+		'cart_form'          => ProductCartForm::for_product( $solar_product ),
 		'trust_badges'       => ProductPanel::trust_badges(),
 		'accordion_sections' => ProductPanel::accordion_sections(),
 	);

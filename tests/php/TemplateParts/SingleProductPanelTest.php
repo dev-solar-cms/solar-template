@@ -5,8 +5,9 @@
  * Author: David ROMERA <d.romera.11@gmail.com>
  * Purpose: Render the product panel template-part with plain, already-computed data (no real
  *          WordPress/WooCommerce install available here) and assert on the resulting markup:
- *          badges, rating stars/average/review link, stock status, short description, trust
- *          badges, accordion, and that every optional block is skipped when empty.
+ *          badges, rating stars/average/review link, stock status, price, Color/Size selectors,
+ *          "Add to cart" form, short description, trust badges, accordion, and that every optional
+ *          block is skipped when empty.
  *
  * @package Solar_Template
  */
@@ -122,6 +123,117 @@ final class SingleProductPanelTest extends TestCase {
 		$this->assertStringNotContainsString( 'product-panel__description', $html );
 		$this->assertStringNotContainsString( 'product-panel__trust', $html );
 		$this->assertStringNotContainsString( 'product-panel__accordion', $html );
+		$this->assertStringNotContainsString( 'product-panel__cart-form', $html );
+		$this->assertStringNotContainsString( 'product-panel__variations', $html );
 		$this->assertStringContainsString( 'product-panel__stock--out-of-stock', $html );
+	}
+
+	/**
+	 * A simple product's cart form renders its price and an enabled "Add to cart" button, no
+	 * Color/Size selectors.
+	 *
+	 * @return void
+	 */
+	public function test_renders_simple_product_cart_form(): void {
+		$html = $this->render(
+			array(
+				'title'     => 'Simple Product',
+				'rating'    => array(
+					'average'       => 0.0,
+					'rounded_stars' => 0,
+					'review_count'  => 0,
+				),
+				'stock'     => array(
+					'label'    => 'In stock',
+					'modifier' => 'in-stock',
+				),
+				'cart_form' => array(
+					'product_id'       => 42,
+					'is_variable'      => false,
+					'price_html'       => '<span class="amount">42,00&nbsp;€</span>',
+					'can_add_to_cart'  => true,
+					'variation_groups' => array(),
+				),
+			)
+		);
+
+		$this->assertStringContainsString( 'data-product-price', $html );
+		$this->assertStringContainsString( '42,00', $html );
+		$this->assertStringContainsString( 'name="add-to-cart"', $html );
+		$this->assertStringContainsString( 'value="42"', $html );
+		$this->assertStringNotContainsString( 'product-panel__variations', $html );
+		$this->assertDoesNotMatchRegularExpression( '/product-panel__add-to-cart"\s*disabled/', $html );
+	}
+
+	/**
+	 * A variable product's cart form renders Color/Size selectors (with an unavailable option
+	 * disabled) and a disabled "Add to cart" button until a selection resolves a real variation
+	 * (see tests/js/product.test.js for that resolution logic).
+	 *
+	 * @return void
+	 */
+	public function test_renders_variable_product_selectors_disabled_until_resolved(): void {
+		$html = $this->render(
+			array(
+				'title'     => 'Variable Product',
+				'rating'    => array(
+					'average'       => 0.0,
+					'rounded_stars' => 0,
+					'review_count'  => 0,
+				),
+				'stock'     => array(
+					'label'    => 'In stock',
+					'modifier' => 'in-stock',
+				),
+				'cart_form' => array(
+					'product_id'       => 7,
+					'is_variable'      => true,
+					'price_html'       => '<span class="amount">20,00&nbsp;€ – 50,00&nbsp;€</span>',
+					'can_add_to_cart'  => false,
+					'variation_groups' => array(
+						array(
+							'taxonomy' => 'pa_color',
+							'type'     => 'color',
+							'label'    => 'Color',
+							'options'  => array(
+								array(
+									'slug'      => 'black',
+									'name'      => 'Black',
+									'color'     => '#0d0d0d',
+									'available' => true,
+								),
+							),
+						),
+						array(
+							'taxonomy' => 'pa_size',
+							'type'     => 'size',
+							'label'    => 'Size',
+							'options'  => array(
+								array(
+									'slug'      => 'm',
+									'name'      => 'M',
+									'color'     => null,
+									'available' => true,
+								),
+								array(
+									'slug'      => 'xxl',
+									'name'      => 'XXL',
+									'color'     => null,
+									'available' => false,
+								),
+							),
+						),
+					),
+				),
+			)
+		);
+
+		$this->assertStringContainsString( 'product-panel__variations', $html );
+		$this->assertStringContainsString( 'data-attribute="pa_color"', $html );
+		$this->assertStringContainsString( 'product-panel__swatch', $html );
+		$this->assertStringContainsString( 'data-attribute="pa_size"', $html );
+		$this->assertStringContainsString( 'product-panel__variation-id', $html );
+		$this->assertMatchesRegularExpression( '/product-panel__size-option is-unavailable"[^>]*disabled/', $html );
+		$this->assertMatchesRegularExpression( '/product-panel__add-to-cart"\s*\n?\s*disabled/', $html );
 	}
 }

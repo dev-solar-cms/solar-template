@@ -34,7 +34,7 @@ solar-template/
 │   ├── Database/        # Schéma et installation des tables `wp_solar_template_*`
 │   ├── Newsletter/      # Stockage des inscrits à la newsletter (SubscriberRepository)
 │   ├── Catalog/         # Options/filtres/pagination/contrôleurs du catalogue produits
-│   └── Product/         # Logique de la fiche produit (galerie, ...), en construction
+│   └── Product/         # Logique de la fiche produit (galerie, panneau, variations), en construction
 ├── template-parts/      # Fragments de gabarit réutilisables (`get_template_part()`)
 │   ├── product-card.php # Carte produit (image, badge, wishlist, overlay panier, prix, swatches)
 │   ├── blog-card.php    # Carte article de blog (image 16:10, badge catégorie, meta, titre, extrait, auteur)
@@ -224,6 +224,27 @@ solar-template/
   accordéon (livraison/guide des tailles/entretien) — ces deux derniers en contenu éditorial
   filtrable (`Product\ProductPanel::trust_badges()`/`accordion_sections()`), même convention que
   les aides de la page d'accueil, prêt pour le futur onglet d'administration « Produits ».
+- Pour un produit variable, le panneau affiche des sélecteurs Couleur/Taille
+  (`Product\ProductVariations::attribute_groups()`, réutilisant les mêmes slugs d'attribut
+  filtrables que la barre de filtres du catalogue — `Catalog\CatalogOptions::color_attribute_slug()`/
+  `size_attribute_slug()`, configurés une seule fois pour tout le thème) : cercles de couleur
+  (`Product\ColorSwatch::hex_for_term()`, une meta de terme optionnelle puis une table de
+  correspondance nom/slug → hex filtrable, en attendant un futur écran d'administration) et
+  boutons de taille, chacun grisé/désactivé s'il n'existe aucune variation en stock pour cette
+  valeur, toutes autres dimensions confondues (même traitement statique que la maquette pour sa
+  taille XXL). Le prix affiché et le bouton « Ajouter au panier » restent des éléments séparés
+  (plutôt que le texte de bouton combiné « Ajouter · {prix} » de la maquette), pour n'avoir qu'un
+  seul emplacement de prix à recalculer.
+- `assets/js/product.js` (`initProductVariations()`) résout la sélection Couleur/Taille courante
+  contre la vraie liste de variations WooCommerce localisée par
+  `Product\ProductController::enqueue_script()` (`window.solarTemplateProduct`), et met à jour en
+  conséquence : le prix affiché (reformaté selon les réglages réels d'affichage des prix de la
+  boutique — décimales, séparateurs, position du symbole —, pas une valeur codée en dur), le champ
+  caché `variation_id` du formulaire d'ajout au panier, et l'état désactivé du bouton. Le
+  formulaire lui-même reste un `<form>` natif WooCommerce standard (champs `attribute_*` cachés
+  synchronisés par ce script plutôt que des `<select>` visibles) — l'ajout au panier fonctionne
+  donc par un chargement de page classique, sans AJAX, vérifié de bout en bout en simulant la
+  requête réelle que soumettrait le formulaire.
 
 ### Pied de page du thème (`footer.php`, `assets/scss/_footer.scss`)
 

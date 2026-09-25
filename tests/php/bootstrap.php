@@ -188,4 +188,14 @@ if ( ! function_exists( '__' ) ) {
 	function number_format_i18n( float $number, int $decimals = 0 ): string {
 		return number_format( $number, $decimals );
 	}
+
+	/**
+	 * Plain stand-in for WordPress' permalink lookup (no real post/routing available here).
+	 *
+	 * @param int $post_id Post/product ID.
+	 * @return string A deterministic fake URL.
+	 */
+	function get_permalink( int $post_id = 0 ): string {
+		return "https://example.test/?p={$post_id}";
+	}
 }

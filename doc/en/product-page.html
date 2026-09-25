@@ -103,6 +103,52 @@
 			short description, its (out of) stock status, and the panel's full translation — test product
 			deleted after verification. No PHP warning or error found.
 		</p>
+
+		<h2 id="variations-and-dynamic-price">Variations and dynamic price</h2>
+		<p>
+			For a WooCommerce variable product, the panel renders Color and Size selectors — color
+			circles and size buttons — wired to the product's real variations, rather than WooCommerce's
+			native dropdown selects. Each greyed-out, disabled option means no in-stock variation exists
+			for that value, regardless of any other dimension (same static treatment as the mockup's own
+			XXL size, independent of the chosen color).
+		</p>
+		<p>
+			<code>Solar_Template\Product\ProductVariations</code> builds these selector groups and the
+			variation list passed to JavaScript, reusing the same filterable Color/Size attribute slugs
+			as the catalog filter bar (<code>Catalog\CatalogOptions::color_attribute_slug()</code>/
+			<code>size_attribute_slug()</code>) — a store only configures this attribute name once for
+			the whole theme. The swatch color comes from
+			<code>Product\ColorSwatch::hex_for_term()</code>: an optional per-term meta value first,
+			then a filterable name/slug → hex map, then a neutral gray — pending a future administration
+			screen to configure it per term.
+		</p>
+		<p>
+			<code>assets/js/product.js</code> (<code>initProductVariations()</code>) resolves the current
+			selection against the real variation list localized by
+			<code>Product\ProductController::enqueue_script()</code>
+			(<code>window.solarTemplateProduct</code>), updating accordingly: the displayed price
+			(reformatted using the store's real price display settings — decimals, separators, symbol
+			position — never a hardcoded value), the "Add to cart" form's hidden <code>variation_id</code>,
+			and that button's disabled state.
+		</p>
+		<p>
+			Technical decision: unlike the mockup, whose "Add to cart" button itself displays the price
+			("Add · {price}"), the price and the button stay two separate elements — a single price
+			location to recompute rather than two to keep in sync. The "Add to cart" form itself stays a
+			standard native WooCommerce form (a plain submission, no AJAX): the <code>attribute_*</code>
+			fields usually real dropdown selects are hidden inputs here, synced by this script on every
+			color circle/size button click — WooCommerce receives exactly the same request it would from
+			native dropdowns.
+		</p>
+		<p>
+			Verified end to end in the real Docker environment with WooCommerce active, in both installed
+			languages: a test variable product (two colors, two sizes, one combination deliberately out
+			of stock) confirms the selectors render correctly and the initial price range, then an
+			add-to-cart request identical to the one the form would submit once a valid combination is
+			resolved confirms WooCommerce's real cart receives the exact variation and quantity (cart
+			total verified) — test product and variations deleted after verification. No PHP warning or
+			error found.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.4.7`.
+Version actuelle : `0.4.8`.
 
 ## Avant une release
 
@@ -30,6 +30,27 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.4.8 — variations et prix dynamique de la fiche produit
+
+- Pour un produit variable, ajout des sélecteurs Couleur (cercles) et Taille (boutons) du panneau
+  produit, branchés sur les vraies variations WooCommerce : sélectionner une combinaison recalcule
+  en direct le prix affiché et l'état de disponibilité, sans rechargement de page. Une option sans
+  aucune variation en stock (toutes couleurs/tailles confondues) est grisée et désactivée.
+- Le bouton « Ajouter au panier » reste désactivé tant qu'une combinaison valide et en stock n'est
+  pas sélectionnée, puis s'active en indiquant l'identifiant réel de la variante au formulaire
+  d'ajout au panier — un ajout au panier soumet donc exactement la même requête que le mécanisme
+  natif de WooCommerce.
+- Décision technique : contrairement à la maquette, dont le bouton d'ajout au panier affiche
+  lui-même le prix, celui-ci reste un élément séparé du bouton — un seul emplacement de prix à
+  recalculer. Le prix est reformaté selon les réglages réels d'affichage de la boutique (décimales,
+  séparateurs, position du symbole) plutôt qu'une valeur codée en dur.
+- Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif, dans les deux
+  langues installées : un produit variable de test (deux couleurs, deux tailles, une combinaison
+  volontairement en rupture de stock) confirme les sélecteurs, la plage de prix initiale, puis une
+  requête d'ajout au panier identique à celle que soumettrait le formulaire confirme que le panier
+  WooCommerce reçoit la bonne variante et la bonne quantité — produit et variations de test
+  supprimés après vérification. Aucun avertissement ni erreur PHP relevé.
 
 ### 0.4.7 — panneau de la fiche produit
 
