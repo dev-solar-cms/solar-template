@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.1.0` (scaffold initial, non publié).
+Version actuelle : `0.1.1`.
 
 ## Avant une release
 
@@ -28,6 +28,14 @@ Ce dépôt est public (`github.com/dev-solar-cms/solar-template`) et versionné 
 3. Créer une release GitHub à partir du tag, avec un changelog résumant les changements.
 
 ## Changelog
+
+### 0.1.1 — vérification de l'environnement de développement
+
+- Confirmation que le thème peut être testé fonctionnellement dans l'environnement Docker réel
+  (`wp-cli` et Composer sont récupérés à la demande sous forme de `.phar`, sans modifier l'image
+  du conteneur ni aucun fichier hors de ce thème).
+- Ajout d'un site de documentation statique (FR + EN) dans `doc/`, avec une première page
+  « Infrastructure » décrivant cette méthode de vérification.
 
 ### 0.1.0 — scaffold initial
 

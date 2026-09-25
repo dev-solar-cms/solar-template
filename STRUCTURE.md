@@ -16,8 +16,11 @@ solar-template/
 ├── functions.php     # Déclare le support title-tag et post-thumbnails
 ├── index.php          # Seul gabarit présent ; appelle get_header()/get_footer()
 ├── screenshot.png     # 1200x900, requis par WordPress pour l'aperçu du thème
-├── composer.json      # Métadonnées placeholder (aucune dépendance)
+├── composer.json      # Dépendances PHP + autoload PSR-4 (Solar_Template\)
 ├── package.json       # Métadonnées placeholder (aucun script/dépendance)
+├── doc/                # Documentation du projet (site statique HTML/JS, FR + EN)
+│   ├── en/, fr/         # Pages par langue (index.html, infrastructure.html, ...)
+│   └── assets/          # CSS/JS partagés par la documentation
 ├── LICENSE             # GPL-2.0-or-later
 ├── README.md
 ├── RELEASE.md

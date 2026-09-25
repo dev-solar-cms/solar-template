@@ -1,0 +1,52 @@
+<!--
+	Created: 2026-09-25 05:39 CEST
+	Role: English documentation home page for the Solar Template WordPress theme.
+	Author: David ROMERA <d.romera.11@gmail.com>
+	Purpose: Entry point of the project documentation site, published as a static site.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Solar Template — Documentation</title>
+	<link rel="stylesheet" href="../assets/doc.css" />
+</head>
+<body>
+	<aside class="doc-sidebar">
+		<a class="doc-brand" href="index.html">Solar Template</a>
+		<nav>
+			<ul>
+				<li><a href="index.html">Home</a></li>
+				<li><a href="infrastructure.html">Infrastructure</a></li>
+			</ul>
+		</nav>
+		<div class="doc-lang-switch">
+			<a class="is-active" href="index.html">EN</a>
+			<a href="../fr/index.html">FR</a>
+		</div>
+	</aside>
+	<main class="doc-content">
+		<h1>Solar Template documentation</h1>
+		<p>
+			Solar Template is a classic (non-block) WordPress theme built for a WooCommerce
+			storefront. This site documents how the theme is built, configured and extended.
+		</p>
+		<h2>Requirements</h2>
+		<ul>
+			<li>PHP 8.1 or later</li>
+			<li>A WordPress installation (this repository does not include WordPress core)</li>
+			<li>WooCommerce, for the storefront features (the theme activates without it and shows
+				an administration notice inviting you to install it — see <a href="infrastructure.html#woocommerce">Infrastructure</a>)</li>
+		</ul>
+		<h2>Where to start</h2>
+		<p>
+			See the <a href="infrastructure.html">Infrastructure</a> section for how the theme is
+			built, tested and released: dependency management, the environment configuration, the
+			translation system, the asset build pipeline, the database tables created on
+			activation, and the continuous integration pipeline.
+		</p>
+	</main>
+	<script src="../assets/doc.js"></script>
+</body>
+</html>

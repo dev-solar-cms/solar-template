@@ -1,0 +1,54 @@
+<!--
+	Créé le : 2026-09-25 05:39 CEST
+	Rôle : Page d'accueil de la documentation en français du thème WordPress Solar Template.
+	Auteur : David ROMERA <d.romera.11@gmail.com>
+	Objectif : Point d'entrée du site de documentation du projet, publié en site statique.
+-->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Solar Template — Documentation</title>
+	<link rel="stylesheet" href="../assets/doc.css" />
+</head>
+<body>
+	<aside class="doc-sidebar">
+		<a class="doc-brand" href="index.html">Solar Template</a>
+		<nav>
+			<ul>
+				<li><a href="index.html">Accueil</a></li>
+				<li><a href="infrastructure.html">Infrastructure</a></li>
+			</ul>
+		</nav>
+		<div class="doc-lang-switch">
+			<a href="../en/index.html">EN</a>
+			<a class="is-active" href="index.html">FR</a>
+		</div>
+	</aside>
+	<main class="doc-content">
+		<h1>Documentation Solar Template</h1>
+		<p>
+			Solar Template est un thème WordPress classique (non block) conçu pour une boutique
+			WooCommerce. Ce site documente la façon dont le thème est construit, configuré et
+			étendu.
+		</p>
+		<h2>Prérequis</h2>
+		<ul>
+			<li>PHP 8.1 ou supérieur</li>
+			<li>Une installation WordPress (ce dépôt ne contient pas WordPress lui-même)</li>
+			<li>WooCommerce, pour les fonctionnalités boutique (le thème s'active sans lui et
+				affiche une notice d'administration invitant à l'installer — voir
+				<a href="infrastructure.html#woocommerce">Infrastructure</a>)</li>
+		</ul>
+		<h2>Par où commencer</h2>
+		<p>
+			Consultez la section <a href="infrastructure.html">Infrastructure</a> pour savoir
+			comment le thème est construit, testé et publié : gestion des dépendances,
+			configuration d'environnement, système de traduction, pipeline de compilation des
+			assets, tables créées à l'activation, et pipeline d'intégration continue.
+		</p>
+	</main>
+	<script src="../assets/doc.js"></script>
+</body>
+</html>

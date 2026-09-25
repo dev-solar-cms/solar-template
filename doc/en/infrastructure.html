@@ -1,0 +1,81 @@
+<!--
+	Created: 2026-09-25 05:39 CEST
+	Role: English documentation page describing the theme's infrastructure/tooling.
+	Author: David ROMERA <d.romera.11@gmail.com>
+	Purpose: Document, in English, how the theme's development environment, dependency
+	         management, translation system, asset pipeline, database and CI are set up.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Infrastructure — Solar Template Documentation</title>
+	<link rel="stylesheet" href="../assets/doc.css" />
+</head>
+<body>
+	<aside class="doc-sidebar">
+		<a class="doc-brand" href="index.html">Solar Template</a>
+		<nav>
+			<ul>
+				<li><a href="index.html">Home</a></li>
+				<li><a href="infrastructure.html">Infrastructure</a></li>
+			</ul>
+		</nav>
+		<div class="doc-lang-switch">
+			<a class="is-active" href="infrastructure.html">EN</a>
+			<a href="../fr/infrastructure.html">FR</a>
+		</div>
+	</aside>
+	<main class="doc-content">
+		<h1>Infrastructure</h1>
+
+		<h2 id="docker-access">Running commands against the local WordPress install</h2>
+		<p>
+			This theme only runs inside a WordPress installation. Locally, that installation is
+			managed by the parent <code>wordpress-dev-env</code> Docker environment
+			(<code>make start</code>, see that repository's own documentation). This repository
+			does not ship <code>wp-cli</code> or Composer inside the container image — they are
+			fetched on demand, as disposable <code>.phar</code> files, so nothing about the
+			container image itself has to change:
+		</p>
+		<pre><code>docker compose exec wordpress bash -lc "
+  curl -sSL -o /tmp/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+  chmod +x /tmp/wp-cli.phar
+  php /tmp/wp-cli.phar core version --path=/var/www/html --allow-root
+"</code></pre>
+		<p>The same approach is used for Composer:</p>
+		<pre><code>docker compose exec wordpress bash -lc "
+  curl -sSL -o /tmp/composer.phar https://getcomposer.org/composer-stable.phar
+  chmod +x /tmp/composer.phar
+  php /tmp/composer.phar --version
+"</code></pre>
+		<p>
+			Both commands can also be run through <code>make terminal</code> once inside the
+			container shell. Every functional check described on this page (activating the
+			theme, inspecting the database, compiling translations, running the WooCommerce
+			notice) was verified this way, against the real WordPress install.
+		</p>
+
+		<h2 id="dependencies">PHP dependencies and contracts</h2>
+		<p>
+			The theme uses Composer for its PHP dependencies, autoloaded under the
+			<code>Solar_Template\</code> namespace (PSR-4, mapped to <code>inc/</code>). Business
+			code never calls a third-party library directly: it depends on an interface defined
+			under <code>Solar_Template\Contracts\*</code>, with a default implementation provided
+			under <code>Solar_Template\Support\*</code> (or a dedicated namespace for larger
+			subsystems, e.g. <code>Solar_Template\I18n\*</code>). This keeps every dependency
+			replaceable without touching the code that consumes it.
+		</p>
+
+		<h2 id="woocommerce">WooCommerce detection</h2>
+		<p>
+			The theme does not require WooCommerce to activate. If WooCommerce is missing or
+			inactive, an administration notice is displayed inviting the site administrator to
+			install/activate it, and WooCommerce-specific theme support is skipped gracefully
+			instead of causing a fatal error.
+		</p>
+	</main>
+	<script src="../assets/doc.js"></script>
+</body>
+</html>

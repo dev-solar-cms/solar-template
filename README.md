@@ -18,7 +18,12 @@ En développement local, ce thème est prévu pour tourner dans l'environnement 
 
 ## Développement
 
-Aucun outil de build, linter ou suite de tests n'est configuré pour l'instant (`composer.json`/`package.json` sont des métadonnées placeholder). Ne pas supposer l'existence de scripts `npm run build` ou `composer install` tant que ces fichiers n'ont pas été complétés.
+L'outillage (Composer, pipeline d'assets, tests, CI) est mis en place progressivement — voir
+[RELEASE.md](./RELEASE.md) pour l'état d'avancement exact. Toute vérification fonctionnelle réelle
+(activation du thème, base de données, traductions) s'exécute à l'intérieur du conteneur Docker du
+dépôt parent, via `wp-cli`/Composer récupérés à la demande (voir la documentation dans
+[doc/fr/infrastructure.html](./doc/fr/infrastructure.html) /
+[doc/en/infrastructure.html](./doc/en/infrastructure.html)).
 
 Voir [STRUCTURE.md](./STRUCTURE.md) pour l'organisation des fichiers et [RELEASE.md](./RELEASE.md) pour la procédure de versionnage/publication.
 
