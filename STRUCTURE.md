@@ -15,6 +15,7 @@ solar-template/
 ├── style.css        # En-tête du thème (nom, version, text-domain) — pas de styles réels encore
 ├── functions.php     # Support title-tag/post-thumbnails, menus, hooks, aides header (réseaux, compte, panier, nav)
 ├── header.php         # En-tête sticky global (barre supérieure + navigation principale)
+├── footer.php         # Pied de page global (colonnes, newsletter, copyright, icônes de paiement)
 ├── index.php          # Seul gabarit de contenu présent ; appelle get_header()/get_footer()
 ├── screenshot.png     # 1200x900, requis par WordPress pour l'aperçu du thème
 ├── composer.json      # Dépendances PHP + autoload PSR-4 (Solar_Template\)
@@ -44,6 +45,7 @@ solar-template/
 │   ├── scss/_product-card.scss # Composant carte produit (media, badge, wishlist, overlay panier, prix, swatches)
 │   ├── scss/_blog-card.scss # Composant carte article de blog (media 16:10, badge, meta, titre, extrait, auteur)
 │   ├── scss/_header.scss # En-tête sticky (barre supérieure, actions, navigation, mega menu)
+│   ├── scss/_footer.scss # Pied de page (colonnes, newsletter, copyright, icônes de paiement)
 │   ├── js/main.js        # Point d'entrée JS (importe le SCSS, initialise les modules de comportement)
 │   ├── js/header.js      # Comportement de l'en-tête (mega menu, bascule de recherche)
 │   └── dist/             # Sortie compilée (générée par `npm run build`/`dev`, ignorée par git)
@@ -121,9 +123,24 @@ solar-template/
   garantissent qu'un menu réel assigné à l'emplacement `primary` reçoit les mêmes classes que la
   navigation de secours, pour un rendu/comportement identique dans les deux cas.
 
+### Pied de page du thème (`footer.php`, `assets/scss/_footer.scss`)
+
+- Grille 5 colonnes (Marque, Boutique, Informations, Légal, Newsletter) + barre de bas de page
+  (copyright, icônes de méthodes de paiement), conforme à la maquette.
+- Contenu piloté par `solar_template_footer_config()` (marque, colonnes de liens, newsletter),
+  `solar_template_footer_payment_icons()` et `solar_template_footer_copyright()` — chacune
+  filtrable, en prévision de l'onglet « Pied de page » du Groupe 10 (pas encore construit).
+- Les liens Boutique/Informations pointent vers l'équivalent le plus proche déjà disponible (page
+  boutique WooCommerce, page des articles) ; les liens Légal (C.G.V., confidentialité, mentions
+  légales, cookies) et « À propos » résolvent vers une page du même slug si elle existe
+  (`solar_template_page_url_by_slug()`, partagée avec la navigation), sinon vers l'accueil — ces
+  pages légales elles-mêmes restent à construire (Groupe 09).
+- Le formulaire newsletter n'est que du balisage : aucune logique d'inscription n'est câblée à
+  cette étape (hors périmètre, voir la fiche d'étape correspondante).
+- Le texte de copyright utilise un espace réservé littéral `{year}`, remplacé par l'année en cours
+  au rendu plutôt qu'à la traduction, pour ne jamais devenir obsolète.
+
 ### À noter
-- `footer.php` **n'existe pas encore** : `index.php` l'appelle déjà, le thème produira donc un
-  avertissement de dépréciation tant qu'il n'est pas créé (`header.php`, lui, existe désormais).
 - `template-claude-code.html` (s'il est présent à la racine) est une maquette HTML exportée, ignorée par git — à utiliser comme référence visuelle/structurelle pour construire les vrais gabarits, jamais comme code à exécuter ou copier tel quel.
 - `.claude/` et `CLAUDE.md` sont exclus du dépôt via `.gitignore` (configuration locale de l'assistant, non versionnée).
 - `composer.json` définit les dépendances PHP et l'autoload PSR-4 (`composer install` requis après

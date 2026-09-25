@@ -1,0 +1,157 @@
+// Created: 2026-09-25 09:00 CEST
+// Role: Site footer component partial (assets/scss/_footer.scss).
+// Author: David ROMERA <d.romera.11@gmail.com>
+// Purpose: Style the footer rendered by footer.php — brand/shop/information/legal columns, the
+//          newsletter form, payment method badges and the copyright bottom bar — built entirely
+//          from the shared design tokens in _tokens.scss.
+
+@use 'tokens' as *;
+
+$footer-social-icon-color: rgba(255, 255, 255, 0.35);
+$footer-column-heading-color: rgba(255, 255, 255, 0.28);
+$footer-column-link-color: rgba(255, 255, 255, 0.5);
+
+.site-footer {
+	background: $color-dark;
+	padding: $spacing-section-y $container-padding-x 40px;
+	border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.site-footer__inner {
+	max-width: $container-max-width;
+	margin: 0 auto;
+}
+
+.site-footer__columns {
+	display: grid;
+	grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr;
+	gap: 56px;
+	margin-bottom: 64px;
+}
+
+.site-footer__brand {
+	display: block;
+	font-size: 14px;
+	font-weight: $font-weight-extrabold;
+	letter-spacing: 0.22em;
+	text-transform: uppercase;
+	color: $color-surface;
+	margin-bottom: 18px;
+}
+
+.site-footer__brand-description {
+	font-size: 13.5px;
+	line-height: 1.8;
+	color: rgba(255, 255, 255, 0.38);
+	max-width: 240px;
+	margin: 0 0 26px;
+	text-wrap: pretty;
+}
+
+.site-footer__social {
+	display: flex;
+	gap: 14px;
+}
+
+.site-footer__social-link {
+	color: $footer-social-icon-color;
+	line-height: 0;
+	transition: color 0.2s ease;
+
+	&:hover,
+	&:focus-visible {
+		color: $color-surface;
+	}
+}
+
+.site-footer__column-heading {
+	display: block;
+	font-size: 10px;
+	font-weight: $font-weight-bold;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	color: $footer-column-heading-color;
+	margin-bottom: 18px;
+}
+
+.site-footer__column-links {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.site-footer__column-link {
+	color: $footer-column-link-color;
+	font-size: 13.5px;
+	transition: color 0.2s ease;
+
+	&:hover,
+	&:focus-visible {
+		color: $color-surface;
+	}
+}
+
+.site-footer__newsletter-description {
+	font-size: 13px;
+	color: rgba(255, 255, 255, 0.38);
+	margin: 0 0 14px;
+	line-height: 1.6;
+}
+
+.site-footer__newsletter-form {
+	display: flex;
+}
+
+.site-footer__newsletter-input {
+	flex: 1;
+	min-width: 0;
+	background: rgba(255, 255, 255, 0.06);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-right: none;
+	border-radius: $radius-badge 0 0 $radius-badge;
+	padding: 11px 13px;
+	color: $color-surface;
+	font-size: 13px;
+	outline: none;
+}
+
+.site-footer__newsletter-submit {
+	background: $color-gold;
+	color: $color-dark;
+	border: none;
+	padding: 11px 15px;
+	font-size: 14px;
+	font-weight: $font-weight-bold;
+	cursor: pointer;
+	border-radius: 0 $radius-badge $radius-badge 0;
+}
+
+.site-footer__bottom {
+	border-top: 1px solid rgba(255, 255, 255, 0.07);
+	padding-top: 28px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 16px;
+}
+
+.site-footer__copyright {
+	font-size: 11.5px;
+	color: rgba(255, 255, 255, 0.28);
+}
+
+.site-footer__payment-icons {
+	display: flex;
+	gap: 7px;
+}
+
+.site-footer__payment-icon {
+	background: rgba(255, 255, 255, 0.06);
+	border-radius: $radius-badge;
+	padding: 4px 8px;
+	font-size: 9.5px;
+	font-weight: $font-weight-extrabold;
+	color: rgba(255, 255, 255, 0.3);
+	letter-spacing: 0.07em;
+}

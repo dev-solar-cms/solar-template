@@ -46,93 +46,153 @@ final class DefaultStrings {
 				'fr_FR' => "Solar Template est conçu pour WooCommerce. Merci d'<a href=\"%s\">installer et d'activer WooCommerce</a> pour activer les fonctionnalités boutique.",
 				'en_US' => 'Solar Template is designed for WooCommerce. Please <a href="%s">install and activate WooCommerce</a> to enable the storefront features.',
 			),
-			'Add to wishlist'      => array(
+			'Add to wishlist'             => array(
 				'fr_FR' => 'Ajouter à la liste de souhaits',
 				'en_US' => 'Add to wishlist',
 			),
-			'Add to cart'          => array(
+			'Add to cart'                 => array(
 				'fr_FR' => 'Ajouter au panier',
 				'en_US' => 'Add to cart',
 			),
-			'−%d%%'                => array(
+			'−%d%%'                       => array(
 				'fr_FR' => '−%d %%',
 				'en_US' => '−%d%%',
 			),
-			'Skip to content'      => array(
+			'Skip to content'             => array(
 				'fr_FR' => 'Aller au contenu',
 				'en_US' => 'Skip to content',
 			),
-			'Instagram'            => array(
+			'Instagram'                   => array(
 				'fr_FR' => 'Instagram',
 				'en_US' => 'Instagram',
 			),
-			'Facebook'             => array(
+			'Facebook'                    => array(
 				'fr_FR' => 'Facebook',
 				'en_US' => 'Facebook',
 			),
-			'X (Twitter)'          => array(
+			'X (Twitter)'                 => array(
 				'fr_FR' => 'X (Twitter)',
 				'en_US' => 'X (Twitter)',
 			),
-			'Search'               => array(
+			'Search'                      => array(
 				'fr_FR' => 'Rechercher',
 				'en_US' => 'Search',
 			),
-			'My account'           => array(
+			'My account'                  => array(
 				'fr_FR' => 'Mon compte',
 				'en_US' => 'My account',
 			),
-			'Cart'                 => array(
+			'Cart'                        => array(
 				'fr_FR' => 'Panier',
 				'en_US' => 'Cart',
 			),
-			'Primary Navigation'   => array(
+			'Primary Navigation'          => array(
 				'fr_FR' => 'Navigation principale',
 				'en_US' => 'Primary Navigation',
 			),
-			'Shop'                 => array(
+			'Shop'                        => array(
 				'fr_FR' => 'Boutique',
 				'en_US' => 'Shop',
 			),
-			'New In'               => array(
+			'New In'                      => array(
 				'fr_FR' => 'Nouveautés',
 				'en_US' => 'New In',
 			),
-			'Collections'          => array(
+			'Collections'                 => array(
 				'fr_FR' => 'Collections',
 				'en_US' => 'Collections',
 			),
-			'Sale'                 => array(
+			'Sale'                        => array(
 				'fr_FR' => 'Promotions',
 				'en_US' => 'Sale',
 			),
-			'Blog'                 => array(
+			'Blog'                        => array(
 				'fr_FR' => 'Blog',
 				'en_US' => 'Blog',
 			),
-			'Contact'              => array(
+			'Contact'                     => array(
 				'fr_FR' => 'Contact',
 				'en_US' => 'Contact',
 			),
-			'Shop by category'     => array(
+			'Shop by category'            => array(
 				'fr_FR' => 'Acheter par catégorie',
 				'en_US' => 'Shop by category',
 			),
-			'Best Sellers'         => array(
+			'Best Sellers'                => array(
 				'fr_FR' => 'Meilleures ventes',
 				'en_US' => 'Best Sellers',
 			),
-			'Limited Edition'      => array(
+			'Limited Edition'             => array(
 				'fr_FR' => 'Édition limitée',
 				'en_US' => 'Limited Edition',
 			),
-			'Featured'             => array(
+			'Featured'                    => array(
 				'fr_FR' => 'En vedette',
 				'en_US' => 'Featured',
 			),
-			'View All Collections' => array(
+			'View All Collections'        => array(
 				'fr_FR' => 'Voir toutes les collections',
 				'en_US' => 'View All Collections',
+			),
+			'A modern, configurable WooCommerce theme to showcase your products.' => array(
+				'fr_FR' => 'Thème WooCommerce moderne et configurable pour valoriser vos produits.',
+				'en_US' => 'A modern, configurable WooCommerce theme to showcase your products.',
+			),
+			'All Products'                => array(
+				'fr_FR' => 'Tous les produits',
+				'en_US' => 'All Products',
+			),
+			'Information'                 => array(
+				'fr_FR' => 'Informations',
+				'en_US' => 'Information',
+			),
+			'About'                       => array(
+				'fr_FR' => 'À propos',
+				'en_US' => 'About',
+			),
+			'Legal'                       => array(
+				'fr_FR' => 'Légal',
+				'en_US' => 'Legal',
+			),
+			'Terms & Conditions'          => array(
+				'fr_FR' => 'C.G.V.',
+				'en_US' => 'Terms & Conditions',
+			),
+			'Privacy Policy'              => array(
+				'fr_FR' => 'Confidentialité',
+				'en_US' => 'Privacy Policy',
+			),
+			'Legal Notice'                => array(
+				'fr_FR' => 'Mentions légales',
+				'en_US' => 'Legal Notice',
+			),
+			'Cookies'                     => array(
+				'fr_FR' => 'Cookies',
+				'en_US' => 'Cookies',
+			),
+			'Newsletter'                  => array(
+				'fr_FR' => 'Newsletter',
+				'en_US' => 'Newsletter',
+			),
+			'Get exclusive offers first.' => array(
+				'fr_FR' => 'Offres exclusives en avant-première.',
+				'en_US' => 'Get exclusive offers first.',
+			),
+			'Email address'               => array(
+				'fr_FR' => 'Adresse e-mail',
+				'en_US' => 'Email address',
+			),
+			'email@example.com'           => array(
+				'fr_FR' => 'email@exemple.com',
+				'en_US' => 'email@example.com',
+			),
+			'Subscribe'                   => array(
+				'fr_FR' => "S'abonner",
+				'en_US' => 'Subscribe',
+			),
+			'© {year} %s — WordPress WooCommerce theme · All rights reserved' => array(
+				'fr_FR' => '© {year} %s — Thème WordPress WooCommerce · Tous droits réservés',
+				'en_US' => '© {year} %s — WordPress WooCommerce theme · All rights reserved',
 			),
 		);
 	}

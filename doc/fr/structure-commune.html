@@ -121,6 +121,41 @@
 			panneau qui venait d'être fermé — corrigé par un verrou temporaire qui ignore cet
 			événement de focus précis, le temps de la remise au focus programmatique.
 		</p>
+
+		<h2 id="pied-de-page">Pied de page</h2>
+		<p>
+			<code>footer.php</code> affiche une grille de cinq colonnes (Marque, Boutique,
+			Informations, Légal, Newsletter) suivie d'une barre de bas de page (copyright, icônes de
+			méthodes de paiement), stylée par <code>assets/scss/_footer.scss</code> et alimentée par
+			trois aides filtrables dans <code>functions.php</code> :
+			<code>solar_template_footer_config()</code> (marque, colonnes de liens, texte de la
+			newsletter), <code>solar_template_footer_payment_icons()</code> et
+			<code>solar_template_footer_copyright()</code>.
+		</p>
+		<p>
+			Les liens Boutique/Informations résolvent vers l'équivalent le plus proche déjà
+			disponible (page boutique WooCommerce, page des articles), comme la navigation
+			principale. Les liens Légal (C.G.V., confidentialité, mentions légales, cookies) et
+			« À propos » utilisent <code>solar_template_page_url_by_slug()</code> — une aide extraite
+			de la logique de navigation à cette étape pour être partagée entre les deux — qui résout
+			vers une page du même slug si elle existe, sinon vers l'accueil : ces pages légales
+			elles-mêmes restent à construire.
+		</p>
+		<p>
+			Le formulaire newsletter n'est que du balisage accessible (champ email avec label associé,
+			bouton d'envoi avec libellé accessible) : aucune logique d'inscription n'est câblée à cette
+			étape, explicitement hors périmètre.
+		</p>
+		<p>
+			Le texte de copyright utilise un espace réservé littéral <code>{year}</code>, remplacé
+			par l'année en cours au moment du rendu (pas à la traduction), pour ne jamais devenir
+			obsolète sans intervention.
+		</p>
+		<p>
+			Vérifié dans l'environnement Docker réel : le pied de page s'affiche sans avertissement ni
+			erreur sur la page d'accueil et sur la page boutique, avec le nom du site et l'année
+			courante correctement interpolés.
+		</p>
 		<p>
 			Vérifié dans l'environnement Docker réel avec WooCommerce actif : le thème s'active sans
 			avertissement ni erreur liés à l'en-tête, les icônes compte/panier résolvent vers les

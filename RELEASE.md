@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.2.5`.
+Version actuelle : `0.2.6`.
 
 ## Avant une release
 
@@ -30,6 +30,23 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.2.6 — pied de page global
+
+- Ajout de `footer.php` : grille 5 colonnes (Marque, Boutique, Informations, Légal, Newsletter) et
+  barre de bas de page (copyright avec année dynamique, icônes de méthodes de paiement), affichée
+  sur toutes les pages qui appellent `get_footer()`.
+- Décision technique : le contenu (colonnes de liens, icônes de paiement, modèle de copyright) est
+  exposé via des filtres WordPress plutôt que codé en dur, en prévision du futur écran
+  d'administration qui le pilotera.
+- Décision technique : extraction d'une aide partagée (résolution d'une page par son slug, avec
+  repli vers l'accueil) entre la navigation et le pied de page, pour éviter de dupliquer cette
+  logique entre les deux.
+- Le formulaire d'inscription à la newsletter reste volontairement du balisage sans logique
+  d'envoi, hors périmètre de cette version.
+- Vérifié de bout en bout dans l'environnement Docker réel : le pied de page s'affiche sans
+  avertissement ni erreur sur plusieurs pages, avec le nom du site et l'année courante
+  correctement interpolés.
 
 ### 0.2.5 — mega menu de navigation
 

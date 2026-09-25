@@ -118,6 +118,39 @@
 			with a temporary guard that ignores that specific focus event while the programmatic
 			refocus happens.
 		</p>
+
+		<h2 id="footer">Footer</h2>
+		<p>
+			<code>footer.php</code> renders a five-column grid (Brand, Shop, Information, Legal,
+			Newsletter) followed by a bottom bar (copyright, payment method badges), styled by
+			<code>assets/scss/_footer.scss</code> and fed by three filterable helpers in
+			<code>functions.php</code>: <code>solar_template_footer_config()</code> (brand,
+			link columns, newsletter copy), <code>solar_template_footer_payment_icons()</code> and
+			<code>solar_template_footer_copyright()</code>.
+		</p>
+		<p>
+			The Shop/Information links resolve to the closest existing equivalent already available
+			(the WooCommerce shop page, the posts page), same as the primary navigation. The Legal
+			links (terms, privacy, legal notice, cookies) and "About" use
+			<code>solar_template_page_url_by_slug()</code> — a helper extracted from the navigation
+			logic at this step so both share it — which resolves to a page of the same slug if one
+			exists, or the front page otherwise: those legal pages themselves are still to be built.
+		</p>
+		<p>
+			The newsletter form is accessible markup only (an email field with an associated label, a
+			submit button with an accessible label): no sign-up logic is wired at this step,
+			explicitly out of scope.
+		</p>
+		<p>
+			The copyright line uses a literal <code>{year}</code> placeholder, replaced by the
+			current year at render time (not at translation time), so it never goes stale without
+			intervention.
+		</p>
+		<p>
+			Verified in the real Docker environment: the footer renders without any warning or error
+			on both the home page and the shop page, with the site name and current year correctly
+			interpolated.
+		</p>
 		<p>
 			Verified in the real Docker environment with WooCommerce active: the theme activates
 			without any header-related warning or error, the account/cart icons resolve to the
