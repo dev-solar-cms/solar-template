@@ -72,6 +72,44 @@
 			confirme l'affichage de la bande de miniatures, la première marquée active — produit et
 			images de test supprimés après vérification. Aucun avertissement ni erreur PHP relevé.
 		</p>
+
+		<h2 id="panneau-produit">Panneau produit</h2>
+		<p>
+			<code>template-parts/single-product/panel.php</code> affiche la colonne droite, sticky
+			(<code>top:120px</code>) : badges, titre, notation, statut de stock, description courte,
+			bloc de réassurance et accordéon. Comme pour la galerie, ce fragment ne fait qu'afficher des
+			données déjà calculées — <code>single-product.php</code> appelle
+			<code>Solar_Template\Product\ProductBadges</code>/<code>ProductPanel</code>/<code>ProductStock</code>
+			et lui transmet le résultat.
+		</p>
+		<p>
+			Contrairement à la maquette, dont les badges « NOUVEAU »/« SOLAR PREMIUM » sont toujours
+			affichés, ceux-ci sont calculés depuis de vraies données WooCommerce et peuvent ne pas
+			s'afficher du tout : « Nouveau » tant que le produit a été publié il y a moins de
+			<code>solar_template_product_new_badge_days</code> jours (14 par défaut, filtrable), « Solar
+			Premium » uniquement si le produit est marqué « En vedette » depuis l'écran d'édition
+			(<code>WC_Product::is_featured()</code>).
+		</p>
+		<p>
+			Le statut de stock (« En stock »/« Rupture de stock »/« Disponible sur commande ») est
+			traduit via le catalogue propre au thème plutôt que de réutiliser les chaînes natives de
+			WooCommerce (qui utilisent leur propre domaine de traduction, distinct de celui du thème) —
+			cohérent avec la fondation i18n posée en tout début de projet.
+		</p>
+		<p>
+			Décision technique : le bloc de réassurance et l'accordéon restent du contenu éditorial,
+			exposés via des filtres WordPress dédiés (<code>solar_template_product_trust_badges</code>/
+			<code>solar_template_product_accordion_sections</code>) — même convention que les aides déjà
+			en place pour le hero et la section « notre histoire » de la page d'accueil, prêts pour le
+			futur onglet d'administration « Produits » sans construire cet onglet maintenant.
+		</p>
+		<p>
+			Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif, dans les
+			deux langues installées : un produit de test fraîchement créé et marqué « En vedette »
+			confirme l'affichage des deux badges, sa description courte, son statut de stock (rupture)
+			et la traduction complète du panneau — produit de test supprimé après vérification. Aucun
+			avertissement ni erreur PHP relevé.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

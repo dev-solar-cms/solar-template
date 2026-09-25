@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.4.6`.
+Version actuelle : `0.4.7`.
 
 ## Avant une release
 
@@ -30,6 +30,25 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.4.7 — panneau de la fiche produit
+
+- Ajout du panneau produit, en colonne droite sticky de la fiche produit : badges, titre,
+  notation (étoiles, moyenne, lien vers les avis), statut de stock, description courte, bloc de
+  réassurance (livraison/retours/paiement sécurisé) et accordéon (livraison & retours, guide des
+  tailles, entretien).
+- Contrairement à la maquette, dont les badges « NOUVEAU »/« SOLAR PREMIUM » sont toujours
+  affichés, ceux-ci sont désormais calculés depuis de vraies données WooCommerce : « Nouveau » tant
+  que le produit a été publié il y a moins de 14 jours (filtrable), « Solar Premium » uniquement
+  si le produit est marqué « En vedette ».
+- Décision technique : le statut de stock est traduit via le catalogue propre au thème plutôt que
+  de réutiliser les chaînes natives de WooCommerce, qui utilisent leur propre domaine de
+  traduction — cohérent avec la fondation i18n du thème.
+- Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif, dans les deux
+  langues installées : un produit de test fraîchement créé et marqué « En vedette » confirme
+  l'affichage des deux badges, sa description courte, son statut de stock et la traduction
+  complète du panneau — produit de test supprimé après vérification. Aucun avertissement ni
+  erreur PHP relevé.
 
 ### 0.4.6 — galerie de la fiche produit
 

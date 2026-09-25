@@ -19,7 +19,7 @@ solar-template/
 ├── searchform.php     # Formulaire de recherche natif personnalisé, chargé par get_search_form()
 ├── front-page.php     # Page d'accueil, assemblée section par section (template-parts/front-page/*)
 ├── archive-product.php # Catalogue produits (boutique + archives de catégorie/étiquette) : fil d'Ariane, titre, barre de filtres et résultats
-├── single-product.php  # Fiche produit : fil d'Ariane, galerie (template-parts/single-product/*), en construction
+├── single-product.php  # Fiche produit : fil d'Ariane, galerie + panneau (template-parts/single-product/*), en construction
 ├── index.php          # Gabarit de repli ; appelle get_header()/get_footer()
 ├── screenshot.png     # 1200x900, requis par WordPress pour l'aperçu du thème
 ├── composer.json      # Dépendances PHP + autoload PSR-4 (Solar_Template\)
@@ -46,7 +46,8 @@ solar-template/
 │   ├── catalog-load-more.php # Statut « Affichage de N sur M », barre de progression et bouton « Charger plus » du catalogue
 │   ├── catalog-active-filters.php # Rangée de chips des filtres actifs (retrait individuel + « Effacer tout »)
 │   ├── single-product/  # Fragments de la fiche produit, un par section (en construction)
-│   │   └── gallery.php  # Image principale 4:5 + bande de miniatures (changement au clic, sans rechargement)
+│   │   ├── gallery.php  # Image principale 4:5 + bande de miniatures (changement au clic, sans rechargement)
+│   │   └── panel.php    # Colonne droite sticky : badges, titre, notation, statut de stock, description courte, réassurance, accordéon
 │   └── front-page/      # Sections de la page d'accueil, une par fichier
 │       ├── hero.php     # Hero plein écran (accroche, titre 3 lignes, CTA, trust badges, carte flottante)
 │       ├── featured-products.php # Grille masonry des produits WooCommerce marqués « en vedette »
@@ -213,6 +214,16 @@ solar-template/
   `initProductGallery()`) — aucune dépendance à la galerie zoom/lightbox de la maquette, dont le
   comportement n'est pas spécifié au-delà de la maquette elle-même (même choix qu'`archive-
   product.php` pour la bascule grille/liste).
+- Le panneau produit (colonne droite, sticky `top:120px`) affiche des badges calculés depuis de
+  vraies données WooCommerce (`Product\ProductBadges::for_product()` : « Nouveau » si le produit a
+  été publié il y a moins de `solar_template_product_new_badge_days` jours — 14 par défaut,
+  filtrable —, « Solar Premium » si `WC_Product::is_featured()`), le titre, la notation (étoiles +
+  moyenne + lien vers les avis, `Product\ProductPanel::rating_summary()`), le statut de stock
+  (`Product\ProductStock::for_product()`, indépendant des chaînes du cœur WooCommerce — traduit via
+  le catalogue propre au thème), la description courte du produit, un bloc de réassurance et un
+  accordéon (livraison/guide des tailles/entretien) — ces deux derniers en contenu éditorial
+  filtrable (`Product\ProductPanel::trust_badges()`/`accordion_sections()`), même convention que
+  les aides de la page d'accueil, prêt pour le futur onglet d'administration « Produits ».
 
 ### Pied de page du thème (`footer.php`, `assets/scss/_footer.scss`)
 

@@ -163,4 +163,29 @@ if ( ! function_exists( '__' ) ) {
 	function wp_parse_args( array $args, array $defaults = array() ): array {
 		return array_merge( $defaults, $args );
 	}
+
+	/**
+	 * Identity stand-in for WordPress' plural translation function: picks the singular or plural
+	 * source text based on $number, no actual translation (see the __() stand-in above).
+	 *
+	 * @param string $single Singular source text.
+	 * @param string $plural Plural source text.
+	 * @param int    $number Number determining which form to use.
+	 * @param string $domain Text domain (ignored here).
+	 * @return string $single or $plural, unchanged.
+	 */
+	function _n( string $single, string $plural, int $number, string $domain = 'default' ): string { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed, WordPress.WP.I18n.MissingTranslatorsComment -- stand-in for the real WordPress function, not a real translatable string.
+		return 1 === $number ? $single : $plural;
+	}
+
+	/**
+	 * Plain stand-in for WordPress' locale-aware number formatter (no real locale support here).
+	 *
+	 * @param float $number   Number to format.
+	 * @param int   $decimals Number of decimal points.
+	 * @return string Formatted number.
+	 */
+	function number_format_i18n( float $number, int $decimals = 0 ): string {
+		return number_format( $number, $decimals );
+	}
 }

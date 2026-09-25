@@ -67,6 +67,42 @@
 			renders, the first one marked active — test product and images deleted after verification. No
 			PHP warning or error found.
 		</p>
+
+		<h2 id="product-panel">Product panel</h2>
+		<p>
+			<code>template-parts/single-product/panel.php</code> renders the sticky right-hand column
+			(<code>top:120px</code>): badges, title, rating, stock status, short description, a trust
+			badges block and an accordion. Same as the gallery, this fragment only renders already-
+			computed data — <code>single-product.php</code> calls
+			<code>Solar_Template\Product\ProductBadges</code>/<code>ProductPanel</code>/<code>ProductStock</code>
+			and passes the result to it.
+		</p>
+		<p>
+			Unlike the mockup, whose "NEW"/"SOLAR PREMIUM" badges are always shown, these are computed
+			from real WooCommerce data and may not render at all: "New" as long as the product was
+			published less than <code>solar_template_product_new_badge_days</code> days ago (14 by
+			default, filterable), "Solar Premium" only when the product is marked "Featured" from the
+			edit screen (<code>WC_Product::is_featured()</code>).
+		</p>
+		<p>
+			The stock status ("In stock"/"Out of stock"/"Available on backorder") is translated through
+			the theme's own catalog rather than reusing WooCommerce's core strings (which use their own
+			text domain, distinct from the theme's) — consistent with the i18n foundation laid at the
+			very start of the project.
+		</p>
+		<p>
+			Technical decision: the trust badges block and the accordion stay editorial content, exposed
+			through dedicated WordPress filters (<code>solar_template_product_trust_badges</code>/
+			<code>solar_template_product_accordion_sections</code>) — same convention as the home page's
+			hero/"our story" helpers, ready for the future "Products" administration tab without building
+			that tab now.
+		</p>
+		<p>
+			Verified end to end in the real Docker environment with WooCommerce active, in both installed
+			languages: a freshly created test product marked "Featured" confirms both badges render, its
+			short description, its (out of) stock status, and the panel's full translation — test product
+			deleted after verification. No PHP warning or error found.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

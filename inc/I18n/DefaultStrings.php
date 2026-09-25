@@ -550,6 +550,78 @@ final class DefaultStrings {
 				'fr_FR' => "Voir l'image %1\$d sur %2\$d",
 				'en_US' => 'View image %1$d of %2$d',
 			),
+			'New'                                         => array(
+				'fr_FR' => 'Nouveau',
+				'en_US' => 'New',
+			),
+			'Solar Premium'                               => array(
+				'fr_FR' => 'Solar Premium',
+				'en_US' => 'Solar Premium',
+			),
+			'In stock'                                    => array(
+				'fr_FR' => 'En stock',
+				'en_US' => 'In stock',
+			),
+			'Out of stock'                                => array(
+				'fr_FR' => 'Rupture de stock',
+				'en_US' => 'Out of stock',
+			),
+			'Available on backorder'                      => array(
+				'fr_FR' => 'Disponible sur commande',
+				'en_US' => 'Available on backorder',
+			),
+			'%d review →'                                 => array(
+				'fr_FR'  => '%d avis →',
+				'en_US'  => '%d review →',
+				'plural' => array(
+					'fr_FR' => '%d avis →',
+					'en_US' => '%d reviews →',
+				),
+			),
+			'Free shipping'                               => array(
+				'fr_FR' => 'Livraison offerte',
+				'en_US' => 'Free shipping',
+			),
+			'From €60'                                    => array(
+				'fr_FR' => 'Dès 60€',
+				'en_US' => 'From €60',
+			),
+			'Free returns'                                => array(
+				'fr_FR' => 'Retour gratuit',
+				'en_US' => 'Free returns',
+			),
+			'Within 30 days'                              => array(
+				'fr_FR' => 'Sous 30 jours',
+				'en_US' => 'Within 30 days',
+			),
+			'SSL encrypted'                               => array(
+				'fr_FR' => 'Chiffrement SSL',
+				'en_US' => 'SSL encrypted',
+			),
+			'Shipping & Returns'                          => array(
+				'fr_FR' => 'Livraison & Retours',
+				'en_US' => 'Shipping & Returns',
+			),
+			'Standard delivery in 3–5 business days (free from €60). Express delivery available. Returns accepted within 30 days in their original packaging.' => array(
+				'fr_FR' => "Livraison standard en 3 à 5 jours ouvrés (offerte dès 60€). Livraison express disponible. Retours acceptés sous 30 jours dans leur emballage d'origine.",
+				'en_US' => 'Standard delivery in 3–5 business days (free from €60). Express delivery available. Returns accepted within 30 days in their original packaging.',
+			),
+			'Size guide'                                  => array(
+				'fr_FR' => 'Guide des tailles',
+				'en_US' => 'Size guide',
+			),
+			'If in doubt between two sizes, we recommend choosing the larger one. See the product\'s own attributes above for the sizes currently available.' => array(
+				'fr_FR' => 'En cas de doute entre deux tailles, nous recommandons de choisir la taille supérieure. Consultez les caractéristiques du produit ci-dessus pour connaître les tailles actuellement disponibles.',
+				'en_US' => 'If in doubt between two sizes, we recommend choosing the larger one. See the product\'s own attributes above for the sizes currently available.',
+			),
+			'Care instructions'                           => array(
+				'fr_FR' => 'Entretien',
+				'en_US' => 'Care instructions',
+			),
+			'Hand washing recommended. Do not tumble dry. Iron on a low heat setting if needed.' => array(
+				'fr_FR' => 'Lavage à la main recommandé. Ne pas sécher en machine. Repasser à basse température si nécessaire.',
+				'en_US' => 'Hand washing recommended. Do not tumble dry. Iron on a low heat setting if needed.',
+			),
 		);
 	}
 

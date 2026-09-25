@@ -4,9 +4,10 @@
  * Role: Product page template (single-product.php), loaded by WooCommerce for every product's own
  *       page.
  * Author: David ROMERA <d.romera.11@gmail.com>
- * Purpose: Render the product page: breadcrumb, title, and (so far) the image gallery
- *          (template-parts/single-product/gallery.php). Grows section by section, same convention
- *          as front-page.php/archive-product.php.
+ * Purpose: Render the product page: breadcrumb, then a two-column layout with the image gallery
+ *          (template-parts/single-product/gallery.php) on the left and the sticky product panel
+ *          (template-parts/single-product/panel.php) on the right. Grows section by section, same
+ *          convention as front-page.php/archive-product.php.
  *
  * @package Solar_Template
  */
@@ -15,7 +16,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use Solar_Template\Product\ProductBadges;
 use Solar_Template\Product\ProductGallery;
+use Solar_Template\Product\ProductPanel;
+use Solar_Template\Product\ProductStock;
 
 get_header();
 
@@ -39,6 +43,16 @@ while ( have_posts() ) :
 			),
 		);
 	}
+
+	$solar_product_panel_args = array(
+		'title'              => get_the_title(),
+		'badges'             => ProductBadges::for_product( $solar_product ),
+		'rating'             => ProductPanel::rating_summary( $solar_product ),
+		'stock'              => ProductStock::for_product( $solar_product ),
+		'short_description'  => apply_filters( 'woocommerce_short_description', $solar_product->get_short_description() ),
+		'trust_badges'       => ProductPanel::trust_badges(),
+		'accordion_sections' => ProductPanel::accordion_sections(),
+	);
 	?>
 	<main class="product-page">
 		<div class="product-page__inner">
@@ -54,7 +68,10 @@ while ( have_posts() ) :
 			);
 			?>
 
-			<?php get_template_part( 'template-parts/single-product/gallery', null, array( 'images' => $solar_product_images ) ); ?>
+			<div class="product-page__layout">
+				<?php get_template_part( 'template-parts/single-product/gallery', null, array( 'images' => $solar_product_images ) ); ?>
+				<?php get_template_part( 'template-parts/single-product/panel', null, $solar_product_panel_args ); ?>
+			</div>
 		</div>
 	</main>
 	<?php

@@ -4,7 +4,7 @@
 
 Thème WordPress classique (non block/FSE) destiné à l'écosystème **dev-solar-cms**.
 
-> État actuel : système de design commun en place (tokens, boutons/badges/pills, cartes produit/article), structure commune du thème (`header.php`, `footer.php`, mega menu), page d'accueil (`front-page.php`) complète (hero, produits vedettes, catégories, notre histoire, témoignages, aperçu du blog, newsletter), catalogue produits (`archive-product.php`) complet (grille de produits réels avec fil d'Ariane, titre, compteur, une barre de filtres qui met à jour la grille en AJAX sans rechargement de page, filtres actifs, tri, chargement progressif) et fiche produit (`single-product.php`) en cours : galerie d'images avec bande de miniatures. Voir [STRUCTURE.md](./STRUCTURE.md) pour le détail des fichiers.
+> État actuel : système de design commun en place (tokens, boutons/badges/pills, cartes produit/article), structure commune du thème (`header.php`, `footer.php`, mega menu), page d'accueil (`front-page.php`) complète (hero, produits vedettes, catégories, notre histoire, témoignages, aperçu du blog, newsletter), catalogue produits (`archive-product.php`) complet (grille de produits réels avec fil d'Ariane, titre, compteur, une barre de filtres qui met à jour la grille en AJAX sans rechargement de page, filtres actifs, tri, chargement progressif) et fiche produit (`single-product.php`) en cours : galerie d'images avec bande de miniatures, panneau produit (badges, titre, notation, statut de stock, description, réassurance, accordéon). Voir [STRUCTURE.md](./STRUCTURE.md) pour le détail des fichiers.
 
 ## Prérequis
 
