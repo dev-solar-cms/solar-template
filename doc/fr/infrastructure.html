@@ -138,6 +138,19 @@ npm run format    # formate assets/**/*.{js,scss} avec Prettier</code></pre>
 			que produit <code>DatabaseTranslator::compile()</code>.
 		</p>
 
+		<h2 id="tests">Tests automatisés</h2>
+		<pre><code>composer test   # tests unitaires PHP (PHPUnit)
+npm run test    # tests unitaires JS (Vitest, jsdom)</code></pre>
+		<p>
+			La suite PHP tourne avec un bootstrap minimal (<code>tests/php/bootstrap.php</code>)
+			qui ne définit que la poignée de fonctions/constantes WordPress réellement utilisées en
+			dehors d'une vraie installation (transients en mémoire, <code>ARRAY_A</code>, …) — pas
+			une bibliothèque de stubs complète du cœur WordPress. Aucun avertissement ni dépréciation
+			n'est toléré dans aucune des deux suites. Cette suite automatisée complète, sans jamais
+			la remplacer, la vérification fonctionnelle manuelle contre l'installation WordPress
+			Docker réelle effectuée pour chaque changement décrit sur cette page.
+		</p>
+
 		<h2 id="base-de-donnees">Tables de base de données et activation</h2>
 		<p>
 			À l'activation, le thème crée trois tables dédiées (préfixées

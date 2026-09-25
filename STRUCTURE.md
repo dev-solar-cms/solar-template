@@ -20,7 +20,7 @@ solar-template/
 ├── phpcs.xml.dist      # Norme de code PHP (WordPress-Extra), utilisée par `composer lint`/`format`
 ├── .env.example        # Réglages non sensibles du thème (version, mode assets, TTL cache) — versionné
 ├── .env                 # Copie locale de .env.example, ignorée par git
-├── package.json       # Métadonnées placeholder (aucun script/dépendance)
+├── package.json       # Pipeline de build des assets + tests JS (Vite, Vitest, Prettier)
 ├── inc/                # Classes PHP du thème, autoloadées en PSR-4 sous `Solar_Template\`
 │   ├── Contracts/       # Interfaces consommées par le code métier (jamais une lib tierce directement)
 │   ├── Support/         # Implémentations par défaut des interfaces génériques
@@ -33,6 +33,9 @@ solar-template/
 │   ├── scss/main.scss   # Point d'entrée SCSS (sources non compilées)
 │   ├── js/main.js       # Point d'entrée JS (importe le SCSS pour une compilation unifiée)
 │   └── dist/            # Sortie compilée (générée par `npm run build`/`dev`, ignorée par git)
+├── phpunit.xml.dist     # Configuration PHPUnit, utilisée par `composer test`
+├── tests/php/           # Tests unitaires PHP (bootstrap minimal, pas une installation WordPress complète)
+├── test/js/             # Tests unitaires JS (Vitest, environnement jsdom), utilisés par `npm run test`
 ├── doc/                # Documentation du projet (site statique HTML/JS, FR + EN)
 │   ├── en/, fr/         # Pages par langue (index.html, infrastructure.html, ...)
 │   └── assets/          # CSS/JS partagés par la documentation
@@ -95,6 +98,17 @@ solar-template/
 - Le thème charge `assets/dist/main.css`/`main.js` s'ils existent (anti-cache basé sur la date de
   modification du fichier) ; sinon, une notice d'administration invite à lancer `npm run build`,
   sans bloquer le reste du site.
+
+### Tests (`composer test` / `npm run test`)
+
+- PHP : PHPUnit, avec un bootstrap (`tests/php/bootstrap.php`) qui ne définit que les quelques
+  fonctions/constantes WordPress réellement utilisées en dehors d'une installation complète
+  (transients en mémoire, `ARRAY_A`...) — pas une bibliothèque de stubs du cœur WordPress. Zéro
+  avertissement/dépréciation toléré (`failOnWarning`/`failOnDeprecation` dans `phpunit.xml.dist`).
+- JS : Vitest (environnement jsdom), configuré dans `vite.config.js`.
+- Cette suite automatisée ne remplace pas la vérification fonctionnelle manuelle dans
+  l'environnement Docker réel (activation du thème, base de données, WooCommerce...), effectuée à
+  chaque étape et documentée dans `RELEASE.md`.
 - Le `.env` de ce thème (`Solar_Template\Support\DotenvEnvironmentLoader`, lu via la fonction
   `solar_template_env()`) est indépendant du `.env` du dépôt Docker parent : aucun nom de variable
   en commun, et ce thème ne possède ni ne lit jamais les identifiants de connexion à la base de

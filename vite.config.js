@@ -4,7 +4,8 @@
  * Author: David ROMERA <d.romera.11@gmail.com>
  * Purpose: Compile `assets/js/main.js` (which itself imports `assets/scss/main.scss`) into a
  *          single predictable pair of output files, `assets/dist/main.js` / `assets/dist/main.css`,
- *          enqueued by functions.php with a filemtime-based cache-busting version.
+ *          enqueued by functions.php with a filemtime-based cache-busting version. Also configures
+ *          Vitest (`npm run test`), which reads its settings from this same file's `test` key.
  */
 
 import { defineConfig } from 'vite';
@@ -26,5 +27,9 @@ export default defineConfig(({ mode }) => ({
 				assetFileNames: 'main[extname]',
 			},
 		},
+	},
+	test: {
+		environment: 'jsdom',
+		include: ['test/js/**/*.test.js'],
 	},
 }));

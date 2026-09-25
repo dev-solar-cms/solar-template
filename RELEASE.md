@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.1.7`.
+Version actuelle : `0.1.8`.
 
 ## Avant une release
 
@@ -28,6 +28,21 @@ Ce dépôt est public (`github.com/dev-solar-cms/solar-template`) et versionné 
 3. Créer une release GitHub à partir du tag, avec un changelog résumant les changements.
 
 ## Changelog
+
+### 0.1.8 — squelette de tests automatisés (PHP + JS)
+
+- PHPUnit (`composer test`), avec un bootstrap qui ne définit que la poignée de fonctions/constantes
+  WordPress réellement nécessaires en dehors d'une vraie installation (transients en mémoire,
+  `ARRAY_A`, etc.) — pas une bibliothèque de stubs complète du cœur WordPress. `failOnWarning`/
+  `failOnDeprecation`/`failOnNotice` activés : aucun avertissement toléré.
+- Vitest (`npm run test`, environnement jsdom), configuré directement dans `vite.config.js`.
+- Premiers tests couvrant : le cache court terme, le compilateur `.mo` (avec un test dédié pour une
+  règle de pluriel française et une anglaise), le catalogue de traductions (via un double de test
+  en mémoire pour `$wpdb`), les instructions SQL de création des tables, la synchronisation des
+  numéros de version entre `composer.json`/`style.css`/`.env.example`, et un test trivial côté JS.
+- La vérification fonctionnelle réelle (activation du thème, base de données, WooCommerce) continue
+  de se faire manuellement dans l'environnement Docker à chaque étape, en complément de cette suite
+  automatisée — cette dernière ne remplace pas la première.
 
 ### 0.1.7 — dégradation gracieuse sans WooCommerce
 

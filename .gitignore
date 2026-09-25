@@ -5,6 +5,7 @@ vendor/
 /build/
 /dist/
 /assets/dist/
+.phpunit.result.cache
 .env
 /.claude
 CLAUDE.md

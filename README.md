@@ -27,6 +27,8 @@ dépôt parent, via `wp-cli`/Composer récupérés à la demande (voir la docume
 [doc/fr/infrastructure.html](./doc/fr/infrastructure.html) /
 [doc/en/infrastructure.html](./doc/en/infrastructure.html)).
 
+Suite de tests : `composer test` (PHP) et `npm run test` (JS).
+
 Voir [STRUCTURE.md](./STRUCTURE.md) pour l'organisation des fichiers et [RELEASE.md](./RELEASE.md) pour la procédure de versionnage/publication.
 
 ## Licence

@@ -30,4 +30,23 @@
 	</rule>
 
 	<config name="testVersion" value="8.1-"/>
+
+	<!--
+		Tests run as plain PHP CLI via PHPUnit, never inside a loaded WordPress: the
+		"use WP_Filesystem/wp_remote_get/wp_delete_file instead" sniffs assume a runtime this
+		context doesn't have, so they are scoped out of tests/ only (everything else in this
+		ruleset still applies there).
+	-->
+	<rule ref="WordPress.WP.AlternativeFunctions.file_system_operations_mkdir">
+		<exclude-pattern>/tests/*</exclude-pattern>
+	</rule>
+	<rule ref="WordPress.WP.AlternativeFunctions.file_system_operations_rmdir">
+		<exclude-pattern>/tests/*</exclude-pattern>
+	</rule>
+	<rule ref="WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents">
+		<exclude-pattern>/tests/*</exclude-pattern>
+	</rule>
+	<rule ref="WordPress.WP.AlternativeFunctions.unlink_unlink">
+		<exclude-pattern>/tests/*</exclude-pattern>
+	</rule>
 </ruleset>
