@@ -62,8 +62,8 @@
 			(positional top margins on certain cards, unrelated to their content), but only for the
 			default 4-column layout — same known limitation as the home page's featured products
 			grid. The quick category tag row and the grid/list toggle button shown in the mockup are
-			deliberately not built here: the former overlaps with the next step's category filter,
-			the latter has no behaviour specified beyond the mockup itself.
+			deliberately not built here: the former is absorbed by the filter bar's own "Category"
+			filter (see below), the latter has no behaviour specified beyond the mockup itself.
 		</p>
 		<p>
 			Verified end to end in the real Docker environment with WooCommerce active: nine test
@@ -71,6 +71,55 @@
 			count (singular and plural) on the shop page and on a category archive, in both installed
 			languages; a category with no product confirms the translated empty-state message. No PHP
 			warning or error observed.
+		</p>
+
+		<h2 id="filter-bar">Filter bar</h2>
+		<p>
+			<code>template-parts/catalog-filters.php</code> renders a sticky bar of five filters
+			(Category, Price, Color, Size, Rating) as a plain native
+			<code>&lt;form method="get"&gt;</code> — functional with JavaScript disabled, submitting a
+			normal page load that <code>solar_template_apply_catalog_filters_to_main_query()</code>
+			already filters (see <code>functions.php</code>) — then progressively enhanced into AJAX
+			by <code>assets/js/catalog.js</code> (<code>initCatalogFilters()</code>): any checked box
+			or changed price value submits the form to the <code>solar_template_catalog_filter</code>
+			AJAX action, whose response replaces only the results area.
+		</p>
+		<p>
+			Each filter group only renders when it actually has an option to offer (same
+			graceful-degradation convention as the rest of the theme): no "Color"/"Size" filter until
+			the store has a matching global attribute — whose exact taxonomy name
+			(<code>pa_color</code>/<code>pa_size</code> by default) is itself filterable
+			(<code>solar_template_catalog_color_attribute_slug()</code>/
+			<code>solar_template_catalog_size_attribute_slug()</code>), since a store may have named
+			that attribute differently. "Rating" has fixed options (5 down to 1 star(s)), always
+			offered.
+		</p>
+		<p>
+			Technical decision: the "Category" filter fully replaces the current archive's taxonomy
+			scope rather than narrowing it further — picking a category from the filter bar can move a
+			visitor already on one category's archive to a different category entirely, exactly like
+			the mockup's own category tag row would have. "Rating" reuses the real
+			<code>product_visibility</code> "rated-N" taxonomy terms WooCommerce's own native rating
+			widget filters on (<code>wc_get_product_visibility_term_ids()</code>) rather than a
+			comparison on the stored average rating meta, to stay faithful to how WooCommerce actually
+			buckets ratings.
+		</p>
+		<p>
+			Bug encountered and fixed during development: an early version built its own price filter
+			on top of WooCommerce's own native price filter (which triggers automatically whenever
+			<code>min_price</code>/<code>max_price</code> are present in the URL) — redundant, and the
+			native one turned out broken for test products created directly in the database (its price
+			lookup cache table was never synced, unlike a product saved normally from the admin).
+			Fixed by re-syncing the test products and keeping a simple, self-contained price filter
+			(a plain price comparison) that behaves identically whether the request is a normal page
+			load or the AJAX request.
+		</p>
+		<p>
+			Verified end to end in the real Docker environment with WooCommerce active: every filter
+			(alone and combined with others) confirmed through both a plain page load and the AJAX
+			request, with identical results either way; checkbox checked state and the bar's active
+			button styling stay in sync with the URL after a page reload. No PHP warning or error
+			observed.
 		</p>
 	</main>
 	<script src="../assets/doc.js"></script>

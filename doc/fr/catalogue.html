@@ -64,10 +64,10 @@
 			Décision technique : la grille reprend le décalage vertical masonry de la maquette
 			(marges hautes positionnelles sur certaines cartes, pas liées à leur contenu), mais
 			uniquement pour la disposition par défaut à 4 colonnes — même limitation connue que la
-			grille des produits vedettes de la page d'accueil. Le rangée de tags catégorie rapides et
+			grille des produits vedettes de la page d'accueil. La rangée de tags catégorie rapides et
 			le bouton grille/liste visibles dans la maquette ne sont volontairement pas construits ici
-			: le premier chevauche le filtre catégorie de l'étape suivante, le second n'a aucun
-			comportement spécifié au-delà de la maquette elle-même.
+			: le premier est absorbé par le filtre « Catégorie » de la barre de filtres (voir
+			ci-dessous), le second n'a aucun comportement spécifié au-delà de la maquette elle-même.
 		</p>
 		<p>
 			Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif : neuf
@@ -75,6 +75,58 @@
 			titre et le compteur (singulier et pluriel) sur la boutique et sur une archive de
 			catégorie, dans les deux langues installées ; une catégorie sans produit confirme le
 			message d'état vide traduit. Aucun avertissement ni erreur PHP relevé.
+		</p>
+
+		<h2 id="barre-de-filtres">Barre de filtres</h2>
+		<p>
+			<code>template-parts/catalog-filters.php</code> affiche une barre sticky de cinq filtres
+			(Catégorie, Prix, Couleur, Taille, Note), rendue comme un formulaire natif
+			<code>&lt;form method="get"&gt;</code> — fonctionnel sans JavaScript, soumettant un
+			chargement de page classique que <code>solar_template_apply_catalog_filters_to_main_query()</code>
+			filtre déjà (voir <code>functions.php</code>) — puis progressivement amélioré en AJAX par
+			<code>assets/js/catalog.js</code> (<code>initCatalogFilters()</code>) : chaque case cochée
+			ou valeur de prix modifiée soumet le formulaire à l'action AJAX
+			<code>solar_template_catalog_filter</code>, dont la réponse remplace uniquement la zone de
+			résultats.
+		</p>
+		<p>
+			Chaque groupe de filtre ne s'affiche que s'il a réellement une option à proposer (même
+			logique de dégradation gracieuse que le reste du thème) : pas de filtre « Couleur »/« Taille »
+			tant que la boutique n'a pas d'attribut global correspondant — dont le nom de taxonomie
+			exact (<code>pa_color</code>/<code>pa_size</code> par défaut) est lui-même filtrable
+			(<code>solar_template_catalog_color_attribute_slug()</code>/
+			<code>solar_template_catalog_size_attribute_slug()</code>), un site pouvant avoir nommé cet
+			attribut différemment. Le filtre « Note » a des options fixes (5 à 1 étoile(s)), toujours
+			proposé.
+		</p>
+		<p>
+			Décision technique : le filtre « Catégorie » remplace entièrement la portée de taxonomie
+			de l'archive courante plutôt que de la restreindre davantage — choisir une catégorie
+			depuis la barre de filtres peut faire passer un visiteur déjà sur l'archive d'une
+			catégorie vers une catégorie complètement différente, exactement comme l'aurait fait la
+			rangée de tags catégorie de la maquette. Le filtre « Note » réutilise les vrais termes de
+			taxonomie <code>product_visibility</code> (« rated-N ») que le widget natif de notation de
+			WooCommerce utilise lui-même (<code>wc_get_product_visibility_term_ids()</code>) plutôt
+			qu'une comparaison sur la note moyenne enregistrée en meta, pour rester fidèle à la façon
+			dont WooCommerce catégorise réellement les notes.
+		</p>
+		<p>
+			Bug rencontré et corrigé pendant le développement : une première version reconstruisait
+			elle-même le filtre de prix par-dessus le filtre de prix natif de WooCommerce (déclenché
+			automatiquement dès que <code>min_price</code>/<code>max_price</code> sont présents dans
+			l'URL) — redondant, et le filtre natif s'est révélé cassé pour les produits de test créés
+			directement en base (sa table de cache de prix n'était jamais synchronisée, contrairement à
+			un produit enregistré normalement depuis l'administration). Corrigé en resynchronisant les
+			produits de test et en gardant un filtre de prix maison simple et autonome (comparaison sur
+			le prix), qui fonctionne de façon identique que la requête vienne du chargement de page
+			normal ou de la requête AJAX.
+		</p>
+		<p>
+			Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif : chaque
+			filtre (seul et combiné à d'autres) confirmé à la fois via un chargement de page classique
+			et via la requête AJAX, avec les mêmes résultats dans les deux cas ; l'état cochée des
+			cases et le style actif des boutons de la barre restent synchronisés avec l'URL après un
+			rechargement de page. Aucun avertissement ni erreur PHP relevé.
 		</p>
 	</main>
 	<script src="../assets/doc.js"></script>

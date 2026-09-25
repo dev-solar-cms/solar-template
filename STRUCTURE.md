@@ -18,7 +18,7 @@ solar-template/
 ├── footer.php         # Pied de page global (colonnes, newsletter, copyright, icônes de paiement)
 ├── searchform.php     # Formulaire de recherche natif personnalisé, chargé par get_search_form()
 ├── front-page.php     # Page d'accueil, assemblée section par section (template-parts/front-page/*)
-├── archive-product.php # Catalogue produits (boutique + archives de catégorie/étiquette), grille de cartes produit
+├── archive-product.php # Catalogue produits (boutique + archives de catégorie/étiquette) : fil d'Ariane, titre, barre de filtres et résultats
 ├── index.php          # Gabarit de repli ; appelle get_header()/get_footer()
 ├── screenshot.png     # 1200x900, requis par WordPress pour l'aperçu du thème
 ├── composer.json      # Dépendances PHP + autoload PSR-4 (Solar_Template\)
@@ -37,6 +37,8 @@ solar-template/
 │   ├── blog-card.php    # Carte article de blog (image 16:10, badge catégorie, meta, titre, extrait, auteur)
 │   ├── cart-badge.php   # Badge du nombre d'articles au panier, utilisé par l'en-tête
 │   ├── mega-menu.php    # Panneau du mega menu « Collections », contenu factice pour l'instant
+│   ├── catalog-filters.php # Barre de filtres du catalogue (Catégorie/Prix/Couleur/Taille/Note), formulaire natif progressivement amélioré en AJAX
+│   ├── catalog-results.php # Compteur/grille/pagination du catalogue, partagé entre le chargement de page et le ré-affichage AJAX
 │   └── front-page/      # Sections de la page d'accueil, une par fichier
 │       ├── hero.php     # Hero plein écran (accroche, titre 3 lignes, CTA, trust badges, carte flottante)
 │       ├── featured-products.php # Grille masonry des produits WooCommerce marqués « en vedette »
@@ -69,6 +71,7 @@ solar-template/
 │   ├── js/main.js        # Point d'entrée JS (importe le SCSS, initialise les modules de comportement)
 │   ├── js/header.js      # Comportement de l'en-tête (mega menu, bascule de recherche)
 │   ├── js/newsletter.js  # Soumission AJAX des formulaires newsletter (`.js-newsletter-form`)
+│   ├── js/catalog.js     # Barre de filtres du catalogue : panneaux, état actif, soumission AJAX
 │   └── dist/             # Sortie compilée (générée par `npm run build`/`dev`, ignorée par git)
 ├── phpunit.xml.dist     # Configuration PHPUnit, utilisée par `composer test`
 ├── tests/php/           # Tests unitaires PHP (bootstrap minimal, pas une installation WordPress complète)

@@ -6,12 +6,13 @@
  *       (WooCommerce's own template loader falls back to this file for
  *       `taxonomy-product_cat.php`/`taxonomy-product_tag.php`).
  * Author: David ROMERA <d.romera.11@gmail.com>
- * Purpose: Render the product catalog: breadcrumb, title/result count, and a masonry-style grid
- *          of the reusable product card component fed with real WooCommerce data. Deliberately
- *          does not build the header's category quick-links or the grid/list view toggle shown in
- *          the design handoff's mockup — the former overlaps with the category filter the next
- *          step introduces and the latter has no behaviour specified beyond the mockup, so both
- *          are left out rather than adding unspecified, un-testable interactivity.
+ * Purpose: Render the product catalog: breadcrumb, title, the native AJAX filter bar
+ *          (template-parts/catalog-filters.php) and the result count/grid/pagination
+ *          (template-parts/catalog-results.php), fed with real WooCommerce data. Deliberately
+ *          does not build the grid/list view toggle shown in the design handoff's mockup — it has
+ *          no behaviour specified beyond the mockup itself, so it is left out rather than adding
+ *          unspecified, un-testable interactivity. The mockup's separate category quick-links row
+ *          is subsumed by the filter bar's own category filter instead of being duplicated.
  *
  * @package Solar_Template
  */
@@ -21,11 +22,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 get_header();
-
-global $wp_query;
-
-$catalog_columns = solar_template_catalog_columns();
-$product_count   = (int) $wp_query->found_posts;
 ?>
 <main class="catalog">
 	<div class="catalog__inner">
@@ -44,38 +40,14 @@ $product_count   = (int) $wp_query->found_posts;
 		<div class="catalog__header">
 			<div>
 				<h1 class="catalog__title"><?php echo esc_html( woocommerce_page_title( false ) ); ?></h1>
-				<?php if ( $product_count > 0 ) : ?>
-					<p class="catalog__count"><?php echo esc_html( solar_template_catalog_result_count_label( $product_count ) ); ?></p>
-				<?php endif; ?>
 			</div>
 		</div>
+	</div>
 
-		<?php if ( have_posts() ) : ?>
-			<div
-				class="catalog__grid<?php echo 4 === $catalog_columns ? ' catalog__grid--masonry' : ''; ?>"
-				style="--catalog-columns: <?php echo esc_attr( (string) $catalog_columns ); ?>;"
-			>
-				<?php
-				while ( have_posts() ) :
-					the_post();
+	<?php get_template_part( 'template-parts/catalog-filters' ); ?>
 
-					$catalog_product = wc_get_product( get_the_ID() );
-
-					if ( ! $catalog_product ) {
-						continue;
-					}
-
-					get_template_part( 'template-parts/product-card', null, solar_template_map_product_to_card_args( $catalog_product ) );
-				endwhile;
-				?>
-			</div>
-
-			<div class="catalog__pagination">
-				<?php woocommerce_pagination(); ?>
-			</div>
-		<?php else : ?>
-			<p class="catalog__empty"><?php esc_html_e( 'No products currently match this selection.', 'solar-template' ); ?></p>
-		<?php endif; ?>
+	<div class="catalog__inner">
+		<?php get_template_part( 'template-parts/catalog-results' ); ?>
 	</div>
 </main>
 <?php

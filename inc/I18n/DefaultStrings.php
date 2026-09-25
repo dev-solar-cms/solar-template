@@ -450,6 +450,46 @@ final class DefaultStrings {
 					'en_US' => '%d products available',
 				),
 			),
+			'Category'                                    => array(
+				'fr_FR' => 'Catégorie',
+				'en_US' => 'Category',
+			),
+			'Price'                                       => array(
+				'fr_FR' => 'Prix',
+				'en_US' => 'Price',
+			),
+			'Color'                                       => array(
+				'fr_FR' => 'Couleur',
+				'en_US' => 'Color',
+			),
+			'Size'                                        => array(
+				'fr_FR' => 'Taille',
+				'en_US' => 'Size',
+			),
+			'Rating'                                      => array(
+				'fr_FR' => 'Note',
+				'en_US' => 'Rating',
+			),
+			'%1$s (%2$d)'                                 => array(
+				'fr_FR' => '%1$s (%2$d)',
+				'en_US' => '%1$s (%2$d)',
+			),
+			'Min'                                         => array(
+				'fr_FR' => 'Min',
+				'en_US' => 'Min',
+			),
+			'Max'                                         => array(
+				'fr_FR' => 'Max',
+				'en_US' => 'Max',
+			),
+			'%d star'                                     => array(
+				'fr_FR'  => '%d étoile',
+				'en_US'  => '%d star',
+				'plural' => array(
+					'fr_FR' => '%d étoiles',
+					'en_US' => '%d stars',
+				),
+			),
 		);
 	}
 

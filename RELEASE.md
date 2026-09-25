@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.4.0`.
+Version actuelle : `0.4.1`.
 
 ## Avant une release
 
@@ -30,6 +30,27 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.4.1 — barre de filtres du catalogue
+
+- Ajout d'une barre de filtres sticky au-dessus de la grille du catalogue : Catégorie, Prix,
+  Couleur, Taille, Note. Construite comme un formulaire natif (fonctionne sans JavaScript, soumet
+  un chargement de page classique déjà filtré côté serveur), puis progressivement améliorée en
+  AJAX pour mettre à jour la grille sans rechargement de page.
+- Chaque filtre ne s'affiche que s'il a réellement une donnée à proposer : pas de filtre Couleur/
+  Taille tant que la boutique n'a pas l'attribut correspondant (dont le nom exact reste
+  configurable, un site pouvant l'avoir nommé différemment). Le filtre Note réutilise les mêmes
+  données de notation que le mécanisme natif de WooCommerce plutôt qu'un calcul maison.
+- Sélectionner une catégorie depuis la barre de filtres remplace entièrement la vue en cours
+  (boutique ou une autre catégorie) plutôt que de se contenter de la restreindre, pour absorber la
+  rangée de raccourcis de catégorie prévue par la maquette au même endroit.
+- Bug rencontré et corrigé : une première version du filtre de prix faisait doublon avec le
+  filtre de prix déjà intégré nativement à WooCommerce, et ce dernier s'est révélé en défaut pour
+  des produits de démonstration insérés directement en base de données (sans passer par
+  l'enregistrement normal depuis l'administration, qui met à jour une table de cache interne).
+  Corrigé en resynchronisant ces produits et en conservant un filtre de prix autonome, simple et
+  fiable, qui se comporte à l'identique que la requête vienne d'un chargement de page normal ou
+  d'une mise à jour en AJAX.
 
 ### 0.4.0 — grille du catalogue produits
 

@@ -1362,3 +1362,484 @@ function solar_template_catalog_result_count_label( int $count ): string {
 		$count
 	);
 }
+
+/**
+ * Returns the slug of the WooCommerce global attribute taxonomy used as the catalog's "Color"
+ * filter.
+ *
+ * Not hardcoded to `pa_color`: a site owner can name (or already have named) this attribute
+ * differently (e.g. `pa_couleur`); a future "Products" administration tab (Group 10 of the
+ * project roadmap) is expected to expose this filter as a setting.
+ *
+ * @return string Taxonomy slug.
+ */
+function solar_template_catalog_color_attribute_slug(): string {
+	/**
+	 * Filters the taxonomy slug used as the catalog's "Color" filter.
+	 *
+	 * @param string $taxonomy Taxonomy slug, e.g. `pa_color`.
+	 */
+	return (string) apply_filters( 'solar_template_catalog_color_attribute_slug', 'pa_color' );
+}
+
+/**
+ * Returns the slug of the WooCommerce global attribute taxonomy used as the catalog's "Size"
+ * filter. See solar_template_catalog_color_attribute_slug() for why this is filterable rather
+ * than hardcoded.
+ *
+ * @return string Taxonomy slug.
+ */
+function solar_template_catalog_size_attribute_slug(): string {
+	/**
+	 * Filters the taxonomy slug used as the catalog's "Size" filter.
+	 *
+	 * @param string $taxonomy Taxonomy slug, e.g. `pa_size`.
+	 */
+	return (string) apply_filters( 'solar_template_catalog_size_attribute_slug', 'pa_size' );
+}
+
+/**
+ * Returns the product categories available as catalog filter options (slug, name, product count).
+ *
+ * Same graceful-degradation convention as solar_template_get_home_categories(): an empty array
+ * when WooCommerce is missing/inactive or the store has no populated category, so the calling
+ * template-part can skip rendering this filter group entirely.
+ *
+ * @return array<int, array{slug: string, name: string, count: int}>
+ */
+function solar_template_get_catalog_category_options(): array {
+	if ( ! solar_template_load_autoloader() || ! \Solar_Template\Support\WooCommerceStatus::is_active() ) {
+		return array();
+	}
+
+	$terms = get_terms(
+		array(
+			'taxonomy'   => 'product_cat',
+			'hide_empty' => true,
+			'orderby'    => 'name',
+			'order'      => 'ASC',
+			'exclude'    => array( (int) get_option( 'default_product_cat', 0 ) ),
+		)
+	);
+
+	if ( is_wp_error( $terms ) ) {
+		return array();
+	}
+
+	return array_map(
+		static function ( \WP_Term $term ): array {
+			return array(
+				'slug'  => $term->slug,
+				'name'  => $term->name,
+				'count' => (int) $term->count,
+			);
+		},
+		$terms
+	);
+}
+
+/**
+ * Returns the terms of a given attribute taxonomy available as catalog filter options (slug,
+ * name), used for both the "Color" and "Size" filters.
+ *
+ * @param string $taxonomy Attribute taxonomy slug (see solar_template_catalog_color_attribute_slug()/
+ *                          solar_template_catalog_size_attribute_slug()).
+ * @return array<int, array{slug: string, name: string}> Empty when the taxonomy does not exist
+ *                                                         (not registered by the store) or has no
+ *                                                         populated term yet.
+ */
+function solar_template_get_catalog_attribute_options( string $taxonomy ): array {
+	if ( ! taxonomy_exists( $taxonomy ) ) {
+		return array();
+	}
+
+	$terms = get_terms(
+		array(
+			'taxonomy'   => $taxonomy,
+			'hide_empty' => true,
+			'orderby'    => 'name',
+			'order'      => 'ASC',
+		)
+	);
+
+	if ( is_wp_error( $terms ) || empty( $terms ) ) {
+		return array();
+	}
+
+	return array_map(
+		static function ( \WP_Term $term ): array {
+			return array(
+				'slug' => $term->slug,
+				'name' => $term->name,
+			);
+		},
+		$terms
+	);
+}
+
+/**
+ * Returns the "Rating" filter's fixed options ("5 stars" down to "1 star"), with correct
+ * singular/plural agreement.
+ *
+ * Deliberately an exact bucket per option (matching a product's own rounded average rating), not
+ * a cumulative "N stars & up" threshold: this is exactly how WooCommerce's own native rating
+ * filter widget buckets products (via `product_visibility` "rated-N" terms — see
+ * solar_template_build_catalog_query_args()), and checking more than one option here simply ORs
+ * their buckets together, same as that widget.
+ *
+ * @return array<int, array{value: int, label: string}>
+ */
+function solar_template_get_catalog_rating_options(): array {
+	$options = array();
+
+	for ( $stars = 5; $stars >= 1; $stars-- ) {
+		$options[] = array(
+			'value' => $stars,
+			'label' => sprintf(
+				/* translators: %d: star rating. */
+				_n( '%d star', '%d stars', $stars, 'solar-template' ),
+				$stars
+			),
+		);
+	}
+
+	return $options;
+}
+
+/**
+ * Returns the lowest and highest price across published products, used as the "Price" filter's
+ * displayed bounds and to clamp any submitted value to a sane range.
+ *
+ * Reads `_price` directly through `$wpdb` (same convention as
+ * Solar_Template\Database\Installer/Solar_Template\Newsletter\SubscriberRepository) rather than a
+ * `WP_Query`, since only the two aggregate values are needed, not post objects.
+ *
+ * @return array{min: float, max: float}
+ */
+function solar_template_get_catalog_price_bounds(): array {
+	global $wpdb;
+
+	$bounds = $wpdb->get_row(
+		"SELECT MIN(CAST(pm.meta_value AS DECIMAL(10,2))) AS min_price, MAX(CAST(pm.meta_value AS DECIMAL(10,2))) AS max_price
+		FROM {$wpdb->postmeta} pm
+		INNER JOIN {$wpdb->posts} p ON p.ID = pm.post_id
+		WHERE pm.meta_key = '_price' AND pm.meta_value != '' AND p.post_type = 'product' AND p.post_status = 'publish'",
+		ARRAY_A
+	);
+
+	return array(
+		'min' => $bounds && null !== $bounds['min_price'] ? (float) $bounds['min_price'] : 0.0,
+		'max' => $bounds && null !== $bounds['max_price'] ? (float) $bounds['max_price'] : 0.0,
+	);
+}
+
+/**
+ * Normalizes and validates a raw filter request (from `$_GET` on a plain page load, or from the
+ * AJAX filter request's `$_POST`) against the catalog's real filter options, so nothing
+ * unsanitized ever reaches a database query: unknown category/color/size slugs are dropped,
+ * ratings outside 1–5 are dropped, and price bounds are clamped to the store's real price range.
+ *
+ * @param array $raw Raw request data (a superglobal-like array).
+ * @return array{
+ *     category: string[],
+ *     color: string[],
+ *     size: string[],
+ *     rating: int[],
+ *     min_price: float|null,
+ *     max_price: float|null,
+ * }
+ */
+function solar_template_sanitize_catalog_filters( array $raw ): array {
+	$category_slugs = wp_list_pluck( solar_template_get_catalog_category_options(), 'slug' );
+	$color_slugs    = wp_list_pluck( solar_template_get_catalog_attribute_options( solar_template_catalog_color_attribute_slug() ), 'slug' );
+	$size_slugs     = wp_list_pluck( solar_template_get_catalog_attribute_options( solar_template_catalog_size_attribute_slug() ), 'slug' );
+
+	$requested_category = array_map( 'sanitize_title', (array) ( $raw['filter_category'] ?? array() ) );
+	$requested_color    = array_map( 'sanitize_title', (array) ( $raw['filter_color'] ?? array() ) );
+	$requested_size     = array_map( 'sanitize_title', (array) ( $raw['filter_size'] ?? array() ) );
+	$requested_rating   = array_map( 'absint', (array) ( $raw['filter_rating'] ?? array() ) );
+	$requested_rating   = array_filter(
+		$requested_rating,
+		static function ( int $value ): bool {
+			return $value >= 1 && $value <= 5;
+		}
+	);
+
+	$price_bounds = solar_template_get_catalog_price_bounds();
+	$min_price    = ( isset( $raw['min_price'] ) && '' !== $raw['min_price'] )
+		? max( $price_bounds['min'], (float) $raw['min_price'] )
+		: null;
+	$max_price    = ( isset( $raw['max_price'] ) && '' !== $raw['max_price'] )
+		? min( $price_bounds['max'], (float) $raw['max_price'] )
+		: null;
+
+	return array(
+		'category'  => array_values( array_intersect( $requested_category, $category_slugs ) ),
+		'color'     => array_values( array_intersect( $requested_color, $color_slugs ) ),
+		'size'      => array_values( array_intersect( $requested_size, $size_slugs ) ),
+		'rating'    => array_values( array_unique( $requested_rating ) ),
+		'min_price' => $min_price,
+		'max_price' => $max_price,
+	);
+}
+
+/**
+ * Returns the catalog filter bar's position modifier class.
+ *
+ * Only `sticky-top` (the design handoff's own layout, applied by
+ * template-parts/catalog-filters.php as a `catalog-filters--{position}` class) is styled today; a
+ * future "Products" administration tab (Group 10 of the project roadmap) is expected to expose
+ * this as a real site owner setting, once an alternative layout (e.g. a sidebar) exists to switch
+ * to.
+ *
+ * @return string Position slug, e.g. `sticky-top`.
+ */
+function solar_template_catalog_filters_position(): string {
+	/**
+	 * Filters the catalog filter bar's position.
+	 *
+	 * @param string $position `sticky-top` by default.
+	 */
+	return (string) apply_filters( 'solar_template_catalog_filters_position', 'sticky-top' );
+}
+
+/**
+ * Reports whether a catalog filter group (as built by template-parts/catalog-filters.php) has at
+ * least one active value, regardless of its type (checkbox list or price range).
+ *
+ * @param array $group One filter group, with an `active` key (array for checkboxes,
+ *                       `{min, max}` for the price range).
+ * @return bool
+ */
+function solar_template_catalog_filter_group_is_active( array $group ): bool {
+	if ( 'range' === $group['type'] ) {
+		return null !== $group['active']['min'] || null !== $group['active']['max'];
+	}
+
+	return ! empty( $group['active'] );
+}
+
+/**
+ * Reads and sanitizes the catalog filters currently active from the request URL (`$_GET`), so a
+ * plain page load (no JavaScript, a shared/bookmarked filtered URL, a browser back navigation)
+ * renders the filter bar and the results already in sync with it.
+ *
+ * @return array See solar_template_sanitize_catalog_filters()'s return type.
+ */
+function solar_template_get_active_catalog_filters(): array {
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only filter state (not a state-changing request), sanitized/validated below against the store's real filter options.
+	return solar_template_sanitize_catalog_filters( wp_unslash( $_GET ) );
+}
+
+/**
+ * Builds `WP_Query` `tax_query`/`meta_query` arguments for the given, already-sanitized filter
+ * selection. Shared by solar_template_apply_catalog_filters_to_main_query() (the initial page
+ * load) and solar_template_handle_catalog_filter_request() (the AJAX re-render), so both always
+ * filter identically — this is deliberately self-contained rather than relying on WooCommerce's
+ * own `$_GET`-reading native price/rating filtering (`price_filter_post_clauses()`/
+ * `rating_filter` handling in `WC_Query::get_tax_query()`): both are wired deep into
+ * `WC_Query::pre_get_posts()`'s own detection of "is this really a product archive query" and
+ * do not reliably engage for a query built programmatically the way the AJAX re-render's is,
+ * whereas a plain `meta_query`/`tax_query` on the query itself always applies regardless of how
+ * the query was constructed. The "Rating" filter still reuses WooCommerce's real
+ * `product_visibility` "rated-N" terms (`wc_get_product_visibility_term_ids()`) — the same data
+ * its own widget filters on — rather than a `_wc_average_rating` meta comparison, which would not
+ * reflect how WooCommerce itself buckets/caches ratings.
+ *
+ * @param array $filters See solar_template_sanitize_catalog_filters()'s return type.
+ * @return array{tax_query?: array, meta_query?: array}
+ */
+function solar_template_build_catalog_query_args( array $filters ): array {
+	$args = array();
+
+	$tax_query = array();
+
+	if ( ! empty( $filters['category'] ) ) {
+		$tax_query[] = array(
+			'taxonomy' => 'product_cat',
+			'field'    => 'slug',
+			'terms'    => $filters['category'],
+		);
+	}
+
+	$color_taxonomy = solar_template_catalog_color_attribute_slug();
+
+	if ( ! empty( $filters['color'] ) && taxonomy_exists( $color_taxonomy ) ) {
+		$tax_query[] = array(
+			'taxonomy' => $color_taxonomy,
+			'field'    => 'slug',
+			'terms'    => $filters['color'],
+		);
+	}
+
+	$size_taxonomy = solar_template_catalog_size_attribute_slug();
+
+	if ( ! empty( $filters['size'] ) && taxonomy_exists( $size_taxonomy ) ) {
+		$tax_query[] = array(
+			'taxonomy' => $size_taxonomy,
+			'field'    => 'slug',
+			'terms'    => $filters['size'],
+		);
+	}
+
+	if ( ! empty( $filters['rating'] ) && function_exists( 'wc_get_product_visibility_term_ids' ) ) {
+		$visibility_term_ids = wc_get_product_visibility_term_ids();
+		$rating_term_ids     = array();
+
+		foreach ( $filters['rating'] as $stars ) {
+			if ( isset( $visibility_term_ids[ 'rated-' . $stars ] ) ) {
+				$rating_term_ids[] = $visibility_term_ids[ 'rated-' . $stars ];
+			}
+		}
+
+		if ( ! empty( $rating_term_ids ) ) {
+			$tax_query[] = array(
+				'taxonomy' => 'product_visibility',
+				'field'    => 'term_taxonomy_id',
+				'terms'    => $rating_term_ids,
+			);
+		}
+	}
+
+	if ( count( $tax_query ) > 1 ) {
+		$tax_query['relation'] = 'AND';
+	}
+
+	if ( ! empty( $tax_query ) ) {
+		$args['tax_query'] = $tax_query; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- filter bar deliberately queries by taxonomy.
+	}
+
+	if ( null !== $filters['min_price'] || null !== $filters['max_price'] ) {
+		$price_query = array(
+			'key'  => '_price',
+			'type' => 'NUMERIC',
+		);
+
+		if ( null !== $filters['min_price'] && null !== $filters['max_price'] ) {
+			$price_query['value']   = array( $filters['min_price'], $filters['max_price'] );
+			$price_query['compare'] = 'BETWEEN';
+		} elseif ( null !== $filters['min_price'] ) {
+			$price_query['value']   = $filters['min_price'];
+			$price_query['compare'] = '>=';
+		} else {
+			$price_query['value']   = $filters['max_price'];
+			$price_query['compare'] = '<=';
+		}
+
+		$args['meta_query'] = array( $price_query ); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- filter bar deliberately queries by price meta.
+	}
+
+	return $args;
+}
+
+/**
+ * Merges the currently active catalog filters into the shop/product-taxonomy page's main query,
+ * so a plain page load (no JavaScript, a shared/bookmarked filtered URL) already returns filtered
+ * results — the AJAX handler only has to re-render the same query for an in-page update.
+ *
+ * When a "Category" filter is active, it fully replaces the archive's own taxonomy scope (rather
+ * than narrowing it further): picking a category from the filter bar can move a visitor already
+ * on one category's archive to a different category entirely, exactly like the design handoff's
+ * quick category links would have (see archive-product.php).
+ *
+ * @param \WP_Query $query The query being modified.
+ * @return void
+ */
+function solar_template_apply_catalog_filters_to_main_query( \WP_Query $query ): void {
+	if ( is_admin() || ! $query->is_main_query() ) {
+		return;
+	}
+
+	if ( ! function_exists( 'is_shop' ) || ( ! is_shop() && ! is_product_taxonomy() ) ) {
+		return;
+	}
+
+	$filters = solar_template_get_active_catalog_filters();
+	$args    = solar_template_build_catalog_query_args( $filters );
+
+	if ( isset( $args['tax_query'] ) ) {
+		if ( ! empty( $filters['category'] ) ) {
+			$query->set( 'product_cat', '' );
+			$query->set( 'product_tag', '' );
+		}
+
+		// `get( 'tax_query', array() )` explicitly defaults to an array: `WP_Query::get()` itself
+		// defaults to '' for an unset query var, and `(array) ''` produces `array( '' )` rather
+		// than `array()`, which corrupts `parse_tax_query()`'s expected clause structure.
+		$query->set( 'tax_query', array_merge( (array) $query->get( 'tax_query', array() ), $args['tax_query'] ) );
+	}
+
+	if ( isset( $args['meta_query'] ) ) {
+		$query->set( 'meta_query', array_merge( (array) $query->get( 'meta_query', array() ), $args['meta_query'] ) );
+	}
+}
+add_action( 'pre_get_posts', 'solar_template_apply_catalog_filters_to_main_query' );
+
+/**
+ * Handles the catalog filter bar's AJAX request (`solar_template_catalog_filter` action):
+ * validates the nonce, sanitizes the submitted filters, runs them as the page's main product
+ * query (so WooCommerce's own visibility/stock/ordering logic — only ever applied to the main
+ * query — still applies, exactly as on a plain page load), and responds with the re-rendered
+ * results markup (template-parts/catalog-results.php) the front-end
+ * (assets/js/catalog.js) swaps into the page.
+ *
+ * @return void
+ */
+function solar_template_handle_catalog_filter_request(): void {
+	check_ajax_referer( 'solar_template_catalog_filter', 'nonce' );
+
+	$filters = solar_template_sanitize_catalog_filters( wp_unslash( $_POST ) );
+	$paged   = isset( $_POST['paged'] ) ? max( 1, absint( $_POST['paged'] ) ) : 1;
+
+	$args = array_merge(
+		array(
+			'post_type'           => 'product',
+			'post_status'         => 'publish',
+			'paged'               => $paged,
+			'ignore_sticky_posts' => true,
+		),
+		solar_template_build_catalog_query_args( $filters )
+	);
+
+	global $wp_query, $wp_the_query;
+
+	$previous_query      = $wp_query;
+	$previous_main_query = $wp_the_query;
+
+	$wp_the_query = new \WP_Query(); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- temporarily swapped so WooCommerce's own main-query-only filtering (visibility/stock) applies, restored right below.
+	$wp_query     = $wp_the_query; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+	$wp_the_query->query( $args );
+
+	ob_start();
+	get_template_part( 'template-parts/catalog-results' );
+	$results_html = ob_get_clean();
+
+	$wp_query     = $previous_query; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+	$wp_the_query = $previous_main_query; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+
+	wp_send_json_success( array( 'html' => $results_html ) );
+}
+add_action( 'wp_ajax_solar_template_catalog_filter', 'solar_template_handle_catalog_filter_request' );
+add_action( 'wp_ajax_nopriv_solar_template_catalog_filter', 'solar_template_handle_catalog_filter_request' );
+
+/**
+ * Enqueues the catalog filter bar's own script and localizes the AJAX endpoint/nonce it needs, on
+ * the shop page and product category/tag archives only.
+ *
+ * @return void
+ */
+function solar_template_enqueue_catalog_script(): void {
+	if ( ! function_exists( 'is_shop' ) || ( ! is_shop() && ! is_product_taxonomy() ) ) {
+		return;
+	}
+
+	wp_localize_script(
+		'solar-template',
+		'solarTemplateCatalog',
+		array(
+			'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+			'nonce'   => wp_create_nonce( 'solar_template_catalog_filter' ),
+		)
+	);
+}
+add_action( 'wp_enqueue_scripts', 'solar_template_enqueue_catalog_script', 20 );

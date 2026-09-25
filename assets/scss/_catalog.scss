@@ -54,8 +54,17 @@
 	color: $color-dark;
 }
 
+.catalog__results {
+	transition: opacity 0.15s ease;
+}
+
+.catalog__results.is-loading {
+	opacity: 0.5;
+	pointer-events: none;
+}
+
 .catalog__count {
-	margin: 0;
+	margin: 0 0 20px;
 	color: $color-muted;
 	font-size: 14px;
 }
@@ -137,4 +146,121 @@
 	.catalog__grid {
 		grid-template-columns: 1fr;
 	}
+}
+
+// Filter bar (template-parts/catalog-filters.php) — sticky row of dropdown buttons, each opening
+// a checkbox list or a price range panel underneath it.
+
+.catalog-filters {
+	position: sticky;
+	top: 0;
+	z-index: 40;
+	margin-bottom: 32px;
+	background: $color-bg;
+	border-bottom: 1px solid $color-border;
+}
+
+.catalog-filters__inner {
+	max-width: $container-max-width;
+	margin: 0 auto;
+	padding: 0 $container-padding-x;
+}
+
+.catalog-filters__bar {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	height: 56px;
+	overflow-x: auto;
+}
+
+.catalog-filters__group {
+	position: relative;
+	flex-shrink: 0;
+}
+
+.catalog-filters__toggle {
+	display: flex;
+	align-items: center;
+	gap: 7px;
+	height: 36px;
+	padding: 0 14px;
+	border: 1.5px solid $color-border;
+	border-radius: $radius-button;
+	background: $color-surface;
+	color: $color-dark;
+	font-size: 12.5px;
+	font-weight: $font-weight-medium;
+	white-space: nowrap;
+	cursor: pointer;
+	transition:
+		background-color 0.2s ease,
+		border-color 0.2s ease,
+		color 0.2s ease;
+}
+
+.catalog-filters__toggle:hover {
+	border-color: $color-dark;
+}
+
+.catalog-filters__toggle.is-active {
+	border-color: $color-dark;
+	background: $color-dark;
+	color: $color-surface;
+	font-weight: $font-weight-semibold;
+}
+
+.catalog-filters__toggle svg {
+	width: 11px;
+	height: 11px;
+}
+
+.catalog-filters__panel {
+	position: absolute;
+	top: calc(100% + 8px);
+	left: 0;
+	z-index: 1;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	min-width: 220px;
+	max-height: 280px;
+	padding: 14px;
+	overflow-y: auto;
+	border: 1px solid $color-border;
+	border-radius: $radius-content-card;
+	background: $color-surface;
+	box-shadow: 0 12px 28px rgba(13, 13, 13, 0.12);
+}
+
+.catalog-filters__option {
+	display: flex;
+	align-items: center;
+	gap: 9px;
+	color: $color-dark;
+	font-size: 13px;
+	cursor: pointer;
+}
+
+.catalog-filters__range {
+	display: flex;
+	align-items: flex-end;
+	gap: 10px;
+}
+
+.catalog-filters__range-field {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	font-size: 11.5px;
+	color: $color-muted;
+}
+
+.catalog-filters__range-field input {
+	width: 90px;
+	padding: 8px 10px;
+	border: 1.5px solid $color-border;
+	border-radius: $radius-input;
+	font-size: 13px;
+	color: $color-dark;
 }
