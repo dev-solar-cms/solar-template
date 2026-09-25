@@ -32,6 +32,9 @@ solar-template/
 ├── assets/
 │   ├── scss/main.scss    # Point d'entrée SCSS (sources non compilées)
 │   ├── scss/_tokens.scss # Design tokens (couleurs, typographie, espacements, géométrie) + mixins d'échelle typo
+│   ├── scss/_buttons.scss # Composant boutons (.btn + variantes primaire/dark/outline)
+│   ├── scss/_badges.scss  # Composant badges (.badge + variantes new/exclusive/sale/outline/discount)
+│   ├── scss/_pills.scss   # Composant pills/chips de filtre (.pill + état actif, bouton de suppression)
 │   ├── js/main.js        # Point d'entrée JS (importe le SCSS pour une compilation unifiée)
 │   └── dist/             # Sortie compilée (générée par `npm run build`/`dev`, ignorée par git)
 ├── phpunit.xml.dist     # Configuration PHPUnit, utilisée par `composer test`
@@ -111,6 +114,16 @@ solar-template/
 - La police **Plus Jakarta Sans** (poids 300 à 800) est chargée depuis Google Fonts
   (`solar_template_enqueue_assets()` dans `functions.php`), avec le numéro de version du thème comme
   version de ressource pour l'invalidation de cache.
+- Composants de base construits à partir de ces tokens : boutons (`_buttons.scss`), badges
+  (`_badges.scss`), pills/chips de filtre (`_pills.scss`). Aucun de ces partials ne code en dur une
+  valeur déjà couverte par `_tokens.scss` ; les quelques valeurs propres au « chrome » d'un
+  composant (ex. taille de police d'un bouton, 13.5px) sont déclarées en variable locale en tête du
+  partial concerné plutôt que dans le fichier de tokens global.
+- `test/js/design-system.test.js` compile `assets/scss/main.scss` directement (indépendamment de
+  `npm run build`) et vérifie, par expression régulière sur le CSS généré, que chaque variante de
+  composant reproduit exactement les valeurs de la maquette (couleurs, rayons de bordure, états
+  hover/actif) — la vérification visuelle « pixel » n'étant pas outillable dans cet environnement
+  sans navigateur, cette régression structurelle en est le meilleur équivalent automatisé.
 
 ### Tests (`composer test` / `npm run test`)
 

@@ -68,6 +68,34 @@
 			The theme loads <strong>Plus Jakarta Sans</strong> (weights 300 to 800) from Google
 			Fonts, enqueued in <code>functions.php</code> alongside the compiled stylesheet.
 		</p>
+
+		<h2 id="buttons-badges-pills">Buttons, badges and pills</h2>
+		<p>
+			The base interactive components, defined in <code>assets/scss/_buttons.scss</code>,
+			<code>_badges.scss</code> and <code>_pills.scss</code>, all built from the tokens above.
+		</p>
+		<table>
+			<thead><tr><th>Component</th><th>Classes</th><th>Use</th></tr></thead>
+			<tbody>
+				<tr><td>Buttons</td><td><code>.btn</code>, <code>.btn--primary</code>, <code>.btn--dark</code>, <code>.btn--outline</code>, <code>.btn--outline-on-dark</code>, <code>.btn--lg</code>, <code>.btn--block</code></td><td>Primary gold CTA, dark full-width CTA, outline on a light or dark background, large/full-width modifiers</td></tr>
+				<tr><td>Badges</td><td><code>.badge--new</code>, <code>.badge--exclusive</code>, <code>.badge--sale</code>, <code>.badge--outline-gold</code>, <code>.badge--discount</code></td><td>Product card corner badges and the price discount badge (tinted background, not a solid fill)</td></tr>
+				<tr><td>Pills</td><td><code>.pill</code>, <code>.pill.is-active</code>, <code>.pill__remove</code></td><td>Filter chips and category pills, with an optional inline "×" remove button</td></tr>
+			</tbody>
+		</table>
+		<p>
+			A handful of values used only by a component's own chrome (e.g. a button's 13.5px label
+			size) are not part of the content typographic scale, so they are declared as local SCSS
+			variables at the top of that component's partial instead of in
+			<code>_tokens.scss</code> — every color and geometry value they use still comes from the
+			shared tokens.
+		</p>
+		<p>
+			No live WordPress page renders these components yet (<code>header.php</code>/
+			<code>footer.php</code> and every page template are still to come). Conformance with the
+			design handoff is instead verified by <code>test/js/design-system.test.js</code>, which
+			compiles the SCSS directly and asserts on the generated CSS (colors, radii, hover/active
+			states) for every variant.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

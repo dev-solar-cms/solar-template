@@ -23,6 +23,7 @@ $color-success: #3aa85a; // In stock, confirmations
 $color-error: #d64545; // Errors, deletions
 $color-sale: #c05a2a; // Promotion/sale badges
 $color-dark-nav: #0d0d0d; // Main nav background
+$color-dark-hover: #1a1a1a; // Hover state of dark (full-width/CTA) buttons
 
 // -----------------------------------------------------------------------------------------------
 // Typography
@@ -90,7 +91,8 @@ $radius-card: 6px; // Product cards, images
 $radius-content-card: 8px; // Content cards (blog, testimonials)
 $radius-modal: 10px; // Modals
 $radius-button: 5px;
-$radius-pill: 99px; // Badges, filter chips
+$radius-badge: 3px; // Corner badges (New/Exclusive/Sale)
+$radius-pill: 99px; // Pills, filter chips
 $radius-input: 5px;
 
 $shadow-card-hover: 0 12px 40px rgba(0, 0, 0, 0.12);

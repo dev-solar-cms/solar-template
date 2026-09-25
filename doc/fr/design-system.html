@@ -71,6 +71,35 @@
 			Fonts, mise en file dans <code>functions.php</code> aux côtés de la feuille de style
 			compilée.
 		</p>
+
+		<h2 id="boutons-badges-pills">Boutons, badges et pills</h2>
+		<p>
+			Les composants d'interface de base, définis dans <code>assets/scss/_buttons.scss</code>,
+			<code>_badges.scss</code> et <code>_pills.scss</code>, tous construits à partir des
+			tokens ci-dessus.
+		</p>
+		<table>
+			<thead><tr><th>Composant</th><th>Classes</th><th>Usage</th></tr></thead>
+			<tbody>
+				<tr><td>Boutons</td><td><code>.btn</code>, <code>.btn--primary</code>, <code>.btn--dark</code>, <code>.btn--outline</code>, <code>.btn--outline-on-dark</code>, <code>.btn--lg</code>, <code>.btn--block</code></td><td>CTA principal doré, CTA sombre pleine largeur, contour sur fond clair ou sombre, modificateurs grand/pleine largeur</td></tr>
+				<tr><td>Badges</td><td><code>.badge--new</code>, <code>.badge--exclusive</code>, <code>.badge--sale</code>, <code>.badge--outline-gold</code>, <code>.badge--discount</code></td><td>Badges en coin des cartes produit et badge de réduction sur le prix (fond teinté, pas un aplat)</td></tr>
+				<tr><td>Pills</td><td><code>.pill</code>, <code>.pill.is-active</code>, <code>.pill__remove</code></td><td>Chips de filtre et pills de catégorie, avec un bouton « × » de suppression optionnel</td></tr>
+			</tbody>
+		</table>
+		<p>
+			Quelques valeurs propres au « chrome » d'un composant (ex. la taille de police 13.5px
+			d'un bouton) ne font pas partie de l'échelle typographique de contenu : elles sont donc
+			déclarées en variable SCSS locale en tête du partial concerné plutôt que dans
+			<code>_tokens.scss</code> — chaque couleur et valeur de géométrie qu'elles utilisent
+			provient malgré tout des tokens partagés.
+		</p>
+		<p>
+			Aucune page WordPress réelle n'affiche encore ces composants (<code>header.php</code>/
+			<code>footer.php</code> et tous les gabarits de page restent à construire). La conformité
+			à la maquette est vérifiée par <code>test/js/design-system.test.js</code>, qui compile le
+			SCSS directement et fait des assertions sur le CSS généré (couleurs, rayons, états
+			hover/actif) pour chaque variante.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

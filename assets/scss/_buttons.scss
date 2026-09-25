@@ -1,0 +1,89 @@
+// Created: 2026-09-25 05:39 CEST
+// Role: Button component partial (assets/scss/_buttons.scss).
+// Author: David ROMERA <d.romera.11@gmail.com>
+// Purpose: Base `.btn` class plus every button variant used across the theme (primary gold CTA,
+//          dark CTA, outline on both light and dark backgrounds), built entirely from the design
+//          tokens in `_tokens.scss`. Page-specific usages (which variant appears where) are wired
+//          in the templates that consume this partial, not here.
+
+@use 'tokens' as *;
+
+// Values specific to button chrome, not part of the content typographic scale in `_tokens.scss`.
+$btn-font-size: 13.5px;
+$btn-font-size-lg: 15px;
+$btn-padding-y: 16px;
+$btn-padding-x: 36px;
+$btn-border-width: 1.5px;
+$overlay-white-15: rgba(255, 255, 255, 0.15);
+$overlay-white-70: rgba(255, 255, 255, 0.7);
+
+.btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	border: $btn-border-width solid transparent;
+	border-radius: $radius-button;
+	padding: $btn-padding-y $btn-padding-x;
+	font-family: $font-family-base;
+	font-size: $btn-font-size;
+	font-weight: $font-weight-bold;
+	line-height: 1;
+	text-decoration: none;
+	cursor: pointer;
+	transition:
+		background-color 0.2s ease,
+		border-color 0.2s ease,
+		color 0.2s ease;
+}
+
+.btn--primary {
+	background: $color-gold;
+	color: $color-dark;
+
+	&:hover {
+		background: $color-gold-dark;
+	}
+}
+
+.btn--dark {
+	background: $color-dark;
+	color: $color-surface;
+
+	&:hover {
+		background: $color-dark-hover;
+	}
+}
+
+.btn--outline {
+	background: transparent;
+	border-color: $color-dark;
+	color: $color-dark;
+
+	&:hover {
+		background: $color-hover;
+	}
+}
+
+.btn--outline-on-dark {
+	background: transparent;
+	border-color: $overlay-white-15;
+	color: $overlay-white-70;
+
+	&:hover {
+		border-color: $color-gold;
+		color: $color-surface;
+	}
+}
+
+.btn--lg {
+	font-size: $btn-font-size-lg;
+	font-weight: $font-weight-extrabold;
+}
+
+.btn--block {
+	display: flex;
+	width: 100%;
+	height: 48px;
+	padding: 0 $btn-padding-x;
+}

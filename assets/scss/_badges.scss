@@ -1,0 +1,54 @@
+// Created: 2026-09-25 05:39 CEST
+// Role: Badge component partial (assets/scss/_badges.scss).
+// Author: David ROMERA <d.romera.11@gmail.com>
+// Purpose: Corner badges shown on product cards/panels (New, Exclusive, Sale) and the price
+//          discount badge, built from the design tokens in `_tokens.scss`.
+
+@use 'tokens' as *;
+@use 'sass:color';
+
+// Value specific to badge chrome, not part of the content typographic scale in `_tokens.scss`.
+$badge-font-size: 9.5px;
+
+.badge {
+	display: inline-flex;
+	align-items: center;
+	border-radius: $radius-badge;
+	padding: 4px 10px;
+	font-family: $font-family-base;
+	font-size: $badge-font-size;
+	font-weight: $font-weight-bold;
+	line-height: 1;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	white-space: nowrap;
+}
+
+.badge--new {
+	background: $color-dark;
+	color: $color-surface;
+}
+
+.badge--exclusive {
+	background: $color-gold;
+	color: $color-dark;
+}
+
+.badge--sale {
+	background: $color-sale;
+	color: $color-surface;
+}
+
+.badge--outline-gold {
+	background: transparent;
+	border: 1px solid $color-gold;
+	color: $color-gold;
+}
+
+// Discount badge shown next to a struck-through price (e.g. "−25%"), distinct from the corner
+// badges above: a tinted background rather than a solid fill.
+.badge--discount {
+	background: color.adjust($color-sale, $alpha: -0.9);
+	color: $color-sale;
+	border-radius: $radius-badge;
+}

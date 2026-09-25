@@ -5,6 +5,9 @@
 //          component styles live in their own `_*.scss` partials under this same directory.
 
 @use 'tokens' as *;
+@use 'buttons';
+@use 'badges';
+@use 'pills';
 
 :root {
 	color-scheme: light;

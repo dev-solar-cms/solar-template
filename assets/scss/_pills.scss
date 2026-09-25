@@ -1,0 +1,54 @@
+// Created: 2026-09-25 05:39 CEST
+// Role: Pill/chip component partial (assets/scss/_pills.scss).
+// Author: David ROMERA <d.romera.11@gmail.com>
+// Purpose: Filter chips and category pills (product filters, blog category filter), built from
+//          the design tokens in `_tokens.scss`. Which pills appear active on a given page is wired
+//          by the templates that consume this partial, not here.
+
+@use 'tokens' as *;
+
+.pill {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	border: 1px solid $color-border;
+	border-radius: $radius-pill;
+	padding: 8px 16px;
+	background: $color-surface;
+	color: $color-muted;
+	font-family: $font-family-base;
+	@include type-small($font-weight-medium);
+	line-height: 1;
+	text-decoration: none;
+	cursor: pointer;
+	transition:
+		background-color 0.2s ease,
+		border-color 0.2s ease,
+		color 0.2s ease;
+}
+
+.pill.is-active {
+	background: $color-dark;
+	border-color: $color-dark;
+	color: $color-surface;
+}
+
+// Removable chip (e.g. an active filter), with an inline "×" button.
+.pill__remove {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border: 0;
+	margin: 0;
+	padding: 0;
+	background: transparent;
+	color: inherit;
+	font-size: inherit;
+	line-height: 1;
+	cursor: pointer;
+	opacity: 0.7;
+
+	&:hover {
+		opacity: 1;
+	}
+}

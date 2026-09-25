@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.2.0`.
+Version actuelle : `0.2.1`.
 
 ## Avant une release
 
@@ -30,6 +30,19 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.2.1 — boutons, badges et pills
+
+- Ajout des composants de base réutilisables : boutons (variantes primaire dorée, sombre pleine
+  largeur, contour clair/sombre), badges (Nouveau/Exclusif/Promo/contour doré/réduction) et
+  pills/chips de filtre (état actif, bouton de suppression), tous construits à partir des tokens de
+  design existants.
+- Décision technique : pas encore de partial PHP de rendu pour ces composants — aucune page réelle
+  du thème ne les consomme à ce stade (l'en-tête/pied de page et les gabarits de page restent à
+  construire) ; les classes CSS sont prêtes à être utilisées par les prochaines étapes.
+- Conformité à la maquette vérifiée par un test automatisé qui compile le SCSS et vérifie chaque
+  couleur/rayon/état généré ; une vérification visuelle en navigateur n'étant pas outillable dans
+  cet environnement, ce point est signalé explicitement plutôt que supposé.
 
 ### 0.2.0 — fondations du système de design
 
