@@ -114,3 +114,42 @@ function solar_template_translator(): \Solar_Template\Contracts\TranslatorInterf
 
 	return $translator;
 }
+
+/**
+ * Enqueues the compiled front-end assets built by the Vite pipeline (`npm run build`/`npm run dev`).
+ *
+ * Both files are optional: a theme checkout where `npm run build` has not been run yet simply
+ * serves no custom CSS/JS instead of fataling, with an admin notice pointing at the missing step.
+ * The query-string version is the file's own modification time, so browsers pick up a rebuilt
+ * asset immediately without any manual cache-busting.
+ *
+ * @return void
+ */
+function solar_template_enqueue_assets(): void {
+	$dist_url = get_template_directory_uri() . '/assets/dist';
+	$dist_dir = get_template_directory() . '/assets/dist';
+
+	$style_file  = "{$dist_dir}/main.css";
+	$script_file = "{$dist_dir}/main.js";
+
+	if ( file_exists( $style_file ) ) {
+		wp_enqueue_style( 'solar-template', "{$dist_url}/main.css", array(), filemtime( $style_file ) );
+	}
+
+	if ( file_exists( $script_file ) ) {
+		wp_enqueue_script( 'solar-template', "{$dist_url}/main.js", array(), filemtime( $script_file ), true );
+	}
+
+	if ( ! file_exists( $style_file ) && ! file_exists( $script_file ) ) {
+		add_action(
+			'admin_notices',
+			static function (): void {
+				printf(
+					'<div class="notice notice-warning"><p>%s</p></div>',
+					esc_html__( 'Solar Template: run "npm run build" in the theme directory to compile its CSS/JS assets.', 'solar-template' )
+				);
+			}
+		);
+	}
+}
+add_action( 'wp_enqueue_scripts', 'solar_template_enqueue_assets' );

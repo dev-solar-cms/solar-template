@@ -4,6 +4,7 @@ vendor/
 *.log
 /build/
 /dist/
+/assets/dist/
 .env
 /.claude
 CLAUDE.md

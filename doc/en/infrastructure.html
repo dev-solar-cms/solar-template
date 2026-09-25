@@ -86,6 +86,21 @@ composer format    # auto-fix what can be auto-fixed (phpcbf)</code></pre>
 			parent repository.
 		</p>
 
+		<h2 id="assets">Asset build pipeline</h2>
+		<p>
+			SCSS/JS sources live in <code>assets/scss/</code> and <code>assets/js/</code> and are
+			compiled by Vite into <code>assets/dist/main.css</code> / <code>assets/dist/main.js</code>.
+		</p>
+		<pre><code>npm install       # install dependencies
+npm run build     # one-off production build (no sourcemaps)
+npm run dev       # rebuild continuously (development, with sourcemaps)
+npm run format    # auto-format assets/**/*.{js,scss} with Prettier</code></pre>
+		<p>
+			The theme enqueues the compiled files only if they exist, cache-busted with the file's
+			own modification time — no build yet simply means no custom CSS/JS is loaded (plus an
+			administration notice), never a fatal error.
+		</p>
+
 		<h2 id="translations">Translation system</h2>
 		<p>
 			The theme's templates keep calling WordPress' own translation functions everywhere —

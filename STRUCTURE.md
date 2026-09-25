@@ -27,6 +27,12 @@ solar-template/
 │   ├── I18n/            # Système de traduction multilingue (catalogue + compilation .mo)
 │   └── Database/        # Schéma et installation des tables `wp_solar_template_*`
 ├── languages/           # Fichiers `.mo` compilés (générés, ignorés par git sauf `.gitkeep`)
+├── vite.config.js       # Configuration du pipeline de build des assets
+├── .prettierrc.json     # Norme de formatage JS/SCSS, utilisée par `npm run format`
+├── assets/
+│   ├── scss/main.scss   # Point d'entrée SCSS (sources non compilées)
+│   ├── js/main.js       # Point d'entrée JS (importe le SCSS pour une compilation unifiée)
+│   └── dist/            # Sortie compilée (générée par `npm run build`/`dev`, ignorée par git)
 ├── doc/                # Documentation du projet (site statique HTML/JS, FR + EN)
 │   ├── en/, fr/         # Pages par langue (index.html, infrastructure.html, ...)
 │   └── assets/          # CSS/JS partagés par la documentation
@@ -65,8 +71,17 @@ solar-template/
 - `template-claude-code.html` (s'il est présent à la racine) est une maquette HTML exportée, ignorée par git — à utiliser comme référence visuelle/structurelle pour construire les vrais gabarits, jamais comme code à exécuter ou copier tel quel.
 - `.claude/` et `CLAUDE.md` sont exclus du dépôt via `.gitignore` (configuration locale de l'assistant, non versionnée).
 - `composer.json` définit les dépendances PHP et l'autoload PSR-4 (`composer install` requis après
-  chaque clone). `package.json` ne définit encore ni dépendances ni scripts : ne pas supposer qu'un
-  build JS/SCSS existe avant la mise en place du pipeline d'assets.
+  chaque clone). `package.json` définit le pipeline de build des assets (`npm install` puis
+  `npm run build`, ou `npm run dev` pour une recompilation continue) — voir « Pipeline d'assets »
+  ci-dessous.
+
+### Pipeline d'assets (`npm run build` / `npm run dev`)
+
+- `npm run build` compile une fois (mode production, sans sourcemap) ; `npm run dev` recompile à
+  chaque changement (mode développement, avec sourcemap).
+- Le thème charge `assets/dist/main.css`/`main.js` s'ils existent (anti-cache basé sur la date de
+  modification du fichier) ; sinon, une notice d'administration invite à lancer `npm run build`,
+  sans bloquer le reste du site.
 - Le `.env` de ce thème (`Solar_Template\Support\DotenvEnvironmentLoader`, lu via la fonction
   `solar_template_env()`) est indépendant du `.env` du dépôt Docker parent : aucun nom de variable
   en commun, et ce thème ne possède ni ne lit jamais les identifiants de connexion à la base de

@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.1.4`.
+Version actuelle : `0.1.5`.
 
 ## Avant une release
 
@@ -28,6 +28,18 @@ Ce dépôt est public (`github.com/dev-solar-cms/solar-template`) et versionné 
 3. Créer une release GitHub à partir du tag, avec un changelog résumant les changements.
 
 ## Changelog
+
+### 0.1.5 — pipeline de compilation des assets (SCSS/JS)
+
+- Mise en place d'un outillage Node (Vite) compilant `assets/scss/*` et `assets/js/*` vers
+  `assets/dist/main.css`/`assets/dist/main.js`, avec un point d'entrée JS unique qui importe le
+  SCSS pour une compilation unifiée en une seule étape.
+- Le thème charge automatiquement ces fichiers compilés (avec anti-cache basé sur leur date de
+  modification) s'ils existent, et affiche une notice d'administration invitant à lancer
+  `npm run build` sinon, plutôt que de bloquer le site.
+- Adoption de Prettier comme outil de formatage JS/SCSS du projet (`npm run format`).
+- `npm audit` : 0 vulnérabilité (résolu en fixant Vite sur sa branche majeure la plus récente au
+  moment de cette étape).
 
 ### 0.1.4 — configuration propre au thème
 

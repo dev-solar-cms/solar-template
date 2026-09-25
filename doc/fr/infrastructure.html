@@ -89,6 +89,23 @@ composer format    # corrige automatiquement ce qui peut l'être (phpcbf)</code>
 			ceux-ci restent gérés par le dépôt parent.
 		</p>
 
+		<h2 id="assets">Pipeline de compilation des assets</h2>
+		<p>
+			Les sources SCSS/JS vivent dans <code>assets/scss/</code> et <code>assets/js/</code>
+			et sont compilées par Vite vers <code>assets/dist/main.css</code> /
+			<code>assets/dist/main.js</code>.
+		</p>
+		<pre><code>npm install       # installe les dépendances
+npm run build     # build de production ponctuel (sans sourcemap)
+npm run dev       # recompile en continu (développement, avec sourcemap)
+npm run format    # formate assets/**/*.{js,scss} avec Prettier</code></pre>
+		<p>
+			Le thème ne charge les fichiers compilés que s'ils existent, avec un anti-cache basé
+			sur la date de modification du fichier — l'absence de build signifie simplement
+			l'absence de CSS/JS personnalisé (plus une notice d'administration), jamais une erreur
+			fatale.
+		</p>
+
 		<h2 id="traductions">Système de traduction</h2>
 		<p>
 			Les gabarits du thème continuent d'appeler partout les fonctions de traduction natives
