@@ -130,6 +130,16 @@ solar-template/
   recherche native, sans réglage supplémentaire. Ouverture/fermeture (bouton, Échap, clic
   extérieur) gérées par `initSearchOverlay()` dans `assets/js/header.js`, avec déplacement du
   focus vers le champ à l'ouverture et retour au bouton déclencheur à la fermeture.
+- Le badge du panier se met à jour dynamiquement, sans rechargement de page, via le mécanisme de
+  fragments AJAX natif de WooCommerce : `solar_template_cart_fragments()` (filtre
+  `woocommerce_add_to_cart_fragments`) renvoie le même balisage que
+  `template-parts/cart-badge.php`, ciblé par le sélecteur `span.site-header__cart-count` déjà
+  présent dans le DOM depuis l'en-tête (voir 02.01). Aucun JS propre au thème n'est nécessaire
+  pour le rafraîchissement lui-même : le script `wc-cart-fragments` de WooCommerce le fait déjà —
+  mais ce script n'est auto-chargé par WooCommerce que par son propre widget « Panier », que le
+  thème n'utilise pas ; il est donc mis en file explicitement
+  (`solar_template_enqueue_cart_fragments()`) pour que le mécanisme fonctionne avec le badge
+  personnalisé de l'en-tête.
 
 ### Pied de page du thème (`footer.php`, `assets/scss/_footer.scss`)
 

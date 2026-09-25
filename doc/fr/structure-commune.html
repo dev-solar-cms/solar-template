@@ -181,6 +181,39 @@
 			recherche (<code>?s=</code>), confirmant que la recherche native remonte effectivement du
 			contenu WordPress et WooCommerce pertinent — contenu de test supprimé après vérification.
 		</p>
+
+		<h2 id="compteur-panier">Compteur panier dynamique</h2>
+		<p>
+			Le badge du panier se met à jour sans rechargement de page grâce au mécanisme natif de
+			WooCommerce, les « fragments » de panier. <code>solar_template_cart_fragments()</code>
+			(accroché au filtre <code>woocommerce_add_to_cart_fragments</code> dans
+			<code>functions.php</code>) renvoie exactement le même balisage que
+			<code>template-parts/cart-badge.php</code>, ciblé par le sélecteur
+			<code>span.site-header__cart-count</code> — c'est précisément parce que ce badge est
+			toujours présent dans le DOM depuis l'étape de l'en-tête (même masqué à zéro article) que
+			ce mécanisme peut le remplacer.
+		</p>
+		<p>
+			Décision technique : aucun JavaScript propre au thème n'a été écrit pour le
+			rafraîchissement lui-même — le script <code>wc-cart-fragments</code> fourni par
+			WooCommerce écoute déjà l'événement <code>added_to_cart</code> et remplace tout élément
+			du DOM correspondant au sélecteur d'un fragment. La seule pièce manquante, découverte en
+			lisant le code source de WooCommerce
+			(<code>WC_Frontend_Scripts::load_scripts()</code>) : ce script n'est automatiquement mis
+			en file que par le widget « Panier » natif de WooCommerce, que ce thème n'utilise pas
+			(l'icône panier de l'en-tête est un balisage personnalisé) — il est donc mis en file
+			explicitement par <code>solar_template_enqueue_cart_fragments()</code>.
+		</p>
+		<p>
+			Vérifié de bout en bout dans l'environnement Docker réel, sans passer par une interface
+			graphique (le catalogue produit lui-même reste à construire) : une requête AJAX
+			d'ajout au panier identique à celle que le script natif de WooCommerce émet
+			(<code>?wc-ajax=add_to_cart</code>) a été simulée sur un produit de test — la réponse
+			contient bien le fragment <code>span.site-header__cart-count</code> avec le compte à
+			jour, et un rechargement complet de page avec la même session confirme que le badge
+			affiché reflète directement ce même compte (initialement masqué, puis visible dès qu'un
+			article est ajouté) — produit de test supprimé après vérification.
+		</p>
 		<p>
 			Vérifié dans l'environnement Docker réel avec WooCommerce actif : le thème s'active sans
 			avertissement ni erreur liés à l'en-tête, les icônes compte/panier résolvent vers les

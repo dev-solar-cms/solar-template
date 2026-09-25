@@ -705,3 +705,45 @@ function solar_template_footer_copyright(): string {
 
 	return str_replace( '{year}', gmdate( 'Y' ), $template );
 }
+
+/**
+ * Refreshes the header's cart-count badge through WooCommerce's own AJAX cart fragments
+ * mechanism, so adding a product to the cart updates the badge without a full page reload.
+ *
+ * WooCommerce enqueues its `wc-cart-fragments` script on the front end whenever at least one
+ * callback is hooked to this filter, and that script already listens for the `added_to_cart`
+ * event and swaps any DOM element matching a fragment's selector for the markup returned here —
+ * no custom front-end JS is needed for this step. The selector below matches the exact markup
+ * `template-parts/cart-badge.php` already renders in the header (see 02.01's cart badge), which
+ * is why that badge is always present in the DOM, even at zero items: this fragment can only
+ * replace an element that already exists.
+ *
+ * @param array $fragments Existing fragments, keyed by CSS selector.
+ * @return array $fragments with the cart badge's selector added/replaced.
+ */
+function solar_template_cart_fragments( array $fragments ): array {
+	ob_start();
+	get_template_part( 'template-parts/cart-badge' );
+	$fragments['span.site-header__cart-count'] = ob_get_clean();
+
+	return $fragments;
+}
+add_filter( 'woocommerce_add_to_cart_fragments', 'solar_template_cart_fragments' );
+
+/**
+ * Enqueues WooCommerce's own `wc-cart-fragments` script on the front end.
+ *
+ * WooCommerce registers this script but only auto-enqueues it from its own "Cart" widget
+ * (`WC_Widget_Cart`); since the header's cart badge is custom markup rather than that widget,
+ * the theme has to enqueue it itself for solar_template_cart_fragments() above to ever run in the
+ * browser — confirmed by reading WooCommerce's own `WC_Frontend_Scripts::load_scripts()`, which
+ * does not enqueue it unconditionally.
+ *
+ * @return void
+ */
+function solar_template_enqueue_cart_fragments(): void {
+	if ( solar_template_load_autoloader() && \Solar_Template\Support\WooCommerceStatus::is_active() ) {
+		wp_enqueue_script( 'wc-cart-fragments' );
+	}
+}
+add_action( 'wp_enqueue_scripts', 'solar_template_enqueue_cart_fragments' );

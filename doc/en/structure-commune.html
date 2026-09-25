@@ -175,6 +175,37 @@
 			confirming the native search actually surfaces relevant WordPress and WooCommerce content
 			— test content removed after verification.
 		</p>
+
+		<h2 id="dynamic-cart-count">Dynamic cart count</h2>
+		<p>
+			The cart badge updates without a page reload through WooCommerce's own native "cart
+			fragments" mechanism. <code>solar_template_cart_fragments()</code> (hooked to the
+			<code>woocommerce_add_to_cart_fragments</code> filter in <code>functions.php</code>)
+			returns exactly the same markup as <code>template-parts/cart-badge.php</code>, targeted
+			by the <code>span.site-header__cart-count</code> selector — it is precisely because that
+			badge is always present in the DOM since the header step (even hidden at zero items) that
+			this mechanism can replace it.
+		</p>
+		<p>
+			Technical decision: no theme-specific JavaScript was written for the refresh itself —
+			WooCommerce's own <code>wc-cart-fragments</code> script already listens for the
+			<code>added_to_cart</code> event and replaces any DOM element matching a fragment's
+			selector. The one missing piece, found by reading WooCommerce's own source
+			(<code>WC_Frontend_Scripts::load_scripts()</code>): that script is only auto-enqueued by
+			WooCommerce's native "Cart" widget, which this theme does not use (the header's cart icon
+			is custom markup) — so it is enqueued explicitly by
+			<code>solar_template_enqueue_cart_fragments()</code>.
+		</p>
+		<p>
+			Verified end to end in the real Docker environment, without going through a browser UI
+			(the product catalog itself is still to be built): an AJAX add-to-cart request identical
+			to the one WooCommerce's own script sends (<code>?wc-ajax=add_to_cart</code>) was
+			simulated against a test product — the response includes the
+			<code>span.site-header__cart-count</code> fragment with the up-to-date count, and a full
+			page reload with the same session confirms the rendered badge reflects that same count
+			directly (initially hidden, then visible once an item is added) — test product removed
+			after verification.
+		</p>
 		<p>
 			Verified in the real Docker environment with WooCommerce active: the theme activates
 			without any header-related warning or error, the account/cart icons resolve to the

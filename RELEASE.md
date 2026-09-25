@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.2.7`.
+Version actuelle : `0.2.8`.
 
 ## Avant une release
 
@@ -30,6 +30,23 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.2.8 — compteur panier dynamique
+
+- Le badge du nombre d'articles au panier se met désormais à jour sans rechargement de page,
+  via le mécanisme natif de « fragments » de panier de WooCommerce.
+- Décision technique : aucun JavaScript propre au thème n'a été écrit pour le rafraîchissement —
+  le script `wc-cart-fragments` fourni par WooCommerce s'en charge déjà nativement. Bug potentiel
+  détecté en lisant le code source de WooCommerce avant qu'il ne se manifeste : ce script n'est
+  automatiquement chargé que par le widget « Panier » natif, que ce thème n'utilise pas ; corrigé
+  en le mettant en file explicitement.
+- Vérifié de bout en bout dans l'environnement Docker réel : une requête d'ajout au panier
+  identique à celle du script natif de WooCommerce, simulée sur un produit de test, renvoie bien
+  le fragment à jour, et un rechargement de page avec la même session confirme que le badge
+  affiché reflète directement ce même compte.
+- **La structure commune du thème (en-tête, navigation avec mega menu, pied de page, recherche,
+  compteur panier) est désormais complète** et prête à être utilisée par les prochaines pages du
+  thème.
 
 ### 0.2.7 — recherche en overlay
 
