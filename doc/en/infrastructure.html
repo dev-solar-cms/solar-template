@@ -145,6 +145,16 @@ npm run test    # JS unit tests (Vitest, jsdom)</code></pre>
 			page.
 		</p>
 
+		<h2 id="ci">Continuous integration</h2>
+		<p>
+			Every push and pull request runs the PHP coding standard, the PHP test suite (on PHP
+			8.1 and 8.3), a production asset build, and the JS test suite. A successful push to
+			<code>main</code> automatically creates a GitHub release for the current
+			<code>composer.json</code> version (tagged <code>vX.Y.Z</code>), with that version's
+			section of the project's release notes as its description — unless that version was
+			already released.
+		</p>
+
 		<h2 id="database">Database tables and activation</h2>
 		<p>
 			On activation, the theme creates three dedicated tables (prefixed

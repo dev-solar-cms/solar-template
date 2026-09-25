@@ -36,6 +36,7 @@ solar-template/
 ├── phpunit.xml.dist     # Configuration PHPUnit, utilisée par `composer test`
 ├── tests/php/           # Tests unitaires PHP (bootstrap minimal, pas une installation WordPress complète)
 ├── test/js/             # Tests unitaires JS (Vitest, environnement jsdom), utilisés par `npm run test`
+├── .github/workflows/ci.yml  # CI : lint + tests PHP/JS à chaque push, release GitHub automatique sur `main`
 ├── doc/                # Documentation du projet (site statique HTML/JS, FR + EN)
 │   ├── en/, fr/         # Pages par langue (index.html, infrastructure.html, ...)
 │   └── assets/          # CSS/JS partagés par la documentation
@@ -109,6 +110,14 @@ solar-template/
 - Cette suite automatisée ne remplace pas la vérification fonctionnelle manuelle dans
   l'environnement Docker réel (activation du thème, base de données, WooCommerce...), effectuée à
   chaque étape et documentée dans `RELEASE.md`.
+
+### Intégration continue (`.github/workflows/ci.yml`)
+
+- À chaque push/pull request : norme de code PHP, tests PHP (PHP `8.1` et `8.3`), build de
+  production des assets, tests JS.
+- Sur un push réussi vers `main` : création automatique d'une release GitHub taguée `vX.Y.Z`
+  (version lue dans `composer.json`), avec pour description la section correspondante de
+  `RELEASE.md` — sauf si cette version a déjà été publiée.
 - Le `.env` de ce thème (`Solar_Template\Support\DotenvEnvironmentLoader`, lu via la fonction
   `solar_template_env()`) est indépendant du `.env` du dépôt Docker parent : aucun nom de variable
   en commun, et ce thème ne possède ni ne lit jamais les identifiants de connexion à la base de

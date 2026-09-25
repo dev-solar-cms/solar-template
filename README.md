@@ -1,5 +1,7 @@
 # Solar Template
 
+[![CI](https://github.com/dev-solar-cms/solar-template/actions/workflows/ci.yml/badge.svg)](https://github.com/dev-solar-cms/solar-template/actions/workflows/ci.yml)
+
 Thème WordPress classique (non block/FSE) destiné à l'écosystème **dev-solar-cms**.
 
 > État actuel : scaffold initial. Le thème n'a pas encore de gabarits (`header.php`/`footer.php` manquants) ni de styles réels — voir [STRUCTURE.md](./STRUCTURE.md) pour le détail des fichiers.
@@ -27,7 +29,8 @@ dépôt parent, via `wp-cli`/Composer récupérés à la demande (voir la docume
 [doc/fr/infrastructure.html](./doc/fr/infrastructure.html) /
 [doc/en/infrastructure.html](./doc/en/infrastructure.html)).
 
-Suite de tests : `composer test` (PHP) et `npm run test` (JS).
+Suite de tests : `composer test` (PHP) et `npm run test` (JS). Une CI GitHub Actions exécute cette
+suite à chaque push et crée automatiquement une release à partir de `main` si elle passe.
 
 Voir [STRUCTURE.md](./STRUCTURE.md) pour l'organisation des fichiers et [RELEASE.md](./RELEASE.md) pour la procédure de versionnage/publication.
 

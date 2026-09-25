@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.1.8`.
+Version actuelle : `0.1.9`.
 
 ## Avant une release
 
@@ -23,11 +23,22 @@ Version actuelle : `0.1.8`.
 
 Ce dépôt est public (`github.com/dev-solar-cms/solar-template`) et versionné indépendamment du repo parent `wordpress-dev-env` — voir [STRUCTURE.md](./STRUCTURE.md).
 
-1. Commit des changements sur `main`.
-2. Tag git correspondant à la version : `git tag vX.Y.Z && git push origin vX.Y.Z`.
-3. Créer une release GitHub à partir du tag, avec un changelog résumant les changements.
+Un push sur `main` déclenche la CI GitHub Actions (`.github/workflows/ci.yml`) : tests PHP et JS,
+puis, si tout passe, création automatique d'une release GitHub taguée `vX.Y.Z` (à partir du champ
+`version` de `composer.json`), avec pour description la section correspondante de ce fichier —
+aucune étape manuelle de tag/release n'est donc nécessaire tant que la version est bien mise à jour
+avant de pousser.
 
 ## Changelog
+
+### 0.1.9 — intégration continue (CI)
+
+- Mise en place d'un workflow GitHub Actions exécutant, à chaque push et pull request : la norme de
+  code PHP, les tests PHP (sur deux versions de PHP, `8.1` et `8.3`), le build de production des
+  assets et les tests JS.
+- Sur un push réussi vers `main`, une release GitHub est créée automatiquement pour la version
+  courante de `composer.json` (si elle n'existe pas déjà), avec pour description la section
+  correspondante de ce fichier.
 
 ### 0.1.8 — squelette de tests automatisés (PHP + JS)
 

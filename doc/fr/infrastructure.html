@@ -151,6 +151,16 @@ npm run test    # tests unitaires JS (Vitest, jsdom)</code></pre>
 			Docker réelle effectuée pour chaque changement décrit sur cette page.
 		</p>
 
+		<h2 id="ci">Intégration continue</h2>
+		<p>
+			Chaque push et pull request exécute la norme de code PHP, la suite de tests PHP (sur
+			PHP 8.1 et 8.3), un build de production des assets, et la suite de tests JS. Un push
+			réussi vers <code>main</code> crée automatiquement une release GitHub pour la version
+			courante de <code>composer.json</code> (taguée <code>vX.Y.Z</code>), avec pour
+			description la section correspondante des notes de version du projet — sauf si cette
+			version a déjà été publiée.
+		</p>
+
 		<h2 id="base-de-donnees">Tables de base de données et activation</h2>
 		<p>
 			À l'activation, le thème crée trois tables dédiées (préfixées
