@@ -646,6 +646,38 @@ final class DefaultStrings {
 				'fr_FR' => 'Cette combinaison est actuellement en rupture de stock.',
 				'en_US' => 'This combination is currently out of stock.',
 			),
+			'Custom engraving'                            => array(
+				'fr_FR' => 'Gravure personnalisée',
+				'en_US' => 'Custom engraving',
+			),
+			'Let customers add custom engraving text to this product, for an extra price.' => array(
+				'fr_FR' => 'Permet aux clients d\'ajouter un texte de gravure personnalisé à ce produit, moyennant un supplément.',
+				'en_US' => 'Let customers add custom engraving text to this product, for an extra price.',
+			),
+			'Engraving price (%s)'                        => array(
+				'fr_FR' => 'Prix de la gravure (%s)',
+				'en_US' => 'Engraving price (%s)',
+			),
+			'Max. engraving length (characters)'          => array(
+				'fr_FR' => 'Longueur maximale de la gravure (caractères)',
+				'en_US' => 'Max. engraving length (characters)',
+			),
+			'Add your text · +%s'                         => array(
+				'fr_FR' => 'Ajoutez votre texte · +%s',
+				'en_US' => 'Add your text · +%s',
+			),
+			'Enable custom engraving'                     => array(
+				'fr_FR' => 'Activer la gravure personnalisée',
+				'en_US' => 'Enable custom engraving',
+			),
+			'Your engraving text (max. %d characters)'    => array(
+				'fr_FR' => 'Votre texte de gravure (max. %d caractères)',
+				'en_US' => 'Your engraving text (max. %d characters)',
+			),
+			'Engraving'                                   => array(
+				'fr_FR' => 'Gravure',
+				'en_US' => 'Engraving',
+			),
 		);
 	}
 

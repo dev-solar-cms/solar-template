@@ -236,4 +236,57 @@ final class SingleProductPanelTest extends TestCase {
 		$this->assertMatchesRegularExpression( '/product-panel__size-option is-unavailable"[^>]*disabled/', $html );
 		$this->assertMatchesRegularExpression( '/product-panel__add-to-cart"\s*\n?\s*disabled/', $html );
 	}
+
+	/**
+	 * A product with custom engraving enabled renders the toggle/field inside the cart form (so
+	 * its values submit with "Add to cart"), with the configured surcharge/max length applied; a
+	 * product without it renders neither.
+	 *
+	 * @return void
+	 */
+	public function test_renders_engraving_section_only_when_enabled(): void {
+		$base_args = array(
+			'title'     => 'Engravable Product',
+			'rating'    => array(
+				'average'       => 0.0,
+				'rounded_stars' => 0,
+				'review_count'  => 0,
+			),
+			'stock'     => array(
+				'label'    => 'In stock',
+				'modifier' => 'in-stock',
+			),
+			'cart_form' => array(
+				'product_id'       => 9,
+				'is_variable'      => false,
+				'price_html'       => '<span class="amount">30,00&nbsp;€</span>',
+				'can_add_to_cart'  => true,
+				'variation_groups' => array(),
+			),
+		);
+
+		$with_engraving = $this->render(
+			array_merge(
+				$base_args,
+				array(
+					'engraving' => array(
+						'price'      => 25.0,
+						'max_length' => 20,
+					),
+				)
+			)
+		);
+
+		$this->assertStringContainsString( 'product-panel__engraving', $with_engraving );
+		$this->assertStringContainsString( 'name="solar_template_engraving_enabled"', $with_engraving );
+		$this->assertStringContainsString( 'name="solar_template_engraving_text"', $with_engraving );
+		$this->assertStringContainsString( 'maxlength="20"', $with_engraving );
+		$this->assertStringContainsString( 'data-surcharge="25"', $with_engraving );
+		$this->assertStringContainsString( '25.00', $with_engraving );
+
+		$without_engraving = $this->render( array_merge( $base_args, array( 'engraving' => null ) ) );
+
+		$this->assertStringNotContainsString( 'product-panel__engraving', $without_engraving );
+		$this->assertStringNotContainsString( 'solar_template_engraving', $without_engraving );
+	}
 }

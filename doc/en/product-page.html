@@ -149,6 +149,46 @@
 			total verified) — test product and variations deleted after verification. No PHP warning or
 			error found.
 		</p>
+
+		<h2 id="custom-engraving">Custom engraving option</h2>
+		<p>
+			A "Custom engraving" section can be enabled per product — natively, with no dependency on
+			ACF or WooCommerce Product Add-ons (a structuring decision of this project).
+			<code>Solar_Template\Product\ProductEngraving</code> reads three native WooCommerce product
+			meta values: enabled or not, price surcharge (€25 by default) and maximum text length (20
+			characters by default).
+		</p>
+		<p>
+			<code>Solar_Template\Product\EngravingAdminFields</code> adds a toggle and two fields to the
+			"General" tab of the WooCommerce product edit screen, using WooCommerce's own native admin
+			field helpers (<code>woocommerce_wp_checkbox()</code>/<code>woocommerce_wp_text_input()</code>)
+			— no third-party meta box framework — and persists them on the
+			<code>woocommerce_process_product_meta</code> hook.
+		</p>
+		<p>
+			When engraving is enabled for a product, the panel renders a toggle and a text field, inside
+			the "Add to cart" form itself (so their value submits along with it). Turning the toggle on
+			adds the surcharge to the displayed price — the same recalculation mechanism as the Color/
+			Size variations — and makes the text field required.
+		</p>
+		<p>
+			<code>Solar_Template\Product\EngravingCart</code> captures the submitted selection into the
+			cart item's own data (truncated to the configured maximum length), adds the surcharge to
+			that item's price on every totals recalculation — recomputed from the product/variation's
+			real price every time, never compounded on top of the already-adjusted price, so the
+			surcharge is never applied on top of itself — shows it as an extra line on the cart/
+			checkout, and persists it as the resulting order line item's meta: the submitted value ends
+			up in the order, not just the cart.
+		</p>
+		<p>
+			Verified end to end in the real Docker environment with WooCommerce active, in both installed
+			languages: the admin fields display and save the configured values correctly; an add-to-cart
+			request identical to the one the form would submit once engraving is enabled confirms
+			WooCommerce's real cart receives the price surcharge (cart total verified) and the engraving
+			text truncated to the configured maximum length; a direct simulation of the order line item's
+			creation confirms that text is persisted as its meta — test product deleted after
+			verification. No PHP warning or error found.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

@@ -3,11 +3,13 @@
  * Role: Front-end behaviour for the product page (assets/js/product.js).
  * Author: David ROMERA <d.romera.11@gmail.com>
  * Purpose: Swap the main product image when a thumbnail is clicked (template-parts/single-product/
- *          gallery.php), and, for a variable product, resolve a Color/Size selection against its
- *          real WooCommerce variations (window.solarTemplateProduct, localized by
+ *          gallery.php); for a variable product, resolve a Color/Size selection against its real
+ *          WooCommerce variations (window.solarTemplateProduct, localized by
  *          Solar_Template\Product\ProductController): recompute the displayed price, the hidden
- *          `variation_id` submitted with the "Add to cart" form, and that button's disabled state.
- *          Does nothing (and throws no error) on a page without the relevant markup.
+ *          `variation_id` submitted with the "Add to cart" form, and that button's disabled state;
+ *          and, when custom engraving is enabled for the product, add its surcharge to that same
+ *          displayed price while it is toggled on. Does nothing (and throws no error) on a page
+ *          without the relevant markup.
  */
 
 /**
@@ -45,9 +47,12 @@ export function initProductGallery() {
 }
 
 /**
- * Wires up the product panel's quantity stepper and, for a variable product, its Color/Size
- * selectors: resolving a full selection against the real variation payload updates the displayed
- * price, the "Add to cart" form's hidden `variation_id`, and that button's disabled state.
+ * Wires up the product panel's quantity stepper, its custom engraving toggle (if any) and, for a
+ * variable product, its Color/Size selectors: resolving a full selection against the real
+ * variation payload updates the displayed price, the "Add to cart" form's hidden `variation_id`,
+ * and that button's disabled state. The displayed price always reflects both the resolved base
+ * price (the simple product's own real price, or the matched variation's) and, when toggled on,
+ * the engraving surcharge — recomputed from whichever of the two changes.
  *
  * @return {void}
  */
@@ -60,15 +65,39 @@ export function initProductVariations() {
 
 	wireQuantityStepper(form);
 
-	const config = window.solarTemplateProduct;
+	const config = window.solarTemplateProduct || {};
+	const priceElement = document.querySelector('[data-product-price]');
+	let resolvedPrice = 'number' === typeof config.basePrice ? config.basePrice : null;
+
+	const getEngravingSurcharge = wireEngravingToggle(form, () => recomputeDisplayedPrice());
+
+	/**
+	 * Re-renders the displayed price from the currently resolved base price plus the engraving
+	 * surcharge, if any. Does nothing while no base price is resolved yet (an unselected variable
+	 * product keeps showing its server-rendered price range).
+	 *
+	 * @return {void}
+	 */
+	function recomputeDisplayedPrice() {
+		if (null === resolvedPrice || !priceElement || !config.priceFormat) {
+			return;
+		}
+
+		priceElement.textContent = formatPrice(
+			resolvedPrice + getEngravingSurcharge(),
+			config.priceFormat,
+		);
+	}
+
+	recomputeDisplayedPrice();
+
 	const groups = Array.from(document.querySelectorAll('.product-panel__variation-group'));
 
-	if (!groups.length || !config || !Array.isArray(config.variations)) {
+	if (!groups.length || !Array.isArray(config.variations)) {
 		return;
 	}
 
 	const variationIdInput = form.querySelector('.product-panel__variation-id');
-	const priceElement = document.querySelector('[data-product-price]');
 	const addToCartButton = form.querySelector('.product-panel__add-to-cart');
 	const messageElement = document.querySelector('[data-variation-message]');
 	const selection = {};
@@ -118,6 +147,7 @@ export function initProductVariations() {
 			addToCartButton.disabled = true;
 		}
 
+		resolvedPrice = null;
 		hideMessage();
 	}
 
@@ -133,6 +163,7 @@ export function initProductVariations() {
 			addToCartButton.disabled = true;
 		}
 
+		resolvedPrice = null;
 		showMessage(config.i18n && config.i18n.unavailable);
 	}
 
@@ -149,7 +180,8 @@ export function initProductVariations() {
 			addToCartButton.disabled = true;
 		}
 
-		updatePrice(match.display_price);
+		resolvedPrice = match.display_price;
+		recomputeDisplayedPrice();
 		showMessage(config.i18n && config.i18n.outOfStock);
 	}
 
@@ -166,7 +198,8 @@ export function initProductVariations() {
 			addToCartButton.disabled = false;
 		}
 
-		updatePrice(match.display_price);
+		resolvedPrice = match.display_price;
+		recomputeDisplayedPrice();
 		hideMessage();
 	}
 
@@ -193,18 +226,6 @@ export function initProductVariations() {
 
 		messageElement.hidden = true;
 		messageElement.textContent = '';
-	}
-
-	/**
-	 * @param {number} amount Amount to format and display.
-	 * @return {void}
-	 */
-	function updatePrice(amount) {
-		if (!priceElement || !config.priceFormat) {
-			return;
-		}
-
-		priceElement.textContent = formatPrice(amount, config.priceFormat);
 	}
 
 	groups.forEach((group) => {
@@ -235,6 +256,37 @@ export function initProductVariations() {
 			});
 		});
 	});
+}
+
+/**
+ * Wires up the custom engraving toggle (if the product has one): shows/hides (and (un)requires) the
+ * text field, and calls back so the caller can recompute the displayed price.
+ *
+ * @param {HTMLFormElement} form     The cart form, possibly containing the engraving toggle.
+ * @param {() => void}      onChange Called whenever the toggle changes.
+ * @return {() => number} Returns the currently active engraving surcharge (0 when off/absent).
+ */
+function wireEngravingToggle(form, onChange) {
+	const toggle = form.querySelector('.product-panel__engraving-toggle');
+	const field = form.querySelector('.product-panel__engraving-field');
+	const input = field ? field.querySelector('input') : null;
+	const surcharge = toggle ? parseFloat(toggle.dataset.surcharge || '0') || 0 : 0;
+
+	if (toggle) {
+		toggle.addEventListener('change', () => {
+			if (field) {
+				field.classList.toggle('is-open', toggle.checked);
+			}
+
+			if (input) {
+				input.required = toggle.checked;
+			}
+
+			onChange();
+		});
+	}
+
+	return () => (toggle && toggle.checked ? surcharge : 0);
 }
 
 /**

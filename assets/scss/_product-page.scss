@@ -307,6 +307,110 @@
 	font-size: 12.5px;
 }
 
+// Custom engraving (template-parts/single-product/panel.php, inside the cart form so its checkbox/
+// text field submit along with "Add to cart").
+
+.product-panel__engraving {
+	grid-column: 1 / -1;
+	padding: 16px 18px;
+	margin-bottom: 22px;
+	border: 1.5px solid $color-border;
+	border-radius: $radius-content-card;
+}
+
+.product-panel__engraving-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+}
+
+.product-panel__engraving-title {
+	margin-bottom: 3px;
+	font-size: 13.5px;
+	font-weight: $font-weight-semibold;
+	color: $color-dark;
+}
+
+.product-panel__engraving-subtitle {
+	font-size: 12px;
+	color: $color-muted;
+}
+
+.product-panel__engraving-switch {
+	position: relative;
+	display: inline-flex;
+	flex-shrink: 0;
+	cursor: pointer;
+}
+
+.product-panel__engraving-toggle {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	opacity: 0;
+}
+
+.product-panel__engraving-track {
+	display: block;
+	width: 42px;
+	height: 24px;
+	border-radius: 12px;
+	background: $color-border;
+	transition: background-color 0.2s ease;
+}
+
+.product-panel__engraving-toggle:checked ~ .product-panel__engraving-track {
+	background: $color-gold;
+}
+
+.product-panel__engraving-toggle:focus-visible ~ .product-panel__engraving-track {
+	outline: 2px solid $color-gold;
+	outline-offset: 2px;
+}
+
+.product-panel__engraving-knob {
+	display: block;
+	width: 18px;
+	height: 18px;
+	margin: 3px;
+	border-radius: 50%;
+	background: $color-surface;
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+	transition: transform 0.2s ease;
+}
+
+.product-panel__engraving-toggle:checked
+	~ .product-panel__engraving-track
+	.product-panel__engraving-knob {
+	transform: translateX(18px);
+}
+
+.product-panel__engraving-field {
+	max-height: 0;
+	margin-top: 0;
+	overflow: hidden;
+	transition:
+		max-height 0.25s ease,
+		margin-top 0.25s ease;
+}
+
+.product-panel__engraving-field.is-open {
+	max-height: 80px;
+	margin-top: 14px;
+}
+
+.product-panel__engraving-input {
+	width: 100%;
+	padding: 10px 14px;
+	border: 1.5px solid $color-gold;
+	border-radius: $radius-input;
+	background: rgba(201, 169, 110, 0.04);
+	font-size: 13.5px;
+	color: $color-dark;
+	outline: none;
+}
+
 .product-panel__cart-form {
 	display: grid;
 	grid-template-columns: auto 1fr;

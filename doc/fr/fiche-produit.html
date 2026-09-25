@@ -161,6 +161,47 @@
 			produit et variations de test supprimés après vérification. Aucun avertissement ni erreur PHP
 			relevé.
 		</p>
+
+		<h2 id="personnalisation-gravure">Option de personnalisation (gravure)</h2>
+		<p>
+			Une section « Gravure personnalisée » peut être activée produit par produit — nativement,
+			sans dépendance à ACF ni à WooCommerce Product Add-ons (décision structurante du projet).
+			<code>Solar_Template\Product\ProductEngraving</code> lit trois métas produit WooCommerce
+			natives : activée ou non, supplément de prix (25&nbsp;€ par défaut) et longueur maximale du
+			texte (20 caractères par défaut).
+		</p>
+		<p>
+			<code>Solar_Template\Product\EngravingAdminFields</code> ajoute un interrupteur et deux
+			champs dans l'onglet « Général » de l'écran d'édition produit WooCommerce, avec les aides de
+			champ natives de l'administration WooCommerce (<code>woocommerce_wp_checkbox()</code>/
+			<code>woocommerce_wp_text_input()</code>) — aucun framework de meta box tiers — et les
+			enregistre au hook <code>woocommerce_process_product_meta</code>.
+		</p>
+		<p>
+			Quand la gravure est activée pour un produit, le panneau affiche un interrupteur et un champ
+			de texte, à l'intérieur même du formulaire d'ajout au panier (pour que leur valeur soit
+			soumise avec). Activer l'interrupteur ajoute le supplément au prix affiché — même mécanisme
+			de recalcul que les variations Couleur/Taille — et rend le champ de texte obligatoire.
+		</p>
+		<p>
+			<code>Solar_Template\Product\EngravingCart</code> capture la sélection soumise dans la
+			donnée de l'article du panier (tronquée à la longueur maximale configurée), ajoute le
+			supplément au prix de cet article à chaque recalcul des totaux — recalculé depuis le vrai
+			prix du produit/de la variante à chaque fois, jamais cumulé sur le prix déjà ajusté, pour ne
+			jamais composer le supplément sur lui-même —, l'affiche comme ligne supplémentaire au panier/
+			paiement, et la persiste comme meta de la ligne de commande : la valeur saisie se retrouve
+			donc bien dans la commande, pas seulement dans le panier.
+		</p>
+		<p>
+			Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif, dans les
+			deux langues installées : les champs d'administration affichent et enregistrent correctement
+			les valeurs configurées ; une requête d'ajout au panier identique à celle que soumettrait le
+			formulaire une fois la gravure activée confirme que le panier WooCommerce reçoit bien le
+			supplément de prix (total du panier vérifié) et le texte de gravure tronqué à la longueur
+			maximale configurée ; une simulation directe de la création de ligne de commande confirme que
+			ce texte est bien persisté comme méta de la ligne — produit de test supprimé après
+			vérification. Aucun avertissement ni erreur PHP relevé.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.4.8`.
+Version actuelle : `0.4.9`.
 
 ## Avant une release
 
@@ -30,6 +30,29 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.4.9 — option de personnalisation (gravure) de la fiche produit
+
+- Ajout d'une option de personnalisation (gravure) activable produit par produit, sans dépendance à
+  ACF ni à WooCommerce Product Add-ons : un supplément de prix et une longueur maximale de texte
+  configurables depuis l'écran d'édition du produit (onglet « Général », champs natifs de
+  l'administration WooCommerce).
+- Quand elle est activée, le panneau produit affiche un interrupteur et un champ de texte ; activer
+  l'interrupteur ajoute le supplément au prix affiché (même mécanisme de recalcul que les
+  variations couleur/taille) et rend le champ de texte obligatoire.
+- Le texte saisi (tronqué à la longueur maximale configurée) est ajouté au panier avec son
+  supplément de prix, affiché comme ligne supplémentaire au panier/paiement, et se retrouve
+  persisté sur la ligne de la commande une fois celle-ci passée.
+- Décision technique : le supplément est recalculé depuis le vrai prix du produit/de la variante à
+  chaque recalcul des totaux du panier, jamais cumulé sur le prix déjà ajusté — pour ne jamais
+  appliquer le supplément deux fois.
+- Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif, dans les deux
+  langues installées : les champs d'administration enregistrent correctement les valeurs
+  configurées ; une requête d'ajout au panier identique à celle que soumettrait le formulaire une
+  fois la gravure activée confirme que le panier WooCommerce reçoit bien le supplément de prix
+  (total du panier vérifié) et le texte tronqué à la longueur configurée ; une simulation directe
+  de la création de ligne de commande confirme que ce texte est bien persisté sur la commande —
+  produit de test supprimé après vérification. Aucun avertissement ni erreur PHP relevé.
 
 ### 0.4.8 — variations et prix dynamique de la fiche produit
 

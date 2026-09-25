@@ -245,6 +245,26 @@ solar-template/
   synchronisés par ce script plutôt que des `<select>` visibles) — l'ajout au panier fonctionne
   donc par un chargement de page classique, sans AJAX, vérifié de bout en bout en simulant la
   requête réelle que soumettrait le formulaire.
+- Option de personnalisation (gravure) : native, sans ACF ni WooCommerce Product Add-ons
+  (DECISIONS.md §2). `Product\ProductEngraving` lit trois metas produit natives
+  (`_solar_template_engraving_enabled`/`_price`/`_max_length`, défauts 25€/20 caractères) ;
+  `Product\EngravingAdminFields` ajoute un toggle + deux champs dans l'onglet « Général » de
+  l'écran d'édition produit WooCommerce (`woocommerce_wp_checkbox()`/`woocommerce_wp_text_input()`
+  natifs, aucun framework de meta box tiers) et les enregistre au hook
+  `woocommerce_process_product_meta`. Quand activée, le panneau affiche un interrupteur + un champ
+  texte (dans le formulaire d'ajout au panier, pour que leur valeur soit soumise avec) ; activer
+  l'interrupteur ajoute le supplément au prix affiché (même mécanisme de recalcul que les
+  variations, `assets/js/product.js`) et rend le champ requis.
+- `Product\EngravingCart` (le « contrôleur » de ce cycle de vie panier/commande) capture la
+  sélection soumise dans la donnée de l'article du panier
+  (`woocommerce_add_cart_item_data`, tronquée à la longueur maximale configurée), ajoute le
+  supplément au prix de cet article à chaque recalcul des totaux
+  (`woocommerce_before_calculate_totals`, recalculé depuis le prix réel du produit/de la variante à
+  chaque fois plutôt que cumulé sur le prix déjà ajusté, pour ne jamais composer le supplément sur
+  lui-même), l'affiche comme ligne supplémentaire au panier/paiement
+  (`woocommerce_get_item_data`) et la persiste comme meta de la ligne de commande
+  (`woocommerce_checkout_create_order_line_item`) — la valeur saisie se retrouve donc bien dans la
+  commande, pas seulement dans le panier.
 
 ### Pied de page du thème (`footer.php`, `assets/scss/_footer.scss`)
 

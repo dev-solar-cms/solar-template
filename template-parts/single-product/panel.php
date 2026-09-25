@@ -4,27 +4,29 @@
  * Role: Product panel template-part (template-parts/single-product/panel.php).
  * Author: David ROMERA <d.romera.11@gmail.com>
  * Purpose: Render the product page's right-hand, sticky panel: badges, title, rating/stock status,
- *          price, Color/Size selectors + "Add to cart" form, short description, trust badges and
- *          the shipping/size/care accordion — everything fed as plain, already-computed data
- *          (single-product.php calls Solar_Template\Product\ProductBadges/ProductStock/
- *          ProductPanel/ProductCartForm), same convention as
+ *          price, Color/Size selectors + custom engraving + "Add to cart" form, short description,
+ *          trust badges and the shipping/size/care accordion — everything fed as plain,
+ *          already-computed data (single-product.php calls Solar_Template\Product\ProductBadges/
+ *          ProductStock/ProductPanel/ProductCartForm/ProductEngraving), same convention as
  *          template-parts/single-product/gallery.php. The price display and the "Add to cart"
  *          button stay separate elements (rather than the mockup's single "Add · {price}" button
  *          text) so assets/js/product.js only ever recomputes one canonical price location.
  *          Selecting a Color/Size resolves the matching real WooCommerce variation
  *          (initProductVariations()), updating the price, the hidden `variation_id`, and the "Add
- *          to cart" button's disabled state accordingly.
+ *          to cart" button's disabled state accordingly; toggling engraving on adds its surcharge
+ *          to that same price.
  *
  * @package Solar_Template
  * @var array $args {
- *     @type string $title             Product title.
- *     @type array  $badges            See Solar_Template\Product\ProductBadges::for_product().
- *     @type array  $rating            See Solar_Template\Product\ProductPanel::rating_summary().
- *     @type array  $stock             See Solar_Template\Product\ProductStock::for_product().
- *     @type string $short_description Pre-filtered, already-safe HTML.
- *     @type array  $cart_form         See Solar_Template\Product\ProductCartForm::for_product().
- *     @type array  $trust_badges      See Solar_Template\Product\ProductPanel::trust_badges().
- *     @type array  $accordion_sections See Solar_Template\Product\ProductPanel::accordion_sections().
+ *     @type string     $title             Product title.
+ *     @type array      $badges            See Solar_Template\Product\ProductBadges::for_product().
+ *     @type array      $rating            See Solar_Template\Product\ProductPanel::rating_summary().
+ *     @type array      $stock             See Solar_Template\Product\ProductStock::for_product().
+ *     @type string     $short_description Pre-filtered, already-safe HTML.
+ *     @type array      $cart_form         See Solar_Template\Product\ProductCartForm::for_product().
+ *     @type array|null $engraving         See Solar_Template\Product\ProductEngraving::config_for_product().
+ *     @type array      $trust_badges      See Solar_Template\Product\ProductPanel::trust_badges().
+ *     @type array      $accordion_sections See Solar_Template\Product\ProductPanel::accordion_sections().
  * }
  */
 
@@ -54,6 +56,7 @@ $panel = wp_parse_args(
 			'can_add_to_cart'  => false,
 			'variation_groups' => array(),
 		),
+		'engraving'          => null,
 		'trust_badges'       => array(),
 		'accordion_sections' => array(),
 	)
@@ -159,6 +162,44 @@ $panel = wp_parse_args(
 			<?php endforeach; ?>
 			<?php if ( $panel['cart_form']['is_variable'] ) : ?>
 				<input type="hidden" class="product-panel__variation-id" name="variation_id" value="0" />
+			<?php endif; ?>
+
+			<?php if ( null !== $panel['engraving'] ) : ?>
+				<div class="product-panel__engraving">
+					<div class="product-panel__engraving-header">
+						<div>
+							<div class="product-panel__engraving-title"><?php esc_html_e( 'Custom engraving', 'solar-template' ); ?></div>
+							<div class="product-panel__engraving-subtitle">
+								<?php
+								printf(
+									/* translators: %s: formatted engraving surcharge price. */
+									esc_html__( 'Add your text · +%s', 'solar-template' ),
+									wp_kses_post( wc_price( $panel['engraving']['price'] ) )
+								);
+								?>
+							</div>
+						</div>
+						<label class="product-panel__engraving-switch">
+							<input
+								type="checkbox"
+								name="solar_template_engraving_enabled"
+								class="product-panel__engraving-toggle"
+								data-surcharge="<?php echo esc_attr( (string) $panel['engraving']['price'] ); ?>"
+							/>
+							<span class="product-panel__engraving-track" aria-hidden="true"><span class="product-panel__engraving-knob"></span></span>
+							<span class="screen-reader-text"><?php esc_html_e( 'Enable custom engraving', 'solar-template' ); ?></span>
+						</label>
+					</div>
+					<div class="product-panel__engraving-field">
+						<input
+							type="text"
+							name="solar_template_engraving_text"
+							class="product-panel__engraving-input"
+							maxlength="<?php echo esc_attr( (string) $panel['engraving']['max_length'] ); ?>"
+							placeholder="<?php echo esc_attr( sprintf( /* translators: %d: maximum number of characters. */ __( 'Your engraving text (max. %d characters)', 'solar-template' ), $panel['engraving']['max_length'] ) ); ?>"
+						/>
+					</div>
+				</div>
 			<?php endif; ?>
 
 			<div class="product-panel__quantity">

@@ -221,6 +221,63 @@ describe('assets/js/product.js', () => {
 		});
 	});
 
+	describe('initProductVariations with custom engraving', () => {
+		beforeEach(() => {
+			document.body.innerHTML = `
+				<span class="product-panel__price-amount" data-product-price>30,00&nbsp;€</span>
+				<form class="product-panel__cart-form">
+					<div class="product-panel__engraving">
+						<input type="checkbox" class="product-panel__engraving-toggle" data-surcharge="25" />
+						<div class="product-panel__engraving-field">
+							<input type="text" class="product-panel__engraving-input" />
+						</div>
+					</div>
+					<div class="product-panel__quantity">
+						<button type="button" class="product-panel__qty-decrease"></button>
+						<input type="number" class="product-panel__qty-input" name="quantity" value="1" min="1" />
+						<button type="button" class="product-panel__qty-increase"></button>
+					</div>
+					<button type="submit" class="product-panel__add-to-cart">Add to cart</button>
+				</form>
+			`;
+
+			window.solarTemplateProduct = {
+				priceFormat: {
+					decimals: 2,
+					decimalSeparator: ',',
+					thousandSeparator: ' ',
+					format: '%2$s&nbsp;%1$s',
+					currencySymbol: '€',
+				},
+				basePrice: 30,
+				variations: [],
+			};
+		});
+
+		it('adds the surcharge to the displayed price once toggled on, and removes it once off', () => {
+			initProductVariations();
+
+			const toggle = document.querySelector('.product-panel__engraving-toggle');
+			const priceElement = document.querySelector('[data-product-price]');
+			const field = document.querySelector('.product-panel__engraving-field');
+			const input = document.querySelector('.product-panel__engraving-input');
+
+			toggle.checked = true;
+			toggle.dispatchEvent(new Event('change', { bubbles: true }));
+
+			expect(priceElement.textContent).toContain('55,00');
+			expect(field.classList.contains('is-open')).toBe(true);
+			expect(input.required).toBe(true);
+
+			toggle.checked = false;
+			toggle.dispatchEvent(new Event('change', { bubbles: true }));
+
+			expect(priceElement.textContent).toContain('30,00');
+			expect(field.classList.contains('is-open')).toBe(false);
+			expect(input.required).toBe(false);
+		});
+	});
+
 	describe('formatPrice', () => {
 		it('formats an amount using the store price display settings', () => {
 			const format = {

@@ -198,4 +198,15 @@ if ( ! function_exists( '__' ) ) {
 	function get_permalink( int $post_id = 0 ): string {
 		return "https://example.test/?p={$post_id}";
 	}
+
+	/**
+	 * Plain stand-in for WooCommerce's price formatter (no real WooCommerce install available
+	 * here): tests exercise markup/structure, not real locale-aware formatting.
+	 *
+	 * @param float $price Amount to format.
+	 * @return string A deterministic, HTML-wrapped price string.
+	 */
+	function wc_price( float $price ): string {
+		return '<span class="amount">' . number_format( $price, 2 ) . '</span>';
+	}
 }

@@ -19,6 +19,8 @@ use Solar_Template\Database\Installer;
 use Solar_Template\Header\Cart;
 use Solar_Template\Header\Nav;
 use Solar_Template\Newsletter\NewsletterController;
+use Solar_Template\Product\EngravingAdminFields;
+use Solar_Template\Product\EngravingCart;
 use Solar_Template\Product\ProductController;
 use Solar_Template\Support\WooCommerceStatus;
 
@@ -58,6 +60,14 @@ final class Theme {
 
 		add_action( 'wp_ajax_solar_template_catalog_filter', array( CatalogController::class, 'handle_filter_request' ) );
 		add_action( 'wp_ajax_nopriv_solar_template_catalog_filter', array( CatalogController::class, 'handle_filter_request' ) );
+
+		add_action( 'woocommerce_product_options_general_product_data', array( EngravingAdminFields::class, 'render' ) );
+		add_action( 'woocommerce_process_product_meta', array( EngravingAdminFields::class, 'save' ) );
+
+		add_filter( 'woocommerce_add_cart_item_data', array( EngravingCart::class, 'add_cart_item_data' ), 10, 3 );
+		add_action( 'woocommerce_before_calculate_totals', array( EngravingCart::class, 'adjust_cart_item_price' ) );
+		add_filter( 'woocommerce_get_item_data', array( EngravingCart::class, 'display_cart_item_data' ), 10, 2 );
+		add_action( 'woocommerce_checkout_create_order_line_item', array( EngravingCart::class, 'add_order_item_meta' ), 10, 3 );
 	}
 
 	/**

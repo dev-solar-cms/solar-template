@@ -4,9 +4,9 @@
  * Role: Product page request handler (Solar_Template\Product).
  * Author: David ROMERA <d.romera.11@gmail.com>
  * Purpose: The product page's WordPress-hook "controller" in the DECISIONS.md MVC sense: localizes
- *          the variation payload and WooCommerce's real price display settings for
- *          assets/js/product.js to resolve a Color/Size selection and recompute the displayed price
- *          against, on a single product page only.
+ *          the variation payload, the simple product's own base price, and WooCommerce's real price
+ *          display settings for assets/js/product.js to resolve a Color/Size/engraving selection
+ *          and recompute the displayed price against, on a single product page only.
  *
  * @package Solar_Template
  */
@@ -41,6 +41,8 @@ final class ProductController {
 			return;
 		}
 
+		$is_variable = ProductVariations::is_variable( $product );
+
 		$data = array(
 			'priceFormat' => array(
 				'decimals'          => wc_get_price_decimals(),
@@ -49,6 +51,9 @@ final class ProductController {
 				'format'            => get_woocommerce_price_format(),
 				'currencySymbol'    => get_woocommerce_currency_symbol(),
 			),
+			// Null for a variable product: its price is only known once a full Color/Size selection
+			// resolves a real variation (see assets/js/product.js), never this base product itself.
+			'basePrice'   => $is_variable ? null : (float) $product->get_price(),
 			'variations'  => array(),
 			'i18n'        => array(
 				'unavailable' => __( 'This combination is currently unavailable.', 'solar-template' ),
@@ -56,7 +61,7 @@ final class ProductController {
 			),
 		);
 
-		if ( ProductVariations::is_variable( $product ) ) {
+		if ( $is_variable ) {
 			$data['variations'] = ProductVariations::variations_payload( $product );
 		}
 
