@@ -30,9 +30,10 @@ solar-template/
 ├── vite.config.js       # Configuration du pipeline de build des assets
 ├── .prettierrc.json     # Norme de formatage JS/SCSS, utilisée par `npm run format`
 ├── assets/
-│   ├── scss/main.scss   # Point d'entrée SCSS (sources non compilées)
-│   ├── js/main.js       # Point d'entrée JS (importe le SCSS pour une compilation unifiée)
-│   └── dist/            # Sortie compilée (générée par `npm run build`/`dev`, ignorée par git)
+│   ├── scss/main.scss    # Point d'entrée SCSS (sources non compilées)
+│   ├── scss/_tokens.scss # Design tokens (couleurs, typographie, espacements, géométrie) + mixins d'échelle typo
+│   ├── js/main.js        # Point d'entrée JS (importe le SCSS pour une compilation unifiée)
+│   └── dist/             # Sortie compilée (générée par `npm run build`/`dev`, ignorée par git)
 ├── phpunit.xml.dist     # Configuration PHPUnit, utilisée par `composer test`
 ├── tests/php/           # Tests unitaires PHP (bootstrap minimal, pas une installation WordPress complète)
 ├── test/js/             # Tests unitaires JS (Vitest, environnement jsdom), utilisés par `npm run test`
@@ -99,6 +100,17 @@ solar-template/
 - Le thème charge `assets/dist/main.css`/`main.js` s'ils existent (anti-cache basé sur la date de
   modification du fichier) ; sinon, une notice d'administration invite à lancer `npm run build`,
   sans bloquer le reste du site.
+
+### Design system (`assets/scss/_tokens.scss`)
+
+- Toutes les valeurs de couleur, typographie, espacement et géométrie du design sont définies une
+  seule fois dans ce fichier (variables SCSS), plus un jeu de mixins (`type-display`, `type-h1`,
+  `type-h2`, `type-h3`, `type-body`, `type-small`, `type-caption`, `type-price`) qui regroupent
+  chaque ligne de l'échelle typographique. Aucun autre fichier SCSS ne doit redéfinir une valeur
+  déjà couverte ici.
+- La police **Plus Jakarta Sans** (poids 300 à 800) est chargée depuis Google Fonts
+  (`solar_template_enqueue_assets()` dans `functions.php`), avec le numéro de version du thème comme
+  version de ressource pour l'invalidation de cache.
 
 ### Tests (`composer test` / `npm run test`)
 

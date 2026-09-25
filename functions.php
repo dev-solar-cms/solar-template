@@ -165,16 +165,26 @@ function solar_template_translator(): \Solar_Template\Contracts\TranslatorInterf
 }
 
 /**
- * Enqueues the compiled front-end assets built by the Vite pipeline (`npm run build`/`npm run dev`).
+ * Enqueues the theme's font and the compiled front-end assets built by the Vite pipeline
+ * (`npm run build`/`npm run dev`).
  *
- * Both files are optional: a theme checkout where `npm run build` has not been run yet simply
- * serves no custom CSS/JS instead of fataling, with an admin notice pointing at the missing step.
- * The query-string version is the file's own modification time, so browsers pick up a rebuilt
- * asset immediately without any manual cache-busting.
+ * The Google Fonts stylesheet (Plus Jakarta Sans, all weights used by the design system) has no
+ * local fallback: it is a small external request, accepted as-is per the design handoff. The
+ * compiled CSS/JS files are optional: a theme checkout where `npm run build` has not been run yet
+ * simply serves no custom CSS/JS instead of fataling, with an admin notice pointing at the missing
+ * step. The query-string version on those two is the file's own modification time, so browsers
+ * pick up a rebuilt asset immediately without any manual cache-busting.
  *
  * @return void
  */
 function solar_template_enqueue_assets(): void {
+	wp_enqueue_style(
+		'solar-template-fonts',
+		'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap',
+		array(),
+		wp_get_theme( get_template() )->get( 'Version' )
+	);
+
 	$dist_url = get_template_directory_uri() . '/assets/dist';
 	$dist_dir = get_template_directory() . '/assets/dist';
 

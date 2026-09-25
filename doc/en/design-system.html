@@ -1,0 +1,74 @@
+<!--
+	Created: 2026-09-25 05:39 CEST
+	Role: English documentation page describing the theme's shared design system.
+	Author: David ROMERA <d.romera.11@gmail.com>
+	Purpose: Document, in English, the design tokens and reusable UI components shared across
+	         every template of the theme.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Design system — Solar Template Documentation</title>
+	<link rel="stylesheet" href="../assets/doc.css" />
+</head>
+<body>
+	<aside class="doc-sidebar">
+		<a class="doc-brand" href="index.html">Solar Template</a>
+		<nav>
+			<ul>
+				<li><a href="index.html">Home</a></li>
+				<li><a href="infrastructure.html">Infrastructure</a></li>
+				<li><a href="design-system.html">Design system</a></li>
+			</ul>
+		</nav>
+		<div class="doc-lang-switch">
+			<a class="is-active" href="design-system.html">EN</a>
+			<a href="../fr/design-system.html">FR</a>
+		</div>
+	</aside>
+	<main class="doc-content">
+		<h1>Design system</h1>
+		<p>
+			The theme's visual language — colors, typography, spacing, geometry, and the reusable
+			components built from them — lives entirely in SCSS partials under
+			<code>assets/scss/</code>, imported by the single entry point
+			(<code>assets/scss/main.scss</code>). No component partial hardcodes a raw value already
+			covered by a token.
+		</p>
+
+		<h2 id="tokens">Design tokens</h2>
+		<p>
+			Every color, typography, spacing and geometry value from the design is defined once in
+			<code>assets/scss/_tokens.scss</code>, as plain SCSS variables plus a set of mixins that
+			bundle each row of the typographic scale (<code>type-display</code>, <code>type-h1</code>,
+			<code>type-h2</code>, <code>type-h3</code>, <code>type-body</code>,
+			<code>type-small</code>, <code>type-caption</code>, <code>type-price</code>).
+		</p>
+		<table>
+			<thead><tr><th>Category</th><th>Examples</th></tr></thead>
+			<tbody>
+				<tr><td>Colors</td><td><code>$color-bg</code>, <code>$color-dark</code>, <code>$color-gold</code>, <code>$color-gold-dark</code>, <code>$color-muted</code>, <code>$color-border</code>, <code>$color-success</code>, <code>$color-error</code>, <code>$color-sale</code>…</td></tr>
+				<tr><td>Typography</td><td><code>$font-family-base</code> (Plus Jakarta Sans), font-weight scale (300–800), fluid <code>clamp()</code> sizes for each scale step (display, h1–h3, body, small, caption, price)</td></tr>
+				<tr><td>Spacing</td><td><code>$container-max-width</code> (1440px), <code>$container-padding-x</code>, <code>$spacing-section-y</code>, <code>$spacing-card-gap</code>, product/blog grid gaps</td></tr>
+				<tr><td>Geometry</td><td><code>$radius-card</code>, <code>$radius-content-card</code>, <code>$radius-modal</code>, <code>$radius-button</code>, <code>$radius-pill</code>, <code>$radius-input</code>, card hover/admin box-shadows</td></tr>
+			</tbody>
+		</table>
+		<p>
+			Ranges given by the design handoff as a min–max pair (e.g. "56–80px" for the display
+			size) are reproduced with a fluid <code>clamp()</code> expression rather than a single
+			fixed value, so type actually scales with the viewport instead of jumping at a single
+			breakpoint. A range given for a border-radius (e.g. "8–10px" for content cards vs.
+			modals) is instead split into two separate tokens (<code>$radius-content-card</code>:
+			8px, <code>$radius-modal</code>: 10px), since that range described two different
+			components rather than a single fluid value.
+		</p>
+		<p>
+			The theme loads <strong>Plus Jakarta Sans</strong> (weights 300 to 800) from Google
+			Fonts, enqueued in <code>functions.php</code> alongside the compiled stylesheet.
+		</p>
+	</main>
+	<script src="../assets/doc.js"></script>
+</body>
+</html>

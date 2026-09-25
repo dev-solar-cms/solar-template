@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.1.9`.
+Version actuelle : `0.2.0`.
 
 ## Avant une release
 
@@ -30,6 +30,21 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.2.0 — fondations du système de design
+
+- Ajout des tokens de design (couleurs, typographie, espacements, géométrie) en variables SCSS
+  (`assets/scss/_tokens.scss`), traduits directement depuis la charte graphique du projet, avec des
+  mixins regroupant chaque niveau de l'échelle typographique.
+- Chargement de la police Plus Jakarta Sans (graisses 300 à 800) depuis Google Fonts.
+- Décision technique : les plages de taille typographique (ex. « 56–80px ») sont reproduites en
+  `clamp()` fluide plutôt qu'en valeur fixe unique, pour un texte réellement responsive ; les
+  plages de rayon de bordure applicables à deux composants différents (cartes de contenu vs.
+  modales) sont scindées en deux tokens distincts plutôt qu'en une seule valeur fluide.
+- Bug corrigé (environnement local, sans rapport avec le contenu fonctionnel de cette version) :
+  dépendances Node obsolètes/incomplètes empêchant la compilation des assets, résolu par une
+  réinstallation propre et une resynchronisation du fichier de verrouillage des dépendances avec le
+  numéro de version du projet.
 
 ### 0.1.9 — intégration continue (CI)
 

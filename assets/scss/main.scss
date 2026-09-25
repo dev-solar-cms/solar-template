@@ -1,10 +1,35 @@
 // Created: 2026-09-25 05:39 CEST
 // Role: Entry point of the theme's compiled stylesheet (assets/dist/main.css).
 // Author: David ROMERA <d.romera.11@gmail.com>
-// Purpose: Placeholder entry point for the SCSS build pipeline. Design tokens and real component
-//          styles are added starting with the design-system step; this file only proves the
-//          build pipeline itself works end to end.
+// Purpose: Load the design tokens and base document styles, then every component partial. Actual
+//          component styles live in their own `_*.scss` partials under this same directory.
+
+@use 'tokens' as *;
 
 :root {
 	color-scheme: light;
+}
+
+html {
+	box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: inherit;
+}
+
+body {
+	margin: 0;
+	background: $color-bg;
+	color: $color-dark;
+	font-family: $font-family-base;
+	@include type-body;
+}
+
+h1,
+h2,
+h3 {
+	margin: 0;
 }

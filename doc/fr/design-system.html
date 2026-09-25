@@ -1,0 +1,77 @@
+<!--
+	Créé le : 2026-09-25 05:39 CEST
+	Rôle : Page de documentation en français décrivant le système de design commun du thème.
+	Auteur : David ROMERA <d.romera.11@gmail.com>
+	Objectif : Documenter, en français, les tokens de design et les composants d'interface
+	           réutilisables partagés par tous les gabarits du thème.
+-->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Système de design — Documentation Solar Template</title>
+	<link rel="stylesheet" href="../assets/doc.css" />
+</head>
+<body>
+	<aside class="doc-sidebar">
+		<a class="doc-brand" href="index.html">Solar Template</a>
+		<nav>
+			<ul>
+				<li><a href="index.html">Accueil</a></li>
+				<li><a href="infrastructure.html">Infrastructure</a></li>
+				<li><a href="design-system.html">Système de design</a></li>
+			</ul>
+		</nav>
+		<div class="doc-lang-switch">
+			<a href="../en/design-system.html">EN</a>
+			<a class="is-active" href="design-system.html">FR</a>
+		</div>
+	</aside>
+	<main class="doc-content">
+		<h1>Système de design</h1>
+		<p>
+			Le langage visuel du thème — couleurs, typographie, espacements, géométrie, et les
+			composants réutilisables construits à partir de ces valeurs — vit entièrement dans des
+			partials SCSS sous <code>assets/scss/</code>, importés par le point d'entrée unique
+			(<code>assets/scss/main.scss</code>). Aucun partial de composant ne code en dur une
+			valeur déjà couverte par un token.
+		</p>
+
+		<h2 id="tokens">Tokens de design</h2>
+		<p>
+			Toutes les valeurs de couleur, typographie, espacement et géométrie du design sont
+			définies une seule fois dans <code>assets/scss/_tokens.scss</code>, sous forme de
+			variables SCSS simples, avec un jeu de mixins qui regroupent chaque ligne de l'échelle
+			typographique (<code>type-display</code>, <code>type-h1</code>, <code>type-h2</code>,
+			<code>type-h3</code>, <code>type-body</code>, <code>type-small</code>,
+			<code>type-caption</code>, <code>type-price</code>).
+		</p>
+		<table>
+			<thead><tr><th>Catégorie</th><th>Exemples</th></tr></thead>
+			<tbody>
+				<tr><td>Couleurs</td><td><code>$color-bg</code>, <code>$color-dark</code>, <code>$color-gold</code>, <code>$color-gold-dark</code>, <code>$color-muted</code>, <code>$color-border</code>, <code>$color-success</code>, <code>$color-error</code>, <code>$color-sale</code>…</td></tr>
+				<tr><td>Typographie</td><td><code>$font-family-base</code> (Plus Jakarta Sans), échelle de graisses (300–800), tailles fluides en <code>clamp()</code> pour chaque niveau (display, h1–h3, body, small, caption, price)</td></tr>
+				<tr><td>Espacements</td><td><code>$container-max-width</code> (1440px), <code>$container-padding-x</code>, <code>$spacing-section-y</code>, <code>$spacing-card-gap</code>, écarts de grille produits/blog</td></tr>
+				<tr><td>Géométrie</td><td><code>$radius-card</code>, <code>$radius-content-card</code>, <code>$radius-modal</code>, <code>$radius-button</code>, <code>$radius-pill</code>, <code>$radius-input</code>, ombres portées (hover carte, admin)</td></tr>
+			</tbody>
+		</table>
+		<p>
+			Une plage donnée par la maquette sous forme min–max (ex. « 56–80px » pour la taille
+			display) est reproduite avec une expression <code>clamp()</code> fluide plutôt qu'une
+			valeur fixe unique, pour que la typographie s'adapte réellement à la largeur de l'écran
+			au lieu de sauter à un seul point de rupture. Une plage donnée pour un rayon de bordure
+			(ex. « 8–10px » pour les cartes de contenu vs. les modales) est en revanche scindée en
+			deux tokens distincts (<code>$radius-content-card</code> : 8px,
+			<code>$radius-modal</code> : 10px), car cette plage décrivait deux composants différents
+			plutôt qu'une seule valeur fluide.
+		</p>
+		<p>
+			Le thème charge <strong>Plus Jakarta Sans</strong> (graisses 300 à 800) depuis Google
+			Fonts, mise en file dans <code>functions.php</code> aux côtés de la feuille de style
+			compilée.
+		</p>
+	</main>
+	<script src="../assets/doc.js"></script>
+</body>
+</html>
