@@ -70,6 +70,14 @@
 			<code>Solar_Template\I18n\*</code>). Chaque dépendance reste ainsi remplaçable sans
 			toucher au code qui la consomme.
 		</p>
+		<pre><code>composer install   # installe les dépendances + génère l'autoload
+composer lint      # vérifie la norme de code (WordPress-Extra, via PHP_CodeSniffer)
+composer format    # corrige automatiquement ce qui peut l'être (phpcbf)</code></pre>
+		<p>
+			Un clone récent de ce thème n'embarque pas de dossier <code>vendor/</code>. Le thème
+			s'active tout de même sans lui — il affiche une notice d'administration invitant à
+			lancer <code>composer install</code> plutôt que de provoquer une erreur fatale.
+		</p>
 
 		<h2 id="woocommerce">Détection de WooCommerce</h2>
 		<p>

@@ -17,7 +17,11 @@ solar-template/
 ├── index.php          # Seul gabarit présent ; appelle get_header()/get_footer()
 ├── screenshot.png     # 1200x900, requis par WordPress pour l'aperçu du thème
 ├── composer.json      # Dépendances PHP + autoload PSR-4 (Solar_Template\)
+├── phpcs.xml.dist      # Norme de code PHP (WordPress-Extra), utilisée par `composer lint`/`format`
 ├── package.json       # Métadonnées placeholder (aucun script/dépendance)
+├── inc/                # Classes PHP du thème, autoloadées en PSR-4 sous `Solar_Template\`
+│   ├── Contracts/       # Interfaces consommées par le code métier (jamais une lib tierce directement)
+│   └── Support/         # Implémentations par défaut de ces interfaces
 ├── doc/                # Documentation du projet (site statique HTML/JS, FR + EN)
 │   ├── en/, fr/         # Pages par langue (index.html, infrastructure.html, ...)
 │   └── assets/          # CSS/JS partagés par la documentation
@@ -27,12 +31,21 @@ solar-template/
 └── .gitignore
 ```
 
+### Interfaces PHP (`inc/Contracts/`)
+
+- `EnvironmentLoaderInterface` — lecture de la configuration `.env` du thème (implémentation par
+  défaut : `Support\DotenvEnvironmentLoader`, basée sur `vlucas/phpdotenv`).
+- `CacheInterface` — cache court terme (implémentation par défaut : `Support\TransientCache`,
+  basée sur l'API des transients WordPress, aucune dépendance externe).
+
 ### À noter
 
 - `header.php` et `footer.php` **n'existent pas encore** : `index.php` les appelle déjà, le thème produira donc une erreur/warning tant qu'ils ne sont pas créés.
 - `template-claude-code.html` (s'il est présent à la racine) est une maquette HTML exportée, ignorée par git — à utiliser comme référence visuelle/structurelle pour construire les vrais gabarits, jamais comme code à exécuter ou copier tel quel.
 - `.claude/` et `CLAUDE.md` sont exclus du dépôt via `.gitignore` (configuration locale de l'assistant, non versionnée).
-- `composer.json` et `package.json` ne définissent ni dépendances ni scripts : ne pas supposer qu'un build existe.
+- `composer.json` définit les dépendances PHP et l'autoload PSR-4 (`composer install` requis après
+  chaque clone). `package.json` ne définit encore ni dépendances ni scripts : ne pas supposer qu'un
+  build JS/SCSS existe avant la mise en place du pipeline d'assets.
 
 ## Conventions de code
 

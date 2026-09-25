@@ -8,7 +8,10 @@ get_header();
 
 <main id="primary">
 	<?php if ( have_posts() ) : ?>
-		<?php while ( have_posts() ) : the_post(); ?>
+		<?php
+		while ( have_posts() ) :
+			the_post();
+			?>
 			<?php the_content(); ?>
 		<?php endwhile; ?>
 	<?php else : ?>

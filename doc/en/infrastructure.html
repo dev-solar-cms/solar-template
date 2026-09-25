@@ -67,6 +67,14 @@
 			subsystems, e.g. <code>Solar_Template\I18n\*</code>). This keeps every dependency
 			replaceable without touching the code that consumes it.
 		</p>
+		<pre><code>composer install   # install dependencies + generate the autoloader
+composer lint      # check the coding standard (WordPress-Extra, via PHP_CodeSniffer)
+composer format    # auto-fix what can be auto-fixed (phpcbf)</code></pre>
+		<p>
+			A fresh clone of this theme does not ship a <code>vendor/</code> directory. The theme
+			still activates without it — it shows an administration notice asking to run
+			<code>composer install</code> instead of causing a fatal error.
+		</p>
 
 		<h2 id="woocommerce">WooCommerce detection</h2>
 		<p>

@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!--
+	Created: 2026-09-25 05:39 CEST
+	Role: PHP_CodeSniffer ruleset for the Solar Template theme.
+	Author: David ROMERA <d.romera.11@gmail.com>
+	Purpose: Enforce WordPress coding standards (with the solar-template text domain) on every
+	         PHP file of the theme, run via `composer lint` / `composer format`.
+-->
+<ruleset name="Solar Template">
+	<description>Coding standard for the Solar Template WordPress theme.</description>
+
+	<file>.</file>
+	<exclude-pattern>/vendor/*</exclude-pattern>
+	<exclude-pattern>/node_modules/*</exclude-pattern>
+	<exclude-pattern>/assets/dist/*</exclude-pattern>
+	<exclude-pattern>/languages/*</exclude-pattern>
+
+	<arg name="extensions" value="php"/>
+	<arg value="sp"/>
+
+	<rule ref="WordPress-Extra">
+		<exclude name="WordPress.Files.FileName"/>
+	</rule>
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="solar-template"/>
+			</property>
+		</properties>
+	</rule>
+
+	<config name="testVersion" value="8.1-"/>
+</ruleset>

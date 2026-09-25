@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.1.1`.
+Version actuelle : `0.1.2`.
 
 ## Avant une release
 
@@ -28,6 +28,18 @@ Ce dépôt est public (`github.com/dev-solar-cms/solar-template`) et versionné 
 3. Créer une release GitHub à partir du tag, avec un changelog résumant les changements.
 
 ## Changelog
+
+### 0.1.2 — dépendances PHP et interfaces de base
+
+- Mise en place de Composer (autoload PSR-4, espace de noms `Solar_Template\`) avec `vlucas/phpdotenv`
+  comme première dépendance, consommée uniquement via une interface du thème
+  (`Solar_Template\Contracts\EnvironmentLoaderInterface`), jamais appelée directement ailleurs.
+- Ajout d'une seconde interface de cache court terme (`CacheInterface`), avec une implémentation
+  par défaut basée sur les transients WordPress (aucune dépendance externe).
+- Mise en place de la norme de code PHP du projet (WordPress Coding Standards via
+  PHP_CodeSniffer) : `composer lint` / `composer format`.
+- Le thème continue de s'activer sans erreur si `composer install` n'a pas encore été lancé
+  (notice d'administration au lieu d'une erreur fatale).
 
 ### 0.1.1 — vérification de l'environnement de développement
 

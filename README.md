@@ -14,7 +14,9 @@ En développement local, ce thème est prévu pour tourner dans l'environnement 
 ## Installation
 
 1. Copier (ou symlink) ce dossier dans `wp-content/themes/` d'une installation WordPress.
-2. Activer **Solar Template** depuis Apparence > Thèmes (Text Domain `solar-template`).
+2. Lancer `composer install` à la racine du thème (sinon le thème s'active quand même, avec une
+   notice d'administration invitant à le faire).
+3. Activer **Solar Template** depuis Apparence > Thèmes (Text Domain `solar-template`).
 
 ## Développement
 
