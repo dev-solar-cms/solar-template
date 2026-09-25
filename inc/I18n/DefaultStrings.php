@@ -338,6 +338,54 @@ final class DefaultStrings {
 				'fr_FR' => 'En savoir plus',
 				'en_US' => 'Learn more',
 			),
+			'Testimonials'                        => array(
+				'fr_FR' => 'Témoignages',
+				'en_US' => 'Testimonials',
+			),
+			'What our customers say'              => array(
+				'fr_FR' => 'Ce que disent nos clients',
+				'en_US' => 'What our customers say',
+			),
+			'%d out of 5 stars'                   => array(
+				'fr_FR' => '%d étoiles sur 5',
+				'en_US' => '%d out of 5 stars',
+			),
+			'Ultra-fast delivery and the product exactly matched my expectations. Customer service is outstanding. Highly recommend!' => array(
+				'fr_FR' => 'Livraison ultra rapide et produit exactement conforme à mes attentes. Le service client est remarquable. Je recommande vivement !',
+				'en_US' => 'Ultra-fast delivery and the product exactly matched my expectations. Customer service is outstanding. Highly recommend!',
+			),
+			'Marie L.'                            => array(
+				'fr_FR' => 'Marie L.',
+				'en_US' => 'Marie L.',
+			),
+			'Customer since 2023'                 => array(
+				'fr_FR' => 'Cliente depuis 2023',
+				'en_US' => 'Customer since 2023',
+			),
+			'Exceptional quality for a very reasonable price. A loyal customer for 2 years and never disappointed. Products that last.' => array(
+				'fr_FR' => "Qualité exceptionnelle pour un prix très raisonnable. Client fidèle depuis 2 ans et je n'ai jamais été déçu. Des produits qui durent.",
+				'en_US' => 'Exceptional quality for a very reasonable price. A loyal customer for 2 years and never disappointed. Products that last.',
+			),
+			'Thomas R.'                           => array(
+				'fr_FR' => 'Thomas R.',
+				'en_US' => 'Thomas R.',
+			),
+			'Customer since 2022'                 => array(
+				'fr_FR' => 'Client depuis 2022',
+				'en_US' => 'Customer since 2022',
+			),
+			'Responsive customer service and impeccable product quality. My purchase far exceeded my expectations. Very satisfied!' => array(
+				'fr_FR' => "Service client réactif et produits d'une qualité irréprochable. Mon achat a largement dépassé mes espérances. Très satisfaite !",
+				'en_US' => 'Responsive customer service and impeccable product quality. My purchase far exceeded my expectations. Very satisfied!',
+			),
+			'Sophie M.'                           => array(
+				'fr_FR' => 'Sophie M.',
+				'en_US' => 'Sophie M.',
+			),
+			'Customer since 2024'                 => array(
+				'fr_FR' => 'Cliente depuis 2024',
+				'en_US' => 'Customer since 2024',
+			),
 		);
 	}
 

@@ -149,6 +149,27 @@
 			renders without any warning or error, fully translated according to the site's active
 			language.
 		</p>
+
+		<h2 id="temoignages">Testimonials</h2>
+		<p>
+			<code>template-parts/front-page/testimonials.php</code> renders a grid of three customer
+			testimonials (quote, star rating out of 5, author), the middle card shown in an inverted
+			style (dark background, light text) via a positional CSS class
+			(<code>testimonials__item--inverted</code>, applied to the second item in the loop),
+			matching the mockup.
+		</p>
+		<p>
+			Content (quotes, ratings, authors) stays editorial, exposed through a single WordPress
+			filter (<code>solar_template_testimonials</code>, via
+			<code>solar_template_get_testimonials()</code> in <code>functions.php</code>) rather
+			than a new custom post type — the project roadmap explicitly calls for a "simply
+			defined" content source at this stage, without building a dedicated admin screen now.
+		</p>
+		<p>
+			Verified end to end in the real Docker environment, in both installed languages: the
+			section renders without any warning or error, fully translated according to the site's
+			active language, with the middle card correctly inverted.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

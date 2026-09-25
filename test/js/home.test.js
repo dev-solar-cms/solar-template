@@ -86,3 +86,24 @@ describe('front page: brand story', () => {
 		);
 	});
 });
+
+describe('front page: testimonials', () => {
+	it('lays out a 3-column grid with the modal radius on each card', () => {
+		expect(css).toMatch(
+			/\.testimonials__grid\s*{[^}]*grid-template-columns:\s*repeat\(3,\s*1fr\)/,
+		);
+		expect(css).toMatch(/\.testimonials__item\s*{[^}]*border-radius:\s*10px/);
+	});
+
+	it('inverts the middle card to a dark background with light text', () => {
+		expect(css).toMatch(/\.testimonials__item--inverted\s*{[^}]*background:\s*#0d0d0d/);
+		expect(css).toMatch(
+			/\.testimonials__item--inverted \.testimonials__author-name\s*{[^}]*color:\s*#ffffff/,
+		);
+	});
+
+	it('colors the star rating and quote mark in gold', () => {
+		expect(css).toMatch(/\.testimonials__rating\s*{[^}]*color:\s*#c9a96e/);
+		expect(css).toMatch(/\.testimonials__quote-mark\s*{[^}]*color:\s*#c9a96e/);
+	});
+});

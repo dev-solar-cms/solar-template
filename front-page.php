@@ -23,6 +23,7 @@ get_header();
 	<?php get_template_part( 'template-parts/front-page/featured-products' ); ?>
 	<?php get_template_part( 'template-parts/front-page/categories' ); ?>
 	<?php get_template_part( 'template-parts/front-page/brand-story' ); ?>
+	<?php get_template_part( 'template-parts/front-page/testimonials' ); ?>
 </main>
 
 <?php

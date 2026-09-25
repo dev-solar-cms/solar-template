@@ -1,0 +1,129 @@
+// Created: 2026-09-25 11:30 CEST
+// Role: Front page testimonials component partial (assets/scss/_testimonials.scss).
+// Author: David ROMERA <d.romera.11@gmail.com>
+// Purpose: Style the 3-column testimonials grid rendered by
+//          template-parts/front-page/testimonials.php, built entirely from the shared design
+//          tokens.
+
+@use 'tokens' as *;
+
+.testimonials {
+	padding: 100px 0;
+	background: $color-surface;
+}
+
+.testimonials__inner {
+	max-width: $container-max-width;
+	margin: 0 auto;
+	padding: 0 $container-padding-x;
+}
+
+.testimonials__header {
+	margin-bottom: 56px;
+	text-align: center;
+}
+
+.testimonials__eyebrow {
+	margin: 0 0 10px;
+	color: $color-gold;
+	@include type-caption;
+	letter-spacing: 0.18em;
+}
+
+.testimonials__heading {
+	@include type-h2;
+	color: $color-dark;
+}
+
+.testimonials__grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 28px;
+}
+
+.testimonials__item {
+	margin: 0;
+	padding: 36px;
+	background: $color-bg;
+	border-radius: $radius-modal;
+}
+
+.testimonials__item--inverted {
+	background: $color-dark;
+}
+
+.testimonials__quote-mark {
+	display: block;
+	margin-bottom: 14px;
+	color: $color-gold;
+	font-family: Georgia, serif;
+	font-size: 52px;
+	font-style: italic;
+	line-height: 1;
+}
+
+.testimonials__quote {
+	margin: 0 0 26px;
+	color: $color-dark;
+	font-size: 15px;
+	font-style: italic;
+	line-height: 1.75;
+}
+
+.testimonials__item--inverted .testimonials__quote {
+	color: rgba(255, 255, 255, 0.8);
+}
+
+.testimonials__rating {
+	margin-bottom: 16px;
+	color: $color-gold;
+	font-size: 14px;
+	letter-spacing: 2px;
+}
+
+.testimonials__author {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin: 0;
+}
+
+.testimonials__author-avatar {
+	flex-shrink: 0;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	object-fit: cover;
+}
+
+.testimonials__author-avatar--placeholder {
+	display: inline-block;
+	background: $color-border;
+}
+
+.testimonials__author-name {
+	display: block;
+	color: $color-dark;
+	font-size: 14px;
+	font-weight: $font-weight-bold;
+}
+
+.testimonials__item--inverted .testimonials__author-name {
+	color: $color-surface;
+}
+
+.testimonials__author-since {
+	display: block;
+	color: $color-muted;
+	font-size: 12px;
+}
+
+.testimonials__item--inverted .testimonials__author-since {
+	color: rgba(255, 255, 255, 0.4);
+}
+
+@media (max-width: 900px) {
+	.testimonials__grid {
+		grid-template-columns: 1fr;
+	}
+}

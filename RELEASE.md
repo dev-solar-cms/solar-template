@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.3.3`.
+Version actuelle : `0.3.4`.
 
 ## Avant une release
 
@@ -30,6 +30,18 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.3.4 — section témoignages de la page d'accueil
+
+- Ajout de la cinquième section de la page d'accueil : une grille de trois témoignages clients
+  (citation, note en étoiles, auteur), la carte du milieu inversée (fond sombre, texte clair) comme
+  dans la maquette.
+- Décision technique : le contenu (citations, notes, auteurs) reste éditorial — exposé via un
+  filtre WordPress unique plutôt qu'un nouveau type de contenu personnalisé, la feuille de route
+  du projet demandant explicitement une source de contenu « simple » à ce stade.
+- Vérifié de bout en bout dans l'environnement Docker réel, dans les deux langues installées : la
+  section s'affiche sans avertissement ni erreur, entièrement traduite selon la langue active du
+  site, avec la carte du milieu correctement inversée.
 
 ### 0.3.3 — section « notre histoire » de la page d'accueil
 

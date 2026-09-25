@@ -160,6 +160,27 @@
 			s'affiche sans avertissement ni erreur, entièrement traduite selon la langue active du
 			site.
 		</p>
+
+		<h2 id="temoignages">Témoignages</h2>
+		<p>
+			<code>template-parts/front-page/testimonials.php</code> affiche une grille de trois
+			témoignages clients (citation, note en étoiles sur 5, auteur), la carte du milieu
+			affichée en style inversé (fond sombre, texte clair) via une classe CSS positionnelle
+			(<code>testimonials__item--inverted</code>, appliquée au deuxième élément de la boucle)
+			comme dans la maquette.
+		</p>
+		<p>
+			Le contenu (citations, notes, auteurs) reste éditorial, exposé par un filtre WordPress
+			unique (<code>solar_template_testimonials</code>, via <code>solar_template_get_testimonials()</code>
+			dans <code>functions.php</code>) plutôt qu'un nouveau type de contenu personnalisé — la
+			feuille de route du projet demande explicitement une source de contenu « simple » à ce
+			stade, sans construire d'interface d'administration dédiée maintenant.
+		</p>
+		<p>
+			Vérifié de bout en bout dans l'environnement Docker réel, dans les deux langues
+			installées : la section s'affiche sans avertissement ni erreur, entièrement traduite
+			selon la langue active du site, avec la carte du milieu correctement inversée.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>
