@@ -83,7 +83,7 @@ function solar_template_env( string $key, mixed $default_value = null ): mixed {
  * `.mo` files are looked up in `languages/`, named `{locale}.mo` (WordPress' just-in-time loading
  * expects a bare locale name for a theme's own languages directory): this is exactly what
  * Solar_Template\I18n\DatabaseTranslator::compile() writes, so any language added and compiled
- * from the future administration screen (Group 11) is picked up automatically.
+ * from a future administration screen is picked up automatically.
  *
  * @return void
  */

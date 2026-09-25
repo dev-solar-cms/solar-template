@@ -100,6 +100,43 @@
 			SCSS directement et fait des assertions sur le CSS généré (couleurs, rayons, états
 			hover/actif) pour chaque variante.
 		</p>
+
+		<h2 id="carte-produit">Carte produit</h2>
+		<p>
+			<code>template-parts/product-card.php</code> affiche une carte produit (image, badge en
+			coin, bouton liste de souhaits, overlay « ajouter au panier » au survol, catégorie, nom,
+			prix avec prix barré et badge de réduction optionnels, swatches de couleur) à partir d'un
+			simple tableau <code>$args</code>, stylée par
+			<code>assets/scss/_product-card.scss</code>.
+		</p>
+		<p>
+			<code>$args</code> est volontairement calqué sur la forme des données produit
+			WooCommerce (<code>name</code>/<code>price</code>/<code>regular_price</code>/
+			<code>currency_symbol</code>…) même si cette étape n'affiche que des données factices —
+			aucun <code>WC_Product</code> n'est encore lu. Le prix est formaté par un petit
+			assistant local, destiné à être remplacé par <code>wc_price()</code> une fois la carte
+			branchée sur de vrais produits (grille catalogue, section « produits similaires »). Cet
+			assistant est déclaré derrière une garde <code>function_exists()</code> pour que le
+			template-part puisse être inclus une fois par produit dans une boucle sans erreur fatale
+			de redéclaration.
+		</p>
+		<p>
+			Chaque chaîne affichée par la carte elle-même (<em>« Ajouter à la liste de
+			souhaits »</em>, <em>« Ajouter au panier »</em>, le badge <em>« −XX% »</em>) est
+			enregistrée dans le catalogue de traduction en français et en anglais via
+			<code>Solar_Template\I18n\DefaultStrings</code> — voir
+			<a href="infrastructure.html#traductions">Système de traduction</a>. Le libellé d'un
+			badge (ex. « Nouveau ») est fourni par le gabarit qui appelle cette carte, jamais codé
+			en dur ici.
+		</p>
+		<p>
+			Vérifié contre une installation WordPress réelle : <code>get_template_part()</code>
+			affiche correctement la carte avec des données factices, et basculer la locale active
+			sur <code>fr_FR</code> traduit correctement chaque chaîne propre à la carte via le
+			fichier <code>.mo</code> compilé — confirmant toute la chaîne (catalogue → fichier
+			compilé → chargement gettext de WordPress → sortie du gabarit) de bout en bout, pas
+			seulement le balisage de la carte isolément.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

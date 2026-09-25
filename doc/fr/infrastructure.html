@@ -122,6 +122,17 @@ npm run format    # formate assets/**/*.{js,scss} avec Prettier</code></pre>
 		</p>
 		<p>Le français (<code>fr_FR</code>) et l'anglais (<code>en_US</code>) sont pré-installés ;
 			ajouter une autre langue ne nécessite jamais de toucher au code du thème.</p>
+		<p>
+			<code>Solar_Template\I18n\DefaultStrings</code> liste chaque chaîne visible par
+			l'utilisateur sur laquelle le code PHP du thème appelle actuellement
+			<code>__()</code>/<code>_e()</code>/<code>_n()</code>, avec sa traduction française et
+			anglaise. L'activation du thème alimente le catalogue à partir de cette liste (voir
+			<a href="#base-de-donnees">Tables de base de données et activation</a>) avant de le
+			compiler, si bien que chaque chaîne dispose toujours d'une vraie ligne de traduction
+			derrière elle — jamais un simple appel au text-domain sans rien derrière. Cette liste
+			s'enrichit d'une entrée à chaque nouvelle chaîne visible introduite ; un futur éditeur
+			de traduction modifiera les mêmes lignes.
+		</p>
 		<table>
 			<thead>
 				<tr><th>Table</th><th>Rôle</th></tr>

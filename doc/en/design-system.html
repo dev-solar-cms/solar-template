@@ -96,6 +96,38 @@
 			compiles the SCSS directly and asserts on the generated CSS (colors, radii, hover/active
 			states) for every variant.
 		</p>
+
+		<h2 id="product-card">Product card</h2>
+		<p>
+			<code>template-parts/product-card.php</code> renders a single product card (image,
+			corner badge, wishlist button, "add to cart" hover overlay, category, name, price with
+			an optional struck-through original price and discount badge, color swatches) from a
+			plain <code>$args</code> array, styled by <code>assets/scss/_product-card.scss</code>.
+		</p>
+		<p>
+			<code>$args</code> is deliberately shaped like WooCommerce product data
+			(<code>name</code>/<code>price</code>/<code>regular_price</code>/
+			<code>currency_symbol</code>…) even though this step only renders fake data — no
+			<code>WC_Product</code> is read yet. The price is formatted by a small local helper,
+			expected to be replaced by WooCommerce's own <code>wc_price()</code> once the card is
+			wired to real products (catalog grid, "similar products" section). The helper function
+			is declared behind a <code>function_exists()</code> guard so the template-part can be
+			included once per product in a loop without a fatal error on redeclaration.
+		</p>
+		<p>
+			Every string the card itself outputs (<em>"Add to wishlist"</em>, <em>"Add to
+			cart"</em>, the <em>"−XX%"</em> discount label) is registered in the translation catalog
+			for French and English via <code>Solar_Template\I18n\DefaultStrings</code> — see
+			<a href="infrastructure.html#translations">Translation system</a>. A badge's own label
+			(e.g. "New") is supplied by whichever template calls this card, not hardcoded here.
+		</p>
+		<p>
+			Verified against a real WordPress install: <code>get_template_part()</code> renders the
+			card correctly with fake data, and switching the active locale to <code>fr_FR</code>
+			correctly translates every string the card owns through the compiled <code>.mo</code>
+			file — confirming the whole chain (catalog → compiled file → WordPress' own gettext
+			loading → template output) end to end, not just the card's markup in isolation.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

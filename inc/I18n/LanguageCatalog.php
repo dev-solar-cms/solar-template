@@ -3,7 +3,7 @@
  * Created: 2026-09-25 05:39 CEST
  * Role: Static reference data for the theme's translation system (Solar_Template\I18n).
  * Author: David ROMERA <d.romera.11@gmail.com>
- * Purpose: List the languages the "add a language" administration screen (Group 11) can offer,
+ * Purpose: List the languages a future "add a language" administration screen can offer,
  *          with a two-form (singular/plural) plural rule for each, and the subset of languages
  *          pre-seeded at theme activation (fr_FR + en_US). No language is hardcoded anywhere
  *          else in the theme: adding support for a new one only means adding a row here.

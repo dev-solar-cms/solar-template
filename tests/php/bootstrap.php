@@ -4,10 +4,11 @@
  * Role: PHPUnit bootstrap for the theme's PHP unit tests.
  * Author: David ROMERA <d.romera.11@gmail.com>
  * Purpose: Load the Composer autoloader and define the minimal set of WordPress functions/
- *          constants actually exercised by classes under `inc/` when no real WordPress install is
- *          available. Deliberately not a full WordPress core stub library: only what the current
- *          test suite needs. Real functional behaviour against WordPress itself is verified
- *          manually in the Docker environment for every step (see RELEASE.md/doc/*).
+ *          constants actually exercised by classes under `inc/` and by template-parts when no
+ *          real WordPress install is available. Deliberately not a full WordPress core stub
+ *          library: only what the current test suite needs. Real functional behaviour against
+ *          WordPress itself is verified manually in the Docker environment for every step (see
+ *          RELEASE.md/doc/*).
  *
  * @package Solar_Template
  */
@@ -79,5 +80,87 @@ if ( ! function_exists( 'get_transient' ) ) {
 		unset( $solar_template_test_transients[ $key ] );
 
 		return $existed;
+	}
+}
+
+if ( ! function_exists( '__' ) ) {
+	/**
+	 * Identity stand-in for WordPress' translation function: tests exercise markup/structure, not
+	 * actual translation, which is covered separately by Solar_Template\I18n\DatabaseTranslator.
+	 *
+	 * @param string $text   Text to translate.
+	 * @param string $domain Text domain (ignored here).
+	 * @return string $text, unchanged.
+	 */
+	function __( string $text, string $domain = 'default' ): string { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed, WordPress.WP.I18n.MissingTranslatorsComment -- stand-in for the real WordPress function, not a real translatable string.
+		return $text;
+	}
+
+	/**
+	 * @param string $text   Text to translate.
+	 * @param string $domain Text domain (ignored here).
+	 * @return string Escaped $text.
+	 */
+	function esc_html__( string $text, string $domain = 'default' ): string { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed, WordPress.WP.I18n.MissingTranslatorsComment -- stand-in for the real WordPress function, not a real translatable string.
+		return htmlspecialchars( $text, ENT_QUOTES );
+	}
+
+	/**
+	 * @param string $text   Text to translate.
+	 * @param string $domain Text domain (ignored here).
+	 * @return string Escaped $text.
+	 */
+	function esc_attr__( string $text, string $domain = 'default' ): string { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed, WordPress.WP.I18n.MissingTranslatorsComment -- stand-in for the real WordPress function, not a real translatable string.
+		return htmlspecialchars( $text, ENT_QUOTES );
+	}
+
+	/**
+	 * @param string $text   Text to translate and echo.
+	 * @param string $domain Text domain (ignored here).
+	 * @return void
+	 */
+	function esc_html_e( string $text, string $domain = 'default' ): void { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed, WordPress.WP.I18n.MissingTranslatorsComment -- stand-in for the real WordPress function, not a real translatable string.
+		echo htmlspecialchars( $text, ENT_QUOTES ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- this *is* the escaping stand-in.
+	}
+
+	/**
+	 * @param string $text Text to escape.
+	 * @return string Escaped $text.
+	 */
+	function esc_html( string $text ): string {
+		return htmlspecialchars( $text, ENT_QUOTES );
+	}
+
+	/**
+	 * @param string $text Text to escape.
+	 * @return string Escaped $text.
+	 */
+	function esc_attr( string $text ): string {
+		return htmlspecialchars( $text, ENT_QUOTES );
+	}
+
+	/**
+	 * @param string $url Raw URL.
+	 * @return string Escaped $url.
+	 */
+	function esc_url( string $url ): string {
+		return htmlspecialchars( $url, ENT_QUOTES );
+	}
+
+	/**
+	 * @param string $content Markup to sanitize.
+	 * @return string $content, unchanged (this stand-in trusts test fixtures).
+	 */
+	function wp_kses_post( string $content ): string {
+		return $content;
+	}
+
+	/**
+	 * @param array $args     Provided arguments.
+	 * @param array $defaults Default values.
+	 * @return array Merged arguments.
+	 */
+	function wp_parse_args( array $args, array $defaults = array() ): array {
+		return array_merge( $defaults, $args );
 	}
 }

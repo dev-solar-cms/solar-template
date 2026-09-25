@@ -11,6 +11,7 @@
 
 namespace Solar_Template\Database;
 
+use Solar_Template\I18n\DefaultStrings;
 use Solar_Template\I18n\GettextMoCompiler;
 use Solar_Template\I18n\LanguageCatalog;
 
@@ -24,9 +25,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 final class Installer {
 
 	/**
-	 * Runs every table creation/seed step, then compiles whatever translation catalog already
-	 * exists (empty on a fresh install) into `.mo` files, so the whole pipeline — table, catalog,
-	 * compiled file, WordPress' own gettext loading — is exercised from the very first activation.
+	 * Runs every table creation/seed step, seeds the translation catalog with every string the
+	 * theme's PHP code currently uses (see DefaultStrings), then compiles it into `.mo` files, so
+	 * the whole pipeline — table, catalog, compiled file, WordPress' own gettext loading — is
+	 * exercised from the very first activation.
 	 *
 	 * Hooked to `after_switch_theme` (see functions.php). Safe to call multiple times.
 	 *
@@ -43,6 +45,7 @@ final class Installer {
 			new GettextMoCompiler(),
 			get_template_directory() . '/languages'
 		);
+		DefaultStrings::seed( $translator );
 		$translator->compile_all();
 	}
 
@@ -147,7 +150,7 @@ final class Installer {
 
 	/**
 	 * Creates (or updates) `wp_solar_template_settings`, a generic key/value store for the
-	 * theme's configuration screens (Group 10 fills it in per admin tab; this step only needs a
+	 * theme's configuration screens (future admin tabs fill it in; this step only needs a
 	 * minimal, generically-useful set of defaults to exist from day one).
 	 *
 	 * @return void

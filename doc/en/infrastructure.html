@@ -116,6 +116,16 @@ npm run format    # auto-format assets/**/*.{js,scss} with Prettier</code></pre>
 		</p>
 		<p>French (<code>fr_FR</code>) and English (<code>en_US</code>) are pre-installed; adding
 			another language never requires touching the theme's code.</p>
+		<p>
+			<code>Solar_Template\I18n\DefaultStrings</code> lists every user-visible string the
+			theme's PHP code currently calls <code>__()</code>/<code>_e()</code>/<code>_n()</code>
+			on, together with its French and English translation. Theme activation seeds the
+			catalog from this list (see <a href="#database">Database tables and activation</a>)
+			before compiling it, so every string always has a real translation row behind it —
+			never just a text-domain call with nothing to back it. It grows by one entry every time
+			a change introduces a new visible string; a future translation editor screen edits the
+			same rows.
+		</p>
 		<table>
 			<thead>
 				<tr><th>Table</th><th>Purpose</th></tr>

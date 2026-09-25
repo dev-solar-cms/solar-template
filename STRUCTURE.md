@@ -26,6 +26,8 @@ solar-template/
 │   ├── Support/         # Implémentations par défaut des interfaces génériques
 │   ├── I18n/            # Système de traduction multilingue (catalogue + compilation .mo)
 │   └── Database/        # Schéma et installation des tables `wp_solar_template_*`
+├── template-parts/      # Fragments de gabarit réutilisables (`get_template_part()`)
+│   └── product-card.php # Carte produit (image, badge, wishlist, overlay panier, prix, swatches)
 ├── languages/           # Fichiers `.mo` compilés (générés, ignorés par git sauf `.gitkeep`)
 ├── vite.config.js       # Configuration du pipeline de build des assets
 ├── .prettierrc.json     # Norme de formatage JS/SCSS, utilisée par `npm run format`
@@ -35,6 +37,7 @@ solar-template/
 │   ├── scss/_buttons.scss # Composant boutons (.btn + variantes primaire/dark/outline)
 │   ├── scss/_badges.scss  # Composant badges (.badge + variantes new/exclusive/sale/outline/discount)
 │   ├── scss/_pills.scss   # Composant pills/chips de filtre (.pill + état actif, bouton de suppression)
+│   ├── scss/_product-card.scss # Composant carte produit (media, badge, wishlist, overlay panier, prix, swatches)
 │   ├── js/main.js        # Point d'entrée JS (importe le SCSS pour une compilation unifiée)
 │   └── dist/             # Sortie compilée (générée par `npm run build`/`dev`, ignorée par git)
 ├── phpunit.xml.dist     # Configuration PHPUnit, utilisée par `composer test`
@@ -79,8 +82,8 @@ solar-template/
 ### Tables et activation (`inc/Database/Installer.php`)
 
 - `wp_solar_template_languages` / `wp_solar_template_translations` : voir ci-dessus.
-- `wp_solar_template_settings` : réglages génériques clé/valeur, alimentés au fil du Groupe 10
-  (onglets d'administration) ; valeurs minimales par défaut : version du thème, couleur primaire
+- `wp_solar_template_settings` : réglages génériques clé/valeur, alimentés au fil des futurs écrans
+  d'administration (onglets) ; valeurs minimales par défaut : version du thème, couleur primaire
   (`#c9a227`), couleur secondaire (`#0b0b0c`), logo/favicon vides.
 - `Installer::install()` est appelée au hook `after_switch_theme` (câblé dans `functions.php`) :
   crée les trois tables (`dbDelta`, idempotent), seed les valeurs par défaut si absentes, puis

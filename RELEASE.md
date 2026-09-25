@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.2.1`.
+Version actuelle : `0.2.2`.
 
 ## Avant une release
 
@@ -30,6 +30,26 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.2.2 — composant carte produit
+
+- Ajout d'un composant réutilisable « carte produit » (image, badge en coin, bouton liste de
+  souhaits, overlay « ajouter au panier » au survol, catégorie, nom, prix avec prix barré/badge de
+  réduction optionnels, swatches de couleur), affiché avec des données factices pour l'instant — le
+  branchement aux données réelles WooCommerce est prévu pour une étape ultérieure.
+- Décision technique : la structure des données attendues par ce composant est volontairement
+  calquée sur celle de WooCommerce, avec un formatage de prix minimal marqué comme temporaire (à
+  remplacer par la fonction native de WooCommerce une fois branché sur de vrais produits).
+- Mise en place d'un mécanisme qui enregistre automatiquement, à l'activation du thème, la
+  traduction française et anglaise de chaque chaîne visible introduite par le thème — vérifié de
+  bout en bout dans l'environnement réel (catalogue → fichier de traduction compilé → affichage
+  traduit).
+- Bug évité avant mise en production : la fonction utilitaire de formatage de prix du composant
+  aurait provoqué une erreur fatale à la deuxième carte affichée sur une même page (grille de
+  plusieurs produits) ; corrigé avant que cette situation ne se présente.
+- Correction de confidentialité : quelques commentaires de code déjà publiés faisaient
+  indirectement référence à l'organisation interne du projet en étapes ; reformulés en langage
+  neutre.
 
 ### 0.2.1 — boutons, badges et pills
 

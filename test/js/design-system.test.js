@@ -59,3 +59,24 @@ describe('design system: pills', () => {
 		expect(css).toMatch(/\.pill\.is-active\s*{[^}]*background:\s*#0d0d0d/);
 	});
 });
+
+describe('design system: product card', () => {
+	it('gives the media block the card radius and a 3:4 aspect ratio', () => {
+		expect(css).toMatch(/\.product-card__media\s*{[^}]*border-radius:\s*6px/);
+		expect(css).toMatch(/\.product-card__media\s*{[^}]*aspect-ratio:\s*3\/4/);
+	});
+
+	it('lifts the card on hover', () => {
+		expect(css).toMatch(/\.product-card:hover\s*{[^}]*transform:\s*translateY\(-4px\)/);
+	});
+
+	it('keeps the "add to cart" overlay hidden until hover/focus', () => {
+		expect(css).toMatch(/\.product-card__cta\s*{[^}]*opacity:\s*0/);
+		expect(css).toMatch(/\.product-card:hover \.product-card__cta[^{]*{[^}]*opacity:\s*1/);
+	});
+
+	it('sizes the wishlist button as a 34px circle', () => {
+		expect(css).toMatch(/\.product-card__wishlist\s*{[^}]*width:\s*34px/);
+		expect(css).toMatch(/\.product-card__wishlist\s*{[^}]*border-radius:\s*50%/);
+	});
+});
