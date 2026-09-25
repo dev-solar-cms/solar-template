@@ -40,7 +40,8 @@ solar-template/
 │       ├── featured-products.php # Grille masonry des produits WooCommerce marqués « en vedette »
 │       ├── categories.php # Grille asymétrique des catégories produit WooCommerce
 │       ├── brand-story.php # Section « notre histoire » (image, carte stat flottante, texte, stats, CTA)
-│       └── testimonials.php # Grille de 3 témoignages, carte du milieu en style inversé
+│       ├── testimonials.php # Grille de 3 témoignages, carte du milieu en style inversé
+│       └── blog-preview.php # Grille des 3 derniers articles de blog réels
 ├── languages/           # Fichiers `.mo` compilés (générés, ignorés par git sauf `.gitkeep`)
 ├── vite.config.js       # Configuration du pipeline de build des assets
 ├── .prettierrc.json     # Norme de formatage JS/SCSS, utilisée par `npm run format`
@@ -59,6 +60,7 @@ solar-template/
 │   ├── scss/_home-categories.scss # Grille asymétrique des catégories produit de la page d'accueil
 │   ├── scss/_brand-story.scss # Section « notre histoire » de la page d'accueil
 │   ├── scss/_testimonials.scss # Grille de témoignages de la page d'accueil
+│   ├── scss/_blog-preview.scss # Grille de l'aperçu du blog de la page d'accueil
 │   ├── js/main.js        # Point d'entrée JS (importe le SCSS, initialise les modules de comportement)
 │   ├── js/header.js      # Comportement de l'en-tête (mega menu, bascule de recherche)
 │   └── dist/             # Sortie compilée (générée par `npm run build`/`dev`, ignorée par git)

@@ -170,6 +170,32 @@
 			section renders without any warning or error, fully translated according to the site's
 			active language, with the middle card correctly inverted.
 		</p>
+
+		<h2 id="blog-preview">Blog preview</h2>
+		<p>
+			<code>template-parts/front-page/blog-preview.php</code> renders the 3 latest actually
+			published blog posts (<code>solar_template_get_blog_preview_posts()</code> in
+			<code>functions.php</code>), reusing the blog card component already in place rather
+			than new markup.
+		</p>
+		<p>
+			Unlike the hero and brand story, this section reads real WordPress data: featured image,
+			primary category (shown as a badge), publication date, title, excerpt and author (with
+			their Gravatar avatar) all come straight from the post
+			(<code>solar_template_map_post_to_card_args()</code>). The reading time shown next to
+			the date is estimated from the post's word count
+			(<code>solar_template_estimate_reading_time_minutes()</code>, 200 words per minute,
+			rounded up, minimum 1 minute) rather than entered manually.
+		</p>
+		<p>
+			Technical decision: same graceful-degradation logic as the other sections backed by real
+			data — the section does not render at all when there is no published post.
+		</p>
+		<p>
+			Verified end to end in the real Docker environment, in both installed languages: a test
+			post confirms correct rendering (title, localized date, translated reading time,
+			category, author) — test post deleted after verification.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

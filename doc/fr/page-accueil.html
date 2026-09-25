@@ -181,6 +181,34 @@
 			installées : la section s'affiche sans avertissement ni erreur, entièrement traduite
 			selon la langue active du site, avec la carte du milieu correctement inversée.
 		</p>
+
+		<h2 id="aperçu-blog">Aperçu du blog</h2>
+		<p>
+			<code>template-parts/front-page/blog-preview.php</code> affiche les 3 derniers articles
+			de blog réellement publiés (<code>solar_template_get_blog_preview_posts()</code> dans
+			<code>functions.php</code>), en réutilisant le composant carte article déjà en place
+			(Groupe 01) plutôt qu'un nouveau balisage.
+		</p>
+		<p>
+			Contrairement au hero et à l'histoire de marque, cette section lit de vraies données
+			WordPress : image à la une, catégorie principale (affichée en badge), date de
+			publication, titre, extrait et auteur (avec son avatar Gravatar) viennent directement de
+			l'article (<code>solar_template_map_post_to_card_args()</code>). La durée de lecture
+			affichée à côté de la date est estimée à partir du nombre de mots de l'article
+			(<code>solar_template_estimate_reading_time_minutes()</code>, 200 mots/minute, arrondi
+			au-dessus, minimum 1 minute) plutôt que saisie manuellement.
+		</p>
+		<p>
+			Décision technique : même logique de dégradation gracieuse que les sections branchées
+			sur de vraies données — la section ne s'affiche pas du tout tant qu'aucun article n'est
+			publié.
+		</p>
+		<p>
+			Vérifié de bout en bout dans l'environnement Docker réel, dans les deux langues
+			installées : un article de test confirme l'affichage correct (titre, date localisée,
+			durée de lecture traduite, catégorie, auteur) — article de test supprimé après
+			vérification.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

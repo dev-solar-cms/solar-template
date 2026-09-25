@@ -1,0 +1,69 @@
+// Created: 2026-09-25 12:00 CEST
+// Role: Front page blog preview component partial (assets/scss/_blog-preview.scss).
+// Author: David ROMERA <d.romera.11@gmail.com>
+// Purpose: Style the "Blog preview" section rendered by
+//          template-parts/front-page/blog-preview.php — mostly layout, since each card's own look
+//          is already styled by _blog-card.scss.
+
+@use 'tokens' as *;
+
+.blog-preview {
+	padding: 100px 0;
+	background: $color-bg;
+}
+
+.blog-preview__inner {
+	max-width: $container-max-width;
+	margin: 0 auto;
+	padding: 0 $container-padding-x;
+}
+
+.blog-preview__header {
+	display: flex;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 24px;
+	margin-bottom: 52px;
+}
+
+.blog-preview__eyebrow {
+	margin: 0 0 10px;
+	color: $color-gold;
+	@include type-caption;
+	letter-spacing: 0.18em;
+}
+
+.blog-preview__heading {
+	@include type-h2;
+	color: $color-dark;
+}
+
+.blog-preview__view-all {
+	flex-shrink: 0;
+	padding-bottom: 2px;
+	border-bottom: 1.5px solid $color-dark;
+	color: $color-dark;
+	font-size: 13.5px;
+	font-weight: $font-weight-semibold;
+	text-decoration: none;
+	transition:
+		color 0.2s ease,
+		border-color 0.2s ease;
+}
+
+.blog-preview__view-all:hover {
+	color: $color-gold;
+	border-color: $color-gold;
+}
+
+.blog-preview__grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: $spacing-grid-gap-blog;
+}
+
+@media (max-width: 900px) {
+	.blog-preview__grid {
+		grid-template-columns: 1fr;
+	}
+}

@@ -1119,3 +1119,103 @@ function solar_template_get_testimonials(): array {
 	 */
 	return apply_filters( 'solar_template_testimonials', $defaults );
 }
+
+/**
+ * Returns the front page's "Blog preview" section header (eyebrow label, heading, "view all"
+ * link) — everything except the post data itself, see solar_template_get_blog_preview_posts().
+ *
+ * @return array{eyebrow: string, heading: string, view_all: array{label: string, url: string}}
+ */
+function solar_template_blog_preview_heading(): array {
+	$blog_page_id = (int) get_option( 'page_for_posts' );
+	$blog_url     = $blog_page_id ? get_permalink( $blog_page_id ) : home_url( '/' );
+
+	$defaults = array(
+		'eyebrow'  => __( 'News', 'solar-template' ),
+		'heading'  => __( 'Inspiration & tips', 'solar-template' ),
+		'view_all' => array(
+			'label' => __( 'View all articles →', 'solar-template' ),
+			'url'   => $blog_url,
+		),
+	);
+
+	/**
+	 * Filters the front page's "Blog preview" section header.
+	 *
+	 * @param array $config See solar_template_blog_preview_heading()'s return type.
+	 */
+	return apply_filters( 'solar_template_blog_preview_heading', $defaults );
+}
+
+/**
+ * Estimates a post's reading time, in whole minutes (minimum 1), from its word count at a
+ * conventional average reading speed of 200 words per minute.
+ *
+ * @param \WP_Post $post Post to estimate.
+ * @return int Reading time, in minutes.
+ */
+function solar_template_estimate_reading_time_minutes( \WP_Post $post ): int {
+	$word_count = str_word_count( wp_strip_all_tags( $post->post_content ) );
+
+	return max( 1, (int) ceil( $word_count / 200 ) );
+}
+
+/**
+ * Maps a `WP_Post` to the `$args` shape expected by template-parts/blog-card.php.
+ *
+ * @param \WP_Post $post Post to map.
+ * @return array See template-parts/blog-card.php's documented `$args` keys.
+ */
+function solar_template_map_post_to_card_args( \WP_Post $post ): array {
+	$categories = get_the_category( $post->ID );
+	$category   = ! empty( $categories ) ? $categories[0]->name : '';
+
+	$meta = sprintf(
+		/* translators: 1: publication date, 2: estimated reading time in minutes. */
+		__( '%1$s · %2$d min read', 'solar-template' ),
+		get_the_date( '', $post ),
+		solar_template_estimate_reading_time_minutes( $post )
+	);
+
+	$thumbnail_url = get_the_post_thumbnail_url( $post, 'medium_large' );
+
+	return array(
+		'image_url'         => false !== $thumbnail_url ? $thumbnail_url : null,
+		'image_alt'         => get_the_title( $post ),
+		'permalink'         => get_permalink( $post ),
+		'badge'             => '' !== $category ? array(
+			'type'  => 'outline-gold',
+			'label' => $category,
+		) : null,
+		'meta'              => $meta,
+		'title'             => get_the_title( $post ),
+		'excerpt'           => get_the_excerpt( $post ),
+		'author_name'       => get_the_author_meta( 'display_name', $post->post_author ),
+		'author_avatar_url' => get_avatar_url( $post->post_author ),
+	);
+}
+
+/**
+ * Returns the front page's latest published blog posts, mapped for template-parts/blog-card.php.
+ *
+ * Reads real WordPress post data (not editorial placeholder content). Returns an empty array when
+ * the site has no published post yet, so the calling template-part can skip rendering the section
+ * entirely rather than showing an empty grid.
+ *
+ * @param int $limit Maximum number of posts to return.
+ * @return array<int, array> List of template-parts/blog-card.php `$args` arrays.
+ */
+function solar_template_get_blog_preview_posts( int $limit = 3 ): array {
+	$posts = get_posts(
+		array(
+			'post_type'      => 'post',
+			'post_status'    => 'publish',
+			'posts_per_page' => $limit,
+			'orderby'        => 'date',
+			'order'          => 'DESC',
+			'no_found_rows'  => true,
+		)
+	);
+
+	return array_map( 'solar_template_map_post_to_card_args', $posts );
+}

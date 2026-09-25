@@ -386,6 +386,22 @@ final class DefaultStrings {
 				'fr_FR' => 'Cliente depuis 2024',
 				'en_US' => 'Customer since 2024',
 			),
+			'News'                                => array(
+				'fr_FR' => 'Actualités',
+				'en_US' => 'News',
+			),
+			'Inspiration & tips'                  => array(
+				'fr_FR' => 'Inspirations & conseils',
+				'en_US' => 'Inspiration & tips',
+			),
+			'View all articles →'                 => array(
+				'fr_FR' => 'Voir tous les articles →',
+				'en_US' => 'View all articles →',
+			),
+			'%1$s · %2$d min read'                => array(
+				'fr_FR' => '%1$s · %2$d min de lecture',
+				'en_US' => '%1$s · %2$d min read',
+			),
 		);
 	}
 

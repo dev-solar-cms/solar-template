@@ -107,3 +107,17 @@ describe('front page: testimonials', () => {
 		expect(css).toMatch(/\.testimonials__quote-mark\s*{[^}]*color:\s*#c9a96e/);
 	});
 });
+
+describe('front page: blog preview', () => {
+	it('lays out a 3-column grid with the shared blog grid gap', () => {
+		expect(css).toMatch(
+			/\.blog-preview__grid\s*{[^}]*grid-template-columns:\s*repeat\(3,\s*1fr\)/,
+		);
+	});
+
+	it('underlines the "view all" link in gold on hover', () => {
+		expect(css).toMatch(
+			/\.blog-preview__view-all:hover\s*{[^}]*color:\s*#c9a96e[^}]*border-color:\s*#c9a96e/,
+		);
+	});
+});

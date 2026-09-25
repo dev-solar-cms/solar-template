@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.3.4`.
+Version actuelle : `0.3.5`.
 
 ## Avant une release
 
@@ -30,6 +30,21 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.3.5 — aperçu du blog sur la page d'accueil
+
+- Ajout de la sixième section de la page d'accueil : un aperçu des 3 derniers articles de blog
+  réellement publiés, réutilisant le composant carte article déjà en place (image à la une,
+  catégorie, date et durée de lecture estimée, titre, extrait, auteur avec son avatar).
+- Décision technique : contrairement au hero/à l'histoire de marque, cette section lit de vraies
+  données WordPress (pas de contenu éditorial de remplacement) — elle ne s'affiche pas du tout tant
+  qu'aucun article n'est publié, même logique de dégradation gracieuse que les autres sections
+  branchées sur des données réelles.
+- La durée de lecture est estimée à partir du nombre de mots de l'article (200 mots/minute,
+  arrondi au-dessus, minimum 1 minute) plutôt que saisie manuellement.
+- Vérifié de bout en bout dans l'environnement Docker réel, dans les deux langues installées : un
+  article de test confirme l'affichage correct (titre, date localisée, durée de lecture traduite,
+  catégorie, auteur) — article de test supprimé après vérification.
 
 ### 0.3.4 — section témoignages de la page d'accueil
 
