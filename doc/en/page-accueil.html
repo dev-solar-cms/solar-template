@@ -106,6 +106,29 @@
 			struck-through price, computed discount percentage), and unmarking them as featured
 			makes the whole section disappear — test products deleted after verification.
 		</p>
+
+		<h2 id="categories">Categories</h2>
+		<p>
+			<code>template-parts/front-page/categories.php</code> renders an asymmetric grid
+			(<code>1.4fr 1fr 1fr</code>, the first category spanning both rows) of real WooCommerce
+			product categories (<code>solar_template_get_home_categories()</code> in
+			<code>functions.php</code>, backed by <code>get_terms('product_cat')</code>), sorted by
+			product count (the most populated first) rather than a manual order — WooCommerce has no
+			native "featured category" concept. Each card links to the category's real archive page
+			(<code>get_term_link()</code>) and shows its WooCommerce category image when it has one.
+		</p>
+		<p>
+			Technical decision: same graceful-degradation logic as the previous sections — the
+			section does not render at all when there is no populated product category (WooCommerce
+			inactive, or an empty store), rather than showing an empty grid. The numbers shown on
+			each card (01, 02…) are just positional numbering, not real data.
+		</p>
+		<p>
+			Verified end to end in the real Docker environment with WooCommerce active: two test
+			categories, each with one product, confirm correct rendering (name, link to the category
+			archive), and deleting them makes the whole section disappear — test categories and
+			products deleted after verification.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

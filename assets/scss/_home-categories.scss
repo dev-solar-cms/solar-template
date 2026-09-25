@@ -1,0 +1,129 @@
+// Created: 2026-09-25 10:30 CEST
+// Role: Front page categories component partial (assets/scss/_home-categories.scss).
+// Author: David ROMERA <d.romera.11@gmail.com>
+// Purpose: Style the asymmetric dark grid rendered by template-parts/front-page/categories.php,
+//          built entirely from the shared design tokens.
+
+@use 'tokens' as *;
+@use 'sass:color';
+
+$home-categories-item-bg: color.adjust($color-dark, $lightness: 7%);
+
+.home-categories {
+	padding: 100px 0;
+	background: $color-dark;
+}
+
+.home-categories__inner {
+	max-width: $container-max-width;
+	margin: 0 auto;
+	padding: 0 $container-padding-x;
+}
+
+.home-categories__header {
+	margin-bottom: 56px;
+	text-align: center;
+}
+
+.home-categories__eyebrow {
+	margin: 0 0 10px;
+	color: $color-gold;
+	@include type-caption;
+	letter-spacing: 0.18em;
+}
+
+.home-categories__heading {
+	@include type-h2;
+	color: $color-surface;
+}
+
+.home-categories__grid {
+	display: grid;
+	grid-template-columns: 1.4fr 1fr 1fr;
+	grid-template-rows: auto auto;
+	gap: 16px;
+}
+
+.home-categories__item {
+	position: relative;
+	display: flex;
+	align-items: flex-end;
+	min-height: 248px;
+	padding: 28px;
+	overflow: hidden;
+	background-color: $home-categories-item-bg;
+	background-position: center;
+	background-size: cover;
+	border-radius: $radius-content-card;
+	text-decoration: none;
+	transition: outline-color 0.2s ease;
+	outline: 1px solid transparent;
+}
+
+.home-categories__item:hover {
+	outline-color: rgba(201, 169, 110, 0.3);
+}
+
+.home-categories__item--primary {
+	grid-row: span 2;
+	min-height: 520px;
+	padding: 36px;
+}
+
+.home-categories__item-overlay {
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(to top, rgba(0, 0, 0, 0.65) 0%, transparent 55%);
+	pointer-events: none;
+}
+
+.home-categories__item-content {
+	position: relative;
+	z-index: 1;
+}
+
+.home-categories__item-index {
+	display: block;
+	margin-bottom: 6px;
+	color: rgba(255, 255, 255, 0.35);
+	@include type-caption;
+	letter-spacing: 0.14em;
+}
+
+.home-categories__item-name {
+	display: block;
+	margin-bottom: 12px;
+	color: $color-surface;
+	font-size: 22px;
+	font-weight: $font-weight-extrabold;
+}
+
+.home-categories__item--primary .home-categories__item-name {
+	margin-bottom: 16px;
+	font-size: 28px;
+	line-height: 1.2;
+}
+
+.home-categories__item-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	color: $color-gold;
+	font-size: 12.5px;
+	font-weight: $font-weight-bold;
+}
+
+.home-categories__item--primary .home-categories__item-link {
+	font-size: 13px;
+}
+
+@media (max-width: 900px) {
+	.home-categories__grid {
+		grid-template-columns: 1fr;
+	}
+
+	.home-categories__item--primary {
+		grid-row: auto;
+		min-height: 320px;
+	}
+}

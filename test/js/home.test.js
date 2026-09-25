@@ -49,3 +49,22 @@ describe('front page: featured products', () => {
 		expect(css).toMatch(/\.featured-products__item:nth-child\(4\)\s*{[^}]*margin-top:\s*28px/);
 	});
 });
+
+describe('front page: categories', () => {
+	it('lays out the asymmetric 1.4fr/1fr/1fr grid on a dark background', () => {
+		expect(css).toMatch(/\.home-categories\s*{[^}]*background:\s*#0d0d0d/);
+		expect(css).toMatch(
+			/\.home-categories__grid\s*{[^}]*grid-template-columns:\s*1\.4fr 1fr 1fr/,
+		);
+	});
+
+	it('spans the primary category across both rows', () => {
+		expect(css).toMatch(/\.home-categories__item--primary\s*{[^}]*grid-row:\s*span 2/);
+	});
+
+	it('shows the gold outline hover state', () => {
+		expect(css).toMatch(
+			/\.home-categories__item:hover\s*{[^}]*outline-color:\s*rgba\(201,\s*169,\s*110,\s*0\.3\)/,
+		);
+	});
+});

@@ -113,6 +113,32 @@
 			du marquage « en vedette » fait bien disparaître la section entière — produits de test
 			supprimés après vérification.
 		</p>
+
+		<h2 id="categories">Catégories</h2>
+		<p>
+			<code>template-parts/front-page/categories.php</code> affiche une grille asymétrique
+			(<code>1.4fr 1fr 1fr</code>, la première catégorie occupant les deux lignes) des vraies
+			catégories produit WooCommerce (<code>solar_template_get_home_categories()</code> dans
+			<code>functions.php</code>, basé sur <code>get_terms('product_cat')</code>), triées par
+			nombre de produits (les plus fournies en premier) plutôt que par un ordre manuel — aucun
+			concept de « catégorie mise en avant » n'existe nativement dans WooCommerce. Chaque
+			carte pointe vers la vraie page d'archive de la catégorie
+			(<code>get_term_link()</code>) et affiche son image de catégorie WooCommerce si elle en
+			a une.
+		</p>
+		<p>
+			Décision technique : même logique de dégradation gracieuse que les sections
+			précédentes — la section ne s'affiche pas du tout tant qu'aucune catégorie produit
+			peuplée n'existe (WooCommerce inactif ou boutique vide), plutôt que d'afficher une grille
+			vide. Les numéros affichés sur chaque carte (01, 02...) sont une simple numérotation de
+			position, pas une donnée réelle.
+		</p>
+		<p>
+			Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif : deux
+			catégories de test, chacune avec un produit, confirment l'affichage correct (nom, lien
+			vers l'archive de catégorie), et leur suppression fait bien disparaître la section
+			entière — catégories et produits de test supprimés après vérification.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

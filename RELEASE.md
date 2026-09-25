@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.3.1`.
+Version actuelle : `0.3.2`.
 
 ## Avant une release
 
@@ -30,6 +30,18 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.3.2 — section catégories de la page d'accueil
+
+- Ajout de la troisième section de la page d'accueil : une grille asymétrique (une grande catégorie
+  à gauche, quatre plus petites à droite) des catégories produit WooCommerce réelles, triées par
+  nombre de produits (les plus fournies en premier), chacune pointant vers sa vraie page d'archive.
+- La section ne s'affiche pas du tout tant qu'aucune catégorie produit peuplée n'existe (WooCommerce
+  inactif ou boutique vide), même logique de dégradation gracieuse que les sections précédentes.
+- Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif : deux catégories
+  de test, chacune avec un produit, confirment l'affichage correct (nom, lien vers l'archive de
+  catégorie) ; leur suppression fait bien disparaître la section entière — catégories et produits de
+  test supprimés après vérification.
 
 ### 0.3.1 — section produits vedettes de la page d'accueil
 

@@ -278,6 +278,14 @@ final class DefaultStrings {
 				'fr_FR' => 'Voir toute la collection',
 				'en_US' => 'View the full collection',
 			),
+			'Explore our worlds'                  => array(
+				'fr_FR' => 'Explorer nos univers',
+				'en_US' => 'Explore our worlds',
+			),
+			'Discover'                            => array(
+				'fr_FR' => 'Découvrir',
+				'en_US' => 'Discover',
+			),
 		);
 	}
 
