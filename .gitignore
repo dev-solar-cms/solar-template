@@ -1,10 +1,8 @@
 node_modules/
-vendor/
 .DS_Store
 *.log
 /build/
 /dist/
-/assets/dist/
 .phpunit.result.cache
 .env
 /.claude
