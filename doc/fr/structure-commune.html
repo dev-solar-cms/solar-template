@@ -80,8 +80,46 @@
 		</p>
 		<p>
 			Le bouton de recherche de la barre supérieure ne fait, à ce stade, que basculer son état
-			<code>aria-expanded</code> — l'overlay de recherche lui-même est ajouté par une étape
-			ultérieure de la structure commune.
+			<code>aria-expanded</code> (<code>assets/js/header.js</code>) — l'overlay de recherche
+			lui-même est ajouté par une étape ultérieure de la structure commune.
+		</p>
+
+		<h2 id="mega-menu">Mega menu « Collections »</h2>
+		<p>
+			L'item « Collections » de la navigation principale ouvre un panneau déroulant
+			(<code>template-parts/mega-menu.php</code>, stylé par la même feuille
+			<code>_header.scss</code>) au survol de la souris, au focus clavier (Tab), et se ferme à
+			la touche Échap (avec retour du focus sur le lien) ou à un clic en dehors de la navigation
+			— comportement entièrement géré par <code>assets/js/header.js</code>
+			(<code>initMegaMenu()</code>), sans erreur en console dans aucun de ces cas.
+		</p>
+		<p>
+			Le contenu du panneau (colonnes de liens) est un texte de remplacement, exposé par le
+			filtre <code>solar_template_mega_menu_columns</code> : le branchement à de vraies
+			catégories WooCommerce est explicitement hors périmètre de cette étape (prévu par une
+			étape ultérieure du catalogue produits) — le filtre est le point d'extension prévu pour ce
+			branchement futur. Le mega menu peut être désactivé dans son ensemble via le filtre
+			<code>solar_template_header_mega_menu_enabled</code>, en prévision de l'onglet « En-tête »
+			du Groupe 10.
+		</p>
+		<p>
+			Décision technique : un administrateur peut assigner son propre menu à l'emplacement
+			<code>primary</code> depuis Apparence &gt; Menus, mais <code>wp_nav_menu()</code>
+			n'applique pas nativement les classes CSS propres au thème à chaque élément. Deux filtres
+			WordPress (<code>nav_menu_css_class</code>, <code>nav_menu_link_attributes</code>)
+			appliquent donc les mêmes classes que la navigation de secours à tout menu réel assigné à
+			cet emplacement — un administrateur marque un item pour le mega menu de la même façon que
+			la navigation de secours le fait, en lui ajoutant la classe CSS <code>has-mega-menu</code>
+			depuis l'écran des menus. Vérifié dans l'environnement Docker réel avec un menu de test
+			assigné à l'emplacement <code>primary</code>, incluant un item marqué
+			<code>has-mega-menu</code>.
+		</p>
+		<p>
+			Bug détecté et corrigé pendant les tests automatisés avant qu'il n'affecte un utilisateur
+			réel : fermer le mega menu à la touche Échap redonnait le focus au lien déclencheur, ce
+			qui déclenchait immédiatement son propre gestionnaire d'ouverture au focus, rouvrant le
+			panneau qui venait d'être fermé — corrigé par un verrou temporaire qui ignore cet
+			événement de focus précis, le temps de la remise au focus programmatique.
 		</p>
 		<p>
 			Vérifié dans l'environnement Docker réel avec WooCommerce actif : le thème s'active sans

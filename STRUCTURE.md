@@ -30,7 +30,8 @@ solar-template/
 ├── template-parts/      # Fragments de gabarit réutilisables (`get_template_part()`)
 │   ├── product-card.php # Carte produit (image, badge, wishlist, overlay panier, prix, swatches)
 │   ├── blog-card.php    # Carte article de blog (image 16:10, badge catégorie, meta, titre, extrait, auteur)
-│   └── cart-badge.php   # Badge du nombre d'articles au panier, utilisé par l'en-tête
+│   ├── cart-badge.php   # Badge du nombre d'articles au panier, utilisé par l'en-tête
+│   └── mega-menu.php    # Panneau du mega menu « Collections », contenu factice pour l'instant
 ├── languages/           # Fichiers `.mo` compilés (générés, ignorés par git sauf `.gitkeep`)
 ├── vite.config.js       # Configuration du pipeline de build des assets
 ├── .prettierrc.json     # Norme de formatage JS/SCSS, utilisée par `npm run format`
@@ -42,8 +43,9 @@ solar-template/
 │   ├── scss/_pills.scss   # Composant pills/chips de filtre (.pill + état actif, bouton de suppression)
 │   ├── scss/_product-card.scss # Composant carte produit (media, badge, wishlist, overlay panier, prix, swatches)
 │   ├── scss/_blog-card.scss # Composant carte article de blog (media 16:10, badge, meta, titre, extrait, auteur)
-│   ├── scss/_header.scss # En-tête sticky (barre supérieure, actions, navigation principale)
-│   ├── js/main.js        # Point d'entrée JS (importe le SCSS pour une compilation unifiée)
+│   ├── scss/_header.scss # En-tête sticky (barre supérieure, actions, navigation, mega menu)
+│   ├── js/main.js        # Point d'entrée JS (importe le SCSS, initialise les modules de comportement)
+│   ├── js/header.js      # Comportement de l'en-tête (mega menu, bascule de recherche)
 │   └── dist/             # Sortie compilée (générée par `npm run build`/`dev`, ignorée par git)
 ├── phpunit.xml.dist     # Configuration PHPUnit, utilisée par `composer test`
 ├── tests/php/           # Tests unitaires PHP (bootstrap minimal, pas une installation WordPress complète)
@@ -111,6 +113,13 @@ solar-template/
   (`woocommerce_add_to_cart_fragments`), sans nouvelle logique JS à cette étape.
 - Les URLs des réseaux sociaux sont un filtre (`solar_template_social_links`), pas encore une
   option d'administration — celle-ci arrive avec l'onglet « En-tête » du Groupe 10.
+- Le mega menu de l'item « Collections » (`template-parts/mega-menu.php`,
+  `assets/js/header.js`) s'ouvre/ferme au survol, au focus clavier et se ferme à l'échappement ou
+  au clic extérieur. Son contenu (colonnes de liens) est du texte de remplacement, exposé via le
+  filtre `solar_template_mega_menu_columns` — le branchement aux vraies catégories WooCommerce est
+  hors périmètre de cette étape. Deux filtres (`nav_menu_css_class`/`nav_menu_link_attributes`)
+  garantissent qu'un menu réel assigné à l'emplacement `primary` reçoit les mêmes classes que la
+  navigation de secours, pour un rendu/comportement identique dans les deux cas.
 
 ### À noter
 - `footer.php` **n'existe pas encore** : `index.php` l'appelle déjà, le thème produira donc un

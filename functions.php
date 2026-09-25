@@ -190,6 +190,21 @@ function solar_template_cart_count(): int {
 }
 
 /**
+ * Returns the WooCommerce shop page URL, or the site's front page when WooCommerce is missing/
+ * inactive. Shared by solar_template_default_nav_items() and solar_template_mega_menu_columns()
+ * so both fall back to the same page rather than duplicating this check.
+ *
+ * @return string
+ */
+function solar_template_shop_url(): string {
+	if ( solar_template_load_autoloader() && \Solar_Template\Support\WooCommerceStatus::is_active() && function_exists( 'wc_get_page_permalink' ) ) {
+		return wc_get_page_permalink( 'shop' );
+	}
+
+	return home_url( '/' );
+}
+
+/**
  * Returns the default primary navigation items, used when no menu is assigned to the
  * "primary" location from Appearance > Menus.
  *
@@ -202,9 +217,7 @@ function solar_template_cart_count(): int {
  * @return array<int, array{slug: string, label: string, url: string, has_mega_menu?: bool}>
  */
 function solar_template_default_nav_items(): array {
-	$shop_url = ( solar_template_load_autoloader() && \Solar_Template\Support\WooCommerceStatus::is_active() && function_exists( 'wc_get_page_permalink' ) )
-		? wc_get_page_permalink( 'shop' )
-		: home_url( '/' );
+	$shop_url = solar_template_shop_url();
 
 	$blog_page_id = (int) get_option( 'page_for_posts' );
 	$blog_url     = $blog_page_id ? get_permalink( $blog_page_id ) : home_url( '/' );
@@ -305,6 +318,117 @@ function solar_template_primary_nav_fallback(): void {
 	}
 
 	echo '</ul>';
+}
+
+/**
+ * Ensures a real menu item assigned to the "primary" location from Appearance > Menus carries the
+ * same `site-header__menu-item` class solar_template_primary_nav_fallback() uses, so header
+ * styling and JS behaviour (see assets/js/header.js) work identically whether an administrator
+ * has assigned a menu there or not. An administrator marks an item for the mega menu the same way
+ * the fallback does: by adding a `has-mega-menu` CSS class to it from the Menus screen.
+ *
+ * @param string[]  $classes Existing classes for this menu item's `<li>`.
+ * @param \WP_Post  $item    Menu item object (untyped to match `Walker_Nav_Menu`'s own filter).
+ * @param \stdClass $args    `wp_nav_menu()` arguments, including `theme_location`.
+ * @return string[] Classes with `site-header__menu-item` added, or $classes unchanged.
+ */
+function solar_template_primary_nav_item_classes( array $classes, $item, $args ): array {
+	if ( 'primary' !== ( $args->theme_location ?? '' ) ) {
+		return $classes;
+	}
+
+	$classes[] = 'site-header__menu-item';
+
+	return $classes;
+}
+add_filter( 'nav_menu_css_class', 'solar_template_primary_nav_item_classes', 10, 3 );
+
+/**
+ * Ensures a real menu item's `<a>` carries the same `site-header__menu-link` class the fallback
+ * uses, for the same parity reason as solar_template_primary_nav_item_classes() above.
+ *
+ * @param array     $atts Existing HTML attributes for this menu item's `<a>`.
+ * @param \WP_Post  $item Menu item object.
+ * @param \stdClass $args `wp_nav_menu()` arguments, including `theme_location`.
+ * @return array Attributes with `site-header__menu-link` appended to `class`.
+ */
+function solar_template_primary_nav_link_attributes( array $atts, $item, $args ): array {
+	if ( 'primary' !== ( $args->theme_location ?? '' ) ) {
+		return $atts;
+	}
+
+	$atts['class'] = trim( ( $atts['class'] ?? '' ) . ' site-header__menu-link' );
+
+	return $atts;
+}
+add_filter( 'nav_menu_link_attributes', 'solar_template_primary_nav_link_attributes', 10, 3 );
+
+/**
+ * Returns the columns shown in the header's "Collections" mega menu.
+ *
+ * Defaults to generic placeholder columns rather than real WooCommerce product categories: wiring
+ * real category data is out of scope for this step (see the project roadmap's later
+ * catalog-related steps). A future step, or the Group 10 administration screen, is expected to
+ * hook into this filter with real taxonomy data.
+ *
+ * @return array<int, array{heading: string, links: array<int, array{label: string, url: string}>}>
+ */
+function solar_template_mega_menu_columns(): array {
+	$shop_url = solar_template_shop_url();
+
+	$columns = array(
+		array(
+			'heading' => __( 'Shop by category', 'solar-template' ),
+			'links'   => array(
+				array(
+					'label' => __( 'New In', 'solar-template' ),
+					'url'   => $shop_url,
+				),
+				array(
+					'label' => __( 'Best Sellers', 'solar-template' ),
+					'url'   => $shop_url,
+				),
+				array(
+					'label' => __( 'Limited Edition', 'solar-template' ),
+					'url'   => $shop_url,
+				),
+			),
+		),
+		array(
+			'heading' => __( 'Featured', 'solar-template' ),
+			'links'   => array(
+				array(
+					'label' => __( 'View All Collections', 'solar-template' ),
+					'url'   => $shop_url,
+				),
+			),
+		),
+	);
+
+	/**
+	 * Filters the columns shown in the header's "Collections" mega menu.
+	 *
+	 * @param array $columns List of { heading, links: [{ label, url }] }, see
+	 *                       solar_template_mega_menu_columns()'s return type.
+	 */
+	return apply_filters( 'solar_template_mega_menu_columns', $columns );
+}
+
+/**
+ * Reports whether the "Collections" mega menu should be rendered at all.
+ *
+ * Defaults to enabled; a future "Header" administration tab (Group 10 of the project roadmap) is
+ * expected to hook into this filter with the site owner's actual preference.
+ *
+ * @return bool
+ */
+function solar_template_mega_menu_enabled(): bool {
+	/**
+	 * Filters whether the header's "Collections" mega menu is enabled.
+	 *
+	 * @param bool $enabled True by default.
+	 */
+	return (bool) apply_filters( 'solar_template_header_mega_menu_enabled', true );
 }
 
 /**

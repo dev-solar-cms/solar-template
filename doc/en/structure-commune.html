@@ -79,7 +79,44 @@
 		</p>
 		<p>
 			The top bar's search button only toggles its <code>aria-expanded</code> state at this
-			stage — the search overlay itself is added by a later step of the common structure.
+			stage (<code>assets/js/header.js</code>) — the search overlay itself is added by a later
+			step of the common structure.
+		</p>
+
+		<h2 id="mega-menu">"Collections" mega menu</h2>
+		<p>
+			The primary navigation's "Collections" item opens a dropdown panel
+			(<code>template-parts/mega-menu.php</code>, styled by the same <code>_header.scss</code>
+			sheet) on mouse hover, on keyboard focus (Tab), and closes on Escape (returning focus to
+			the link) or on a click outside the navigation — fully handled by
+			<code>assets/js/header.js</code> (<code>initMegaMenu()</code>), with no console error in
+			any of those cases.
+		</p>
+		<p>
+			The panel's content (link columns) is placeholder text, exposed through the
+			<code>solar_template_mega_menu_columns</code> filter: wiring it to real WooCommerce
+			categories is explicitly out of scope for this step (planned for a later catalog step) —
+			the filter is the intended extension point for that future wiring. The mega menu can be
+			disabled entirely via the <code>solar_template_header_mega_menu_enabled</code> filter,
+			ahead of the "Header" tab of Group 10.
+		</p>
+		<p>
+			Technical decision: a site administrator can assign their own menu to the
+			<code>primary</code> location from Appearance &gt; Menus, but <code>wp_nav_menu()</code>
+			does not natively apply the theme's own CSS classes to each item. Two WordPress filters
+			(<code>nav_menu_css_class</code>, <code>nav_menu_link_attributes</code>) therefore apply
+			the same classes the fallback navigation uses to any real menu assigned to that location —
+			an administrator flags an item for the mega menu the same way the fallback does, by adding
+			the <code>has-mega-menu</code> CSS class to it from the Menus screen. Verified in the real
+			Docker environment with a test menu assigned to the <code>primary</code> location,
+			including an item flagged <code>has-mega-menu</code>.
+		</p>
+		<p>
+			Bug caught and fixed during automated testing before it could affect a real user: closing
+			the mega menu with Escape returned focus to the trigger link, which immediately fired its
+			own focus-opens-the-menu handler, reopening the panel that had just been closed — fixed
+			with a temporary guard that ignores that specific focus event while the programmatic
+			refocus happens.
 		</p>
 		<p>
 			Verified in the real Docker environment with WooCommerce active: the theme activates

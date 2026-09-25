@@ -103,6 +103,7 @@ $header-nav-height: 44px;
 
 .site-header__nav {
 	background: $color-dark-nav;
+	position: relative;
 }
 
 .site-header__nav-inner {
@@ -155,5 +156,64 @@ $header-nav-height: 44px;
 		color: $color-gold;
 		font-weight: $font-weight-bold;
 		border-bottom-color: $color-gold;
+	}
+}
+
+.site-header__mega-menu {
+	position: absolute;
+	top: 100%;
+	left: 0;
+	right: 0;
+	background: $color-dark-nav;
+	border-top: 1px solid rgba(255, 255, 255, 0.08);
+	box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+	opacity: 0;
+	visibility: hidden;
+	transform: translateY(-8px);
+	transition:
+		opacity 0.2s ease,
+		transform 0.2s ease,
+		visibility 0.2s ease;
+	z-index: 90;
+}
+
+.site-header__nav.is-mega-menu-open .site-header__mega-menu {
+	opacity: 1;
+	visibility: visible;
+	transform: translateY(0);
+}
+
+.site-header__mega-menu-inner {
+	max-width: $container-max-width;
+	margin: 0 auto;
+	padding: 40px $container-padding-x;
+	display: flex;
+	gap: 56px;
+}
+
+.site-header__mega-menu-column {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.site-header__mega-menu-heading {
+	display: block;
+	font-size: 10px;
+	font-weight: $font-weight-bold;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	color: rgba(255, 255, 255, 0.28);
+	margin-bottom: 6px;
+}
+
+.site-header__mega-menu-link {
+	color: rgba(255, 255, 255, 0.6);
+	font-size: 13.5px;
+	transition: color 0.2s ease;
+
+	&:hover,
+	&:focus-visible {
+		color: $color-surface;
 	}
 }

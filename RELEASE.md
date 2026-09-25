@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.2.4`.
+Version actuelle : `0.2.5`.
 
 ## Avant une release
 
@@ -30,6 +30,23 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.2.5 — mega menu de navigation
+
+- Ajout du mega menu déroulant sur l'item « Collections » de la navigation principale
+  (`template-parts/mega-menu.php`, `assets/js/header.js`) : ouverture/fermeture au survol de la
+  souris, au focus clavier, à la touche Échap et au clic extérieur, sans erreur en console dans
+  aucun de ces cas.
+- Décision technique : le contenu du panneau (colonnes de liens) reste un texte de remplacement
+  exposé par un filtre WordPress (`solar_template_mega_menu_columns`) — le branchement à de
+  vraies catégories WooCommerce est hors périmètre de cette étape.
+- Décision technique : deux filtres WordPress (`nav_menu_css_class`/`nav_menu_link_attributes`)
+  garantissent qu'un menu réel assigné par un administrateur depuis Apparence > Menus reçoit les
+  mêmes classes que la navigation de secours (même rendu, même comportement) — vérifié dans
+  l'environnement Docker réel avec un menu de test.
+- Bug détecté et corrigé pendant les tests automatisés avant qu'il n'affecte un utilisateur réel :
+  fermer le mega menu à la touche Échap redonnait le focus au lien déclencheur, ce qui déclenchait
+  immédiatement son propre gestionnaire d'ouverture au focus et rouvrait aussitôt le panneau.
 
 ### 0.2.4 — en-tête sticky global
 

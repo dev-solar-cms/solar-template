@@ -4,9 +4,11 @@
  * Role: Global header template (header.php), loaded by every page via get_header().
  * Author: David ROMERA <d.romera.11@gmail.com>
  * Purpose: Open the document (`<html>`/`<head>`/`<body>`) and render the sticky site header: a
- *          top bar (social links, brand, search/account/cart icons) and a primary navigation bar.
- *          The search icon only toggles an `aria-expanded` state at this step — the search overlay
- *          itself, the mega menu content and the AJAX-driven cart badge are added by later steps.
+ *          top bar (social links, brand, search/account/cart icons) and a primary navigation bar
+ *          with a "Collections" mega menu (open/close behaviour in assets/js/header.js; real
+ *          category content is out of scope, see solar_template_mega_menu_columns()). The search
+ *          icon only toggles an `aria-expanded` state at this step — the search overlay itself and
+ *          the AJAX-driven cart badge are added by later steps.
  *
  * @package Solar_Template
  */
@@ -84,5 +86,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 			);
 			?>
 		</div>
+
+		<?php if ( solar_template_mega_menu_enabled() ) : ?>
+			<?php get_template_part( 'template-parts/mega-menu' ); ?>
+		<?php endif; ?>
 	</nav>
 </header>

@@ -2,14 +2,17 @@
  * Created: 2026-09-25 05:39 CEST
  * Role: Entry point of the theme's compiled front-end script (assets/dist/main.js).
  * Author: David ROMERA <d.romera.11@gmail.com>
- * Purpose: Placeholder entry point for the JS build pipeline. Real front-end behaviour is added
- *          in later steps; this file only proves the build pipeline itself works end to end. It
- *          imports the SCSS entry point so Vite bundles both into a single build step, emitting
- *          `assets/dist/main.js` and `assets/dist/main.css`.
+ * Purpose: Entry point for the theme's compiled front-end script. Imports the SCSS entry point so
+ *          Vite bundles both into a single build step (`assets/dist/main.js`/`main.css`), then
+ *          wires up every front-end behaviour module (see assets/js/header.js) once the DOM is
+ *          ready.
  */
 
 import '../scss/main.scss';
+import { initMegaMenu, initSearchToggle } from './header.js';
 
 document.addEventListener('DOMContentLoaded', () => {
 	document.documentElement.classList.add('solar-template-ready');
+	initMegaMenu();
+	initSearchToggle();
 });
