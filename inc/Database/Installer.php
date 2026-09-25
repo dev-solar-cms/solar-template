@@ -39,6 +39,7 @@ final class Installer {
 		self::seed_default_languages();
 		self::create_settings_table();
 		self::seed_default_settings();
+		self::create_newsletter_table();
 
 		$translator = new \Solar_Template\I18n\DatabaseTranslator(
 			$GLOBALS['wpdb'],
@@ -219,6 +220,39 @@ final class Installer {
 			updated_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			PRIMARY KEY  (id),
 			UNIQUE KEY setting_key (setting_key)
+		) {$charset_collate};";
+	}
+
+	/**
+	 * Creates (or updates) `wp_solar_template_newsletter_subscribers`, storing the front page
+	 * newsletter section's sign-ups (see Solar_Template\Newsletter\SubscriberRepository).
+	 *
+	 * @return void
+	 */
+	public static function create_newsletter_table(): void {
+		global $wpdb;
+
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+
+		dbDelta( self::newsletter_subscribers_table_sql( $wpdb->prefix, $wpdb->get_charset_collate() ) );
+	}
+
+	/**
+	 * Builds the `CREATE TABLE` statement for `wp_solar_template_newsletter_subscribers`.
+	 *
+	 * @param string $prefix          WordPress table prefix (`$wpdb->prefix`).
+	 * @param string $charset_collate Charset/collation clause (`$wpdb->get_charset_collate()`).
+	 * @return string SQL statement, formatted for `dbDelta()`.
+	 */
+	public static function newsletter_subscribers_table_sql( string $prefix, string $charset_collate ): string {
+		$table = $prefix . 'solar_template_newsletter_subscribers';
+
+		return "CREATE TABLE {$table} (
+			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			email varchar(191) NOT NULL,
+			subscribed_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			PRIMARY KEY  (id),
+			UNIQUE KEY email (email)
 		) {$charset_collate};";
 	}
 }

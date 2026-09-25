@@ -209,6 +209,47 @@
 			durée de lecture traduite, catégorie, auteur) — article de test supprimé après
 			vérification.
 		</p>
+
+		<h2 id="newsletter">Newsletter</h2>
+		<p>
+			<code>template-parts/front-page/newsletter.php</code> affiche un formulaire
+			d'inscription (email + bouton) sur fond sombre, traité nativement — sans dépendance à un
+			plugin tiers de newsletter, conformément aux décisions structurantes du projet. Le
+			contenu (accroche, titre, description, libellés) reste éditorial et filtrable, via
+			<code>solar_template_newsletter_config()</code> dans <code>functions.php</code>.
+		</p>
+		<p>
+			Une nouvelle table dédiée, <code>wp_solar_template_newsletter_subscribers</code>
+			(email unique), et une classe de stockage
+			(<code>Solar_Template\Newsletter\SubscriberRepository</code>) gèrent l'inscription et sa
+			déduplication — accès direct à <code>$wpdb</code>, sans interface <code>Contracts</code>,
+			même convention que <code>Solar_Template\Database\Installer</code> : aucune bibliothèque
+			tierce n'est enveloppée ici.
+		</p>
+		<p>
+			Le formulaire est soumis en AJAX (<code>assets/js/newsletter.js</code>,
+			<code>initNewsletterForms()</code>) vers <code>solar_template_handle_newsletter_subscription()</code>
+			dans <code>functions.php</code>, un point d'entrée <code>admin-ajax.php</code> protégé
+			par un nonce (<code>check_ajax_referer()</code>). Le retour visuel (succès, déjà inscrit,
+			email invalide, erreur) s'affiche dans l'élément <code>.js-newsletter-feedback</code>
+			du formulaire, sans rechargement de page.
+		</p>
+		<p>
+			Décision technique : le formulaire newsletter déjà présent dans le pied de page (ajouté
+			à une étape antérieure de la structure commune, markup uniquement) n'est pas branché à
+			ce mécanisme dans cette version — il reste hors périmètre de cette étape, qui ne couvre
+			que la section dédiée de la page d'accueil. La classe JS de ciblage
+			(<code>.js-newsletter-form</code>) rendrait ce branchement trivial pour une étape future,
+			sans le construire maintenant.
+		</p>
+		<p>
+			Vérifié de bout en bout dans l'environnement Docker réel avec une véritable requête AJAX
+			(identique à celle que le formulaire émettrait) : une inscription valide est enregistrée
+			et confirmée, une deuxième inscription avec le même email est rejetée avec le message
+			adéquat, une adresse invalide est rejetée avant toute écriture en base — le tout
+			entièrement traduit selon la langue active du site ; inscription de test supprimée après
+			vérification.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

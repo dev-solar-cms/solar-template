@@ -121,3 +121,20 @@ describe('front page: blog preview', () => {
 		);
 	});
 });
+
+describe('front page: newsletter', () => {
+	it('renders centered on a dark background', () => {
+		expect(css).toMatch(/\.home-newsletter\s*{[^}]*background:\s*#0d0d0d/);
+		expect(css).toMatch(/\.home-newsletter__inner\s*{[^}]*text-align:\s*center/);
+	});
+
+	it('fills the submit button in gold with a darker hover state', () => {
+		expect(css).toMatch(/\.home-newsletter__submit\s*{[^}]*background:\s*#c9a96e/);
+		expect(css).toMatch(/\.home-newsletter__submit:hover\s*{[^}]*background:\s*#a8803e/);
+	});
+
+	it('colors the feedback message by success/error state', () => {
+		expect(css).toMatch(/\.home-newsletter__feedback\.is-success\s*{[^}]*color:\s*#3aa85a/);
+		expect(css).toMatch(/\.home-newsletter__feedback\.is-error\s*{[^}]*color:\s*#d64545/);
+	});
+});

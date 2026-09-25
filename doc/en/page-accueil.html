@@ -196,6 +196,47 @@
 			post confirms correct rendering (title, localized date, translated reading time,
 			category, author) — test post deleted after verification.
 		</p>
+
+		<h2 id="newsletter">Newsletter</h2>
+		<p>
+			<code>template-parts/front-page/newsletter.php</code> renders a sign-up form (email +
+			button) on a dark background, handled natively — no dependency on a third-party
+			newsletter plugin, per the project's structuring decisions. Its content (eyebrow,
+			heading, description, labels) stays editorial and filterable, via
+			<code>solar_template_newsletter_config()</code> in <code>functions.php</code>.
+		</p>
+		<p>
+			A new dedicated table, <code>wp_solar_template_newsletter_subscribers</code> (unique
+			email), and a storage class
+			(<code>Solar_Template\Newsletter\SubscriberRepository</code>) handle subscription and
+			de-duplication — direct <code>$wpdb</code> access, no <code>Contracts</code> interface,
+			same convention as <code>Solar_Template\Database\Installer</code>: no third-party
+			library is wrapped here.
+		</p>
+		<p>
+			The form is submitted via AJAX (<code>assets/js/newsletter.js</code>,
+			<code>initNewsletterForms()</code>) to
+			<code>solar_template_handle_newsletter_subscription()</code> in
+			<code>functions.php</code>, an <code>admin-ajax.php</code> endpoint protected by a nonce
+			(<code>check_ajax_referer()</code>). Feedback (success, already subscribed, invalid
+			email, error) is shown in the form's <code>.js-newsletter-feedback</code> element,
+			without a page reload.
+		</p>
+		<p>
+			Technical decision: the newsletter form already present in the footer (added in an
+			earlier common-structure step, markup only) is not wired to this mechanism in this
+			version — it stays out of scope for this step, which only covers the home page's own
+			dedicated section. The targeting class (<code>.js-newsletter-form</code>) would make
+			that wiring trivial for a future step, without building it now.
+		</p>
+		<p>
+			Verified end to end in the real Docker environment with an actual AJAX request
+			(identical to the one the form would issue): a valid subscription is recorded and
+			confirmed, a second subscription with the same email is rejected with the right
+			message, an invalid address is rejected before any database write — all fully
+			translated according to the site's active language; test subscription deleted after
+			verification.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

@@ -1,0 +1,109 @@
+// Created: 2026-09-25 12:30 CEST
+// Role: Front page newsletter component partial (assets/scss/_home-newsletter.scss).
+// Author: David ROMERA <d.romera.11@gmail.com>
+// Purpose: Style the newsletter sign-up section rendered by
+//          template-parts/front-page/newsletter.php, built entirely from the shared design
+//          tokens.
+
+@use 'tokens' as *;
+
+.home-newsletter {
+	padding: 80px $container-padding-x;
+	background: $color-dark;
+}
+
+.home-newsletter__inner {
+	max-width: 600px;
+	margin: 0 auto;
+	text-align: center;
+}
+
+.home-newsletter__eyebrow {
+	margin: 0 0 16px;
+	color: $color-gold;
+	@include type-caption;
+	letter-spacing: 0.18em;
+}
+
+.home-newsletter__heading {
+	margin: 0 0 14px;
+	color: $color-surface;
+	font-size: 36px;
+	font-weight: $font-weight-extrabold;
+	letter-spacing: -0.02em;
+}
+
+.home-newsletter__description {
+	margin: 0 0 36px;
+	color: rgba(255, 255, 255, 0.45);
+	font-size: 15.5px;
+	line-height: 1.75;
+}
+
+.home-newsletter__form {
+	display: flex;
+	max-width: 420px;
+	margin: 0 auto 14px;
+}
+
+.home-newsletter__input {
+	flex: 1;
+	min-width: 0;
+	padding: 14px 18px;
+	background: rgba(255, 255, 255, 0.07);
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	border-right: none;
+	border-radius: 4px 0 0 4px;
+	color: $color-surface;
+	font-family: $font-family-base;
+	font-size: 14px;
+	outline: none;
+}
+
+.home-newsletter__input::placeholder {
+	color: rgba(255, 255, 255, 0.35);
+}
+
+.home-newsletter__submit {
+	flex-shrink: 0;
+	padding: 14px 26px;
+	background: $color-gold;
+	border: none;
+	border-radius: 0 4px 4px 0;
+	color: $color-dark;
+	font-family: $font-family-base;
+	font-size: 13.5px;
+	font-weight: $font-weight-bold;
+	white-space: nowrap;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+}
+
+.home-newsletter__submit:hover {
+	background: $color-gold-dark;
+}
+
+.home-newsletter__submit:disabled {
+	cursor: not-allowed;
+	opacity: 0.6;
+}
+
+.home-newsletter__feedback {
+	min-height: 1.4em;
+	margin: 0 0 8px;
+	font-size: 13px;
+}
+
+.home-newsletter__feedback.is-success {
+	color: $color-success;
+}
+
+.home-newsletter__feedback.is-error {
+	color: $color-error;
+}
+
+.home-newsletter__privacy {
+	margin: 0;
+	color: rgba(255, 255, 255, 0.25);
+	font-size: 11.5px;
+}

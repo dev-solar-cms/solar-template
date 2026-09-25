@@ -29,7 +29,8 @@ solar-template/
 │   ├── Contracts/       # Interfaces consommées par le code métier (jamais une lib tierce directement)
 │   ├── Support/         # Implémentations par défaut des interfaces génériques
 │   ├── I18n/            # Système de traduction multilingue (catalogue + compilation .mo)
-│   └── Database/        # Schéma et installation des tables `wp_solar_template_*`
+│   ├── Database/        # Schéma et installation des tables `wp_solar_template_*`
+│   └── Newsletter/      # Stockage des inscrits à la newsletter (SubscriberRepository)
 ├── template-parts/      # Fragments de gabarit réutilisables (`get_template_part()`)
 │   ├── product-card.php # Carte produit (image, badge, wishlist, overlay panier, prix, swatches)
 │   ├── blog-card.php    # Carte article de blog (image 16:10, badge catégorie, meta, titre, extrait, auteur)
@@ -41,7 +42,8 @@ solar-template/
 │       ├── categories.php # Grille asymétrique des catégories produit WooCommerce
 │       ├── brand-story.php # Section « notre histoire » (image, carte stat flottante, texte, stats, CTA)
 │       ├── testimonials.php # Grille de 3 témoignages, carte du milieu en style inversé
-│       └── blog-preview.php # Grille des 3 derniers articles de blog réels
+│       ├── blog-preview.php # Grille des 3 derniers articles de blog réels
+│       └── newsletter.php # Formulaire d'inscription newsletter (traité en AJAX)
 ├── languages/           # Fichiers `.mo` compilés (générés, ignorés par git sauf `.gitkeep`)
 ├── vite.config.js       # Configuration du pipeline de build des assets
 ├── .prettierrc.json     # Norme de formatage JS/SCSS, utilisée par `npm run format`
@@ -61,8 +63,10 @@ solar-template/
 │   ├── scss/_brand-story.scss # Section « notre histoire » de la page d'accueil
 │   ├── scss/_testimonials.scss # Grille de témoignages de la page d'accueil
 │   ├── scss/_blog-preview.scss # Grille de l'aperçu du blog de la page d'accueil
+│   ├── scss/_home-newsletter.scss # Section newsletter de la page d'accueil
 │   ├── js/main.js        # Point d'entrée JS (importe le SCSS, initialise les modules de comportement)
 │   ├── js/header.js      # Comportement de l'en-tête (mega menu, bascule de recherche)
+│   ├── js/newsletter.js  # Soumission AJAX des formulaires newsletter (`.js-newsletter-form`)
 │   └── dist/             # Sortie compilée (générée par `npm run build`/`dev`, ignorée par git)
 ├── phpunit.xml.dist     # Configuration PHPUnit, utilisée par `composer test`
 ├── tests/php/           # Tests unitaires PHP (bootstrap minimal, pas une installation WordPress complète)

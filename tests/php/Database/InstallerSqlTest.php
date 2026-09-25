@@ -60,4 +60,17 @@ final class InstallerSqlTest extends TestCase {
 		$this->assertStringContainsString( 'CREATE TABLE wptests_solar_template_settings', $sql );
 		$this->assertStringContainsString( 'UNIQUE KEY setting_key (setting_key)', $sql );
 	}
+
+	/**
+	 * The newsletter subscribers table SQL declares a unique key on `email` so subscribing the
+	 * same address twice can be detected before insert.
+	 *
+	 * @return void
+	 */
+	public function test_newsletter_subscribers_table_sql_declares_unique_email_key(): void {
+		$sql = Installer::newsletter_subscribers_table_sql( 'wptests_', 'DEFAULT CHARACTER SET utf8mb4' );
+
+		$this->assertStringContainsString( 'CREATE TABLE wptests_solar_template_newsletter_subscribers', $sql );
+		$this->assertStringContainsString( 'UNIQUE KEY email (email)', $sql );
+	}
 }

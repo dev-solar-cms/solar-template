@@ -25,6 +25,7 @@ get_header();
 	<?php get_template_part( 'template-parts/front-page/brand-story' ); ?>
 	<?php get_template_part( 'template-parts/front-page/testimonials' ); ?>
 	<?php get_template_part( 'template-parts/front-page/blog-preview' ); ?>
+	<?php get_template_part( 'template-parts/front-page/newsletter' ); ?>
 </main>
 
 <?php

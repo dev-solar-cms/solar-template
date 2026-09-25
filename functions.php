@@ -1196,6 +1196,113 @@ function solar_template_map_post_to_card_args( \WP_Post $post ): array {
 }
 
 /**
+ * Returns the front page "Newsletter" section's content (eyebrow, heading, description, form
+ * placeholder/button labels, and feedback messages) — everything except the submission handling
+ * itself, see solar_template_handle_newsletter_subscription().
+ *
+ * @return array{
+ *     eyebrow: string,
+ *     heading: string,
+ *     description: string,
+ *     email_placeholder: string,
+ *     submit_label: string,
+ *     privacy_note: string,
+ *     success_message: string,
+ *     already_subscribed_message: string,
+ *     invalid_email_message: string,
+ *     error_message: string,
+ * }
+ */
+function solar_template_newsletter_config(): array {
+	$defaults = array(
+		'eyebrow'                    => __( 'Newsletter', 'solar-template' ),
+		'heading'                    => __( 'Stay in the loop', 'solar-template' ),
+		'description'                => __( 'Get our new arrivals, exclusive offers and inspiration straight to your inbox.', 'solar-template' ),
+		'email_placeholder'          => __( 'your@email.com', 'solar-template' ),
+		'submit_label'               => __( 'Subscribe', 'solar-template' ),
+		'privacy_note'               => __( 'Unsubscribe at any time. No spam, ever.', 'solar-template' ),
+		'success_message'            => __( 'Thank you for subscribing!', 'solar-template' ),
+		'already_subscribed_message' => __( 'This email address is already subscribed.', 'solar-template' ),
+		'invalid_email_message'      => __( 'Please enter a valid email address.', 'solar-template' ),
+		'error_message'              => __( 'Something went wrong. Please try again.', 'solar-template' ),
+	);
+
+	/**
+	 * Filters the front page "Newsletter" section's content.
+	 *
+	 * @param array $config See solar_template_newsletter_config()'s return type.
+	 */
+	return apply_filters( 'solar_template_newsletter_config', $defaults );
+}
+
+/**
+ * Builds the theme's newsletter subscriber repository, wired to the real WordPress database.
+ *
+ * @return \Solar_Template\Newsletter\SubscriberRepository
+ */
+function solar_template_newsletter_repository(): \Solar_Template\Newsletter\SubscriberRepository {
+	global $wpdb;
+
+	static $repository = null;
+
+	if ( null === $repository ) {
+		$repository = new \Solar_Template\Newsletter\SubscriberRepository( $wpdb );
+	}
+
+	return $repository;
+}
+
+/**
+ * Handles the front page newsletter form's AJAX submission (`solar_template_newsletter_subscribe`
+ * action): validates the nonce and the submitted email address, records the subscription, and
+ * responds with the JSON feedback message the front-end (assets/js/newsletter.js) displays.
+ *
+ * @return void
+ */
+function solar_template_handle_newsletter_subscription(): void {
+	check_ajax_referer( 'solar_template_newsletter', 'nonce' );
+
+	$config = solar_template_newsletter_config();
+	$email  = isset( $_POST['email'] ) ? sanitize_email( wp_unslash( $_POST['email'] ) ) : '';
+
+	if ( ! is_email( $email ) ) {
+		wp_send_json_error( array( 'message' => $config['invalid_email_message'] ) );
+	}
+
+	if ( ! solar_template_load_autoloader() ) {
+		wp_send_json_error( array( 'message' => $config['error_message'] ) );
+	}
+
+	$subscribed = solar_template_newsletter_repository()->subscribe( $email );
+
+	if ( $subscribed ) {
+		wp_send_json_success( array( 'message' => $config['success_message'] ) );
+	}
+
+	wp_send_json_error( array( 'message' => $config['already_subscribed_message'] ) );
+}
+add_action( 'wp_ajax_solar_template_newsletter_subscribe', 'solar_template_handle_newsletter_subscription' );
+add_action( 'wp_ajax_nopriv_solar_template_newsletter_subscribe', 'solar_template_handle_newsletter_subscription' );
+
+/**
+ * Enqueues the front page newsletter form's own script and localizes the AJAX endpoint/nonce it
+ * needs, on top of the theme's compiled main script.
+ *
+ * @return void
+ */
+function solar_template_enqueue_newsletter_script(): void {
+	wp_localize_script(
+		'solar-template',
+		'solarTemplateNewsletter',
+		array(
+			'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+			'nonce'   => wp_create_nonce( 'solar_template_newsletter' ),
+		)
+	);
+}
+add_action( 'wp_enqueue_scripts', 'solar_template_enqueue_newsletter_script', 20 );
+
+/**
  * Returns the front page's latest published blog posts, mapped for template-parts/blog-card.php.
  *
  * Reads real WordPress post data (not editorial placeholder content). Returns an empty array when

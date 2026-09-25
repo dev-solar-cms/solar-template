@@ -10,9 +10,11 @@
 
 import '../scss/main.scss';
 import { initMegaMenu, initSearchOverlay } from './header.js';
+import { initNewsletterForms } from './newsletter.js';
 
 document.addEventListener('DOMContentLoaded', () => {
 	document.documentElement.classList.add('solar-template-ready');
 	initMegaMenu();
 	initSearchOverlay();
+	initNewsletterForms();
 });

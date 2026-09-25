@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.3.5`.
+Version actuelle : `0.3.6`.
 
 ## Avant une release
 
@@ -30,6 +30,31 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.3.6 — section newsletter de la page d'accueil
+
+- Ajout de la septième et dernière section de la page d'accueil : un formulaire d'inscription à la
+  newsletter (email + bouton), sur fond sombre, traité nativement — sans dépendance à un plugin
+  tiers de newsletter, conformément aux décisions structurantes du projet.
+- Nouvelle table `wp_solar_template_newsletter_subscribers` (email unique) et une classe dédiée
+  (`Solar_Template\Newsletter\SubscriberRepository`) pour l'inscription/la déduplication.
+- Le formulaire est soumis en AJAX (`assets/js/newsletter.js`) vers un point d'entrée
+  `admin-ajax.php` protégé par un nonce, avec un retour visuel inline (succès, déjà inscrit, email
+  invalide, erreur) sans rechargement de page.
+- Décision technique : le formulaire newsletter déjà présent dans le pied de page (ajouté à une
+  étape antérieure, markup uniquement) n'est pas branché à ce mécanisme dans cette version — il
+  reste hors périmètre de cette étape, qui ne couvre que la section dédiée de la page d'accueil.
+- Bug détecté et corrigé par le linter avant la mise en production : la norme de code du projet
+  interdit l'opérateur ternaire court, déjà rencontré à l'étape précédente ; un besoin similaire
+  a été résolu de la même façon dans le nouveau dépôt de stockage.
+- Vérifié de bout en bout dans l'environnement Docker réel avec une véritable requête AJAX
+  (identique à celle que le formulaire émettrait) : une inscription valide est enregistrée et
+  confirmée, une deuxième inscription avec le même email est rejetée avec le message adéquat, une
+  adresse invalide est rejetée avant toute écriture en base — le tout entièrement traduit selon la
+  langue active du site ; inscription de test supprimée après vérification.
+- **La page d'accueil du thème est désormais complète (hero, produits vedettes, catégories, notre
+  histoire, témoignages, aperçu du blog, newsletter)** et prête à recevoir les prochaines pages du
+  thème.
 
 ### 0.3.5 — aperçu du blog sur la page d'accueil
 
