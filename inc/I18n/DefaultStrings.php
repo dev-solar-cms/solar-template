@@ -258,6 +258,26 @@ final class DefaultStrings {
 				'fr_FR' => '38% déjà vendus · Stock limité',
 				'en_US' => '38% already claimed · Limited stock',
 			),
+			'Selection'                           => array(
+				'fr_FR' => 'Sélection',
+				'en_US' => 'Selection',
+			),
+			'Favorites'                           => array(
+				'fr_FR' => 'Coups de cœur',
+				'en_US' => 'Favorites',
+			),
+			'View all →'                          => array(
+				'fr_FR' => 'Voir tout →',
+				'en_US' => 'View all →',
+			),
+			'On Sale'                             => array(
+				'fr_FR' => 'Promo',
+				'en_US' => 'On Sale',
+			),
+			'View the full collection'            => array(
+				'fr_FR' => 'Voir toute la collection',
+				'en_US' => 'View the full collection',
+			),
 		);
 	}
 

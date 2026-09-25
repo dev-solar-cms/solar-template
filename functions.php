@@ -834,3 +834,98 @@ function solar_template_hero_config(): array {
 	 */
 	return apply_filters( 'solar_template_hero_config', $defaults );
 }
+
+/**
+ * Returns the front page's "Featured products" section header (eyebrow label, heading, "view
+ * all" link) — everything except the product data itself, see
+ * solar_template_get_featured_products().
+ *
+ * @return array{eyebrow: string, heading: string, view_all: array{label: string, url: string}}
+ */
+function solar_template_featured_products_heading(): array {
+	$defaults = array(
+		'eyebrow'  => __( 'Selection', 'solar-template' ),
+		'heading'  => __( 'Favorites', 'solar-template' ),
+		'view_all' => array(
+			'label' => __( 'View all →', 'solar-template' ),
+			'url'   => solar_template_shop_url(),
+		),
+	);
+
+	/**
+	 * Filters the front page's "Featured products" section header.
+	 *
+	 * @param array $config See solar_template_featured_products_heading()'s return type.
+	 */
+	return apply_filters( 'solar_template_featured_products_heading', $defaults );
+}
+
+/**
+ * Maps a `WC_Product` to the `$args` shape expected by template-parts/product-card.php.
+ *
+ * @param \WC_Product $product Product to map.
+ * @return array See template-parts/product-card.php's documented `$args` keys.
+ */
+function solar_template_map_product_to_card_args( \WC_Product $product ): array {
+	$image_id = $product->get_image_id();
+	$price    = $product->get_price();
+	$regular  = $product->get_regular_price();
+
+	$discount_percent = null;
+	$badge            = null;
+
+	if ( $product->is_on_sale() && '' !== $regular && (float) $regular > 0 ) {
+		$discount_percent = (int) round( ( ( (float) $regular - (float) $price ) / (float) $regular ) * 100 );
+		$badge            = array(
+			'type'  => 'sale',
+			'label' => __( 'On Sale', 'solar-template' ),
+		);
+	}
+
+	$categories = get_the_terms( $product->get_id(), 'product_cat' );
+	$category   = ( $categories && ! is_wp_error( $categories ) ) ? reset( $categories )->name : '';
+
+	return array(
+		'image_url'        => $image_id ? wp_get_attachment_image_url( $image_id, 'medium' ) : null,
+		'image_alt'        => $image_id ? get_post_meta( $image_id, '_wp_attachment_image_alt', true ) : '',
+		'permalink'        => get_permalink( $product->get_id() ),
+		'badge'            => $badge,
+		'category'         => $category,
+		'name'             => $product->get_name(),
+		'price'            => '' !== $price ? (float) $price : null,
+		'regular_price'    => '' !== $regular ? (float) $regular : null,
+		'currency_symbol'  => get_woocommerce_currency_symbol(),
+		'discount_percent' => $discount_percent,
+		'in_wishlist'      => false,
+		'swatches'         => array(),
+	);
+}
+
+/**
+ * Returns the front page's featured products, mapped for template-parts/product-card.php.
+ *
+ * Reads real WooCommerce data (products marked "Featured" from the product edit screen) — unlike
+ * solar_template_hero_config(), this is not editorial placeholder content. Returns an empty array
+ * when WooCommerce is missing/inactive, or when no product is currently marked as featured, so the
+ * calling template-part can skip rendering the section entirely rather than showing an empty grid.
+ *
+ * @param int $limit Maximum number of products to return.
+ * @return array<int, array> List of template-parts/product-card.php `$args` arrays.
+ */
+function solar_template_get_featured_products( int $limit = 4 ): array {
+	if ( ! solar_template_load_autoloader() || ! \Solar_Template\Support\WooCommerceStatus::is_active() || ! function_exists( 'wc_get_products' ) ) {
+		return array();
+	}
+
+	$products = wc_get_products(
+		array(
+			'featured' => true,
+			'status'   => 'publish',
+			'limit'    => $limit,
+			'orderby'  => 'date',
+			'order'    => 'DESC',
+		)
+	);
+
+	return array_map( 'solar_template_map_product_to_card_args', $products );
+}

@@ -69,6 +69,43 @@
 			helper, superseded by WooCommerce's own <code>wc_price()</code> once wired to a real
 			product.
 		</p>
+
+		<h2 id="produits-vedettes">Featured products</h2>
+		<p>
+			<code>template-parts/front-page/featured-products.php</code> renders a masonry grid
+			(4 columns, a purely visual vertical offset on the 2nd and 4th card) of the WooCommerce
+			products actually marked "Featured" from the product edit screen
+			(<code>solar_template_get_featured_products()</code> in <code>functions.php</code>,
+			backed by <code>wc_get_products(['featured' => true])</code>), each rendered with the
+			product card component already in place (see
+			<a href="design-system.html">Design system</a>) rather than new markup.
+		</p>
+		<p>
+			Unlike the hero, this section reads real WooCommerce data: image, price, struck-through
+			price and discount percentage when the product is on sale (an "On Sale" badge) all come
+			straight from the <code>WC_Product</code> object
+			(<code>solar_template_map_product_to_card_args()</code>). The product card's color
+			swatches stay empty at this step: no reliable color attribute data is wired in yet
+			(planned for a later catalog/product page step).
+		</p>
+		<p>
+			Technical decision: the section does not render at all when no product is marked as
+			featured (WooCommerce inactive, or none marked yet), rather than showing an empty grid —
+			the same graceful-degradation logic used throughout the theme.
+		</p>
+		<p>
+			Bug avoided before it caused a translation regression: the "On Sale" badge was initially
+			going to reuse the English source string "Sale", already used by the "Promotions"
+			navigation link with a different French translation for the same English text — the
+			theme's translation catalog does not distinguish strings by context yet. Fixed by using
+			a distinct source string ("On Sale") for the badge.
+		</p>
+		<p>
+			Verified end to end in the real Docker environment with WooCommerce active: two test
+			products (one on sale) created and marked as featured confirm correct rendering (price,
+			struck-through price, computed discount percentage), and unmarking them as featured
+			makes the whole section disappear — test products deleted after verification.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

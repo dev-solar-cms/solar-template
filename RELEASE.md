@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.3.0`.
+Version actuelle : `0.3.1`.
 
 ## Avant une release
 
@@ -30,6 +30,25 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.3.1 — section produits vedettes de la page d'accueil
+
+- Ajout de la deuxième section de la page d'accueil : une grille masonry des produits WooCommerce
+  réellement marqués « en vedette » depuis l'écran d'édition produit, affichés avec le composant
+  carte produit déjà en place, avec effet de décalage vertical purement visuel entre les cartes.
+- Contrairement au hero, cette section lit de vraies données WooCommerce (pas de contenu
+  éditorial de remplacement) : prix, promotion et badge « Promo » calculés depuis le produit réel.
+  La section ne s'affiche pas du tout tant qu'aucun produit n'est marqué en vedette, plutôt que
+  d'afficher une grille vide.
+- Bug évité avant qu'il ne cause une régression de traduction : la chaîne « Sale » du badge de
+  promotion allait initialement réutiliser le même texte source que le lien de navigation
+  « Promotions », qui a pourtant une traduction française différente pour le même texte anglais —
+  détecté avant la mise en production car le catalogue de traduction ne distingue pas encore les
+  chaînes par contexte ; corrigé en utilisant un texte source distinct (« On Sale ») pour le badge.
+- Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif : deux produits
+  de test (dont un en promotion) créés puis marqués en vedette confirment l'affichage correct
+  (prix, prix barré, pourcentage de réduction calculé), et le retrait du marquage « en vedette »
+  fait bien disparaître la section entière — produits de test supprimés après vérification.
 
 ### 0.3.0 — section hero de la page d'accueil
 

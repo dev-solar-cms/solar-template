@@ -20,6 +20,7 @@ get_header();
 
 <main id="primary" class="front-page">
 	<?php get_template_part( 'template-parts/front-page/hero' ); ?>
+	<?php get_template_part( 'template-parts/front-page/featured-products' ); ?>
 </main>
 
 <?php

@@ -35,3 +35,17 @@ describe('front page: hero', () => {
 		expect(css).toMatch(/\.hero__highlight-progress-bar\s*{[^}]*background:\s*#c9a96e/);
 	});
 });
+
+describe('front page: featured products', () => {
+	it('lays out a 4-column grid with the shared product grid gap', () => {
+		expect(css).toMatch(
+			/\.featured-products__grid\s*{[^}]*grid-template-columns:\s*repeat\(4,\s*1fr\)/,
+		);
+		expect(css).toMatch(/\.featured-products__grid\s*{[^}]*gap:\s*24px/);
+	});
+
+	it('offsets the 2nd and 4th cards for the masonry effect', () => {
+		expect(css).toMatch(/\.featured-products__item:nth-child\(2\)\s*{[^}]*margin-top:\s*48px/);
+		expect(css).toMatch(/\.featured-products__item:nth-child\(4\)\s*{[^}]*margin-top:\s*28px/);
+	});
+});

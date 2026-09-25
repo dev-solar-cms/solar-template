@@ -1,0 +1,96 @@
+// Created: 2026-09-25 10:00 CEST
+// Role: Front page featured products component partial (assets/scss/_featured-products.scss).
+// Author: David ROMERA <d.romera.11@gmail.com>
+// Purpose: Style the "Featured products" masonry grid rendered by
+//          template-parts/front-page/featured-products.php, built entirely from the shared
+//          design tokens and the button partial.
+
+@use 'tokens' as *;
+
+.featured-products {
+	padding: 100px 0;
+	background: $color-bg;
+}
+
+.featured-products__inner {
+	max-width: $container-max-width;
+	margin: 0 auto;
+	padding: 0 $container-padding-x;
+}
+
+.featured-products__header {
+	display: flex;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 24px;
+	margin-bottom: 52px;
+}
+
+.featured-products__eyebrow {
+	margin: 0 0 10px;
+	color: $color-gold;
+	@include type-caption;
+	letter-spacing: 0.18em;
+}
+
+.featured-products__heading {
+	@include type-h2;
+	color: $color-dark;
+}
+
+.featured-products__view-all {
+	flex-shrink: 0;
+	padding-bottom: 2px;
+	border-bottom: 1.5px solid $color-dark;
+	color: $color-dark;
+	font-size: 13.5px;
+	font-weight: $font-weight-semibold;
+	text-decoration: none;
+	transition:
+		color 0.2s ease,
+		border-color 0.2s ease;
+}
+
+.featured-products__view-all:hover {
+	color: $color-gold;
+	border-color: $color-gold;
+}
+
+.featured-products__grid {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: $spacing-grid-gap-products;
+	align-items: start;
+}
+
+// Masonry-style offsets, matching the design handoff's staggered card layout — purely positional,
+// not tied to any particular product's data.
+.featured-products__item:nth-child(2) {
+	margin-top: 48px;
+}
+
+.featured-products__item:nth-child(4) {
+	margin-top: 28px;
+}
+
+.featured-products__footer {
+	margin-top: 64px;
+	text-align: center;
+}
+
+@media (max-width: 1100px) {
+	.featured-products__grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	.featured-products__item:nth-child(2),
+	.featured-products__item:nth-child(4) {
+		margin-top: 0;
+	}
+}
+
+@media (max-width: 600px) {
+	.featured-products__grid {
+		grid-template-columns: 1fr;
+	}
+}

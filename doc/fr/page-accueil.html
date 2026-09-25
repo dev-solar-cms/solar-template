@@ -73,6 +73,46 @@
 			<code>template-parts/product-card.php</code>, remplacée par <code>wc_price()</code> de
 			WooCommerce une fois branchée sur un vrai produit.
 		</p>
+
+		<h2 id="produits-vedettes">Produits vedettes</h2>
+		<p>
+			<code>template-parts/front-page/featured-products.php</code> affiche une grille masonry
+			(4 colonnes, décalage vertical purement visuel sur la 2<sup>e</sup> et la 4<sup>e</sup>
+			carte) des produits WooCommerce réellement marqués « en vedette » depuis l'écran
+			d'édition produit (<code>solar_template_get_featured_products()</code> dans
+			<code>functions.php</code>, basé sur <code>wc_get_products(['featured' => true])</code>),
+			chacun rendu avec le composant carte produit déjà en place (voir
+			<a href="design-system.html">Système de design</a>) plutôt qu'un nouveau balisage.
+		</p>
+		<p>
+			Contrairement au hero, cette section lit de vraies données WooCommerce : image, prix,
+			prix barré et pourcentage de réduction quand le produit est en promotion (badge
+			« Promo ») viennent directement de l'objet <code>WC_Product</code>
+			(<code>solar_template_map_product_to_card_args()</code>). Les swatches de couleur du
+			composant carte produit restent vides à cette étape : aucune donnée d'attribut couleur
+			fiable n'est encore branchée (prévu par une étape ultérieure du catalogue/de la fiche
+			produit).
+		</p>
+		<p>
+			Décision technique : la section ne s'affiche pas du tout tant qu'aucun produit n'est
+			marqué en vedette (WooCommerce inactif ou absence de produit vedette), plutôt que
+			d'afficher une grille vide — même logique de dégradation gracieuse que le reste du
+			thème.
+		</p>
+		<p>
+			Bug évité avant qu'il ne cause une régression de traduction : le badge « Promo » allait
+			initialement réutiliser le texte source anglais « Sale », déjà utilisé par le lien de
+			navigation « Promotions » avec une traduction française différente pour le même texte —
+			le catalogue de traduction du thème ne distingue pas encore les chaînes par contexte.
+			Corrigé en utilisant un texte source distinct (« On Sale ») pour le badge.
+		</p>
+		<p>
+			Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif : deux
+			produits de test (dont un en promotion) créés puis marqués en vedette confirment
+			l'affichage correct (prix, prix barré, pourcentage de réduction calculé), et le retrait
+			du marquage « en vedette » fait bien disparaître la section entière — produits de test
+			supprimés après vérification.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

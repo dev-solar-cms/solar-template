@@ -36,7 +36,8 @@ solar-template/
 │   ├── cart-badge.php   # Badge du nombre d'articles au panier, utilisé par l'en-tête
 │   ├── mega-menu.php    # Panneau du mega menu « Collections », contenu factice pour l'instant
 │   └── front-page/      # Sections de la page d'accueil, une par fichier
-│       └── hero.php     # Hero plein écran (accroche, titre 3 lignes, CTA, trust badges, carte flottante)
+│       ├── hero.php     # Hero plein écran (accroche, titre 3 lignes, CTA, trust badges, carte flottante)
+│       └── featured-products.php # Grille masonry des produits WooCommerce marqués « en vedette »
 ├── languages/           # Fichiers `.mo` compilés (générés, ignorés par git sauf `.gitkeep`)
 ├── vite.config.js       # Configuration du pipeline de build des assets
 ├── .prettierrc.json     # Norme de formatage JS/SCSS, utilisée par `npm run format`
@@ -51,6 +52,7 @@ solar-template/
 │   ├── scss/_header.scss # En-tête sticky (barre supérieure, actions, navigation, mega menu)
 │   ├── scss/_footer.scss # Pied de page (colonnes, newsletter, copyright, icônes de paiement)
 │   ├── scss/_hero.scss   # Section hero de la page d'accueil (titre, CTA, trust badges, carte flottante)
+│   ├── scss/_featured-products.scss # Grille masonry des produits vedettes de la page d'accueil
 │   ├── js/main.js        # Point d'entrée JS (importe le SCSS, initialise les modules de comportement)
 │   ├── js/header.js      # Comportement de l'en-tête (mega menu, bascule de recherche)
 │   └── dist/             # Sortie compilée (générée par `npm run build`/`dev`, ignorée par git)
