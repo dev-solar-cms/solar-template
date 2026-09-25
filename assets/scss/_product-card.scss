@@ -6,17 +6,37 @@
 //          `template-parts/product-card.php`. Built from the shared design tokens and the button/
 //          badge partials; a small number of values are specific to this card's own typographic
 //          treatment (not part of the generic content scale in `_tokens.scss`) and are declared
-//          locally, same convention as `_buttons.scss`/`_badges.scss`.
+//          locally, same convention as `_buttons.scss`/`_badges.scss`. The category/name/price
+//          rows below are clamped to a fixed height each (rather than sized to their own text),
+//          and `.product-card__body` carries the resulting total as a `min-height` — real product
+//          names vary a lot in length (unlike the fixed-length mockup placeholders this card
+//          originally shipped with), and without this, cards in the same grid row end up with
+//          different overall heights and visibly drift out of alignment with each other.
 
 @use 'tokens' as *;
 @use 'sass:color';
 
 $product-card-category-font-size: 10px;
 $product-card-category-letter-spacing: 0.12em;
+$product-card-category-line-height: 1.2;
 $product-card-name-font-size: 15px;
+$product-card-name-line-height: 1.35;
+$product-card-name-lines: 2;
 $product-card-price-font-size: 15.5px;
+$product-card-price-line-height: 1.2;
 $product-card-wishlist-size: 34px;
 $product-card-swatch-size: 13px;
+$product-card-body-gap: 6px;
+$product-card-body-padding-top: 14px;
+
+// Fixed block heights used by `.product-card__category`/`__name`/`__body` below.
+$product-card-category-height: $product-card-category-font-size * $product-card-category-line-height;
+$product-card-name-height: $product-card-name-font-size * $product-card-name-line-height *
+	$product-card-name-lines;
+$product-card-price-height: $product-card-price-font-size * $product-card-price-line-height;
+$product-card-body-min-height: $product-card-body-padding-top + $product-card-category-height +
+	$product-card-body-gap + $product-card-name-height + $product-card-body-gap +
+	$product-card-price-height;
 
 .product-card {
 	position: relative;
@@ -110,24 +130,35 @@ $product-card-swatch-size: 13px;
 	display: flex;
 	flex: 1;
 	flex-direction: column;
-	gap: 6px;
-	padding-top: 14px;
+	gap: $product-card-body-gap;
+	min-height: $product-card-body-min-height;
+	padding-top: $product-card-body-padding-top;
 }
 
 .product-card__category {
+	overflow: hidden;
 	color: $color-muted;
 	font-size: $product-card-category-font-size;
 	font-weight: $font-weight-bold;
+	line-height: $product-card-category-line-height;
 	letter-spacing: $product-card-category-letter-spacing;
+	text-overflow: ellipsis;
 	text-transform: uppercase;
+	white-space: nowrap;
 }
 
 .product-card__name {
+	display: -webkit-box;
+	overflow: hidden;
+	height: $product-card-name-height;
 	color: $color-dark;
 	font-size: $product-card-name-font-size;
 	font-weight: $font-weight-semibold;
-	line-height: 1.35;
+	line-height: $product-card-name-line-height;
 	text-decoration: none;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: $product-card-name-lines;
+	line-clamp: $product-card-name-lines;
 }
 
 .product-card__price {
@@ -139,6 +170,7 @@ $product-card-swatch-size: 13px;
 	color: $color-dark;
 	font-size: $product-card-price-font-size;
 	font-weight: $font-weight-bold;
+	line-height: $product-card-price-line-height;
 }
 
 .product-card__price-original {

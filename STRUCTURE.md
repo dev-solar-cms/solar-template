@@ -60,7 +60,7 @@ solar-template/
 │   ├── scss/_buttons.scss # Composant boutons (.btn + variantes primaire/dark/outline)
 │   ├── scss/_badges.scss  # Composant badges (.badge + variantes new/exclusive/sale/outline/discount)
 │   ├── scss/_pills.scss   # Composant pills/chips de filtre (.pill + état actif, bouton de suppression)
-│   ├── scss/_product-card.scss # Composant carte produit (media, badge, wishlist, overlay panier, prix, swatches)
+│   ├── scss/_product-card.scss # Composant carte produit (media, badge, wishlist, overlay panier, prix, swatches), hauteurs de texte fixes pour garder les cartes alignées entre elles quelle que soit la longueur du nom du produit
 │   ├── scss/_blog-card.scss # Composant carte article de blog (media 16:10, badge, meta, titre, extrait, auteur)
 │   ├── scss/_header.scss # En-tête sticky (barre supérieure, actions, navigation, mega menu)
 │   ├── scss/_footer.scss # Pied de page (colonnes, newsletter, copyright, icônes de paiement)

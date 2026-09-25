@@ -62,19 +62,32 @@
 		</p>
 		<p>
 			Décision technique : la grille reprend le décalage vertical masonry de la maquette
-			(marges hautes positionnelles sur certaines cartes, pas liées à leur contenu), mais
-			uniquement pour la disposition par défaut à 4 colonnes — même limitation connue que la
-			grille des produits vedettes de la page d'accueil. La rangée de tags catégorie rapides et
-			le bouton grille/liste visibles dans la maquette ne sont volontairement pas construits ici
-			: le premier est absorbé par le filtre « Catégorie » de la barre de filtres (voir
+			(marges hautes positionnelles sur certaines cartes, pas liées à leur contenu), uniquement
+			pour la disposition par défaut à 4 colonnes. La rangée de tags catégorie rapides et le
+			bouton grille/liste visibles dans la maquette ne sont volontairement pas construits ici :
+			le premier est absorbé par le filtre « Catégorie » de la barre de filtres (voir
 			ci-dessous), le second n'a aucun comportement spécifié au-delà de la maquette elle-même.
+		</p>
+		<p>
+			Défaut identifié et corrigé : avec de vrais noms de produits de longueur variable, ce
+			décalage masonry positionnel ne suffisait plus à lui seul à garder les cartes alignées
+			entre elles — un nom de produit plus long que les autres faisait varier la hauteur totale
+			de sa carte, désynchronisant la rangée. Corrigé dans <code>assets/scss/_product-card.scss</code>
+			en fixant la hauteur du nom du produit à deux lignes (troncature avec points de
+			suspension au-delà) et en réservant une hauteur minimale cohérente pour le bloc de texte
+			de la carte, que sa catégorie soit renseignée ou non — la carte produit étant un
+			composant partagé, cette correction s'applique partout où elle est utilisée.
 		</p>
 		<p>
 			Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif : neuf
 			produits de test répartis sur trois catégories confirment la grille, le fil d'Ariane, le
 			titre et le compteur (singulier et pluriel) sur la boutique et sur une archive de
 			catégorie, dans les deux langues installées ; une catégorie sans produit confirme le
-			message d'état vide traduit. Aucun avertissement ni erreur PHP relevé.
+			message d'état vide traduit. Un produit de test supplémentaire, au nom volontairement très
+			long et sans catégorie, confirme que les cartes de la grille restent parfaitement alignées
+			entre elles (à 4, 2 et 1 colonne selon la largeur d'écran) et que ce nom est bien tronqué
+			avec des points de suspension plutôt que de casser la mise en page ; produit de test
+			supprimé après vérification. Aucun avertissement ni erreur PHP relevé.
 		</p>
 
 		<h2 id="barre-de-filtres">Barre de filtres</h2>

@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.4.4`.
+Version actuelle : `0.4.5`.
 
 ## Avant une release
 
@@ -30,6 +30,26 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.4.5 — alignement des cartes du catalogue produits
+
+- Correction visuelle : dans la grille du catalogue produits, les cartes n'étaient plus alignées
+  entre elles dès que des produits réels avec des noms de longueur variable remplaçaient les
+  données factices d'origine — un nom plus long que ses voisins faisait varier la hauteur totale
+  de sa carte et désynchronisait la rangée.
+- Corrigé dans le composant carte produit partagé (`assets/scss/_product-card.scss`), pas dans la
+  grille elle-même : le nom du produit est désormais limité à deux lignes (tronqué avec des points
+  de suspension au-delà), et le bloc de texte de la carte (catégorie, nom, prix) réserve une
+  hauteur minimale cohérente, que la catégorie soit renseignée ou non. Le décalage vertical
+  masonry de la grille catalogue, lui, reste inchangé — il redevient simplement fiable maintenant
+  que la hauteur de chaque carte ne varie plus avec son contenu.
+- La correction de l'alignement des produits similaires en fiche produit reste hors périmètre de
+  cette version (le gabarit fiche produit n'existe pas encore).
+- Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif : un produit de
+  test au nom volontairement très long et sans catégorie confirme que la grille reste parfaitement
+  alignée à 4, 2 et 1 colonne selon la largeur d'écran, et que ce nom est bien tronqué avec des
+  points de suspension plutôt que de casser la mise en page — produit de test supprimé après
+  vérification.
 
 ### 0.4.4 — chargement progressif du catalogue
 

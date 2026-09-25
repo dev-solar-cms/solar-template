@@ -59,18 +59,32 @@
 		</p>
 		<p>
 			Technical decision: the grid keeps the design handoff's masonry vertical offset
-			(positional top margins on certain cards, unrelated to their content), but only for the
-			default 4-column layout — same known limitation as the home page's featured products
-			grid. The quick category tag row and the grid/list toggle button shown in the mockup are
-			deliberately not built here: the former is absorbed by the filter bar's own "Category"
-			filter (see below), the latter has no behaviour specified beyond the mockup itself.
+			(positional top margins on certain cards, unrelated to their content), only for the
+			default 4-column layout. The quick category tag row and the grid/list toggle button shown
+			in the mockup are deliberately not built here: the former is absorbed by the filter bar's
+			own "Category" filter (see below), the latter has no behaviour specified beyond the
+			mockup itself.
+		</p>
+		<p>
+			Defect identified and fixed: with real, variable-length product names, this positional
+			masonry offset alone was no longer enough to keep cards aligned with each other — a name
+			longer than its neighbours' made that card's total height vary, throwing the whole row
+			out of alignment. Fixed in <code>assets/scss/_product-card.scss</code> by clamping the
+			product name to a fixed two-line height (truncated with an ellipsis beyond that) and
+			reserving a consistent minimum height for the card's text block whether or not its
+			category is set — the product card being a shared component, this fix applies everywhere
+			it is used.
 		</p>
 		<p>
 			Verified end to end in the real Docker environment with WooCommerce active: nine test
 			products spread across three categories confirm the grid, breadcrumb, title and result
 			count (singular and plural) on the shop page and on a category archive, in both installed
-			languages; a category with no product confirms the translated empty-state message. No PHP
-			warning or error observed.
+			languages; a category with no product confirms the translated empty-state message. One
+			additional test product, with a deliberately very long name and no category, confirms
+			that the grid's cards stay perfectly aligned with each other (at 4, 2, and 1 column
+			depending on screen width) and that this name is correctly truncated with an ellipsis
+			rather than breaking the layout; test product deleted after verification. No PHP warning
+			or error observed.
 		</p>
 
 		<h2 id="filter-bar">Filter bar</h2>
