@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.1.5`.
+Version actuelle : `0.1.6`.
 
 ## Avant une release
 
@@ -28,6 +28,17 @@ Ce dépôt est public (`github.com/dev-solar-cms/solar-template`) et versionné 
 3. Créer une release GitHub à partir du tag, avec un changelog résumant les changements.
 
 ## Changelog
+
+### 0.1.6 — tables de configuration et activation du thème
+
+- Ajout d'une table de réglages génériques (`wp_solar_template_settings`, clé → valeur), initialisée
+  avec des valeurs minimales par défaut (version du thème, couleurs de base, logo/favicon vides).
+- Toutes les tables du thème (langues, traductions, réglages) sont désormais créées et initialisées
+  automatiquement à l'activation du thème (`after_switch_theme`), de façon idempotente : réactiver
+  le thème, ou l'activer sur une base vierge, ne duplique jamais les données par défaut.
+- L'activation compile aussi immédiatement les fichiers `.mo` du catalogue de traduction existant,
+  pour que le mécanisme complet (table → catalogue → fichier compilé → chargement WordPress) soit
+  exercé dès le premier chargement du thème.
 
 ### 0.1.5 — pipeline de compilation des assets (SCSS/JS)
 

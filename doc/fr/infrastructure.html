@@ -138,6 +138,26 @@ npm run format    # formate assets/**/*.{js,scss} avec Prettier</code></pre>
 			que produit <code>DatabaseTranslator::compile()</code>.
 		</p>
 
+		<h2 id="base-de-donnees">Tables de base de données et activation</h2>
+		<p>
+			À l'activation, le thème crée trois tables dédiées (préfixées
+			<code>wp_solar_template_</code>) et initialise chacune avec des données minimales par
+			défaut — jamais une table vide sans rien d'exploitable :
+		</p>
+		<table>
+			<thead><tr><th>Table</th><th>Rôle</th></tr></thead>
+			<tbody>
+				<tr><td><code>wp_solar_template_languages</code></td><td>Langues installées</td></tr>
+				<tr><td><code>wp_solar_template_translations</code></td><td>Catalogue de traductions</td></tr>
+				<tr><td><code>wp_solar_template_settings</code></td><td>Réglages génériques clé/valeur (version du thème, couleurs de base, logo/favicon)</td></tr>
+			</tbody>
+		</table>
+		<p>
+			Le tout passe par un seul appel idempotent à <code>Installer::install()</code>, câblé
+			sur le hook WordPress <code>after_switch_theme</code> : réactiver le thème, ou
+			l'activer sur une base vierge, ne duplique jamais les valeurs par défaut.
+		</p>
+
 		<h2 id="woocommerce">Détection de WooCommerce</h2>
 		<p>
 			Le thème ne nécessite pas WooCommerce pour s'activer. Si WooCommerce est absent ou

@@ -132,6 +132,26 @@ npm run format    # auto-format assets/**/*.{js,scss} with Prettier</code></pre>
 			<code>DatabaseTranslator::compile()</code> writes.
 		</p>
 
+		<h2 id="database">Database tables and activation</h2>
+		<p>
+			On activation, the theme creates three dedicated tables (prefixed
+			<code>wp_solar_template_</code>) and seeds each with minimal default data — never an
+			empty table with nothing usable in it:
+		</p>
+		<table>
+			<thead><tr><th>Table</th><th>Purpose</th></tr></thead>
+			<tbody>
+				<tr><td><code>wp_solar_template_languages</code></td><td>Installed languages</td></tr>
+				<tr><td><code>wp_solar_template_translations</code></td><td>Translation catalog</td></tr>
+				<tr><td><code>wp_solar_template_settings</code></td><td>Generic key/value settings (theme version, base colors, logo/favicon)</td></tr>
+			</tbody>
+		</table>
+		<p>
+			This runs from a single idempotent <code>Installer::install()</code> call, hooked to
+			WordPress' <code>after_switch_theme</code>: reactivating the theme, or activating it on
+			a fresh database, never duplicates the default rows.
+		</p>
+
 		<h2 id="woocommerce">WooCommerce detection</h2>
 		<p>
 			The theme does not require WooCommerce to activate. If WooCommerce is missing or

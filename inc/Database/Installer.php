@@ -3,16 +3,15 @@
  * Created: 2026-09-25 05:39 CEST
  * Role: Database schema/installation helper for the theme (Solar_Template\Database).
  * Author: David ROMERA <d.romera.11@gmail.com>
- * Purpose: Define the `wp_solar_template_*` tables and seed their minimal default data. Only the
- *          i18n tables are handled at this stage; the remaining tables and the `after_switch_theme`
- *          activation hook are added once the settings they back exist (see later steps), which
- *          will call the methods defined here as part of a combined install() routine.
+ * Purpose: Define every `wp_solar_template_*` table and seed their minimal default data, and
+ *          hook this installation into the theme's `after_switch_theme` activation event.
  *
  * @package Solar_Template
  */
 
 namespace Solar_Template\Database;
 
+use Solar_Template\I18n\GettextMoCompiler;
 use Solar_Template\I18n\LanguageCatalog;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -23,6 +22,29 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Creates and seeds the theme's dedicated database tables.
  */
 final class Installer {
+
+	/**
+	 * Runs every table creation/seed step, then compiles whatever translation catalog already
+	 * exists (empty on a fresh install) into `.mo` files, so the whole pipeline — table, catalog,
+	 * compiled file, WordPress' own gettext loading — is exercised from the very first activation.
+	 *
+	 * Hooked to `after_switch_theme` (see functions.php). Safe to call multiple times.
+	 *
+	 * @return void
+	 */
+	public static function install(): void {
+		self::create_i18n_tables();
+		self::seed_default_languages();
+		self::create_settings_table();
+		self::seed_default_settings();
+
+		$translator = new \Solar_Template\I18n\DatabaseTranslator(
+			$GLOBALS['wpdb'],
+			new GettextMoCompiler(),
+			get_template_directory() . '/languages'
+		);
+		$translator->compile_all();
+	}
 
 	/**
 	 * Creates (or updates, if the schema changed) the two i18n tables:
@@ -120,6 +142,80 @@ final class Installer {
 			updated_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			PRIMARY KEY  (id),
 			UNIQUE KEY language_string_context (language_code,string_key,context)
+		) {$charset_collate};";
+	}
+
+	/**
+	 * Creates (or updates) `wp_solar_template_settings`, a generic key/value store for the
+	 * theme's configuration screens (Group 10 fills it in per admin tab; this step only needs a
+	 * minimal, generically-useful set of defaults to exist from day one).
+	 *
+	 * @return void
+	 */
+	public static function create_settings_table(): void {
+		global $wpdb;
+
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+
+		dbDelta( self::settings_table_sql( $wpdb->prefix, $wpdb->get_charset_collate() ) );
+	}
+
+	/**
+	 * Inserts the minimal default settings (theme version, base colors, empty logo/favicon) if
+	 * they are not registered yet.
+	 *
+	 * @return void
+	 */
+	public static function seed_default_settings(): void {
+		global $wpdb;
+
+		$table = $wpdb->prefix . 'solar_template_settings';
+
+		$defaults = array(
+			'general.theme_version'   => wp_get_theme( get_template() )->get( 'Version' ),
+			'general.primary_color'   => '#c9a227',
+			'general.secondary_color' => '#0b0b0c',
+			'general.logo_id'         => '0',
+			'general.favicon_id'      => '0',
+		);
+
+		foreach ( $defaults as $key => $value ) {
+			$already_exists = (bool) $wpdb->get_var(
+				$wpdb->prepare( "SELECT COUNT(*) FROM {$table} WHERE setting_key = %s", $key ) // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			);
+
+			if ( $already_exists ) {
+				continue;
+			}
+
+			$wpdb->insert(
+				$table,
+				array(
+					'setting_key'   => $key,
+					'setting_value' => (string) $value,
+				),
+				array( '%s', '%s' )
+			);
+		}
+	}
+
+	/**
+	 * Builds the `CREATE TABLE` statement for `wp_solar_template_settings`.
+	 *
+	 * @param string $prefix          WordPress table prefix (`$wpdb->prefix`).
+	 * @param string $charset_collate Charset/collation clause (`$wpdb->get_charset_collate()`).
+	 * @return string SQL statement, formatted for `dbDelta()`.
+	 */
+	public static function settings_table_sql( string $prefix, string $charset_collate ): string {
+		$table = $prefix . 'solar_template_settings';
+
+		return "CREATE TABLE {$table} (
+			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			setting_key varchar(191) NOT NULL,
+			setting_value longtext NOT NULL,
+			updated_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			PRIMARY KEY  (id),
+			UNIQUE KEY setting_key (setting_key)
 		) {$charset_collate};";
 	}
 }

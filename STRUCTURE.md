@@ -65,6 +65,16 @@ solar-template/
 - Important : les `.mo` du dossier `languages/` propre au thème doivent être nommés `{locale}.mo`
   (sans préfixe de domaine) — c'est ce que produit `DatabaseTranslator::compile()`.
 
+### Tables et activation (`inc/Database/Installer.php`)
+
+- `wp_solar_template_languages` / `wp_solar_template_translations` : voir ci-dessus.
+- `wp_solar_template_settings` : réglages génériques clé/valeur, alimentés au fil du Groupe 10
+  (onglets d'administration) ; valeurs minimales par défaut : version du thème, couleur primaire
+  (`#c9a227`), couleur secondaire (`#0b0b0c`), logo/favicon vides.
+- `Installer::install()` est appelée au hook `after_switch_theme` (câblé dans `functions.php`) :
+  crée les trois tables (`dbDelta`, idempotent), seed les valeurs par défaut si absentes, puis
+  compile le catalogue de traduction existant en `.mo`.
+
 ### À noter
 
 - `header.php` et `footer.php` **n'existent pas encore** : `index.php` les appelle déjà, le thème produira donc une erreur/warning tant qu'ils ne sont pas créés.

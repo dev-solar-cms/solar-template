@@ -95,6 +95,23 @@ function solar_template_setup(): void {
 add_action( 'after_setup_theme', 'solar_template_setup' );
 
 /**
+ * Creates the theme's dedicated database tables and seeds their default data on activation.
+ *
+ * Only runs if the Composer autoloader is available, since it relies on classes under `inc/`; a
+ * checkout without `composer install` yet already shows the admin notice from
+ * solar_template_load_autoloader() and simply skips table creation until dependencies are
+ * installed and the theme is reactivated.
+ *
+ * @return void
+ */
+function solar_template_activate(): void {
+	if ( solar_template_load_autoloader() ) {
+		\Solar_Template\Database\Installer::install();
+	}
+}
+add_action( 'after_switch_theme', 'solar_template_activate' );
+
+/**
  * Builds the theme's translator, wired to the real WordPress database and `.mo` compiler.
  *
  * @return \Solar_Template\Contracts\TranslatorInterface
