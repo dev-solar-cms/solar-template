@@ -9,5 +9,6 @@ vendor/
 .env
 /.claude
 CLAUDE.md
+TODO.md
 /languages/*.mo
 /languages/*.po
