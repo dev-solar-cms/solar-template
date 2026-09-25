@@ -6,9 +6,11 @@
  * Purpose: Open the document (`<html>`/`<head>`/`<body>`) and render the sticky site header: a
  *          top bar (social links, brand, search/account/cart icons) and a primary navigation bar
  *          with a "Collections" mega menu (open/close behaviour in assets/js/header.js; real
- *          category content is out of scope, see solar_template_mega_menu_columns()). The search
- *          icon only toggles an `aria-expanded` state at this step — the search overlay itself and
- *          the AJAX-driven cart badge are added by later steps.
+ *          category content is out of scope, see solar_template_mega_menu_columns()). Also renders
+ *          the full-screen search overlay toggled by the search icon, wrapping the theme's own
+ *          searchform.php — a native WordPress search, which already includes WooCommerce
+ *          products in its results once it's active. The AJAX-driven cart badge is added by a
+ *          later step.
  *
  * @package Solar_Template
  */
@@ -92,3 +94,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<?php endif; ?>
 	</nav>
 </header>
+
+<div class="site-search-overlay" id="site-search">
+	<div class="site-search-overlay__inner">
+		<?php get_search_form(); ?>
+		<button type="button" class="site-search-overlay__close" id="site-search-close">
+			<span class="screen-reader-text"><?php esc_html_e( 'Close search', 'solar-template' ); ?></span>
+			<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+		</button>
+	</div>
+</div>

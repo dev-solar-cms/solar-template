@@ -9,10 +9,10 @@
  */
 
 import '../scss/main.scss';
-import { initMegaMenu, initSearchToggle } from './header.js';
+import { initMegaMenu, initSearchOverlay } from './header.js';
 
 document.addEventListener('DOMContentLoaded', () => {
 	document.documentElement.classList.add('solar-template-ready');
 	initMegaMenu();
-	initSearchToggle();
+	initSearchOverlay();
 });

@@ -194,6 +194,18 @@ final class DefaultStrings {
 				'fr_FR' => '© {year} %s — Thème WordPress WooCommerce · Tous droits réservés',
 				'en_US' => '© {year} %s — WordPress WooCommerce theme · All rights reserved',
 			),
+			'Search this site'            => array(
+				'fr_FR' => 'Rechercher sur ce site',
+				'en_US' => 'Search this site',
+			),
+			'Search products, articles…'  => array(
+				'fr_FR' => 'Rechercher des produits, des articles…',
+				'en_US' => 'Search products, articles…',
+			),
+			'Close search'                => array(
+				'fr_FR' => 'Fermer la recherche',
+				'en_US' => 'Close search',
+			),
 		);
 	}
 

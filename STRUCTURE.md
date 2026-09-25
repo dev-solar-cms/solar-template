@@ -14,8 +14,9 @@ Ce dépôt n'a aucun lien d'historique git avec le repo parent : il vit dans `wp
 solar-template/
 ├── style.css        # En-tête du thème (nom, version, text-domain) — pas de styles réels encore
 ├── functions.php     # Support title-tag/post-thumbnails, menus, hooks, aides header (réseaux, compte, panier, nav)
-├── header.php         # En-tête sticky global (barre supérieure + navigation principale)
+├── header.php         # En-tête sticky global (barre supérieure + navigation principale + overlay de recherche)
 ├── footer.php         # Pied de page global (colonnes, newsletter, copyright, icônes de paiement)
+├── searchform.php     # Formulaire de recherche natif personnalisé, chargé par get_search_form()
 ├── index.php          # Seul gabarit de contenu présent ; appelle get_header()/get_footer()
 ├── screenshot.png     # 1200x900, requis par WordPress pour l'aperçu du thème
 ├── composer.json      # Dépendances PHP + autoload PSR-4 (Solar_Template\)
@@ -122,6 +123,13 @@ solar-template/
   hors périmètre de cette étape. Deux filtres (`nav_menu_css_class`/`nav_menu_link_attributes`)
   garantissent qu'un menu réel assigné à l'emplacement `primary` reçoit les mêmes classes que la
   navigation de secours, pour un rendu/comportement identique dans les deux cas.
+- L'icône de recherche ouvre un overlay plein écran (`#site-search`) qui enveloppe
+  `searchform.php` — un formulaire de recherche WordPress natif (`?s=`), sans aucun branchement
+  spécifique à WooCommerce : WordPress inclut déjà tous les types de contenu publics et
+  interrogeables (dont les produits, une fois WooCommerce actif) dans les résultats d'une
+  recherche native, sans réglage supplémentaire. Ouverture/fermeture (bouton, Échap, clic
+  extérieur) gérées par `initSearchOverlay()` dans `assets/js/header.js`, avec déplacement du
+  focus vers le champ à l'ouverture et retour au bouton déclencheur à la fermeture.
 
 ### Pied de page du thème (`footer.php`, `assets/scss/_footer.scss`)
 

@@ -3,8 +3,8 @@
  * Role: Front-end behaviour for the sticky site header (assets/js/header.js).
  * Author: David ROMERA <d.romera.11@gmail.com>
  * Purpose: Open/close the "Collections" mega menu (hover, keyboard focus, Escape, outside click)
- *          and toggle the search button's `aria-expanded` state — no visible search overlay yet,
- *          that panel is added by a later step which is expected to extend initSearchToggle().
+ *          and the full-screen search overlay (toggle button, close button, Escape, outside
+ *          click), moving focus into the search field on open and back to the toggle on close.
  */
 
 /**
@@ -79,23 +79,69 @@ export function initMegaMenu() {
 }
 
 /**
- * Wires up the header's search toggle button so it reflects its own open/closed state.
+ * Wires up the header's full-screen search overlay: the top bar's search icon opens it and moves
+ * focus into the search field, the overlay's own close button, Escape, or a click outside it
+ * close it and return focus to the toggle button.
  *
- * There is no search overlay to show/hide yet: this only flips `aria-expanded` so assistive
- * technology already reports the correct state, ready for a later step to attach the overlay
- * panel to the same toggle without changing this wiring.
+ * Returns early (no listener attached, no error thrown) when the toggle button or the overlay
+ * markup is missing from the page.
  *
  * @return {void}
  */
-export function initSearchToggle() {
+export function initSearchOverlay() {
 	const toggle = document.getElementById('site-search-toggle');
+	const overlay = document.getElementById('site-search');
 
-	if (!toggle) {
+	if (!toggle || !overlay) {
 		return;
 	}
 
+	const input = overlay.querySelector('.site-search-form__input');
+	const closeButton = document.getElementById('site-search-close');
+
+	const open = () => {
+		overlay.classList.add('is-open');
+		toggle.setAttribute('aria-expanded', 'true');
+
+		if (input) {
+			input.focus();
+		}
+	};
+
+	const close = () => {
+		overlay.classList.remove('is-open');
+		toggle.setAttribute('aria-expanded', 'false');
+	};
+
 	toggle.addEventListener('click', () => {
-		const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
-		toggle.setAttribute('aria-expanded', String(!isExpanded));
+		if (overlay.classList.contains('is-open')) {
+			close();
+		} else {
+			open();
+		}
+	});
+
+	if (closeButton) {
+		closeButton.addEventListener('click', () => {
+			close();
+			toggle.focus();
+		});
+	}
+
+	overlay.addEventListener('keydown', (event) => {
+		if (event.key === 'Escape') {
+			close();
+			toggle.focus();
+		}
+	});
+
+	document.addEventListener('click', (event) => {
+		if (
+			overlay.classList.contains('is-open') &&
+			!overlay.contains(event.target) &&
+			!toggle.contains(event.target)
+		) {
+			close();
+		}
 	});
 }

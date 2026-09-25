@@ -151,6 +151,30 @@
 			on both the home page and the shop page, with the site name and current year correctly
 			interpolated.
 		</p>
+
+		<h2 id="search">Search (overlay)</h2>
+		<p>
+			The top bar's search icon opens a full-screen overlay (<code>#site-search</code>, in
+			<code>header.php</code>) wrapping <code>searchform.php</code> — the template WordPress'
+			own <code>get_search_form()</code> automatically loads to customize its markup. The
+			submitted search stays a native WordPress search (<code>?s=</code>): WordPress already
+			includes every public, searchable content type — including WooCommerce products once the
+			plugin is active — in a native search's results, with no extra wiring; an advanced search
+			like SearchWP is explicitly out of scope.
+		</p>
+		<p>
+			Open/close is handled by <code>initSearchOverlay()</code>
+			(<code>assets/js/header.js</code>): the top bar's button opens the overlay and moves
+			focus into the search field; the close button, Escape, or a click outside the overlay
+			close it and return focus to the trigger button — the same accessibility pattern as the
+			mega menu.
+		</p>
+		<p>
+			Verified in the real Docker environment: a test blog post and a test WooCommerce product
+			created for the occasion both appear in the results of the same search (<code>?s=</code>),
+			confirming the native search actually surfaces relevant WordPress and WooCommerce content
+			— test content removed after verification.
+		</p>
 		<p>
 			Verified in the real Docker environment with WooCommerce active: the theme activates
 			without any header-related warning or error, the account/cart icons resolve to the

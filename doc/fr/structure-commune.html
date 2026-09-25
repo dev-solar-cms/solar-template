@@ -156,6 +156,31 @@
 			erreur sur la page d'accueil et sur la page boutique, avec le nom du site et l'année
 			courante correctement interpolés.
 		</p>
+
+		<h2 id="recherche">Recherche (overlay)</h2>
+		<p>
+			L'icône de recherche de la barre supérieure ouvre un overlay plein écran
+			(<code>#site-search</code>, dans <code>header.php</code>) qui enveloppe
+			<code>searchform.php</code> — le gabarit chargé automatiquement par la fonction native
+			<code>get_search_form()</code> de WordPress pour personnaliser son balisage. La recherche
+			soumise reste une recherche WordPress native (<code>?s=</code>) : WordPress inclut déjà
+			tous les types de contenu publics et interrogeables — dont les produits WooCommerce une
+			fois le plugin actif — dans les résultats d'une recherche native, sans réglage
+			supplémentaire ; une recherche avancée type SearchWP est explicitement hors périmètre.
+		</p>
+		<p>
+			Ouverture/fermeture gérées par <code>initSearchOverlay()</code>
+			(<code>assets/js/header.js</code>) : le bouton de la barre supérieure ouvre l'overlay et
+			déplace le focus dans le champ de recherche ; le bouton de fermeture, la touche Échap ou
+			un clic en dehors de l'overlay le referment et rendent le focus au bouton déclencheur —
+			même schéma d'accessibilité que le mega menu.
+		</p>
+		<p>
+			Vérifié dans l'environnement Docker réel : un article et un produit WooCommerce de test
+			créés pour l'occasion apparaissent bien tous les deux dans les résultats d'une même
+			recherche (<code>?s=</code>), confirmant que la recherche native remonte effectivement du
+			contenu WordPress et WooCommerce pertinent — contenu de test supprimé après vérification.
+		</p>
 		<p>
 			Vérifié dans l'environnement Docker réel avec WooCommerce actif : le thème s'active sans
 			avertissement ni erreur liés à l'en-tête, les icônes compte/panier résolvent vers les

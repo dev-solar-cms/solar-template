@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.2.6`.
+Version actuelle : `0.2.7`.
 
 ## Avant une release
 
@@ -30,6 +30,20 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.2.7 — recherche en overlay
+
+- Ajout de l'overlay de recherche plein écran, ouvert depuis l'icône de la barre supérieure,
+  enveloppant un formulaire de recherche WordPress natif personnalisé (`searchform.php`).
+- Décision technique : la recherche reste native (`?s=`), sans branchement spécifique à
+  WooCommerce — WordPress inclut déjà les produits dans les résultats d'une recherche native une
+  fois WooCommerce actif, sans réglage supplémentaire ; une recherche avancée type SearchWP est
+  explicitement hors périmètre.
+- Ouverture/fermeture au clic, à la touche Échap et au clic extérieur, avec déplacement du focus
+  dans le champ à l'ouverture et retour au bouton déclencheur à la fermeture — même schéma
+  d'accessibilité que le mega menu déjà en place.
+- Vérifié de bout en bout dans l'environnement Docker réel : un article et un produit WooCommerce
+  de test apparaissent tous les deux dans les résultats d'une même recherche.
 
 ### 0.2.6 — pied de page global
 
