@@ -45,7 +45,15 @@ function renderCatalogFixture() {
 				<option value="price-asc">Price: low to high</option>
 			</select>
 		</form>
-		<div id="catalog-results"><p>9 products available</p></div>
+		<div id="catalog-results">
+			<p>9 products available</p>
+			<div class="catalog__grid">
+				<div class="product-card">Existing product</div>
+			</div>
+			<div class="catalog__load-more" id="catalog-load-more">
+				<a href="https://example.test/shop/?paged=2" data-load-more data-page="2">Load more products</a>
+			</div>
+		</div>
 		<div id="catalog-active-filters">
 			<span class="catalog-active-filters__chip">
 				Watches
@@ -275,5 +283,50 @@ describe('assets/js/catalog.js', () => {
 			.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
 
 		expect(document.querySelector('select[name="catalog_orderby"]').value).toBe('price-asc');
+	});
+
+	it('appends the returned cards to the grid and replaces the load-more block on click', async () => {
+		const fetchMock = vi.fn().mockResolvedValue({
+			json: () =>
+				Promise.resolve({
+					success: true,
+					data: {
+						cardsHtml: '<div class="product-card">New product</div>',
+						loadMoreHtml:
+							'<div class="catalog__load-more" id="catalog-load-more"><a href="?paged=3" data-load-more data-page="3">Load more products</a></div>',
+					},
+				}),
+		});
+		vi.stubGlobal('fetch', fetchMock);
+
+		initCatalogFilters();
+
+		document
+			.querySelector('[data-load-more]')
+			.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+
+		await vi.waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+		await new Promise((resolve) => setTimeout(resolve, 0));
+
+		const [, requestInit] = fetchMock.mock.calls[0];
+		expect(String(requestInit.body)).toContain('mode=append');
+		expect(String(requestInit.body)).toContain('paged=2');
+
+		const cards = document.querySelectorAll('.catalog__grid .product-card');
+		expect(cards).toHaveLength(2);
+		expect(cards[1].textContent).toBe('New product');
+		expect(document.querySelector('[data-load-more]').dataset.page).toBe('3');
+	});
+
+	it('does not throw when clicking load more without a grid on the page', () => {
+		document.querySelector('.catalog__grid').remove();
+
+		initCatalogFilters();
+
+		expect(() =>
+			document
+				.querySelector('[data-load-more]')
+				.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true })),
+		).not.toThrow();
 	});
 });

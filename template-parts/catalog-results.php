@@ -4,17 +4,29 @@
  * Role: Catalog results template-part (template-parts/catalog-results.php).
  * Author: David ROMERA <d.romera.11@gmail.com>
  * Purpose: Render the part of the product catalog that changes when a filter is applied: the
- *          result count, the product grid, the empty state and the pagination. Shared by
+ *          result count, the product grid (template-parts/catalog-cards.php) and the empty state,
+ *          plus the "load more" status/progress bar/button
+ *          (template-parts/catalog-load-more.php) for the resulting first page. Shared by
  *          archive-product.php (initial page load) and solar_template_handle_catalog_filter()
- *          (AJAX re-render), rendered against whichever `$wp_query` is currently the main query,
- *          so both call sites stay pixel-identical without duplicating this markup.
+ *          (AJAX re-render, "replace" mode), rendered against whichever `$wp_query` is currently
+ *          the main query, so both call sites stay pixel-identical without duplicating this
+ *          markup. Not used by that same handler's "append" ("load more") mode, which renders
+ *          template-parts/catalog-cards.php/catalog-load-more.php directly instead — appending
+ *          more cards to an existing grid is a different operation than (re)rendering the whole
+ *          results block.
  *
  * @package Solar_Template
+ * @var array $args {
+ *     @type string|null $base_url See solar_template_catalog_filters_url()'s $base_url parameter,
+ *                                   forwarded to template-parts/catalog-load-more.php.
+ * }
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+$results_args = wp_parse_args( $args ?? array(), array( 'base_url' => null ) );
 
 global $wp_query;
 
@@ -31,26 +43,10 @@ $product_count   = (int) $wp_query->found_posts;
 			class="catalog__grid<?php echo 4 === $catalog_columns ? ' catalog__grid--masonry' : ''; ?>"
 			style="--catalog-columns: <?php echo esc_attr( (string) $catalog_columns ); ?>;"
 		>
-			<?php
-			while ( have_posts() ) :
-				the_post();
-
-				$catalog_product = wc_get_product( get_the_ID() );
-
-				if ( ! $catalog_product ) {
-					continue;
-				}
-
-				get_template_part( 'template-parts/product-card', null, solar_template_map_product_to_card_args( $catalog_product ) );
-			endwhile;
-
-			wp_reset_postdata();
-			?>
+			<?php get_template_part( 'template-parts/catalog-cards' ); ?>
 		</div>
 
-		<div class="catalog__pagination">
-			<?php woocommerce_pagination(); ?>
-		</div>
+		<?php get_template_part( 'template-parts/catalog-load-more', null, array( 'base_url' => $results_args['base_url'] ) ); ?>
 	<?php else : ?>
 		<p class="catalog__empty"><?php esc_html_e( 'No products currently match this selection.', 'solar-template' ); ?></p>
 	<?php endif; ?>

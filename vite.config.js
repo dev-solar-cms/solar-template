@@ -30,6 +30,6 @@ export default defineConfig(({ mode }) => ({
 	},
 	test: {
 		environment: 'jsdom',
-		include: ['test/js/**/*.test.js'],
+		include: ['tests/js/**/*.test.js'],
 	},
 }));

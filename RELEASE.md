@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.4.3`.
+Version actuelle : `0.4.4`.
 
 ## Avant une release
 
@@ -30,6 +30,20 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.4.4 — chargement progressif du catalogue
+
+- Remplacement de la pagination numérotée du catalogue par un statut « Affichage de N sur M
+  produits », une barre de progression dorée, et un bouton « Charger plus de produits » qui
+  ajoute la page suivante à la grille existante en AJAX, sans rechargement ni remplacement des
+  produits déjà affichés.
+- Bug rencontré et corrigé : le nombre de produits par page pouvait différer entre le chargement
+  de page classique et la requête AJAX de la page suivante, provoquant un chevauchement/doublon de
+  produits entre les deux. Corrigé en calculant explicitement ce nombre de la même façon dans les
+  deux cas, plutôt que de laisser WooCommerce le déduire implicitement à chaque fois.
+- Réorganisation interne : les tests JavaScript du projet vivent désormais dans `./tests/js/*`,
+  au même niveau que les tests PHP (`./tests/php/*`), plutôt que dans un dossier `./test/js/*`
+  distinct et incohérent avec cette convention.
 
 ### 0.4.3 — tri du catalogue
 

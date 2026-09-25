@@ -1349,6 +1349,22 @@ function solar_template_catalog_columns(): int {
 }
 
 /**
+ * Returns the number of products the catalog shows per page, explicitly, rather than leaving it
+ * to be set as a side effect of WooCommerce's own `WC_Query::product_query()` (hooked on
+ * `pre_get_posts`, applying its own `loop_shop_per_page`-filtered default): that side effect does
+ * not reliably apply to the AJAX handler's programmatically-built query the way it does the real
+ * main query (see solar_template_build_catalog_query_args()'s docblock for the same class of
+ * issue with ordering), which would silently mismatch the "load more" page size between a plain
+ * page load and the next page fetched via AJAX, duplicating/skipping products between the two.
+ * Reuses WooCommerce's own filter/defaults, just called directly instead of relying on that hook.
+ *
+ * @return int
+ */
+function solar_template_catalog_products_per_page(): int {
+	return (int) apply_filters( 'loop_shop_per_page', wc_get_default_products_per_row() * wc_get_default_product_rows_per_page() );
+}
+
+/**
  * Returns the product catalog's result count label ("N products available"), with correct
  * singular/plural agreement.
  *
@@ -1360,6 +1376,48 @@ function solar_template_catalog_result_count_label( int $count ): string {
 		/* translators: %d: number of products currently shown in the catalog. */
 		_n( '%d product available', '%d products available', $count, 'solar-template' ),
 		$count
+	);
+}
+
+/**
+ * Returns the catalog's "load more" state for the given, already-executed product query: how many
+ * products are shown so far, the real total, the percentage for the progress bar, and the next
+ * page's number/URL — or null when there is no further page (including when the query returned no
+ * results at all), so the calling template-part can render nothing rather than an empty/broken
+ * control.
+ *
+ * @param \WP_Query   $query    An already-executed catalog product query.
+ * @param string|null $base_url See solar_template_catalog_filters_url()'s $base_url parameter —
+ *                                the "next page" link is built against it the same way.
+ * @return array{shown: int, total: int, percent: float, next_page: int, next_page_url: string}|null
+ */
+function solar_template_get_catalog_load_more_config( \WP_Query $query, ?string $base_url = null ): ?array {
+	$total = (int) $query->found_posts;
+
+	if ( $total <= 0 ) {
+		return null;
+	}
+
+	$current_page = max( 1, (int) $query->get( 'paged' ) );
+
+	if ( $current_page >= (int) $query->max_num_pages ) {
+		return null;
+	}
+
+	$per_page  = (int) $query->get( 'posts_per_page' );
+	$shown     = min( $total, $current_page * $per_page );
+	$next_page = $current_page + 1;
+
+	$next_page_url = null !== $base_url
+		? add_query_arg( 'paged', $next_page, $base_url )
+		: add_query_arg( 'paged', $next_page );
+
+	return array(
+		'shown'         => $shown,
+		'total'         => $total,
+		'percent'       => round( ( $shown / $total ) * 100, 1 ),
+		'next_page'     => $next_page,
+		'next_page_url' => $next_page_url,
 	);
 }
 
@@ -2061,6 +2119,7 @@ function solar_template_apply_catalog_filters_to_main_query( \WP_Query $query ):
 	$query->set( 'orderby', $args['orderby'] );
 	$query->set( 'order', $args['order'] );
 	$query->set( 'meta_key', $args['meta_key'] ?? '' );
+	$query->set( 'posts_per_page', solar_template_catalog_products_per_page() );
 }
 add_action( 'pre_get_posts', 'solar_template_apply_catalog_filters_to_main_query' );
 
@@ -2077,15 +2136,18 @@ add_action( 'pre_get_posts', 'solar_template_apply_catalog_filters_to_main_query
 function solar_template_handle_catalog_filter_request(): void {
 	check_ajax_referer( 'solar_template_catalog_filter', 'nonce' );
 
-	$filters  = solar_template_sanitize_catalog_filters( wp_unslash( $_POST ) );
-	$paged    = isset( $_POST['paged'] ) ? max( 1, absint( $_POST['paged'] ) ) : 1;
-	$page_url = isset( $_POST['pageUrl'] ) ? esc_url_raw( wp_unslash( $_POST['pageUrl'] ) ) : '';
+	$filters   = solar_template_sanitize_catalog_filters( wp_unslash( $_POST ) );
+	$paged     = isset( $_POST['paged'] ) ? max( 1, absint( $_POST['paged'] ) ) : 1;
+	$page_url  = isset( $_POST['pageUrl'] ) ? esc_url_raw( wp_unslash( $_POST['pageUrl'] ) ) : '';
+	$base_url  = '' !== $page_url ? $page_url : null;
+	$is_append = isset( $_POST['mode'] ) && 'append' === $_POST['mode'];
 
 	$args = array_merge(
 		array(
 			'post_type'           => 'product',
 			'post_status'         => 'publish',
 			'paged'               => $paged,
+			'posts_per_page'      => solar_template_catalog_products_per_page(),
 			'ignore_sticky_posts' => true,
 		),
 		solar_template_build_catalog_query_args( $filters )
@@ -2100,8 +2162,31 @@ function solar_template_handle_catalog_filter_request(): void {
 	$wp_query     = $wp_the_query; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 	$wp_the_query->query( $args );
 
+	if ( $is_append ) {
+		// "Load more": only the requested page's own cards, plus a freshly computed "load more"
+		// block (updated shown/total/next page) — appended to/replacing a slice of the existing
+		// grid client-side, rather than re-rendering the whole results block from scratch.
+		ob_start();
+		get_template_part( 'template-parts/catalog-cards' );
+		$cards_html = ob_get_clean();
+
+		ob_start();
+		get_template_part( 'template-parts/catalog-load-more', null, array( 'base_url' => $base_url ) );
+		$load_more_html = ob_get_clean();
+
+		$wp_query     = $previous_query; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		$wp_the_query = $previous_main_query; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+
+		wp_send_json_success(
+			array(
+				'cardsHtml'    => $cards_html,
+				'loadMoreHtml' => $load_more_html,
+			)
+		);
+	}
+
 	ob_start();
-	get_template_part( 'template-parts/catalog-results' );
+	get_template_part( 'template-parts/catalog-results', null, array( 'base_url' => $base_url ) );
 	$results_html = ob_get_clean();
 
 	ob_start();
@@ -2110,7 +2195,7 @@ function solar_template_handle_catalog_filter_request(): void {
 		null,
 		array(
 			'filters'  => $filters,
-			'base_url' => '' !== $page_url ? $page_url : null,
+			'base_url' => $base_url,
 		)
 	);
 	$active_filters_html = ob_get_clean();

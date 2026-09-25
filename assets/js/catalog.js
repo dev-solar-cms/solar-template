@@ -11,18 +11,23 @@
  *          chip's remove link or "Clear all" (template-parts/catalog-active-filters.php) is
  *          intercepted the same way: its `href` already encodes the resulting filter state (a
  *          plain link works without JavaScript), which is applied back onto the form's own
- *          controls before submitting, so the two stay in sync either way. Reads the AJAX
- *          endpoint/nonce from `window.solarTemplateCatalog`, localized by `wp_localize_script()`.
- *          Does nothing (and throws no error) on a page without the filter bar, e.g. because
- *          WooCommerce is inactive.
+ *          controls before submitting, so the two stay in sync either way. A click on the "Load
+ *          more products" link (template-parts/catalog-load-more.php) instead requests that one
+ *          extra page in "append" mode and adds its cards to the end of the existing grid, rather
+ *          than replacing the results wholesale. Reads the AJAX endpoint/nonce from
+ *          `window.solarTemplateCatalog`, localized by `wp_localize_script()`. Does nothing (and
+ *          throws no error) on a page without the filter bar, e.g. because WooCommerce is
+ *          inactive.
  */
 
-// Tracks the two listeners bound directly to `document` (rather than to an element scoped to this
-// page's own filter bar), so a repeated call re-wires them instead of accumulating duplicates —
-// production only ever calls this once (on `DOMContentLoaded`), but each call still fully rewires
-// as if it were the first, which the test suite relies on against a fresh fixture per test.
+// Tracks the three listeners bound directly to `document` (rather than to an element scoped to
+// this page's own filter bar), so a repeated call re-wires them instead of accumulating
+// duplicates — production only ever calls this once (on `DOMContentLoaded`), but each call still
+// fully rewires as if it were the first, which the test suite relies on against a fresh fixture
+// per test.
 let outsideClickHandler = null;
 let chipsClickHandler = null;
+let loadMoreClickHandler = null;
 
 /**
  * Wires up every filter group's dropdown panel, the "Active filters" chip row, and change
@@ -81,6 +86,7 @@ export function initCatalogFilters() {
 	}
 
 	wireActiveFilterChips(form, groups, config);
+	wireLoadMore(form, config);
 }
 
 /**
@@ -240,6 +246,88 @@ function getArrayParamValues(params, baseName) {
 	return Array.from(params.entries())
 		.filter(([key]) => key === `${baseName}[]` || key.startsWith(`${baseName}[`))
 		.map(([, value]) => value);
+}
+
+/**
+ * Intercepts clicks on the "Load more products" link (template-parts/catalog-load-more.php),
+ * requesting its target page in "append" mode instead of following it — the link/its wrapper is
+ * replaced wholesale on every response, so it is (re)found by delegating from a stable ancestor
+ * rather than bound once at page load.
+ *
+ * @param {HTMLFormElement}                  form   The `#catalog-filters` form (its current
+ *                                                     filter/sort state is sent along).
+ * @param {{ajaxUrl: string, nonce: string}} config Localized AJAX endpoint/nonce.
+ * @return {void}
+ */
+function wireLoadMore(form, config) {
+	if (loadMoreClickHandler) {
+		document.removeEventListener('click', loadMoreClickHandler);
+	}
+
+	loadMoreClickHandler = (event) => {
+		const button = event.target.closest('#catalog-load-more [data-load-more]');
+
+		if (!button) {
+			return;
+		}
+
+		event.preventDefault();
+		appendMoreProducts(form, config, button);
+	};
+	document.addEventListener('click', loadMoreClickHandler);
+}
+
+/**
+ * Requests one more page of products (in "append" mode, current filter/sort state included) and
+ * adds its cards to the end of the existing `.catalog__grid`, replacing the "load more" block with
+ * the freshly rendered one (updated shown/total/next page, or empty once there is no page left).
+ *
+ * @param {HTMLFormElement}                  form   The `#catalog-filters` form.
+ * @param {{ajaxUrl: string, nonce: string}} config Localized AJAX endpoint/nonce.
+ * @param {HTMLElement}                      button The clicked "Load more products" link, carrying
+ *                                                     the target page in its `data-page` attribute.
+ * @return {Promise<void>}
+ */
+async function appendMoreProducts(form, config, button) {
+	const grid = document.querySelector('.catalog__grid');
+
+	if (!grid) {
+		return;
+	}
+
+	button.classList.add('is-loading');
+
+	try {
+		const params = new URLSearchParams(new FormData(form));
+		params.set('action', 'solar_template_catalog_filter');
+		params.set('nonce', config.nonce);
+		params.set('pageUrl', window.location.href);
+		params.set('mode', 'append');
+		params.set('paged', button.dataset.page);
+
+		const response = await fetch(config.ajaxUrl, {
+			method: 'POST',
+			credentials: 'same-origin',
+			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+			body: params,
+		});
+
+		const result = await response.json();
+
+		if (result.success && result.data && typeof result.data.cardsHtml === 'string') {
+			grid.insertAdjacentHTML('beforeend', result.data.cardsHtml);
+
+			const loadMoreContainer = document.getElementById('catalog-load-more');
+
+			if (loadMoreContainer && typeof result.data.loadMoreHtml === 'string') {
+				loadMoreContainer.outerHTML = result.data.loadMoreHtml;
+			}
+		} else {
+			button.classList.remove('is-loading');
+		}
+	} catch {
+		button.classList.remove('is-loading');
+	}
 }
 
 /**

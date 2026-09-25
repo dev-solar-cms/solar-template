@@ -1,13 +1,13 @@
 {
     "name": "solar-template",
-    "version": "0.4.3",
+    "version": "0.4.4",
     "private": true,
     "description": "Asset build pipeline (SCSS + JS) for the Solar Template WordPress theme.",
     "type": "module",
     "scripts": {
         "dev": "vite build --watch --mode development",
         "build": "vite build --mode production",
-        "format": "prettier --write \"assets/**/*.{js,scss}\" \"test/**/*.js\" \"vite.config.js\"",
+        "format": "prettier --write \"assets/**/*.{js,scss}\" \"tests/js/**/*.js\" \"vite.config.js\"",
         "test": "vitest run"
     },
     "devDependencies": {

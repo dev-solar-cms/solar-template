@@ -97,39 +97,36 @@
 	text-align: center;
 }
 
-.catalog__pagination {
-	margin-top: 64px;
+.catalog__load-more {
+	margin-top: 72px;
 	text-align: center;
 }
 
-.catalog__pagination .page-numbers {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	min-width: 36px;
-	height: 36px;
-	margin: 0 3px;
-	padding: 0 10px;
-	border: 1.5px solid $color-border;
-	border-radius: $radius-button;
-	color: $color-dark;
-	font-size: 13px;
-	font-weight: $font-weight-semibold;
-	text-decoration: none;
-	transition:
-		background-color 0.2s ease,
-		color 0.2s ease,
-		border-color 0.2s ease;
+.catalog__load-more-status {
+	margin: 0 0 14px;
+	color: $color-muted;
+	font-size: 13.5px;
 }
 
-.catalog__pagination .page-numbers:hover {
-	border-color: $color-dark;
+.catalog__load-more-track {
+	max-width: 320px;
+	height: 3px;
+	margin: 0 auto 24px;
+	overflow: hidden;
+	border-radius: $radius-pill;
+	background: $color-border;
 }
 
-.catalog__pagination .page-numbers.current {
-	border-color: $color-dark;
-	background: $color-dark;
-	color: $color-surface;
+.catalog__load-more-fill {
+	height: 100%;
+	border-radius: $radius-pill;
+	background: $color-gold;
+	transition: width 0.3s ease;
+}
+
+.catalog__load-more-button.is-loading {
+	opacity: 0.6;
+	pointer-events: none;
 }
 
 @media (max-width: 1100px) {

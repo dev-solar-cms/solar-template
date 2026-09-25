@@ -197,6 +197,44 @@
 			filter) confirmed with the same result through both a plain page load and the AJAX
 			request, in both installed languages. No PHP warning or error observed.
 		</p>
+
+		<h2 id="progressive-loading">Progressive loading</h2>
+		<p>
+			<code>template-parts/catalog-load-more.php</code> replaces numbered pagination with a
+			"Showing N of M products" status, a gold progress bar (width = the real percentage
+			loaded so far) and a "Load more products" button — a real link to the next page first
+			(works without JavaScript, though a click without it then shows only that next page
+			rather than adding it to the previous one, since appending without replacing needs
+			JavaScript by nature), intercepted by <code>assets/js/catalog.js</code> to append that
+			page's cards to the existing grid via AJAX instead of navigating.
+		</p>
+		<p>
+			Technical decision: the next-page AJAX request reuses the same endpoint as the rest of
+			the filter bar (<code>solar_template_catalog_filter</code>), with a
+			<code>mode=append</code> parameter that makes it respond with only the new cards
+			(<code>template-parts/catalog-cards.php</code>, a cards-only loop extracted out of
+			<code>catalog-results.php</code> so it can be reused without the grid wrapping it) and
+			the updated progress block, rather than the whole results — consistent with the state
+			already rendered client-side, which must not be overwritten.
+		</p>
+		<p>
+			Bug encountered and fixed during development: the number of products per page could
+			differ between a plain page load (16 by default, implicitly derived by WooCommerce) and
+			the AJAX request for the next page (10, WordPress's own generic setting — WooCommerce
+			does not reliably apply its own default to a query built programmatically rather than
+			through a real page visit), causing overlapping products between the two. Fixed by
+			computing that number explicitly, the same way, in both cases, instead of depending on
+			implicit behaviour that does not reliably apply outside of a real page request.
+		</p>
+		<p>
+			Verified end to end in the real Docker environment with WooCommerce active and
+			nineteen test products (exceeding the default page size): the status, progress bar and
+			button correctly reflect the real state on the first page; clicking correctly appends
+			the remaining products with no duplicate or missing product, and the button disappears
+			once everything is shown; combined with a category filter that brings the count below
+			the page size, the whole block does not render at all. No PHP warning or error
+			observed.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

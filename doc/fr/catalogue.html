@@ -213,6 +213,46 @@
 			et via la requête AJAX, dans les deux langues installées. Aucun avertissement ni erreur
 			PHP relevé.
 		</p>
+
+		<h2 id="chargement-progressif">Chargement progressif</h2>
+		<p>
+			<code>template-parts/catalog-load-more.php</code> remplace la pagination numérotée par
+			un statut « Affichage de N sur M produits », une barre de progression dorée (largeur =
+			pourcentage réellement chargé) et un bouton « Charger plus de produits » — un vrai lien
+			vers la page suivante d'abord (fonctionne sans JavaScript, bien qu'un clic sans
+			JavaScript affiche alors uniquement cette page suivante plutôt que de l'ajouter à la
+			précédente, l'ajout sans remplacement nécessitant par nature du JavaScript), intercepté
+			par <code>assets/js/catalog.js</code> pour ajouter les cartes de cette page à la grille
+			existante en AJAX plutôt que de naviguer.
+		</p>
+		<p>
+			Décision technique : la requête AJAX de chargement de page suivante réutilise le même
+			point d'entrée que le reste de la barre de filtres (<code>solar_template_catalog_filter</code>),
+			avec un paramètre <code>mode=append</code> qui fait répondre uniquement les nouvelles
+			cartes (<code>template-parts/catalog-cards.php</code>, une boucle de cartes extraite de
+			<code>catalog-results.php</code> pour être réutilisable sans la grille qui l'enveloppe)
+			et le bloc de progression mis à jour, plutôt que l'ensemble des résultats — cohérent
+			avec l'état déjà affiché côté client, qu'il ne faut pas écraser.
+		</p>
+		<p>
+			Bug rencontré et corrigé pendant le développement : le nombre de produits par page
+			pouvait différer entre le chargement de page classique (16 par défaut, déduit
+			implicitement par WooCommerce) et la requête AJAX de chargement de la page suivante (10,
+			le réglage WordPress générique, WooCommerce ne l'appliquant pas de façon fiable à une
+			requête construite par du code plutôt que par une vraie visite de page) — provoquant un
+			chevauchement de produits entre les deux. Corrigé en calculant ce nombre soi-même, de la
+			même façon, dans les deux cas, plutôt que de dépendre d'un comportement implicite qui ne
+			s'applique pas de façon fiable en dehors d'une vraie requête de page.
+		</p>
+		<p>
+			Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif et dix-
+			neuf produits de test (dépassant la taille de page par défaut) : le statut, la barre de
+			progression et le bouton reflètent correctement l'état réel sur la première page ; le
+			clic ajoute bien les produits restants sans doublon ni produit manquant et fait
+			disparaître le bouton une fois tout affiché ; combiné à un filtre catégorie réduisant le
+			nombre de produits sous la taille de page, le bloc entier ne s'affiche pas du tout.
+			Aucun avertissement ni erreur PHP relevé.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

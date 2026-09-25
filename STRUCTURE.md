@@ -38,7 +38,9 @@ solar-template/
 │   ├── cart-badge.php   # Badge du nombre d'articles au panier, utilisé par l'en-tête
 │   ├── mega-menu.php    # Panneau du mega menu « Collections », contenu factice pour l'instant
 │   ├── catalog-filters.php # Barre de filtres du catalogue (Catégorie/Prix/Couleur/Taille/Note) + tri, formulaire natif progressivement amélioré en AJAX
-│   ├── catalog-results.php # Compteur/grille/pagination du catalogue, partagé entre le chargement de page et le ré-affichage AJAX
+│   ├── catalog-results.php # Compteur/grille/chargement progressif du catalogue, partagé entre le chargement de page et le ré-affichage AJAX
+│   ├── catalog-cards.php # Boucle des cartes produit seule (sans grille), réutilisée par le mode « append » du chargement progressif
+│   ├── catalog-load-more.php # Statut « Affichage de N sur M », barre de progression et bouton « Charger plus » du catalogue
 │   ├── catalog-active-filters.php # Rangée de chips des filtres actifs (retrait individuel + « Effacer tout »)
 │   └── front-page/      # Sections de la page d'accueil, une par fichier
 │       ├── hero.php     # Hero plein écran (accroche, titre 3 lignes, CTA, trust badges, carte flottante)
@@ -76,7 +78,7 @@ solar-template/
 │   └── dist/             # Sortie compilée (générée par `npm run build`/`dev`, ignorée par git)
 ├── phpunit.xml.dist     # Configuration PHPUnit, utilisée par `composer test`
 ├── tests/php/           # Tests unitaires PHP (bootstrap minimal, pas une installation WordPress complète)
-├── test/js/             # Tests unitaires JS (Vitest, environnement jsdom), utilisés par `npm run test`
+├── tests/js/            # Tests unitaires JS (Vitest, environnement jsdom), utilisés par `npm run test`
 ├── .github/workflows/ci.yml  # CI : lint + tests PHP/JS à chaque push, release GitHub automatique sur `main`
 ├── doc/                # Documentation du projet (site statique HTML/JS, FR + EN)
 │   ├── en/, fr/         # Pages par langue (index.html, infrastructure.html, ...)
@@ -213,7 +215,7 @@ solar-template/
   valeur déjà couverte par `_tokens.scss` ; les quelques valeurs propres au « chrome » d'un
   composant (ex. taille de police d'un bouton, 13.5px) sont déclarées en variable locale en tête du
   partial concerné plutôt que dans le fichier de tokens global.
-- `test/js/design-system.test.js` compile `assets/scss/main.scss` directement (indépendamment de
+- `tests/js/design-system.test.js` compile `assets/scss/main.scss` directement (indépendamment de
   `npm run build`) et vérifie, par expression régulière sur le CSS généré, que chaque variante de
   composant reproduit exactement les valeurs de la maquette (couleurs, rayons de bordure, états
   hover/actif) — la vérification visuelle « pixel » n'étant pas outillable dans cet environnement

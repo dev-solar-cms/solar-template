@@ -538,6 +538,14 @@ final class DefaultStrings {
 				'fr_FR' => 'Meilleures ventes',
 				'en_US' => 'Best sellers',
 			),
+			'Showing %1$d of %2$d products'               => array(
+				'fr_FR' => 'Affichage de %1$d sur %2$d produits',
+				'en_US' => 'Showing %1$d of %2$d products',
+			),
+			'Load more products'                          => array(
+				'fr_FR' => 'Charger plus de produits',
+				'en_US' => 'Load more products',
+			),
 		);
 	}
 
