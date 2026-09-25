@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.1.3`.
+Version actuelle : `0.1.4`.
 
 ## Avant une release
 
@@ -28,6 +28,15 @@ Ce dépôt est public (`github.com/dev-solar-cms/solar-template`) et versionné 
 3. Créer une release GitHub à partir du tag, avec un changelog résumant les changements.
 
 ## Changelog
+
+### 0.1.4 — configuration propre au thème
+
+- Ajout d'un fichier `.env` propre au thème (déjà exclu par `.gitignore`, avec un `.env.example`
+  versionné) : uniquement des réglages non sensibles (version, mode des assets, TTL du cache) —
+  jamais d'identifiants de connexion, la base de données restant gérée par le `.env` du dépôt
+  Docker parent, un fichier distinct dans un répertoire distinct.
+- Le numéro de version est désormais lisible depuis `.env`, `composer.json` et l'en-tête de
+  `style.css`, avec la même valeur dans les trois.
 
 ### 0.1.3 — fondations du système de traduction multilingue
 

@@ -79,6 +79,16 @@ composer format    # corrige automatiquement ce qui peut l'être (phpcbf)</code>
 			lancer <code>composer install</code> plutôt que de provoquer une erreur fatale.
 		</p>
 
+		<h2 id="configuration">Configuration du thème (.env)</h2>
+		<p>
+			Le thème lit ses propres réglages non sensibles (version, mode de build des assets,
+			TTL du cache) depuis un fichier <code>.env</code> à sa racine, copié depuis le
+			<code>.env.example</code> versionné. Il est entièrement distinct du <code>.env</code>
+			du dépôt parent <code>wordpress-dev-env</code> : aucun nom de variable en commun, et ce
+			thème ne lit ni ne stocke jamais les identifiants de connexion à la base de données —
+			ceux-ci restent gérés par le dépôt parent.
+		</p>
+
 		<h2 id="traductions">Système de traduction</h2>
 		<p>
 			Les gabarits du thème continuent d'appeler partout les fonctions de traduction natives

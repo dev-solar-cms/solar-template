@@ -76,6 +76,16 @@ composer format    # auto-fix what can be auto-fixed (phpcbf)</code></pre>
 			<code>composer install</code> instead of causing a fatal error.
 		</p>
 
+		<h2 id="configuration">Theme configuration (.env)</h2>
+		<p>
+			The theme reads its own non-sensitive settings (version, asset build mode, cache TTL)
+			from a <code>.env</code> file at its root, copied from the versioned
+			<code>.env.example</code>. It is entirely separate from the parent
+			<code>wordpress-dev-env</code> repository's own <code>.env</code>: no shared variable
+			names, and this theme never reads or stores database credentials — those stay with the
+			parent repository.
+		</p>
+
 		<h2 id="translations">Translation system</h2>
 		<p>
 			The theme's templates keep calling WordPress' own translation functions everywhere —

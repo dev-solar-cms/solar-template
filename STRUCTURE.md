@@ -18,6 +18,8 @@ solar-template/
 ├── screenshot.png     # 1200x900, requis par WordPress pour l'aperçu du thème
 ├── composer.json      # Dépendances PHP + autoload PSR-4 (Solar_Template\)
 ├── phpcs.xml.dist      # Norme de code PHP (WordPress-Extra), utilisée par `composer lint`/`format`
+├── .env.example        # Réglages non sensibles du thème (version, mode assets, TTL cache) — versionné
+├── .env                 # Copie locale de .env.example, ignorée par git
 ├── package.json       # Métadonnées placeholder (aucun script/dépendance)
 ├── inc/                # Classes PHP du thème, autoloadées en PSR-4 sous `Solar_Template\`
 │   ├── Contracts/       # Interfaces consommées par le code métier (jamais une lib tierce directement)
@@ -65,6 +67,10 @@ solar-template/
 - `composer.json` définit les dépendances PHP et l'autoload PSR-4 (`composer install` requis après
   chaque clone). `package.json` ne définit encore ni dépendances ni scripts : ne pas supposer qu'un
   build JS/SCSS existe avant la mise en place du pipeline d'assets.
+- Le `.env` de ce thème (`Solar_Template\Support\DotenvEnvironmentLoader`, lu via la fonction
+  `solar_template_env()`) est indépendant du `.env` du dépôt Docker parent : aucun nom de variable
+  en commun, et ce thème ne possède ni ne lit jamais les identifiants de connexion à la base de
+  données (gérés exclusivement par le `.env` parent).
 
 ## Conventions de code
 

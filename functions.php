@@ -52,6 +52,32 @@ function solar_template_load_autoloader(): bool {
 solar_template_load_autoloader();
 
 /**
+ * Reads a value from the theme's own `.env` file (see `.env.example`).
+ *
+ * Never used for database credentials: those belong to the parent `wordpress-dev-env` repo's own
+ * `.env`, a separate file this theme never reads from or writes to.
+ *
+ * @param string $key           Name of the environment variable, e.g. `SOLAR_TEMPLATE_CACHE_TTL`.
+ * @param mixed  $default_value Value returned when the key is not set.
+ * @return mixed The value found, or $default_value.
+ */
+function solar_template_env( string $key, mixed $default_value = null ): mixed {
+	static $loader = null;
+
+	if ( null === $loader ) {
+		$loader = solar_template_load_autoloader()
+			? new \Solar_Template\Support\DotenvEnvironmentLoader()
+			: null;
+
+		if ( null !== $loader ) {
+			$loader->load( get_template_directory() );
+		}
+	}
+
+	return null !== $loader ? $loader->get( $key, $default_value ) : $default_value;
+}
+
+/**
  * Registers the theme's core support features and loads its compiled translations.
  *
  * `.mo` files are looked up in `languages/`, named `{locale}.mo` (WordPress' just-in-time loading
