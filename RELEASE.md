@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.2.8`.
+Version actuelle : `0.3.0`.
 
 ## Avant une release
 
@@ -30,6 +30,20 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.3.0 — section hero de la page d'accueil
+
+- Ajout de `front-page.php`, la page d'accueil du thème, assemblée section par section : cette
+  version livre sa première section, un hero plein écran (accroche, titre en trois lignes, deux
+  appels à l'action, trust badges, carte flottante « coup de cœur » avec prix et barre de
+  progression de stock).
+- Décision technique : tout le contenu du hero (textes, CTA, carte flottante) vient d'une aide
+  filtrable unique dans `functions.php`, même convention que les aides déjà en place pour l'en-tête
+  et le pied de page — aucune donnée réelle (produit vedette, image) n'est branchée à cette étape,
+  volontairement hors périmètre.
+- Vérifié de bout en bout dans l'environnement Docker réel, dans les deux langues installées : la
+  section s'affiche sans avertissement ni erreur, entièrement traduite selon la langue active du
+  site.
 
 ### 0.2.8 — compteur panier dynamique
 

@@ -17,7 +17,8 @@ solar-template/
 ├── header.php         # En-tête sticky global (barre supérieure + navigation principale + overlay de recherche)
 ├── footer.php         # Pied de page global (colonnes, newsletter, copyright, icônes de paiement)
 ├── searchform.php     # Formulaire de recherche natif personnalisé, chargé par get_search_form()
-├── index.php          # Seul gabarit de contenu présent ; appelle get_header()/get_footer()
+├── front-page.php     # Page d'accueil, assemblée section par section (template-parts/front-page/*)
+├── index.php          # Gabarit de repli ; appelle get_header()/get_footer()
 ├── screenshot.png     # 1200x900, requis par WordPress pour l'aperçu du thème
 ├── composer.json      # Dépendances PHP + autoload PSR-4 (Solar_Template\)
 ├── phpcs.xml.dist      # Norme de code PHP (WordPress-Extra), utilisée par `composer lint`/`format`
@@ -33,7 +34,9 @@ solar-template/
 │   ├── product-card.php # Carte produit (image, badge, wishlist, overlay panier, prix, swatches)
 │   ├── blog-card.php    # Carte article de blog (image 16:10, badge catégorie, meta, titre, extrait, auteur)
 │   ├── cart-badge.php   # Badge du nombre d'articles au panier, utilisé par l'en-tête
-│   └── mega-menu.php    # Panneau du mega menu « Collections », contenu factice pour l'instant
+│   ├── mega-menu.php    # Panneau du mega menu « Collections », contenu factice pour l'instant
+│   └── front-page/      # Sections de la page d'accueil, une par fichier
+│       └── hero.php     # Hero plein écran (accroche, titre 3 lignes, CTA, trust badges, carte flottante)
 ├── languages/           # Fichiers `.mo` compilés (générés, ignorés par git sauf `.gitkeep`)
 ├── vite.config.js       # Configuration du pipeline de build des assets
 ├── .prettierrc.json     # Norme de formatage JS/SCSS, utilisée par `npm run format`
@@ -47,6 +50,7 @@ solar-template/
 │   ├── scss/_blog-card.scss # Composant carte article de blog (media 16:10, badge, meta, titre, extrait, auteur)
 │   ├── scss/_header.scss # En-tête sticky (barre supérieure, actions, navigation, mega menu)
 │   ├── scss/_footer.scss # Pied de page (colonnes, newsletter, copyright, icônes de paiement)
+│   ├── scss/_hero.scss   # Section hero de la page d'accueil (titre, CTA, trust badges, carte flottante)
 │   ├── js/main.js        # Point d'entrée JS (importe le SCSS, initialise les modules de comportement)
 │   ├── js/header.js      # Comportement de l'en-tête (mega menu, bascule de recherche)
 │   └── dist/             # Sortie compilée (générée par `npm run build`/`dev`, ignorée par git)

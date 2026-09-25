@@ -1,0 +1,75 @@
+<!--
+	Created: 2026-09-25 09:30 CEST
+	Role: English documentation page describing the theme's home page, built section by section.
+	Author: David ROMERA <d.romera.11@gmail.com>
+	Purpose: Document, in English, every home page section as it is built.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Home page — Solar Template documentation</title>
+	<link rel="stylesheet" href="../assets/doc.css" />
+</head>
+<body>
+	<aside class="doc-sidebar">
+		<a class="doc-brand" href="index.html">Solar Template</a>
+		<nav>
+			<ul>
+				<li><a href="index.html">Home</a></li>
+				<li><a href="infrastructure.html">Infrastructure</a></li>
+				<li><a href="design-system.html">Design system</a></li>
+				<li><a href="structure-commune.html">Common structure</a></li>
+				<li><a href="page-accueil.html">Home page</a></li>
+			</ul>
+		</nav>
+		<div class="doc-lang-switch">
+			<a class="is-active" href="page-accueil.html">EN</a>
+			<a href="../fr/page-accueil.html">FR</a>
+		</div>
+	</aside>
+	<main class="doc-content">
+		<h1>Home page</h1>
+		<p>
+			<code>front-page.php</code> assembles the home page section by section, each one a
+			self-contained template-part under <code>template-parts/front-page/</code> — as each is
+			built.
+		</p>
+
+		<h2 id="hero">Hero</h2>
+		<p>
+			<code>template-parts/front-page/hero.php</code> renders the full-viewport hero (dark
+			background, two-column grid): a gold eyebrow label, a three-line heading (the middle
+			line in accent gold italics), a subtitle, two calls to action, a list of trust badges,
+			and a media block with a floating "favorite pick" card (title, price, stock progress
+			bar). Styled by <code>assets/scss/_hero.scss</code>, built entirely from the shared
+			design tokens — see <a href="design-system.html">Design system</a>.
+		</p>
+		<p>
+			All of its content (eyebrow, heading, CTAs, trust badges, floating card) comes from a
+			single filterable helper, <code>solar_template_hero_config()</code> in
+			<code>functions.php</code> — the same convention as
+			<code>solar_template_footer_config()</code> and the other common-structure helpers. No
+			real data (a featured product, an image) is wired in at this step: this is placeholder
+			editorial content, ready for the future "Home page" administration tab to hook into.
+		</p>
+		<p>
+			Technical decision: both hero CTAs point at the WooCommerce shop page
+			(<code>solar_template_shop_url()</code>), matching the mockup — there is no dedicated
+			"new arrivals" view yet to point the second one at, for the same reason as the primary
+			navigation (see <a href="structure-commune.html#en-tete">Common structure</a>).
+		</p>
+		<p>
+			Verified in the real Docker environment, in both installed languages (French and
+			English): the section renders without any warning or error, fully translated according
+			to the site's active language. The highlight card's price formatting is not
+			locale-aware yet ("129,00&nbsp;€" in both languages) — the same known, documented
+			limitation as <code>template-parts/product-card.php</code>'s identical placeholder
+			helper, superseded by WooCommerce's own <code>wc_price()</code> once wired to a real
+			product.
+		</p>
+	</main>
+	<script src="../assets/doc.js"></script>
+</body>
+</html>

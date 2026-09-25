@@ -1,0 +1,79 @@
+<!--
+	Créé le : 2026-09-25 09:30 CEST
+	Rôle : Page de documentation en français décrivant la page d'accueil du thème, construite
+	       section par section.
+	Auteur : David ROMERA <d.romera.11@gmail.com>
+	Objectif : Documenter, en français, chaque section de la page d'accueil au fur et à mesure de
+	           sa construction.
+-->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Page d'accueil — Documentation Solar Template</title>
+	<link rel="stylesheet" href="../assets/doc.css" />
+</head>
+<body>
+	<aside class="doc-sidebar">
+		<a class="doc-brand" href="index.html">Solar Template</a>
+		<nav>
+			<ul>
+				<li><a href="index.html">Accueil</a></li>
+				<li><a href="infrastructure.html">Infrastructure</a></li>
+				<li><a href="design-system.html">Système de design</a></li>
+				<li><a href="structure-commune.html">Structure commune</a></li>
+				<li><a href="page-accueil.html">Page d'accueil</a></li>
+			</ul>
+		</nav>
+		<div class="doc-lang-switch">
+			<a href="../en/page-accueil.html">EN</a>
+			<a class="is-active" href="page-accueil.html">FR</a>
+		</div>
+	</aside>
+	<main class="doc-content">
+		<h1>Page d'accueil</h1>
+		<p>
+			<code>front-page.php</code> assemble la page d'accueil section par section, chacune un
+			template-part indépendant sous <code>template-parts/front-page/</code> — au fur et à
+			mesure de leur construction.
+		</p>
+
+		<h2 id="hero">Hero</h2>
+		<p>
+			<code>template-parts/front-page/hero.php</code> affiche le hero plein écran (fond
+			sombre, grille deux colonnes) : une accroche dorée, un titre de trois lignes (la ligne
+			centrale en accent doré italique), un sous-titre, deux appels à l'action, une liste de
+			trust badges, et un bloc média avec une carte flottante « coup de cœur » (titre, prix,
+			barre de progression de stock). Stylé par <code>assets/scss/_hero.scss</code>, construit
+			entièrement à partir des tokens de design partagés — voir
+			<a href="design-system.html">Système de design</a>.
+		</p>
+		<p>
+			Tout le contenu (accroche, titre, CTA, trust badges, carte flottante) vient d'une aide
+			filtrable unique, <code>solar_template_hero_config()</code> dans <code>functions.php</code>
+			— même convention que <code>solar_template_footer_config()</code> et les autres aides de
+			la structure commune. Aucune donnée réelle (produit vedette, image) n'est branchée à cette
+			étape : c'est un contenu éditorial de remplacement, prêt à être piloté par le futur onglet
+			d'administration « Page d'accueil ».
+		</p>
+		<p>
+			Décision technique : les deux CTA du hero pointent tous les deux vers la page boutique
+			WooCommerce (<code>solar_template_shop_url()</code>), comme dans la maquette — il n'existe
+			pas encore de vue « nouveautés » dédiée vers laquelle pointer le second, pour la même
+			raison que la navigation principale (voir <a href="structure-commune.html#en-tete">Structure
+			commune</a>).
+		</p>
+		<p>
+			Vérifié dans l'environnement Docker réel, dans les deux langues installées (français et
+			anglais) : la section s'affiche sans avertissement ni erreur, entièrement traduite selon
+			la langue active du site. Le formatage du prix de la carte flottante n'est pas encore
+			sensible à la langue (« 129,00&nbsp;€ » dans les deux langues) — même limitation connue
+			et déjà documentée que l'aide de remplacement identique de
+			<code>template-parts/product-card.php</code>, remplacée par <code>wc_price()</code> de
+			WooCommerce une fois branchée sur un vrai produit.
+		</p>
+	</main>
+	<script src="../assets/doc.js"></script>
+</body>
+</html>
