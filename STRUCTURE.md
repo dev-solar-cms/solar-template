@@ -19,6 +19,7 @@ solar-template/
 ├── searchform.php     # Formulaire de recherche natif personnalisé, chargé par get_search_form()
 ├── front-page.php     # Page d'accueil, assemblée section par section (template-parts/front-page/*)
 ├── archive-product.php # Catalogue produits (boutique + archives de catégorie/étiquette) : fil d'Ariane, titre, barre de filtres et résultats
+├── single-product.php  # Fiche produit : fil d'Ariane, galerie (template-parts/single-product/*), en construction
 ├── index.php          # Gabarit de repli ; appelle get_header()/get_footer()
 ├── screenshot.png     # 1200x900, requis par WordPress pour l'aperçu du thème
 ├── composer.json      # Dépendances PHP + autoload PSR-4 (Solar_Template\)
@@ -32,7 +33,8 @@ solar-template/
 │   ├── I18n/            # Système de traduction multilingue (catalogue + compilation .mo)
 │   ├── Database/        # Schéma et installation des tables `wp_solar_template_*`
 │   ├── Newsletter/      # Stockage des inscrits à la newsletter (SubscriberRepository)
-│   └── Catalog/         # Options/filtres/pagination/contrôleurs du catalogue produits
+│   ├── Catalog/         # Options/filtres/pagination/contrôleurs du catalogue produits
+│   └── Product/         # Logique de la fiche produit (galerie, ...), en construction
 ├── template-parts/      # Fragments de gabarit réutilisables (`get_template_part()`)
 │   ├── product-card.php # Carte produit (image, badge, wishlist, overlay panier, prix, swatches)
 │   ├── blog-card.php    # Carte article de blog (image 16:10, badge catégorie, meta, titre, extrait, auteur)
@@ -43,6 +45,8 @@ solar-template/
 │   ├── catalog-cards.php # Boucle des cartes produit seule (sans grille), réutilisée par le mode « append » du chargement progressif
 │   ├── catalog-load-more.php # Statut « Affichage de N sur M », barre de progression et bouton « Charger plus » du catalogue
 │   ├── catalog-active-filters.php # Rangée de chips des filtres actifs (retrait individuel + « Effacer tout »)
+│   ├── single-product/  # Fragments de la fiche produit, un par section (en construction)
+│   │   └── gallery.php  # Image principale 4:5 + bande de miniatures (changement au clic, sans rechargement)
 │   └── front-page/      # Sections de la page d'accueil, une par fichier
 │       ├── hero.php     # Hero plein écran (accroche, titre 3 lignes, CTA, trust badges, carte flottante)
 │       ├── featured-products.php # Grille masonry des produits WooCommerce marqués « en vedette »
@@ -72,10 +76,12 @@ solar-template/
 │   ├── scss/_blog-preview.scss # Grille de l'aperçu du blog de la page d'accueil
 │   ├── scss/_home-newsletter.scss # Section newsletter de la page d'accueil
 │   ├── scss/_catalog.scss # Catalogue produits (fil d'Ariane, titre/compteur, grille masonry, pagination)
+│   ├── scss/_product-page.scss # Fiche produit (fil d'Ariane, galerie), en construction
 │   ├── js/main.js        # Point d'entrée JS (importe le SCSS, initialise les modules de comportement)
 │   ├── js/header.js      # Comportement de l'en-tête (mega menu, bascule de recherche)
 │   ├── js/newsletter.js  # Soumission AJAX des formulaires newsletter (`.js-newsletter-form`)
 │   ├── js/catalog.js     # Barre de filtres du catalogue : panneaux, état actif, soumission AJAX
+│   ├── js/product.js     # Fiche produit : changement d'image de la galerie au clic sur une miniature
 │   └── dist/             # Sortie compilée (générée par `npm run build`/`dev`, ignorée par git)
 ├── phpunit.xml.dist     # Configuration PHPUnit, utilisée par `composer test`
 ├── tests/php/           # Tests unitaires PHP (bootstrap minimal, pas une installation WordPress complète)
@@ -191,6 +197,22 @@ solar-template/
     ou enregistrés comme callback de hook), chacun repliant sur la valeur par défaut documentée de
     la fonction d'origine si le loader Composer n'est pas disponible — réorganisation interne sans
     changement de comportement.
+
+### Fiche produit (`single-product.php`, `inc/Product/`, `template-parts/single-product/`)
+
+**En construction** — grandit section par section, même convention que `front-page.php`.
+
+- `Solar_Template\Product\ProductGallery::images()` lit l'image mise en avant puis la galerie
+  WooCommerce du produit (`WC_Product::get_image_id()`/`get_gallery_image_ids()`), dédoublonnées,
+  et renvoie une liste plate `{id, full, alt}` — `single-product.php` calcule cette liste (avec
+  repli sur l'image de remplacement WooCommerce si le produit n'a aucune image) et la transmet à
+  `template-parts/single-product/gallery.php`, qui ne fait que l'afficher (même convention que
+  `Catalog\ProductCardMapper`/`template-parts/product-card.php`).
+- La bande de miniatures ne s'affiche que si le produit a plus d'une image ; cliquer une miniature
+  change l'image principale sans rechargement (`assets/js/product.js`,
+  `initProductGallery()`) — aucune dépendance à la galerie zoom/lightbox de la maquette, dont le
+  comportement n'est pas spécifié au-delà de la maquette elle-même (même choix qu'`archive-
+  product.php` pour la bascule grille/liste).
 
 ### Pied de page du thème (`footer.php`, `assets/scss/_footer.scss`)
 

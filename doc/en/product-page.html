@@ -1,0 +1,73 @@
+<!--
+	Created: 2026-09-25 16:14 CEST
+	Role: English documentation page describing the theme's product page, built step by step.
+	Author: David ROMERA <d.romera.11@gmail.com>
+	Purpose: Document, in English, every product page feature as it is built.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Product page — Solar Template documentation</title>
+	<link rel="stylesheet" href="../assets/doc.css" />
+</head>
+<body>
+	<aside class="doc-sidebar">
+		<a class="doc-brand" href="index.html">Solar Template</a>
+		<nav>
+			<ul>
+				<li><a href="index.html">Home</a></li>
+				<li><a href="infrastructure.html">Infrastructure</a></li>
+				<li><a href="design-system.html">Design system</a></li>
+				<li><a href="structure-commune.html">Common structure</a></li>
+				<li><a href="page-accueil.html">Home page</a></li>
+				<li><a href="catalog.html">Product catalog</a></li>
+				<li><a href="product-page.html">Product page</a></li>
+			</ul>
+		</nav>
+		<div class="doc-lang-switch">
+			<a class="is-active" href="product-page.html">EN</a>
+			<a href="../fr/fiche-produit.html">FR</a>
+		</div>
+	</aside>
+	<main class="doc-content">
+		<h1>Product page</h1>
+		<p>
+			<code>single-product.php</code> renders a WooCommerce product's own page. This template is
+			built section by section, same convention as <code>front-page.php</code> for the home page.
+		</p>
+
+		<h2 id="gallery">Gallery</h2>
+		<p>
+			<code>Solar_Template\Product\ProductGallery::images()</code> reads the product's featured
+			image, then its WooCommerce gallery (<code>WC_Product::get_image_id()</code>/
+			<code>get_gallery_image_ids()</code>), deduplicated, and returns a flat list (id, URL, alt
+			text). <code>single-product.php</code> computes this list (falling back to WooCommerce's own
+			placeholder image when the product has no image at all) and passes it to
+			<code>template-parts/single-product/gallery.php</code>, which only renders it — same
+			convention as <code>Catalog\ProductCardMapper</code>/<code>template-parts/product-card.php</code>
+			for the product card.
+		</p>
+		<p>
+			The main image (4:5 ratio) is followed by a strip of thumbnails, one per image — the strip
+			does not render at all as long as the product has a single image. Clicking a thumbnail swaps
+			the main image with no page reload (<code>assets/js/product.js</code>,
+			<code>initProductGallery()</code>), and marks that thumbnail active.
+		</p>
+		<p>
+			Technical decision: the mockup's "Enlarge" (zoom/lightbox) button is deliberately not built
+			at this stage — its behaviour is not specified beyond the mockup itself, same reasoning as
+			<code>archive-product.php</code>'s grid/list view toggle.
+		</p>
+		<p>
+			Verified end to end in the real Docker environment with WooCommerce active: a product with no
+			image at all confirms the fallback to WooCommerce's own placeholder image (no thumbnail
+			strip); a test product with a featured image and a gallery image confirms the thumbnail strip
+			renders, the first one marked active — test product and images deleted after verification. No
+			PHP warning or error found.
+		</p>
+	</main>
+	<script src="../assets/doc.js"></script>
+</body>
+</html>

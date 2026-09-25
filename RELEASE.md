@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.4.5`.
+Version actuelle : `0.4.6`.
 
 ## Avant une release
 
@@ -30,6 +30,24 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.4.6 — galerie de la fiche produit
+
+- Ajout du gabarit de la fiche produit (`single-product.php`), qui affiche pour l'instant le fil
+  d'Ariane et la galerie d'images du produit : une image principale (ratio 4:5) suivie d'une bande
+  de miniatures — une par image du produit (image mise en avant puis galerie WooCommerce). Cliquer
+  une miniature change l'image principale sans rechargement de page.
+- La bande de miniatures ne s'affiche pas du tout tant que le produit n'a qu'une seule image ; un
+  produit sans aucune image se replie sur l'image de remplacement WooCommerce standard.
+- Décision technique : le bouton « Agrandir » (zoom/lightbox) visible dans la maquette n'est
+  volontairement pas construit à ce stade — son comportement n'est pas spécifié au-delà de la
+  maquette elle-même, même raisonnement que la bascule grille/liste déjà laissée de côté sur le
+  catalogue produits.
+- Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif, dans les deux
+  langues installées : un produit sans image confirme le repli sur l'image de remplacement, un
+  produit de test avec une image mise en avant et une image de galerie confirme la bande de
+  miniatures (première miniature marquée active) — produit et images de test supprimés après
+  vérification. Aucun avertissement ni erreur PHP relevé.
 
 ### 0.4.5 — alignement des cartes du catalogue produits
 

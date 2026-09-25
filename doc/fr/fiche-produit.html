@@ -1,0 +1,78 @@
+<!--
+	Créé le : 2026-09-25 16:14 CEST
+	Rôle : Page de documentation en français décrivant la fiche produit du thème, construite étape
+	       par étape.
+	Auteur : David ROMERA <d.romera.11@gmail.com>
+	Objectif : Documenter, en français, chaque fonctionnalité de la fiche produit au fur et à
+	           mesure de sa construction.
+-->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Fiche produit — Documentation Solar Template</title>
+	<link rel="stylesheet" href="../assets/doc.css" />
+</head>
+<body>
+	<aside class="doc-sidebar">
+		<a class="doc-brand" href="index.html">Solar Template</a>
+		<nav>
+			<ul>
+				<li><a href="index.html">Accueil</a></li>
+				<li><a href="infrastructure.html">Infrastructure</a></li>
+				<li><a href="design-system.html">Système de design</a></li>
+				<li><a href="structure-commune.html">Structure commune</a></li>
+				<li><a href="page-accueil.html">Page d'accueil</a></li>
+				<li><a href="catalogue.html">Catalogue produits</a></li>
+				<li><a href="fiche-produit.html">Fiche produit</a></li>
+			</ul>
+		</nav>
+		<div class="doc-lang-switch">
+			<a href="../en/product-page.html">EN</a>
+			<a class="is-active" href="fiche-produit.html">FR</a>
+		</div>
+	</aside>
+	<main class="doc-content">
+		<h1>Fiche produit</h1>
+		<p>
+			<code>single-product.php</code> affiche la fiche d'un produit WooCommerce. Ce gabarit est
+			construit section par section, même convention que <code>front-page.php</code> pour la page
+			d'accueil.
+		</p>
+
+		<h2 id="galerie">Galerie</h2>
+		<p>
+			<code>Solar_Template\Product\ProductGallery::images()</code> lit l'image mise en avant du
+			produit puis sa galerie WooCommerce (<code>WC_Product::get_image_id()</code>/
+			<code>get_gallery_image_ids()</code>), dédoublonnées, et renvoie une liste plate
+			(identifiant, URL, texte alternatif). <code>single-product.php</code> calcule cette liste
+			(avec repli sur l'image de remplacement WooCommerce si le produit n'a aucune image) et la
+			transmet à <code>template-parts/single-product/gallery.php</code>, qui ne fait que
+			l'afficher — même convention que <code>Catalog\ProductCardMapper</code>/
+			<code>template-parts/product-card.php</code> pour la carte produit.
+		</p>
+		<p>
+			L'image principale (ratio 4:5) est suivie d'une bande de miniatures, une par image — la
+			bande ne s'affiche pas du tout tant que le produit n'a qu'une seule image. Cliquer une
+			miniature change l'image principale sans rechargement de page
+			(<code>assets/js/product.js</code>, <code>initProductGallery()</code>), et marque cette
+			miniature comme active.
+		</p>
+		<p>
+			Décision technique : le bouton « Agrandir » (zoom/lightbox) visible dans la maquette n'est
+			volontairement pas construit à cette étape — son comportement n'est pas spécifié au-delà de
+			la maquette elle-même, même raisonnement qu'<code>archive-product.php</code> pour la bascule
+			grille/liste du catalogue.
+		</p>
+		<p>
+			Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif : un produit
+			sans aucune image confirme le repli sur l'image de remplacement WooCommerce (pas de bande de
+			miniatures) ; un produit de test avec une image mise en avant et une image de galerie
+			confirme l'affichage de la bande de miniatures, la première marquée active — produit et
+			images de test supprimés après vérification. Aucun avertissement ni erreur PHP relevé.
+		</p>
+	</main>
+	<script src="../assets/doc.js"></script>
+</body>
+</html>

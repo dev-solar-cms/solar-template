@@ -1,0 +1,82 @@
+// Created: 2026-09-25 16:14 CEST
+// Role: Product page component partial (assets/scss/_product-page.scss).
+// Author: David ROMERA <d.romera.11@gmail.com>
+// Purpose: Style single-product.php and its template-parts/single-product/* fragments. Grows
+//          section by section alongside single-product.php.
+
+@use 'tokens' as *;
+
+.product-page__inner {
+	max-width: $container-max-width;
+	margin: 0 auto;
+	padding: 28px $container-padding-x 96px;
+}
+
+.product-page__breadcrumb {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	margin-bottom: 24px;
+	color: $color-muted;
+	font-size: 12.5px;
+}
+
+.product-page__breadcrumb a {
+	color: $color-muted;
+	text-decoration: none;
+	transition: color 0.2s ease;
+}
+
+.product-page__breadcrumb a:hover {
+	color: $color-dark;
+}
+
+.product-page__breadcrumb-sep {
+	display: inline-flex;
+	opacity: 0.6;
+}
+
+// Gallery (template-parts/single-product/gallery.php)
+
+.product-gallery__main-image {
+	display: block;
+	width: 100%;
+	aspect-ratio: 4 / 5;
+	border-radius: $radius-content-card;
+	object-fit: cover;
+	background: $color-hover;
+}
+
+.product-gallery__thumbnails {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 10px;
+	margin-top: 10px;
+}
+
+.product-gallery__thumbnail {
+	padding: 0;
+	border: 2px solid transparent;
+	border-radius: $radius-button;
+	background: none;
+	cursor: pointer;
+	overflow: hidden;
+	transition:
+		border-color 0.15s ease,
+		opacity 0.15s ease;
+}
+
+.product-gallery__thumbnail:hover {
+	opacity: 0.85;
+}
+
+.product-gallery__thumbnail.is-active {
+	border-color: $color-gold;
+}
+
+.product-gallery__thumbnail img {
+	display: block;
+	width: 100%;
+	aspect-ratio: 4 / 5;
+	object-fit: cover;
+}

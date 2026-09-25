@@ -546,6 +546,10 @@ final class DefaultStrings {
 				'fr_FR' => 'Charger plus de produits',
 				'en_US' => 'Load more products',
 			),
+			'View image %1$d of %2$d'                     => array(
+				'fr_FR' => "Voir l'image %1\$d sur %2\$d",
+				'en_US' => 'View image %1$d of %2$d',
+			),
 		);
 	}
 
