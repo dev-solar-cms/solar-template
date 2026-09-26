@@ -864,3 +864,89 @@
 	font-size: 13.5px;
 	color: $color-muted;
 }
+
+// Related products (template-parts/single-product/related-products.php)
+
+.related-products {
+	padding: 80px 0;
+	background: $color-bg;
+}
+
+.related-products__inner {
+	max-width: $container-max-width;
+	margin: 0 auto;
+	padding: 0 $container-padding-x;
+}
+
+.related-products__header {
+	display: flex;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 24px;
+	margin-bottom: 44px;
+}
+
+.related-products__eyebrow {
+	margin: 0 0 8px;
+	color: $color-gold;
+	@include type-caption;
+	letter-spacing: 0.18em;
+}
+
+.related-products__heading {
+	@include type-h2;
+	color: $color-dark;
+}
+
+.related-products__view-all {
+	flex-shrink: 0;
+	padding-bottom: 2px;
+	border-bottom: 1.5px solid $color-dark;
+	color: $color-dark;
+	font-size: 13px;
+	font-weight: $font-weight-semibold;
+	text-decoration: none;
+	transition:
+		color 0.2s ease,
+		border-color 0.2s ease;
+}
+
+.related-products__view-all:hover {
+	color: $color-gold;
+	border-color: $color-gold;
+}
+
+.related-products__grid {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: $spacing-grid-gap-products;
+	align-items: start;
+}
+
+// Masonry-style offsets, same convention as .featured-products__grid — the shared product card
+// component already carries the Group 04 fixed-height alignment fix, so these are purely
+// positional.
+.related-products__item:nth-child(2) {
+	margin-top: 40px;
+}
+
+.related-products__item:nth-child(4) {
+	margin-top: 20px;
+}
+
+@media (max-width: 1100px) {
+	.related-products__grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	.related-products__item:nth-child(2),
+	.related-products__item:nth-child(4) {
+		margin-top: 0;
+	}
+}
+
+@media (max-width: 600px) {
+	.related-products__grid {
+		grid-template-columns: 1fr;
+	}
+}

@@ -239,6 +239,30 @@
 			graceful degradation (only the Reviews tab renders, with the "There are no reviews yet."
 			message). No PHP warning or error found.
 		</p>
+
+		<h2 id="related-products">Related products</h2>
+		<p>
+			At the bottom of the product page, <code>template-parts/single-product/related-products.php</code>
+			renders a grid of real related products, computed by
+			<code>Solar_Template\Product\ProductRelated::products()</code> through WooCommerce's own
+			native <code>wc_get_related_products()</code> function (the same category/tag matching
+			WooCommerce's own native templates use), reusing the existing product card component
+			(<code>Catalog\ProductCardMapper</code>, already used by the catalog and the home page's
+			featured products). The section renders nothing at all when the product has no related
+			product.
+		</p>
+		<p>
+			Technical decision: this grid follows the exact same masonry-offset pattern as the home
+			page's featured products grid. The Group 04 alignment fix (fixed name/category/text-block
+			heights on the card, regardless of product name length) lives entirely in the shared product
+			card component — this new section inherits it automatically, with no extra code.
+		</p>
+		<p>
+			Verified end to end in the real Docker environment with WooCommerce active, in both installed
+			languages: a product with several others in the same category confirms the grid renders
+			(aligned) with real data; a product whose category has only one other product confirms that a
+			single related product renders. No PHP warning or error found.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

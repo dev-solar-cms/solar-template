@@ -7,8 +7,9 @@
  * Purpose: Render the product page: breadcrumb, then a two-column layout with the image gallery
  *          (template-parts/single-product/gallery.php) on the left and the sticky product panel
  *          (template-parts/single-product/panel.php) on the right, followed by the Description/
- *          Reviews/Specifications tabs (template-parts/single-product/tabs.php). Grows section by
- *          section, same convention as front-page.php/archive-product.php.
+ *          Reviews/Specifications tabs (template-parts/single-product/tabs.php) and a "Related
+ *          products" section (template-parts/single-product/related-products.php). Grows section
+ *          by section, same convention as front-page.php/archive-product.php.
  *
  * @package Solar_Template
  */
@@ -23,6 +24,7 @@ use Solar_Template\Product\ProductDescription;
 use Solar_Template\Product\ProductEngraving;
 use Solar_Template\Product\ProductGallery;
 use Solar_Template\Product\ProductPanel;
+use Solar_Template\Product\ProductRelated;
 use Solar_Template\Product\ProductReviews;
 use Solar_Template\Product\ProductSpecifications;
 use Solar_Template\Product\ProductStock;
@@ -77,6 +79,11 @@ while ( have_posts() ) :
 		),
 		'specifications' => ProductSpecifications::rows( $solar_product ),
 	);
+
+	$solar_related_products_args = array(
+		'heading'  => ProductRelated::heading(),
+		'products' => ProductRelated::products( $solar_product ),
+	);
 	?>
 	<main class="product-page">
 		<div class="product-page__inner">
@@ -99,6 +106,7 @@ while ( have_posts() ) :
 		</div>
 
 		<?php get_template_part( 'template-parts/single-product/tabs', null, $solar_product_tabs_args ); ?>
+		<?php get_template_part( 'template-parts/single-product/related-products', null, $solar_related_products_args ); ?>
 	</main>
 	<?php
 endwhile;

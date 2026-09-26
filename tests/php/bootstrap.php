@@ -200,6 +200,17 @@ if ( ! function_exists( '__' ) ) {
 	}
 
 	/**
+	 * Plain stand-in for WordPress' site URL helper, used by Solar_Template\Support\StoreLinks'
+	 * fallbacks (no real site available here).
+	 *
+	 * @param string $path Path appended to the site URL.
+	 * @return string A deterministic fake URL.
+	 */
+	function home_url( string $path = '' ): string {
+		return "https://example.test{$path}";
+	}
+
+	/**
 	 * Plain stand-in for WooCommerce's price formatter (no real WooCommerce install available
 	 * here): tests exercise markup/structure, not real locale-aware formatting.
 	 *
@@ -208,5 +219,21 @@ if ( ! function_exists( '__' ) ) {
 	 */
 	function wc_price( float $price ): string {
 		return '<span class="amount">' . number_format( $price, 2 ) . '</span>';
+	}
+}
+
+if ( ! function_exists( 'get_template_part' ) ) {
+	/**
+	 * Minimal stand-in for WordPress' template-part loader: requires the theme file directly with
+	 * $args available in its scope, exactly like WordPress' own `load_template()` does (no `-
+	 * {$name}` variant lookup, not needed by the current test suite).
+	 *
+	 * @param string      $slug Template part slug, relative to the theme root.
+	 * @param string|null $name Ignored in this stand-in.
+	 * @param array       $args Arguments made available to the included file as $args.
+	 * @return void
+	 */
+	function get_template_part( string $slug, ?string $name = null, array $args = array() ): void { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- stand-in mirrors the real function's signature.
+		require ABSPATH . "{$slug}.php";
 	}
 }

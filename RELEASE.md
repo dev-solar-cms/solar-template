@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.4.10`.
+Version actuelle : `0.4.11`.
 
 ## Avant une release
 
@@ -30,6 +30,25 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.4.11 — produits similaires et fiche produit complète
+
+- Ajout, en bas de la fiche produit, d'une section « Produits similaires » : une grille de vrais
+  produits liés WooCommerce (`wc_get_related_products()`, même correspondance catégorie/étiquette
+  que les gabarits natifs de WooCommerce), réutilisant le composant carte produit déjà utilisé par
+  le catalogue et les produits vedettes de la page d'accueil. Ne s'affiche pas du tout sans aucun
+  produit similaire.
+- Décision technique : la grille reprend le même motif de décalages « masonry » que les produits
+  vedettes de la page d'accueil ; le correctif d'alignement des cartes (hauteurs fixes,
+  indépendamment de la longueur du nom du produit) vit déjà dans le composant carte produit
+  partagé, donc cette nouvelle section en hérite automatiquement sans code supplémentaire.
+- La fiche produit est désormais complète (galerie, panneau avec variations et personnalisation,
+  onglets Description/Avis/Caractéristiques, produits similaires).
+- Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif, dans les deux
+  langues installées : un produit avec plusieurs autres produits dans sa catégorie confirme la
+  grille alignée avec de vraies données ; un produit dont la catégorie ne contient qu'un seul autre
+  produit confirme l'affichage d'un unique produit similaire. Aucun avertissement ni erreur PHP
+  relevé.
 
 ### 0.4.10 — onglets Description/Avis/Caractéristiques de la fiche produit
 

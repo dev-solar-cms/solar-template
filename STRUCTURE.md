@@ -19,7 +19,7 @@ solar-template/
 ├── searchform.php     # Formulaire de recherche natif personnalisé, chargé par get_search_form()
 ├── front-page.php     # Page d'accueil, assemblée section par section (template-parts/front-page/*)
 ├── archive-product.php # Catalogue produits (boutique + archives de catégorie/étiquette) : fil d'Ariane, titre, barre de filtres et résultats
-├── single-product.php  # Fiche produit : fil d'Ariane, galerie + panneau (template-parts/single-product/*), en construction
+├── single-product.php  # Fiche produit complète : fil d'Ariane, galerie, panneau, onglets, produits similaires (template-parts/single-product/*)
 ├── index.php          # Gabarit de repli ; appelle get_header()/get_footer()
 ├── screenshot.png     # 1200x900, requis par WordPress pour l'aperçu du thème
 ├── composer.json      # Dépendances PHP + autoload PSR-4 (Solar_Template\)
@@ -34,7 +34,7 @@ solar-template/
 │   ├── Database/        # Schéma et installation des tables `wp_solar_template_*`
 │   ├── Newsletter/      # Stockage des inscrits à la newsletter (SubscriberRepository)
 │   ├── Catalog/         # Options/filtres/pagination/contrôleurs du catalogue produits
-│   └── Product/         # Logique de la fiche produit (galerie, panneau, variations), en construction
+│   └── Product/         # Logique de la fiche produit (galerie, panneau, variations, onglets, produits similaires)
 ├── template-parts/      # Fragments de gabarit réutilisables (`get_template_part()`)
 │   ├── product-card.php # Carte produit (image, badge, wishlist, overlay panier, prix, swatches)
 │   ├── blog-card.php    # Carte article de blog (image 16:10, badge catégorie, meta, titre, extrait, auteur)
@@ -45,10 +45,11 @@ solar-template/
 │   ├── catalog-cards.php # Boucle des cartes produit seule (sans grille), réutilisée par le mode « append » du chargement progressif
 │   ├── catalog-load-more.php # Statut « Affichage de N sur M », barre de progression et bouton « Charger plus » du catalogue
 │   ├── catalog-active-filters.php # Rangée de chips des filtres actifs (retrait individuel + « Effacer tout »)
-│   ├── single-product/  # Fragments de la fiche produit, un par section (en construction)
+│   ├── single-product/  # Fragments de la fiche produit, un par section
 │   │   ├── gallery.php  # Image principale 4:5 + bande de miniatures (changement au clic, sans rechargement)
 │   │   ├── panel.php    # Colonne droite sticky : badges, titre, notation, statut de stock, description courte, réassurance, accordéon
-│   │   └── tabs.php     # Onglets Description/Avis/Caractéristiques (motif ARIA tabs, avis WooCommerce natifs)
+│   │   ├── tabs.php     # Onglets Description/Avis/Caractéristiques (motif ARIA tabs, avis WooCommerce natifs)
+│   │   └── related-products.php # Grille masonry des produits similaires WooCommerce réels (même carte produit)
 │   └── front-page/      # Sections de la page d'accueil, une par fichier
 │       ├── hero.php     # Hero plein écran (accroche, titre 3 lignes, CTA, trust badges, carte flottante)
 │       ├── featured-products.php # Grille masonry des produits WooCommerce marqués « en vedette »
@@ -78,7 +79,7 @@ solar-template/
 │   ├── scss/_blog-preview.scss # Grille de l'aperçu du blog de la page d'accueil
 │   ├── scss/_home-newsletter.scss # Section newsletter de la page d'accueil
 │   ├── scss/_catalog.scss # Catalogue produits (fil d'Ariane, titre/compteur, grille masonry, pagination)
-│   ├── scss/_product-page.scss # Fiche produit (fil d'Ariane, galerie), en construction
+│   ├── scss/_product-page.scss # Fiche produit complète (fil d'Ariane, galerie, panneau, onglets, produits similaires)
 │   ├── js/main.js        # Point d'entrée JS (importe le SCSS, initialise les modules de comportement)
 │   ├── js/header.js      # Comportement de l'en-tête (mega menu, bascule de recherche)
 │   ├── js/newsletter.js  # Soumission AJAX des formulaires newsletter (`.js-newsletter-form`)
@@ -202,7 +203,7 @@ solar-template/
 
 ### Fiche produit (`single-product.php`, `inc/Product/`, `template-parts/single-product/`)
 
-**En construction** — grandit section par section, même convention que `front-page.php`.
+**Complète** — construite section par section, même convention que `front-page.php`.
 
 - `Solar_Template\Product\ProductGallery::images()` lit l'image mise en avant puis la galerie
   WooCommerce du produit (`WC_Product::get_image_id()`/`get_gallery_image_ids()`), dédoublonnées,
@@ -282,6 +283,13 @@ solar-template/
   chaque attribut visible) pour renvoyer des lignes brutes plutôt que d'échapper à un template
   WooCommerce complet. Le lien existant du panneau vers `#reviews` active directement l'onglet Avis
   au chargement (`assets/js/product.js`, `initProductTabs()`).
+- Une section « Produits similaires » (`template-parts/single-product/related-products.php`,
+  `Product\ProductRelated`) réutilisant `wc_get_related_products()` (même correspondance
+  catégorie/étiquette que les templates natifs de WooCommerce) et le composant carte produit
+  existant (`Catalog\ProductCardMapper`) — ne s'affiche pas du tout sans aucun produit similaire.
+  Grille à décalages « masonry » identiques à celle des produits vedettes de la page d'accueil : le
+  correctif de hauteur fixe des cartes (Groupe 04) vit déjà dans le composant carte produit partagé,
+  donc cette section en hérite automatiquement sans code supplémentaire.
 
 ### Pied de page du thème (`footer.php`, `assets/scss/_footer.scss`)
 

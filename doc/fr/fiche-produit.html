@@ -253,6 +253,32 @@
 			dégradation gracieuse (seul l'onglet Avis s'affiche, avec le message « Il n'y a pas encore
 			d'avis. »). Aucun avertissement ni erreur PHP relevé.
 		</p>
+
+		<h2 id="produits-similaires">Produits similaires</h2>
+		<p>
+			En bas de la fiche produit, <code>template-parts/single-product/related-products.php</code>
+			affiche une grille de produits similaires réels, calculés par
+			<code>Solar_Template\Product\ProductRelated::products()</code> via la fonction native de
+			WooCommerce <code>wc_get_related_products()</code> (même correspondance catégorie/étiquette
+			que les gabarits natifs de WooCommerce), réutilisant le composant carte produit existant
+			(<code>Catalog\ProductCardMapper</code>, déjà utilisé par le catalogue et les produits
+			vedettes de la page d'accueil). La section ne s'affiche pas du tout quand le produit n'a
+			aucun produit similaire.
+		</p>
+		<p>
+			Décision technique : cette grille reprend le même motif de décalages « masonry » que la
+			grille des produits vedettes de la page d'accueil. Le correctif d'alignement du Groupe 04
+			(hauteurs fixes du nom/de la catégorie/du bloc texte de la carte, quelle que soit la longueur
+			du nom du produit) vit entièrement dans le composant carte produit partagé — cette nouvelle
+			section en hérite donc automatiquement, sans code supplémentaire.
+		</p>
+		<p>
+			Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif, dans les
+			deux langues installées : un produit avec plusieurs autres produits dans la même catégorie
+			confirme l'affichage de la grille (alignée) avec de vraies données ; un produit dont la
+			catégorie ne contient qu'un seul autre produit confirme qu'un seul produit similaire
+			s'affiche. Aucun avertissement ni erreur PHP relevé.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

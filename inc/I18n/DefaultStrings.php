@@ -778,6 +778,14 @@ final class DefaultStrings {
 				'fr_FR' => 'Votre avis',
 				'en_US' => 'Your review',
 			),
+			'Suggestions'                                 => array(
+				'fr_FR' => 'Suggestions',
+				'en_US' => 'Suggestions',
+			),
+			'Related products'                            => array(
+				'fr_FR' => 'Produits similaires',
+				'en_US' => 'Related products',
+			),
 		);
 	}
 
