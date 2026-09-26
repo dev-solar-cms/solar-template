@@ -1222,6 +1222,54 @@ final class DefaultStrings {
 				'fr_FR' => 'Échoué',
 				'en_US' => 'Failed',
 			),
+			'All'                                          => array(
+				'fr_FR' => 'Toutes',
+				'en_US' => 'All',
+			),
+			'Returns'                                      => array(
+				'fr_FR' => 'Retours',
+				'en_US' => 'Returns',
+			),
+			'View detail'                                  => array(
+				'fr_FR' => 'Voir le détail',
+				'en_US' => 'View detail',
+			),
+			'+%d item'                                     => array(
+				'fr_FR' => '+%d article',
+				'en_US' => '+%d item',
+			),
+			'Previous'                                     => array(
+				'fr_FR' => 'Précédent',
+				'en_US' => 'Previous',
+			),
+			'Next'                                         => array(
+				'fr_FR' => 'Suivant',
+				'en_US' => 'Next',
+			),
+			'No order matches this selection.'             => array(
+				'fr_FR' => 'Aucune commande ne correspond à cette sélection.',
+				'en_US' => 'No order matches this selection.',
+			),
+			'Orders pagination'                            => array(
+				'fr_FR' => 'Pagination des commandes',
+				'en_US' => 'Orders pagination',
+			),
+			'← Back to orders'                             => array(
+				'fr_FR' => '← Retour aux commandes',
+				'en_US' => '← Back to orders',
+			),
+			'Order #%s'                                    => array(
+				'fr_FR' => 'Commande #%s',
+				'en_US' => 'Order #%s',
+			),
+			'Order updates'                                => array(
+				'fr_FR' => 'Suivi de la commande',
+				'en_US' => 'Order updates',
+			),
+			'l jS \o\f F Y, h:ia'                          => array(
+				'fr_FR' => 'l j F Y à H\hi',
+				'en_US' => 'l jS \o\f F Y, h:ia',
+			),
 		);
 	}
 

@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.6.0`.
+Version actuelle : `0.6.1`.
 
 ## Avant une release
 
@@ -30,6 +30,23 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.6.1 — liste et détail des commandes dans l'espace client
+
+- La page « Mes commandes » affiche désormais des onglets de statut (Toutes, En cours, Livrées,
+  Retours, avec leur vrai compte) et des cartes de commande (en-tête coloré, miniatures des
+  articles, actions « Voir le détail »/« Recommander ») plutôt que le tableau par défaut de
+  WooCommerce — chaque onglet reste un lien simple, fonctionnel sans JavaScript.
+- La page de détail d'une commande affiche un en-tête restylé (numéro, date, badge de statut)
+  au-dessus du tableau de détails natif de WooCommerce (articles, téléchargements éventuels,
+  bouton « Recommander »), conservé tel quel.
+- Décision technique : l'onglet « Retours » recense les commandes au statut « remboursé » de
+  WooCommerce ; les actions de suivi de livraison/téléchargement de facture ne sont pas
+  implémentées, aucun service de transport ni générateur de facture réel n'existant dans ce
+  thème.
+- Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif : le filtrage
+  par onglet isole les bonnes commandes du compte de test, et la page de détail affiche les
+  bonnes données.
 
 ### 0.6.0 — sidebar et tableau de bord de l'espace client
 

@@ -91,6 +91,37 @@
 			et le lien « Recommander » ajoute réellement les bons articles/quantités au panier (vérifié via
 			le récapitulatif de panier réel). Aucun avertissement ni erreur PHP relevé.
 		</p>
+
+		<h2 id="mes-commandes">Mes commandes</h2>
+		<p>
+			<code>woocommerce/myaccount/orders.php</code> affiche désormais des onglets de statut (Toutes,
+			En cours, Livrées, Retours — avec leur vrai compte) et des cartes de commande (en-tête coloré
+			selon le statut, miniatures des articles, actions) plutôt que le tableau par défaut de
+			WooCommerce, à partir d'un vrai lien <code>?orders-tab=...</code> — fonctionne sans
+			JavaScript, chaque onglet étant un lien simple. <code>Solar_Template\Account\OrdersView</code>
+			calcule les compteurs d'onglets et construit chaque carte de commande à partir des vraies
+			commandes du client.
+		</p>
+		<p>
+			<code>woocommerce/myaccount/view-order.php</code> restyle l'en-tête de la page (numéro de
+			commande, date, badge de statut coloré) et l'historique des notes de commande, en conservant
+			intact le hook natif <code>woocommerce_view_order</code> de WooCommerce en dessous — c'est lui
+			qui affiche le vrai tableau de détails de commande, les liens de téléchargement éventuels et le
+			bouton « Recommander », réutilisés tels quels plutôt que réimplémentés.
+		</p>
+		<p>
+			Décision technique : l'onglet « Retours » ne recense que les commandes au statut
+			« remboursé » de WooCommerce (aucune notion native de retour partiel distincte de ce statut) ;
+			les boutons « Suivre ma livraison » et « Télécharger la facture » de la maquette sont
+			volontairement omis (aucun transporteur ni générateur de facture PDF réel n'existe dans ce
+			thème) au profit de « Voir le détail » et « Recommander », déjà réels et fonctionnels.
+		</p>
+		<p>
+			Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif : les onglets
+			« En cours »/« Livrées » isolent bien les bonnes commandes du compte de test, la page de détail
+			d'une commande affiche le bon numéro/statut/tableau d'articles, et le lien « Recommander »
+			continue de fonctionner depuis cette liste. Aucun avertissement ni erreur PHP relevé.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

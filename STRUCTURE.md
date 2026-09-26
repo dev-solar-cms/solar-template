@@ -39,7 +39,7 @@ solar-template/
 │   ├── Catalog/         # Options/filtres/pagination/contrôleurs du catalogue produits
 │   ├── Product/         # Logique de la fiche produit (galerie, panneau, variations, onglets, produits similaires)
 │   ├── Checkout/        # Tunnel de vente : routage, indicateur d'étapes, vue du panier, disposition des champs d'adresse, icônes/texte du paiement, vue de la confirmation de commande
-│   └── Account/         # Espace client : endpoints/menu, sidebar, tableau de bord, statut de commande, action « Recommander »
+│   └── Account/         # Espace client : endpoints/menu, sidebar, tableau de bord, statut de commande, action « Recommander », liste/détail de commandes
 ├── template-parts/      # Fragments de gabarit réutilisables (`get_template_part()`)
 │   ├── product-card.php # Carte produit (image, badge, wishlist, overlay panier, prix, swatches)
 │   ├── blog-card.php    # Carte article de blog (image 16:10, badge catégorie, meta, titre, extrait, auteur)
@@ -59,7 +59,9 @@ solar-template/
 │   │   └── step-indicator.php # Indicateur des 5 étapes (cercles/labels/ligne de progression), partagé par tout le tunnel
 │   ├── account/         # Fragments de l'espace client, un par section
 │   │   ├── sidebar.php  # Bloc utilisateur + navigation à icônes (Solar_Template\Account\AccountProfile/AccountNav)
-│   │   └── dashboard.php # Message d'accueil, cartes de statistiques, commandes récentes, liens rapides
+│   │   ├── dashboard.php # Message d'accueil, cartes de statistiques, commandes récentes, liens rapides
+│   │   ├── orders-list.php # Tabs de statut + cartes de commande + pagination
+│   │   └── order-card.php # Une carte de commande (en-tête coloré, miniatures, actions)
 │   └── front-page/      # Sections de la page d'accueil, une par fichier
 │       ├── hero.php     # Hero plein écran (accroche, titre 3 lignes, CTA, trust badges, carte flottante)
 │       ├── featured-products.php # Grille masonry des produits WooCommerce marqués « en vedette »
@@ -89,7 +91,9 @@ solar-template/
 ├── woocommerce/myaccount/ # Surcharges de l'espace client
 │   ├── my-account.php   # Grille sidebar (260px) + contenu
 │   ├── navigation.php   # Délègue à template-parts/account/sidebar.php
-│   └── dashboard.php    # Délègue à template-parts/account/dashboard.php
+│   ├── dashboard.php    # Délègue à template-parts/account/dashboard.php
+│   ├── orders.php       # Tabs de statut (filtrage par lien simple) + délègue à orders-list.php
+│   └── view-order.php   # En-tête restylé (numéro, date, statut) + tableau natif WooCommerce conservé
 ├── languages/           # Fichiers `.mo` compilés (générés, ignorés par git sauf `.gitkeep`)
 ├── vite.config.js       # Configuration du pipeline de build des assets
 ├── .prettierrc.json     # Norme de formatage JS/SCSS, utilisée par `npm run format`

@@ -383,3 +383,172 @@
 		color: $color-muted;
 	}
 }
+
+// -------------------------------------------------------------------------------------------
+// Orders list
+// -------------------------------------------------------------------------------------------
+
+.account-orders__tabs {
+	display: flex;
+	gap: 0;
+	border-bottom: 1.5px solid $color-border;
+	margin-bottom: 28px;
+	flex-wrap: wrap;
+}
+
+.account-orders__tab {
+	padding: 12px 20px;
+	font-size: 13.5px;
+	font-weight: $font-weight-medium;
+	color: $color-muted;
+	border-bottom: 2px solid transparent;
+	margin-bottom: -2px;
+
+	&:hover {
+		color: $color-dark;
+	}
+
+	&.is-active {
+		font-weight: $font-weight-bold;
+		color: $color-dark;
+		border-bottom-color: $color-dark;
+	}
+}
+
+.account-orders__list {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	margin-bottom: 24px;
+}
+
+.order-card {
+	background: $color-surface;
+	border-radius: $radius-modal;
+	border: 1.5px solid $color-border;
+	overflow: hidden;
+}
+
+.order-card__header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 12px;
+	padding: 16px 20px;
+	border-bottom: 1px solid $color-border;
+	background: $color-bg;
+
+	&--transit {
+		background: #fef9f1;
+	}
+
+	&--delivered {
+		background: #f8fbf8;
+	}
+}
+
+.order-card__meta {
+	display: flex;
+	gap: 24px;
+	align-items: center;
+	flex-wrap: wrap;
+}
+
+.order-card__meta-label {
+	display: block;
+	font-size: 11px;
+	color: $color-muted;
+	margin-bottom: 2px;
+}
+
+.order-card__meta-value {
+	display: block;
+	font-size: 14px;
+	font-weight: $font-weight-extrabold;
+	color: $color-dark;
+
+	&--regular {
+		font-size: 13.5px;
+		font-weight: $font-weight-semibold;
+	}
+}
+
+.order-card__body {
+	padding: 16px 20px;
+}
+
+.order-card__thumbnails {
+	display: flex;
+	gap: 12px;
+	align-items: center;
+	margin-bottom: 14px;
+}
+
+.order-card__thumbnail {
+	width: 52px;
+	height: 64px;
+	border-radius: 4px;
+	object-fit: cover;
+	flex-shrink: 0;
+}
+
+.order-card__extra-count {
+	font-size: 13px;
+	color: $color-muted;
+}
+
+.order-card__actions {
+	display: flex;
+	gap: 10px;
+	flex-wrap: wrap;
+}
+
+.account-orders__pagination {
+	display: flex;
+	justify-content: center;
+	gap: 12px;
+}
+
+// -------------------------------------------------------------------------------------------
+// Order detail
+// -------------------------------------------------------------------------------------------
+
+.view-order__back {
+	display: inline-block;
+	font-size: 13px;
+	font-weight: $font-weight-semibold;
+	color: $color-muted;
+	margin-bottom: 16px;
+
+	&:hover {
+		color: $color-dark;
+	}
+}
+
+.view-order__heading {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 12px;
+	margin-bottom: 24px;
+
+	h1 {
+		font-size: 26px;
+		font-weight: $font-weight-extrabold;
+		letter-spacing: -0.02em;
+		color: $color-dark;
+	}
+}
+
+.view-order__date {
+	font-size: 13.5px;
+	color: $color-muted;
+	margin-top: 4px;
+}
+
+.view-order__notes {
+	margin-bottom: 24px;
+	padding: 20px 24px;
+}

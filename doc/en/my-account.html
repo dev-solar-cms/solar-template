@@ -86,6 +86,36 @@
 			adds the right items/quantities to the cart (confirmed via the real cart summary). No PHP
 			warning or error observed.
 		</p>
+
+		<h2 id="orders">Orders</h2>
+		<p>
+			<code>woocommerce/myaccount/orders.php</code> now shows status tabs (All, In progress,
+			Delivered, Returns — with their real counts) and order cards (a status-colored header, item
+			thumbnails, actions) instead of WooCommerce's default table, driven by a real
+			<code>?orders-tab=...</code> link — works without JavaScript, each tab being a plain link.
+			<code>Solar_Template\Account\OrdersView</code> computes the tab counts and builds each order
+			card from the customer's real orders.
+		</p>
+		<p>
+			<code>woocommerce/myaccount/view-order.php</code> restyles the page's own heading (order
+			number, date, colored status badge) and the order note history, while keeping WooCommerce's
+			native <code>woocommerce_view_order</code> hook untouched below it — that's what renders the
+			real order details table, any download links and the "Order again" button, reused as-is
+			rather than reimplemented.
+		</p>
+		<p>
+			Technical decision: the "Returns" tab only counts orders with WooCommerce's own "refunded"
+			status (no native concept of a partial return distinct from that status); the design's own
+			"Track my order" and "Download invoice" buttons are deliberately left out (no real carrier or
+			PDF invoice generator exists in this theme) in favor of "View detail" and "Reorder", already
+			real and functional.
+		</p>
+		<p>
+			Verified end to end in the real Docker environment with WooCommerce active: the "In
+			progress"/"Delivered" tabs correctly isolate the right orders on the test account, an order's
+			detail page shows the right number/status/item table, and the "Reorder" link keeps working
+			from this list. No PHP warning or error observed.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>
