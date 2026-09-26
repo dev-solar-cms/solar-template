@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.5.3`.
+Version actuelle : `0.5.4`.
 
 ## Avant une release
 
@@ -30,6 +30,22 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.5.4 — étape de paiement dédiée, passerelles réelles
+
+- Le paiement dispose désormais de sa propre étape sur la page de commande, distincte de l'étape
+  « Livraison » qui la précédait auparavant dans la même colonne : un bouton « Procéder au paiement »
+  fait passer de l'une à l'autre sans jamais soumettre le formulaire, un bouton « ← Retour » fait
+  l'inverse. Le récapitulatif de commande reste affiché sur ces deux étapes plutôt que dupliqué.
+- Les moyens de paiement réellement configurés par la boutique s'affichent en cartes radio avec une
+  icône pertinente (virement bancaire, chèque, paiement à la livraison — aucune dépendance à un
+  moyen de paiement tiers ; toute autre passerelle qu'une boutique activerait plus tard reçoit une
+  icône générique plutôt que rien).
+- Le bouton de validation affiche « 🔒 Payer [montant] », calculé à partir du total réel et courant
+  du panier.
+- Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif : une commande
+  complète simulée avec la requête réelle que le formulaire de paiement soumettrait, confirmée créée
+  avec le bon moyen de paiement et le bon total (commande de test supprimée après vérification).
 
 ### 0.5.3 — adresse de livraison et méthodes d'expédition réelles
 
