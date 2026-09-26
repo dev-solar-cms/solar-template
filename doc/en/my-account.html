@@ -1,0 +1,92 @@
+<!--
+	Created: 2026-09-26 15:30 CEST
+	Role: English documentation page describing the theme's My Account area, built page by page.
+	Author: David ROMERA <d.romera.11@gmail.com>
+	Purpose: Document, in English, each My Account page as it gets built.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>My account — Solar Template documentation</title>
+	<link rel="stylesheet" href="../assets/doc.css" />
+</head>
+<body>
+	<aside class="doc-sidebar">
+		<a class="doc-brand" href="index.html">Solar Template</a>
+		<nav>
+			<ul>
+				<li><a href="index.html">Home</a></li>
+				<li><a href="infrastructure.html">Infrastructure</a></li>
+				<li><a href="design-system.html">Design system</a></li>
+				<li><a href="structure-commune.html">Common structure</a></li>
+				<li><a href="page-accueil.html">Home page</a></li>
+				<li><a href="catalog.html">Product catalog</a></li>
+				<li><a href="product-page.html">Product page</a></li>
+				<li><a href="checkout.html">Checkout</a></li>
+				<li><a href="my-account.html">My account</a></li>
+			</ul>
+		</nav>
+		<div class="doc-lang-switch">
+			<a class="is-active" href="my-account.html">EN</a>
+			<a href="../fr/mon-compte.html">FR</a>
+		</div>
+	</aside>
+	<main class="doc-content">
+		<h1>My account</h1>
+		<p>
+			The My Account area stays built on the real WordPress/WooCommerce
+			<code>/my-account/</code> page (the <code>[woocommerce_my_account]</code> shortcode), dressed by
+			the theme's own templates — <code>woocommerce/myaccount/*.php</code> — rather than replaced by
+			dedicated views. Two endpoints of the theme's own (wishlist, support request) are added on top
+			of WooCommerce's native ones.
+		</p>
+
+		<h2 id="sidebar-and-dashboard">Sidebar and dashboard</h2>
+		<p>
+			<code>woocommerce/myaccount/my-account.php</code> now places the navigation and content in a
+			<code>260px 1fr</code> grid (<code>.account-layout</code>) instead of WooCommerce's default
+			stacked layout. <code>woocommerce/myaccount/navigation.php</code> delegates rendering to
+			<code>template-parts/account/sidebar.php</code>: a user info block (avatar/name/email,
+			<code>Solar_Template\Account\AccountProfile</code>) followed by an icon-based navigation
+			(<code>Solar_Template\Account\AccountNav</code>).
+		</p>
+		<p>
+			<code>Solar_Template\Account\AccountEndpoints</code> fully rebuilds the account menu in the
+			design handoff's own order and wording (Dashboard, Orders, Wishlist, Addresses, Downloads,
+			Support request, Settings, Logout) — WooCommerce's own "Payment methods" item, absent from the
+			design, is dropped from the menu (still reachable at its direct URL). The same class registers
+			the theme's two custom endpoints (<code>wishlist</code>, <code>sav</code>) via
+			<code>add_rewrite_endpoint()</code>; their real content is wired in later steps of this area's
+			build-out.
+		</p>
+		<p>
+			<code>woocommerce/myaccount/dashboard.php</code> delegates to
+			<code>template-parts/account/dashboard.php</code> a greeting, 4 stat cards (in-progress orders,
+			total orders, wishlist, active support requests — computed by
+			<code>Solar_Template\Account\Dashboard</code> from the customer's real orders), a recent orders
+			table with a colored status badge (<code>Solar_Template\Account\OrderStatusPresenter</code>) and
+			3 quick links. An already-delivered order offers a "Reorder" link
+			(<code>Solar_Template\Account\ReorderHandler</code>) that adds every item of that past order
+			back into the cart in a single, nonce-protected request.
+		</p>
+		<p>
+			Technical decision: every menu label/order comes from this theme's own translation catalog
+			rather than WooCommerce's own defaults (e.g. "Settings" rather than core's "Account details"),
+			to stay faithful to the design's wording regardless of which core WooCommerce translation is
+			installed. The "Wishlist"/"Support" stat counts start at 0 until those two features are
+			themselves built, then get wired to their real data once ready.
+		</p>
+		<p>
+			Verified end to end in the real Docker environment with WooCommerce active (permalinks set to a
+			non-"plain" structure, a WooCommerce requirement for its own endpoints): a test customer account
+			with two real orders (one "in transit", one "delivered") shows exact stats and a recent orders
+			table, the active navigation item matches every visited page, and the "Reorder" link genuinely
+			adds the right items/quantities to the cart (confirmed via the real cart summary). No PHP
+			warning or error observed.
+		</p>
+	</main>
+	<script src="../assets/doc.js"></script>
+</body>
+</html>

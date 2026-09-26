@@ -41,6 +41,12 @@ final class Installer {
 		self::seed_default_settings();
 		self::create_newsletter_table();
 
+		// Newly registered My Account endpoints ("wishlist", "sav" — see
+		// Solar_Template\Account\AccountEndpoints) only resolve once WordPress' rewrite rules are
+		// flushed; running this on every (re-)activation is the same mechanism already used in Docker
+		// to pick up any newly added table above.
+		flush_rewrite_rules();
+
 		$translator = new \Solar_Template\I18n\DatabaseTranslator(
 			$GLOBALS['wpdb'],
 			new GettextMoCompiler(),

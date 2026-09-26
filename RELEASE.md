@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.5.5`.
+Version actuelle : `0.6.0`.
 
 ## Avant une release
 
@@ -30,6 +30,24 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.6.0 — sidebar et tableau de bord de l'espace client
+
+- L'espace client (« Mon compte ») affiche désormais une sidebar (avatar, nom, email, navigation à
+  icônes) plutôt que la liste de liens par défaut de WooCommerce, et un tableau de bord avec 4
+  cartes de statistiques (commandes en cours, total, liste de souhaits, demandes S.A.V.), un tableau
+  des commandes récentes avec statut coloré, et 3 liens rapides — toutes ces données viennent des
+  vraies commandes du compte connecté.
+- Le menu du compte est réordonné et entièrement re-libellé dans le vocabulaire de la maquette
+  (Tableau de bord, Mes commandes, Liste de souhaits, Mes adresses, Téléchargements, Demande
+  S.A.V., Paramètres, Se déconnecter), et deux nouveaux emplacements (liste de souhaits, demande
+  S.A.V.) sont réservés pour les prochaines étapes de cet espace.
+- Une commande déjà livrée propose un lien « Recommander » qui ajoute au panier, en une seule
+  requête protégée par un jeton de sécurité, chaque article de cette commande passée.
+- Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif : un compte
+  client de test avec deux commandes réelles affiche des statistiques et un statut exacts, et le
+  lien « Recommander » ajoute bien les bons articles au panier (compte et commandes de test
+  supprimés après vérification).
 
 ### 0.5.5 — page de confirmation de commande
 

@@ -1,0 +1,385 @@
+// Created: 2026-09-26 14:50 CEST
+// Role: My Account area component partial (assets/scss/_account.scss).
+// Author: David ROMERA <d.romera.11@gmail.com>
+// Purpose: Sidebar/navigation, dashboard, orders, wishlist, addresses, downloads, support request
+//          and settings styles for the My Account area (woocommerce/myaccount/*.php overrides +
+//          template-parts/account/*.php), built from the design tokens in `_tokens.scss`. Grows one
+//          section at a time as each My Account page is built out.
+
+@use 'tokens' as *;
+
+// -------------------------------------------------------------------------------------------
+// Layout
+// -------------------------------------------------------------------------------------------
+
+.account-layout {
+	max-width: $container-max-width;
+	margin: 0 auto;
+	padding: 40px $container-padding-x 96px;
+	display: grid;
+	grid-template-columns: 260px 1fr;
+	gap: 40px;
+	align-items: start;
+}
+
+.account-content {
+	min-width: 0;
+}
+
+// -------------------------------------------------------------------------------------------
+// Sidebar
+// -------------------------------------------------------------------------------------------
+
+.account-sidebar {
+	position: sticky;
+	top: 120px;
+	background: $color-surface;
+	border-radius: $radius-modal;
+	border: 1.5px solid $color-border;
+	overflow: hidden;
+}
+
+.account-sidebar__user {
+	padding: 24px 20px;
+	border-bottom: 1px solid $color-border;
+	background: linear-gradient(135deg, $color-dark 0%, $color-dark-hover 100%);
+}
+
+.account-avatar {
+	width: 52px;
+	height: 52px;
+	border-radius: 50%;
+	background: repeating-linear-gradient(
+		-45deg,
+		$color-gold,
+		$color-gold 4px,
+		$color-gold-dark 4px,
+		$color-gold-dark 8px
+	);
+	border: 2px solid rgba(201, 169, 110, 0.4);
+	margin-bottom: 12px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 20px;
+	font-weight: $font-weight-extrabold;
+	color: $color-surface;
+}
+
+.account-sidebar__name {
+	font-size: 15px;
+	font-weight: $font-weight-bold;
+	color: $color-surface;
+	margin-bottom: 2px;
+}
+
+.account-sidebar__email {
+	font-size: 12px;
+	color: rgba(255, 255, 255, 0.45);
+}
+
+.account-nav {
+	padding: 10px;
+	display: flex;
+	flex-direction: column;
+}
+
+.account-nav__item {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 11px 14px;
+	border-radius: 6px;
+	color: $color-muted;
+	font-size: 13.5px;
+	font-weight: $font-weight-medium;
+	margin-bottom: 2px;
+	transition:
+		background-color 0.2s ease,
+		color 0.2s ease;
+
+	&:hover {
+		background: $color-hover;
+		color: $color-dark;
+	}
+
+	&.is-active {
+		background: $color-dark;
+		color: $color-surface;
+		font-weight: $font-weight-bold;
+
+		&:hover {
+			background: $color-dark;
+			color: $color-surface;
+		}
+	}
+
+	&--logout {
+		color: $color-error;
+		margin-top: 2px;
+
+		&:hover {
+			background: rgba(214, 69, 69, 0.06);
+			color: $color-error;
+		}
+	}
+}
+
+.account-nav__icon {
+	display: inline-flex;
+	width: 15px;
+	height: 15px;
+	flex-shrink: 0;
+
+	svg {
+		width: 100%;
+		height: 100%;
+	}
+}
+
+// -------------------------------------------------------------------------------------------
+// Dashboard
+// -------------------------------------------------------------------------------------------
+
+.account-dashboard__heading {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 28px;
+
+	h1 {
+		font-size: 28px;
+		font-weight: $font-weight-extrabold;
+		letter-spacing: -0.02em;
+		color: $color-dark;
+	}
+
+	p {
+		font-size: 14px;
+		color: $color-muted;
+		margin-top: 4px;
+	}
+}
+
+.account-stats {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 16px;
+	margin-bottom: 32px;
+
+	@media (max-width: 900px) {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+.account-stat-card {
+	display: block;
+	background: $color-surface;
+	border-radius: $radius-content-card;
+	border: 1.5px solid $color-border;
+	padding: 20px;
+	transition: border-color 0.2s ease;
+
+	&:hover {
+		border-color: $color-gold;
+	}
+}
+
+.account-stat-card__value {
+	display: block;
+	font-size: 28px;
+	font-weight: $font-weight-extrabold;
+	color: $color-dark;
+	margin-bottom: 4px;
+
+	&--gold {
+		color: $color-gold;
+	}
+}
+
+.account-stat-card__label {
+	display: block;
+	font-size: 12.5px;
+	font-weight: $font-weight-semibold;
+	color: $color-dark;
+}
+
+.account-stat-card__sublabel {
+	display: block;
+	font-size: 11.5px;
+	color: $color-muted;
+	margin-top: 2px;
+}
+
+.account-panel {
+	background: $color-surface;
+	border-radius: $radius-modal;
+	border: 1.5px solid $color-border;
+	overflow: hidden;
+	margin-bottom: 24px;
+}
+
+.account-panel__header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 20px 24px;
+	border-bottom: 1px solid $color-border;
+
+	h2 {
+		font-size: 16px;
+		font-weight: $font-weight-extrabold;
+		color: $color-dark;
+	}
+}
+
+.account-panel__see-all {
+	background: none;
+	border: none;
+	font-size: 13px;
+	font-weight: $font-weight-semibold;
+	color: $color-gold;
+}
+
+.account-panel__empty {
+	padding: 24px;
+	text-align: center;
+	color: $color-muted;
+	font-size: 14px;
+}
+
+.account-orders-table__wrapper {
+	overflow-x: auto;
+}
+
+.account-orders-table {
+	width: 100%;
+	border-collapse: collapse;
+
+	th {
+		text-align: left;
+		padding: 12px 24px;
+		font-size: 11px;
+		font-weight: $font-weight-bold;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: $color-muted;
+		background: $color-bg;
+	}
+
+	td {
+		padding: 16px 24px;
+		font-size: 13px;
+		color: $color-muted;
+		border-top: 1px solid $color-border;
+	}
+}
+
+.account-orders-table__amount {
+	text-align: right;
+}
+
+.account-orders-table__number {
+	font-size: 13.5px;
+	font-weight: $font-weight-bold;
+	color: $color-dark;
+}
+
+.account-orders-table__actions {
+	display: flex;
+	gap: 8px;
+}
+
+.btn-link {
+	display: inline-block;
+	font-size: 12px;
+	font-weight: $font-weight-semibold;
+	color: $color-dark;
+	border: 1.5px solid $color-border;
+	background: $color-surface;
+	padding: 6px 12px;
+	border-radius: 4px;
+	transition: border-color 0.2s ease;
+
+	&:hover {
+		border-color: $color-dark;
+	}
+
+	&--gold {
+		color: $color-gold;
+		border-color: $color-gold;
+
+		&:hover {
+			background: $color-gold;
+			color: $color-dark;
+		}
+	}
+}
+
+.account-quick-links {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 16px;
+
+	@media (max-width: 700px) {
+		grid-template-columns: 1fr;
+	}
+}
+
+.account-quick-link {
+	display: block;
+	background: $color-surface;
+	border: 1.5px solid $color-border;
+	border-radius: $radius-content-card;
+	padding: 18px;
+	transition: border-color 0.2s ease;
+
+	&:hover {
+		border-color: $color-dark;
+	}
+}
+
+.account-quick-link__icon {
+	display: block;
+	font-size: 20px;
+	margin-bottom: 8px;
+}
+
+.account-quick-link__title {
+	display: block;
+	font-size: 14px;
+	font-weight: $font-weight-bold;
+	color: $color-dark;
+}
+
+// -------------------------------------------------------------------------------------------
+// Status badge (shared by the dashboard's recent orders and the orders list page)
+// -------------------------------------------------------------------------------------------
+
+.order-status-badge {
+	display: inline-block;
+	font-size: 11.5px;
+	font-weight: $font-weight-bold;
+	padding: 4px 10px;
+	border-radius: $radius-pill;
+
+	&--transit {
+		background: #fef3e2;
+		color: $color-sale;
+	}
+
+	&--delivered {
+		background: #e8f5e9;
+		color: #2e7d32;
+	}
+
+	&--cancelled {
+		background: #fdeaea;
+		color: $color-error;
+	}
+
+	&--pending {
+		background: $color-hover;
+		color: $color-muted;
+	}
+}

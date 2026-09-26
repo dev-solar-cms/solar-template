@@ -1,0 +1,97 @@
+<!--
+	Créé le : 2026-09-26 15:30 CEST
+	Rôle : Page de documentation en français décrivant l'espace client (Mon compte) du thème,
+	       construit page par page.
+	Auteur : David ROMERA <d.romera.11@gmail.com>
+	Objectif : Documenter, en français, chaque page de l'espace client au fur et à mesure de sa
+	           construction.
+-->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Espace client — Documentation Solar Template</title>
+	<link rel="stylesheet" href="../assets/doc.css" />
+</head>
+<body>
+	<aside class="doc-sidebar">
+		<a class="doc-brand" href="index.html">Solar Template</a>
+		<nav>
+			<ul>
+				<li><a href="index.html">Accueil</a></li>
+				<li><a href="infrastructure.html">Infrastructure</a></li>
+				<li><a href="design-system.html">Système de design</a></li>
+				<li><a href="structure-commune.html">Structure commune</a></li>
+				<li><a href="page-accueil.html">Page d'accueil</a></li>
+				<li><a href="catalogue.html">Catalogue produits</a></li>
+				<li><a href="fiche-produit.html">Fiche produit</a></li>
+				<li><a href="tunnel-vente.html">Tunnel de vente</a></li>
+				<li><a href="mon-compte.html">Espace client</a></li>
+			</ul>
+		</nav>
+		<div class="doc-lang-switch">
+			<a href="../en/my-account.html">EN</a>
+			<a class="is-active" href="mon-compte.html">FR</a>
+		</div>
+	</aside>
+	<main class="doc-content">
+		<h1>Espace client</h1>
+		<p>
+			L'espace client (« Mon compte ») reste construit sur la vraie page WordPress/WooCommerce
+			<code>/mon-compte/</code> (le shortcode <code>[woocommerce_my_account]</code>), habillée par les
+			propres gabarits du thème — <code>woocommerce/myaccount/*.php</code> — plutôt que remplacée par
+			des vues dédiées. Deux endpoints propres au thème (liste de souhaits, demande S.A.V.) viennent
+			s'ajouter aux endpoints natifs de WooCommerce.
+		</p>
+
+		<h2 id="sidebar-et-tableau-de-bord">Sidebar et tableau de bord</h2>
+		<p>
+			<code>woocommerce/myaccount/my-account.php</code> place désormais la navigation et le contenu
+			dans une grille <code>260px 1fr</code> (<code>.account-layout</code>) plutôt que dans la mise en
+			page empilée par défaut de WooCommerce.
+			<code>woocommerce/myaccount/navigation.php</code> délègue l'affichage à
+			<code>template-parts/account/sidebar.php</code> : un bloc utilisateur (avatar/nom/email,
+			<code>Solar_Template\Account\AccountProfile</code>) suivi d'une navigation à icônes
+			(<code>Solar_Template\Account\AccountNav</code>).
+		</p>
+		<p>
+			<code>Solar_Template\Account\AccountEndpoints</code> reconstruit entièrement le menu du compte
+			dans l'ordre et le vocabulaire de la maquette (Tableau de bord, Mes commandes, Liste de
+			souhaits, Mes adresses, Téléchargements, Demande S.A.V., Paramètres, Se déconnecter) — l'item
+			« Moyens de paiement » de WooCommerce, absent de la maquette, est retiré du menu (toujours
+			accessible par son URL directe). Cette même classe enregistre les deux endpoints propres au
+			thème (<code>wishlist</code>, <code>sav</code>) via <code>add_rewrite_endpoint()</code> ; leur
+			contenu réel est branché aux étapes suivantes de la construction de cet espace.
+		</p>
+		<p>
+			<code>woocommerce/myaccount/dashboard.php</code> délègue à
+			<code>template-parts/account/dashboard.php</code> un message d'accueil, 4 cartes de statistiques
+			(commandes en cours, total de commandes, liste de souhaits, demandes S.A.V. actives — calculées
+			par <code>Solar_Template\Account\Dashboard</code> à partir des vraies commandes du client), un
+			tableau des commandes récentes avec statut coloré
+			(<code>Solar_Template\Account\OrderStatusPresenter</code>) et 3 liens rapides. Une commande déjà
+			livrée propose un lien « Recommander »
+			(<code>Solar_Template\Account\ReorderHandler</code>) qui ajoute au panier, en une requête
+			simple protégée par nonce, chaque article de cette commande passée.
+		</p>
+		<p>
+			Décision technique : les libellés/l'ordre du menu sont entièrement fournis par ce thème plutôt
+			que par les valeurs par défaut de WooCommerce (par exemple « Paramètres » plutôt que « Détails du
+			compte »), pour rester fidèle au vocabulaire de la maquette quelle que soit la traduction du
+			cœur de WooCommerce installée. Les statistiques « Liste de souhaits »/« S.A.V. » démarrent à 0 le
+			temps que ces deux fonctionnalités soient elles-mêmes construites, puis sont branchées à leurs
+			vraies données une fois prêtes.
+		</p>
+		<p>
+			Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif (permaliens
+			non « simples », requis par WooCommerce pour ses endpoints) : un compte client de test avec deux
+			commandes réelles (une « en transit », une « livrée ») affiche des statistiques et un tableau de
+			commandes récentes exacts, l'élément de navigation actif correspond bien à chaque page visitée,
+			et le lien « Recommander » ajoute réellement les bons articles/quantités au panier (vérifié via
+			le récapitulatif de panier réel). Aucun avertissement ni erreur PHP relevé.
+		</p>
+	</main>
+	<script src="../assets/doc.js"></script>
+</body>
+</html>

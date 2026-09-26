@@ -13,6 +13,8 @@
 
 namespace Solar_Template;
 
+use Solar_Template\Account\AccountEndpoints;
+use Solar_Template\Account\ReorderHandler;
 use Solar_Template\Admin\Notices;
 use Solar_Template\Catalog\CatalogController;
 use Solar_Template\Checkout\CheckoutController;
@@ -76,6 +78,11 @@ final class Theme {
 		add_action( 'woocommerce_before_calculate_totals', array( EngravingCart::class, 'adjust_cart_item_price' ) );
 		add_filter( 'woocommerce_get_item_data', array( EngravingCart::class, 'display_cart_item_data' ), 10, 2 );
 		add_action( 'woocommerce_checkout_create_order_line_item', array( EngravingCart::class, 'add_order_item_meta' ), 10, 3 );
+
+		add_action( 'init', array( AccountEndpoints::class, 'register_endpoints' ) );
+		add_filter( 'woocommerce_account_menu_items', array( AccountEndpoints::class, 'menu_items' ) );
+		add_filter( 'woocommerce_endpoint_title', array( AccountEndpoints::class, 'endpoint_title' ), 10, 2 );
+		add_action( 'template_redirect', array( ReorderHandler::class, 'maybe_handle' ) );
 	}
 
 	/**

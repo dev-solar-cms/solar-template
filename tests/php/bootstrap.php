@@ -140,6 +140,15 @@ if ( ! function_exists( '__' ) ) {
 	}
 
 	/**
+	 * @param string $text   Text to translate, escape and echo.
+	 * @param string $domain Text domain (ignored here).
+	 * @return void
+	 */
+	function esc_attr_e( string $text, string $domain = 'default' ): void { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed, WordPress.WP.I18n.MissingTranslatorsComment -- stand-in for the real WordPress function, not a real translatable string.
+		echo htmlspecialchars( $text, ENT_QUOTES ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- this *is* the escaping stand-in.
+	}
+
+	/**
 	 * @param string $url Raw URL.
 	 * @return string Escaped $url.
 	 */
@@ -152,6 +161,15 @@ if ( ! function_exists( '__' ) ) {
 	 * @return string $content, unchanged (this stand-in trusts test fixtures).
 	 */
 	function wp_kses_post( string $content ): string {
+		return $content;
+	}
+
+	/**
+	 * @param string $content Markup to sanitize.
+	 * @param array  $allowed_html Ignored in this stand-in.
+	 * @return string $content, unchanged (this stand-in trusts test fixtures).
+	 */
+	function wp_kses( string $content, array $allowed_html = array() ): string { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- stand-in mirrors the real function's signature.
 		return $content;
 	}
 

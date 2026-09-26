@@ -1086,6 +1086,142 @@ final class DefaultStrings {
 				'fr_FR' => "Nous n'avons pas trouvé cette commande.",
 				'en_US' => 'We could not find this order.',
 			),
+			'Dashboard'                                    => array(
+				'fr_FR' => 'Tableau de bord',
+				'en_US' => 'Dashboard',
+			),
+			'Orders'                                       => array(
+				'fr_FR' => 'Mes commandes',
+				'en_US' => 'Orders',
+			),
+			'Wishlist'                                     => array(
+				'fr_FR' => 'Liste de souhaits',
+				'en_US' => 'Wishlist',
+			),
+			'Addresses'                                    => array(
+				'fr_FR' => 'Mes adresses',
+				'en_US' => 'Addresses',
+			),
+			'Downloads'                                    => array(
+				'fr_FR' => 'Téléchargements',
+				'en_US' => 'Downloads',
+			),
+			'Support request'                              => array(
+				'fr_FR' => 'Demande S.A.V.',
+				'en_US' => 'Support request',
+			),
+			'Settings'                                     => array(
+				'fr_FR' => 'Paramètres',
+				'en_US' => 'Settings',
+			),
+			'Logout'                                       => array(
+				'fr_FR' => 'Se déconnecter',
+				'en_US' => 'Logout',
+			),
+			'My account navigation'                        => array(
+				'fr_FR' => 'Navigation du compte',
+				'en_US' => 'My account navigation',
+			),
+			'Hello, %s! 👋'                                 => array(
+				'fr_FR' => 'Bonjour, %s ! 👋',
+				'en_US' => 'Hello, %s! 👋',
+			),
+			'Welcome to your personal space'               => array(
+				'fr_FR' => 'Bienvenue dans votre espace personnel',
+				'en_US' => 'Welcome to your personal space',
+			),
+			'In progress'                                  => array(
+				'fr_FR' => 'En cours',
+				'en_US' => 'In progress',
+			),
+			'Total'                                        => array(
+				'fr_FR' => 'Total',
+				'en_US' => 'Total',
+			),
+			'orders'                                       => array(
+				'fr_FR' => 'commandes',
+				'en_US' => 'orders',
+			),
+			'orders placed'                                => array(
+				'fr_FR' => 'commandes passées',
+				'en_US' => 'orders placed',
+			),
+			'saved items'                                  => array(
+				'fr_FR' => 'articles sauvegardés',
+				'en_US' => 'saved items',
+			),
+			'Support'                                      => array(
+				'fr_FR' => 'S.A.V.',
+				'en_US' => 'Support',
+			),
+			'active requests'                              => array(
+				'fr_FR' => 'demandes actives',
+				'en_US' => 'active requests',
+			),
+			'Recent orders'                                => array(
+				'fr_FR' => 'Commandes récentes',
+				'en_US' => 'Recent orders',
+			),
+			'You have not placed any order yet.'           => array(
+				'fr_FR' => "Vous n'avez pas encore passé de commande.",
+				'en_US' => 'You have not placed any order yet.',
+			),
+			'Order'                                        => array(
+				'fr_FR' => 'Commande',
+				'en_US' => 'Order',
+			),
+			'Date'                                         => array(
+				'fr_FR' => 'Date',
+				'en_US' => 'Date',
+			),
+			'Items'                                        => array(
+				'fr_FR' => 'Articles',
+				'en_US' => 'Items',
+			),
+			'Status'                                       => array(
+				'fr_FR' => 'Statut',
+				'en_US' => 'Status',
+			),
+			'Detail'                                       => array(
+				'fr_FR' => 'Détail',
+				'en_US' => 'Detail',
+			),
+			'Reorder'                                      => array(
+				'fr_FR' => 'Recommander',
+				'en_US' => 'Reorder',
+			),
+			'The items from your past order have been added to your cart.' => array(
+				'fr_FR' => 'Les articles de votre commande précédente ont été ajoutés à votre panier.',
+				'en_US' => 'The items from your past order have been added to your cart.',
+			),
+			'Awaiting payment'                             => array(
+				'fr_FR' => 'En attente de paiement',
+				'en_US' => 'Awaiting payment',
+			),
+			'On hold'                                      => array(
+				'fr_FR' => 'En attente',
+				'en_US' => 'On hold',
+			),
+			'In transit'                                   => array(
+				'fr_FR' => 'En transit',
+				'en_US' => 'In transit',
+			),
+			'Delivered'                                    => array(
+				'fr_FR' => 'Livré',
+				'en_US' => 'Delivered',
+			),
+			'Cancelled'                                    => array(
+				'fr_FR' => 'Annulé',
+				'en_US' => 'Cancelled',
+			),
+			'Refunded'                                     => array(
+				'fr_FR' => 'Remboursé',
+				'en_US' => 'Refunded',
+			),
+			'Failed'                                       => array(
+				'fr_FR' => 'Échoué',
+				'en_US' => 'Failed',
+			),
 		);
 	}
 
