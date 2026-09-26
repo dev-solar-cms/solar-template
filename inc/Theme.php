@@ -57,6 +57,7 @@ final class Theme {
 		add_action( 'pre_get_posts', array( CatalogController::class, 'apply_filters_to_main_query' ) );
 
 		add_filter( 'template_include', array( CheckoutController::class, 'template_include' ) );
+		add_action( 'wp', array( CheckoutController::class, 'detach_default_checkout_hooks' ) );
 
 		add_action( 'wp_ajax_solar_template_newsletter_subscribe', array( NewsletterController::class, 'handle_subscription' ) );
 		add_action( 'wp_ajax_nopriv_solar_template_newsletter_subscribe', array( NewsletterController::class, 'handle_subscription' ) );

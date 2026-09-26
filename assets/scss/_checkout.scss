@@ -453,3 +453,153 @@
 	color: $color-muted;
 	font-size: 12px;
 }
+
+// -----------------------------------------------------------------------------------------------
+// Checkout step wizard (woocommerce/checkout/form-checkout.php)
+// -----------------------------------------------------------------------------------------------
+
+.checkout-step__intro {
+	margin-bottom: 8px;
+	text-align: center;
+}
+
+.checkout-step__title {
+	margin-bottom: 8px;
+	@include type-h1;
+}
+
+.checkout-step__subtitle {
+	margin-bottom: 28px;
+	color: $color-muted;
+	font-size: 14.5px;
+}
+
+.checkout-step__back {
+	display: block;
+	margin: 16px auto 0;
+	color: $color-muted;
+	font-size: 13px;
+	text-align: center;
+	text-decoration: underline;
+	background: none;
+	border: none;
+}
+
+// Login step (woocommerce/global/form-login.php's own markup lives inside .checkout-login-panel).
+
+[data-step-panel='login'] {
+	max-width: 480px;
+	margin: 0 auto;
+}
+
+.checkout-login-panel {
+	padding: 36px;
+	border: 1.5px solid $color-border;
+	border-radius: $radius-modal;
+	background: $color-surface;
+}
+
+.solar-login-form__field {
+	margin-bottom: 16px;
+
+	label {
+		display: block;
+		margin-bottom: 7px;
+		color: $color-dark;
+		font-size: 13px;
+		font-weight: $font-weight-semibold;
+	}
+
+	input {
+		width: 100%;
+		border: 1.5px solid $color-border;
+		border-radius: $radius-input;
+		padding: 13px 16px;
+		font-size: 14.5px;
+	}
+}
+
+.solar-login-form__row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 24px;
+	font-size: 13px;
+}
+
+.solar-login-form__remember {
+	display: flex;
+	align-items: center;
+	gap: 7px;
+	color: $color-muted;
+}
+
+.solar-login-form__lost-password {
+	color: $color-gold;
+	font-weight: $font-weight-semibold;
+	text-decoration: none;
+}
+
+.solar-login-form__submit {
+	margin-bottom: 20px;
+}
+
+.checkout-login-panel__divider {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin-bottom: 20px;
+	color: $color-muted;
+	font-size: 12px;
+
+	&::before,
+	&::after {
+		content: '';
+		flex: 1;
+		height: 1px;
+		background: $color-border;
+	}
+}
+
+.checkout-login-panel__social {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 10px;
+	margin-bottom: 24px;
+}
+
+.checkout-login-panel__social-button {
+	border: 1.5px solid $color-border;
+	border-radius: $radius-input;
+	background: $color-surface;
+	padding: 12px;
+	color: $color-dark;
+	font-size: 13.5px;
+	font-weight: $font-weight-semibold;
+	cursor: not-allowed;
+	opacity: 0.6;
+}
+
+.checkout-login-panel__create-account {
+	color: $color-muted;
+	font-size: 13.5px;
+	text-align: center;
+}
+
+.checkout-login-panel__create-account-link {
+	background: none;
+	border: none;
+	padding: 0;
+	color: $color-dark;
+	font-weight: $font-weight-bold;
+	text-decoration: none;
+	cursor: pointer;
+
+	&:hover {
+		color: $color-gold;
+	}
+}
+
+.checkout-login-panel__guest {
+	margin-top: 12px;
+}

@@ -8,7 +8,10 @@
  *          and resolve which of the tunnel's 5 steps is the current one server-side, so the step
  *          indicator renders in the right initial state on every request (assets/js/checkout.js
  *          then moves between the login/shipping/payment sub-steps client-side, since those three
- *          live on the single real checkout page).
+ *          live on the single real checkout page). Also detaches the login form/coupon box
+ *          WooCommerce hooks onto the very top of the checkout page by default, since
+ *          woocommerce/checkout/form-checkout.php places the login form itself (inside its own
+ *          step panel) and the coupon box is already offered on the cart step.
  *
  * @package Solar_Template
  */
@@ -25,6 +28,16 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Routes the tunnel's real pages to the theme's own template and resolves the current step.
  */
 final class CheckoutController {
+
+	/**
+	 * Detaches WooCommerce's default login form/coupon box from the top of the checkout page.
+	 *
+	 * @return void
+	 */
+	public static function detach_default_checkout_hooks(): void {
+		remove_action( 'woocommerce_before_checkout_form', 'woocommerce_checkout_login_form', 10 );
+		remove_action( 'woocommerce_before_checkout_form', 'woocommerce_checkout_coupon_form', 10 );
+	}
 
 	/**
 	 * Serves the theme's own checkout.php for the cart/checkout/order-received pages, leaving every

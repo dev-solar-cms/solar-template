@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.5.1`.
+Version actuelle : `0.5.2`.
 
 ## Avant une release
 
@@ -30,6 +30,22 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.5.2 — étape de connexion sur la page de paiement
+
+- La page de paiement affiche désormais un panneau « Connexion » pour un visiteur non connecté
+  (authentification WordPress réelle, restylée), avec « Continuer sans compte » et « Créer un
+  compte » (coche la case native correspondante) ; un client déjà connecté passe directement à la
+  suite du formulaire. Les boutons de connexion sociale Google/Facebook sont désactivés et
+  documentés comme non implémentés (dépendance tierce hors périmètre).
+- L'indicateur d'étapes reste synchronisé lors du passage d'un panneau à l'autre, sans jamais
+  soumettre le formulaire de commande avant le clic final sur le bouton de paiement.
+- Décision technique : le formulaire de connexion et l'encart de code promo que WooCommerce ajoute
+  par défaut en haut de la page de paiement sont désormais détachés (le premier vit dans son propre
+  panneau stylé, le second est déjà proposé à l'étape panier).
+- Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif : une connexion
+  réelle avec un utilisateur de test (créé puis supprimé après vérification) redirige vers la page
+  de paiement et fait disparaître le panneau de connexion. Aucun avertissement ni erreur PHP relevé.
 
 ### 0.5.1 — page panier réelle
 

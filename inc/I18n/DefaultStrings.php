@@ -894,6 +894,58 @@ final class DefaultStrings {
 				'fr_FR' => 'Mettre à jour le panier',
 				'en_US' => 'Update cart',
 			),
+			'You must be logged in to checkout.'          => array(
+				'fr_FR' => 'Vous devez être connecté pour passer commande.',
+				'en_US' => 'You must be logged in to checkout.',
+			),
+			'Checkout'                                    => array(
+				'fr_FR' => 'Paiement',
+				'en_US' => 'Checkout',
+			),
+			'Log in to speed up your order'               => array(
+				'fr_FR' => 'Connectez-vous pour accélérer votre commande',
+				'en_US' => 'Log in to speed up your order',
+			),
+			'Password'                                    => array(
+				'fr_FR' => 'Mot de passe',
+				'en_US' => 'Password',
+			),
+			'Remember me'                                 => array(
+				'fr_FR' => 'Se souvenir de moi',
+				'en_US' => 'Remember me',
+			),
+			'Forgot your password?'                       => array(
+				'fr_FR' => 'Mot de passe oublié ?',
+				'en_US' => 'Forgot your password?',
+			),
+			'or continue with'                            => array(
+				'fr_FR' => 'ou continuer avec',
+				'en_US' => 'or continue with',
+			),
+			'Not available yet'                           => array(
+				'fr_FR' => 'Bientôt disponible',
+				'en_US' => 'Not available yet',
+			),
+			"Don't have an account?"                      => array(
+				'fr_FR' => 'Pas de compte ?',
+				'en_US' => "Don't have an account?",
+			),
+			'Create an account'                           => array(
+				'fr_FR' => 'Créer un compte',
+				'en_US' => 'Create an account',
+			),
+			'Continue as guest'                           => array(
+				'fr_FR' => 'Continuer sans compte',
+				'en_US' => 'Continue as guest',
+			),
+			'Back to cart'                                => array(
+				'fr_FR' => 'Retour au panier',
+				'en_US' => 'Back to cart',
+			),
+			'Your order'                                  => array(
+				'fr_FR' => 'Votre commande',
+				'en_US' => 'Your order',
+			),
 		);
 	}
 

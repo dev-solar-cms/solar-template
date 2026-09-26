@@ -65,12 +65,16 @@ solar-template/
 │       ├── blog-preview.php # Grille des 3 derniers articles de blog réels
 │       └── newsletter.php # Formulaire d'inscription newsletter (traité en AJAX)
 ├── woocommerce/         # Surcharges de gabarits natifs WooCommerce (voir « Tunnel de vente » ci-dessous)
-│   └── cart/            # Page panier : articles, code promo, récapitulatif
-│       ├── cart.php     # Liste des articles réels du panier + formulaire de code promo
-│       ├── cart-totals.php # Récapitulatif sticky (sous-total, remise, livraison, total, bouton de paiement)
-│       ├── cart-item-data.php # Métadonnées d'un article (variante/gravure) sur une seule ligne, plutôt que la liste de définitions par défaut
-│       ├── cart-empty.php # État panier vide, stylé
-│       └── proceed-to-checkout-button.php # Bouton nommant explicitement la prochaine étape (connexion ou livraison)
+│   ├── cart/            # Page panier : articles, code promo, récapitulatif
+│   │   ├── cart.php     # Liste des articles réels du panier + formulaire de code promo
+│   │   ├── cart-totals.php # Récapitulatif sticky (sous-total, remise, livraison, total, bouton de paiement)
+│   │   ├── cart-item-data.php # Métadonnées d'un article (variante/gravure) sur une seule ligne, plutôt que la liste de définitions par défaut
+│   │   ├── cart-empty.php # État panier vide, stylé
+│   │   └── proceed-to-checkout-button.php # Bouton nommant explicitement la prochaine étape (connexion ou livraison)
+│   ├── global/
+│   │   └── form-login.php # Formulaire de connexion réutilisable, restylé (repris par la page paiement)
+│   └── checkout/
+│       └── form-checkout.php # Structure de la page paiement : panneaux "login"/"shipping" basculés par assets/js/checkout.js
 ├── languages/           # Fichiers `.mo` compilés (générés, ignorés par git sauf `.gitkeep`)
 ├── vite.config.js       # Configuration du pipeline de build des assets
 ├── .prettierrc.json     # Norme de formatage JS/SCSS, utilisée par `npm run format`
@@ -99,7 +103,7 @@ solar-template/
 │   ├── js/newsletter.js  # Soumission AJAX des formulaires newsletter (`.js-newsletter-form`)
 │   ├── js/catalog.js     # Barre de filtres du catalogue : panneaux, état actif, soumission AJAX
 │   ├── js/product.js     # Fiche produit : changement d'image de la galerie au clic sur une miniature
-	├── js/checkout.js    # Panier : stepper de quantité "−"/"+" à côté du champ natif WooCommerce
+	├── js/checkout.js    # Panier (stepper de quantité) + assistant multi-étapes de la page paiement (login/shipping)
 │   └── dist/             # Sortie compilée (générée par `npm run build`/`dev`, ignorée par git)
 ├── phpunit.xml.dist     # Configuration PHPUnit, utilisée par `composer test`
 ├── tests/php/           # Tests unitaires PHP (bootstrap minimal, pas une installation WordPress complète)
@@ -357,6 +361,31 @@ solar-template/
   bout en bout ensuite : ajout au panier, modification de quantité, retrait d'article et application
   d'un code promo de test (créé puis supprimé après vérification) confirmés fonctionnels dans
   l'environnement Docker réel, sans avertissement ni erreur PHP.
+- La page de paiement (`/checkout/`) est désormais organisée en panneaux basculés côté client par
+  `assets/js/checkout.js` (`initCheckoutSteps()`) : un visiteur non connecté voit d'abord un panneau
+  « Connexion » (`woocommerce/checkout/form-checkout.php`, `woocommerce/global/form-login.php`
+  restylé pour l'authentification réelle — `wp_signon()` via `WC_Form_Handler::process_login()`,
+  inchangé), avec « Continuer sans compte » (si l'inscription à la commande n'est pas obligatoire) et
+  « Créer un compte » (si elle est autorisée, coche la case native `#createaccount` du panneau
+  suivant) ; un client déjà connecté passe directement au panneau « Livraison ». Les boutons sociaux
+  Google/Facebook sont volontairement désactivés et documentés comme non implémentés (dépendance
+  tierce hors périmètre, voir la fiche d'étape correspondante).
+- `Checkout\CheckoutController::detach_default_checkout_hooks()` détache le formulaire de connexion
+  et le encart de code promo que WooCommerce ajoute par défaut en haut de la page de paiement
+  (`woocommerce_before_checkout_form`), puisque `form-checkout.php` place lui-même le premier dans
+  son propre panneau stylé et que le second est déjà proposé à l'étape panier.
+- L'indicateur d'étapes reste synchronisé lors de ces changements de panneau côté client
+  (`updateStepIndicator()` dans `assets/js/checkout.js`) : l'étape « Connexion » passe à `done` et
+  son cercle affiche une coche, l'étape « Livraison » devient `active` et son cercle (un bouton)
+  redevient cliquable pour y revenir. Un cercle d'étape future reste désactivé tant qu'elle n'a pas
+  été atteinte.
+- Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif : une connexion
+  réelle avec un utilisateur de test (créé puis supprimé après vérification) redirige bien vers la
+  page de paiement et fait disparaître entièrement le panneau de connexion (le client passe
+  directement au panneau « Livraison », l'indicateur affichant « Connexion » complétée) ; côté tests
+  automatisés, `initCheckoutSteps()` est couvert par des scénarios simulant le clic sur « Continuer
+  sans compte », sur « Créer un compte » (coche la case native) et sur un cercle d'étape future
+  désactivé. Aucun avertissement ni erreur PHP relevé.
 
 ### Pied de page du thème (`footer.php`, `assets/scss/_footer.scss`)
 

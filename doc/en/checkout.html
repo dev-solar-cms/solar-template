@@ -126,6 +126,48 @@
 			(created then deleted after verification) all confirmed working. No PHP warning or error
 			raised.
 		</p>
+
+		<h2 id="login">Login</h2>
+		<p>
+			The checkout page is now organized into panels toggled client-side by
+			<code>assets/js/checkout.js</code> (<code>initCheckoutSteps()</code>): a not-logged-in
+			visitor first sees a "Login" panel (<code>woocommerce/checkout/form-checkout.php</code>), an
+			already logged-in customer goes straight to the "Shipping" panel. No panel is ever submitted
+			before the final click on the payment button — these are just sections of one single native
+			form, shown or hidden.
+		</p>
+		<p>
+			The login form itself (<code>woocommerce/global/form-login.php</code>) stays real WordPress
+			authentication (<code>wp_signon()</code>, unchanged) — only its presentation is restyled, the
+			native field names, nonce and redirect field stay identical. "Continue as guest" (offered
+			unless an account is required to order) simply switches to the "Shipping" panel — guest
+			checkout is already WooCommerce's native behavior, nothing to enable server-side. "Create an
+			account" (offered when registration is allowed at checkout) also switches to that panel and
+			checks the native <code>#createaccount</code> checkbox that reveals the account-creation
+			fields there.
+		</p>
+		<p>
+			The Google/Facebook social login buttons are deliberately disabled
+			(<code>disabled</code>, "Not available yet" tooltip) and documented as not implemented — a
+			real OAuth integration would require a third-party service, out of scope for this step.
+		</p>
+		<p>
+			Technical decision:
+			<code>Checkout\CheckoutController::detach_default_checkout_hooks()</code> detaches the login
+			form and coupon box WooCommerce adds to the top of the checkout page by default, since the
+			former now lives in its own styled panel and the latter is already offered on the cart step.
+		</p>
+		<p>
+			The step indicator stays in sync across these panel changes: the "Login" step turns done
+			(checkmark), the "Shipping" step turns active and its circle becomes clickable again to go
+			back; a future step's circle stays disabled until it's actually reached.
+		</p>
+		<p>
+			Verified end to end in the real Docker environment with WooCommerce active: a real login
+			with a test user (created then deleted after verification) correctly redirects to the
+			checkout page and makes the login panel disappear entirely, the customer going straight to
+			the "Shipping" panel with the "Login" step marked done. No PHP warning or error raised.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

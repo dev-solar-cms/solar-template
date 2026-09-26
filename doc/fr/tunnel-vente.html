@@ -131,6 +131,53 @@
 			d'un code promo de test (créé puis supprimé après vérification) tous confirmés fonctionnels.
 			Aucun avertissement ni erreur PHP relevé.
 		</p>
+
+		<h2 id="connexion">Connexion</h2>
+		<p>
+			La page de paiement est désormais organisée en panneaux basculés côté client par
+			<code>assets/js/checkout.js</code> (<code>initCheckoutSteps()</code>) : un visiteur non
+			connecté voit d'abord un panneau « Connexion »
+			(<code>woocommerce/checkout/form-checkout.php</code>), un client déjà connecté passe
+			directement au panneau « Livraison ». Aucun panneau n'est jamais soumis avant le clic final
+			sur le bouton de paiement — ce sont uniquement des sections d'un seul et même formulaire
+			natif, montrées ou masquées.
+		</p>
+		<p>
+			Le formulaire de connexion lui-même (<code>woocommerce/global/form-login.php</code>) reste
+			une authentification WordPress réelle (<code>wp_signon()</code>, inchangée) : seule sa
+			présentation est restylée, les noms de champs, le nonce et le champ de redirection natifs
+			sont conservés à l'identique. « Continuer sans compte » (proposé sauf si le compte est
+			obligatoire pour commander) fait simplement basculer vers le panneau « Livraison » — le
+			paiement en tant qu'invité est déjà le comportement natif de WooCommerce, rien à activer
+			côté serveur. « Créer un compte » (proposé si l'inscription est autorisée à la commande)
+			bascule également vers ce panneau et coche la case native <code>#createaccount</code> qui y
+			révèle les champs de création de compte.
+		</p>
+		<p>
+			Les boutons de connexion sociale Google/Facebook sont volontairement désactivés
+			(<code>disabled</code>, infobulle « Bientôt disponible ») et documentés comme non
+			implémentés — une intégration OAuth réelle nécessiterait un service tiers, hors périmètre de
+			cette étape.
+		</p>
+		<p>
+			Décision technique : <code>Checkout\CheckoutController::detach_default_checkout_hooks()</code>
+			détache le formulaire de connexion et l'encart de code promo que WooCommerce ajoute par
+			défaut en haut de la page de paiement, puisque le premier est désormais placé dans son propre
+			panneau stylé et que le second est déjà proposé à l'étape panier.
+		</p>
+		<p>
+			L'indicateur d'étapes reste synchronisé lors de ces changements de panneau : l'étape
+			« Connexion » passe à complétée (coche), l'étape « Livraison » devient active et son cercle
+			redevient cliquable pour y revenir ; un cercle d'étape future reste désactivé tant qu'elle
+			n'a pas été atteinte.
+		</p>
+		<p>
+			Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif : une
+			connexion réelle avec un utilisateur de test (créé puis supprimé après vérification) redirige
+			bien vers la page de paiement et fait disparaître entièrement le panneau de connexion, le
+			client passant directement au panneau « Livraison » avec l'étape « Connexion » marquée
+			complétée. Aucun avertissement ni erreur PHP relevé.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>
