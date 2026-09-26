@@ -994,6 +994,50 @@ final class DefaultStrings {
 				'fr_FR' => 'Sous-total',
 				'en_US' => 'Subtotal',
 			),
+			'Payment methods'                              => array(
+				'fr_FR' => 'Moyens de paiement',
+				'en_US' => 'Payment methods',
+			),
+			'Sorry, it seems that there are no available payment methods. Please contact us if you require assistance or wish to make alternate arrangements.' => array(
+				'fr_FR' => "Désolé, il semble qu'aucun moyen de paiement ne soit disponible. Merci de nous contacter si vous avez besoin d'aide ou souhaitez un arrangement particulier.",
+				'en_US' => 'Sorry, it seems that there are no available payment methods. Please contact us if you require assistance or wish to make alternate arrangements.',
+			),
+			'Please fill in your details above to see available payment methods.' => array(
+				'fr_FR' => 'Merci de renseigner vos informations ci-dessus pour afficher les moyens de paiement disponibles.',
+				'en_US' => 'Please fill in your details above to see available payment methods.',
+			),
+			'This order requires no payment.'              => array(
+				'fr_FR' => 'Cette commande ne nécessite aucun paiement.',
+				'en_US' => 'This order requires no payment.',
+			),
+			'Your data is protected by SSL 256-bit encryption.' => array(
+				'fr_FR' => 'Vos données sont protégées par un chiffrement SSL 256 bits.',
+				'en_US' => 'Your data is protected by SSL 256-bit encryption.',
+			),
+			'Back'                                         => array(
+				'fr_FR' => 'Retour',
+				'en_US' => 'Back',
+			),
+			'If JavaScript is disabled in your browser, click %1$sUpdate Totals%2$s before placing your order — you may otherwise be charged more than the amount shown above.' => array(
+				'fr_FR' => 'Si JavaScript est désactivé dans votre navigateur, cliquez sur %1$sMettre à jour les totaux%2$s avant de passer commande — le montant facturé pourrait sinon être supérieur à celui affiché ci-dessus.',
+				'en_US' => 'If JavaScript is disabled in your browser, click %1$sUpdate Totals%2$s before placing your order — you may otherwise be charged more than the amount shown above.',
+			),
+			'Update totals'                                => array(
+				'fr_FR' => 'Mettre à jour les totaux',
+				'en_US' => 'Update totals',
+			),
+			'Proceed to payment'                           => array(
+				'fr_FR' => 'Procéder au paiement',
+				'en_US' => 'Proceed to payment',
+			),
+			'🔒 Pay %s'                                     => array(
+				'fr_FR' => '🔒 Payer %s',
+				'en_US' => '🔒 Pay %s',
+			),
+			'By placing your order, you accept our %1$sT&Cs%2$s and our %3$sprivacy policy%4$s.' => array(
+				'fr_FR' => 'En passant commande, vous acceptez nos %1$sC.G.V.%2$s et notre %3$spolitique de confidentialité%4$s.',
+				'en_US' => 'By placing your order, you accept our %1$sT&Cs%2$s and our %3$sprivacy policy%4$s.',
+			),
 		);
 	}
 

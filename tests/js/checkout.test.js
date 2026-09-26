@@ -12,9 +12,10 @@ import { initCartQuantitySteppers, initCheckoutSteps } from '../../assets/js/che
 
 /**
  * Builds the slice of the checkout page's real markup this behaviour attaches to: the step
- * indicator (template-parts/checkout/step-indicator.php) for the login/shipping/payment steps, plus
- * a login panel and a hidden shipping panel (woocommerce/checkout/form-checkout.php), matching a
- * guest visitor's first page load.
+ * indicator (template-parts/checkout/step-indicator.php) for the login/shipping/payment steps, a
+ * login panel, a hidden shipping panel with its own "Proceed to payment" button, a hidden payment
+ * panel with its own "Back" button, and the shared order summary sidebar
+ * (woocommerce/checkout/form-checkout.php), matching a guest visitor's first page load.
  *
  * @return {void}
  */
@@ -36,10 +37,19 @@ function renderCheckoutStepsFixture() {
 			<button type="button" class="checkout-login-panel__guest" data-goto-step="shipping">Continue as guest</button>
 		</div>
 		<form>
-			<div class="checkout-step" data-step-panel="shipping" hidden>
-				<p class="create-account">
-					<input type="checkbox" id="createaccount" name="createaccount" value="1" />
-				</p>
+			<div class="checkout-page__layout">
+				<div class="checkout-page__main">
+					<div class="checkout-step" data-step-panel="shipping" hidden>
+						<p class="create-account">
+							<input type="checkbox" id="createaccount" name="createaccount" value="1" />
+						</p>
+						<button type="button" data-goto-step="payment">Proceed to payment</button>
+					</div>
+					<div class="checkout-step" data-step-panel="payment" hidden>
+						<button type="button" data-goto-step="shipping">Back</button>
+					</div>
+				</div>
+				<div class="checkout-page__sidebar" hidden></div>
 			</div>
 		</form>
 	`;
@@ -157,6 +167,37 @@ describe('assets/js/checkout.js', () => {
 			document.body.innerHTML = '<div>plain page</div>';
 
 			expect(() => initCheckoutSteps()).not.toThrow();
+		});
+
+		it('reveals the shared order summary sidebar once past the login step', () => {
+			initCheckoutSteps();
+
+			expect(document.querySelector('.checkout-page__sidebar').hidden).toBe(true);
+
+			document.querySelector('.checkout-login-panel__guest').click();
+
+			expect(document.querySelector('.checkout-page__sidebar').hidden).toBe(false);
+		});
+
+		it('keeps the sidebar visible when moving from shipping to payment, and back', () => {
+			initCheckoutSteps();
+
+			document.querySelector('.checkout-login-panel__guest').click();
+			document
+				.querySelector('[data-step-panel="shipping"] [data-goto-step="payment"]')
+				.click();
+
+			expect(document.querySelector('[data-step-panel="shipping"]').hidden).toBe(true);
+			expect(document.querySelector('[data-step-panel="payment"]').hidden).toBe(false);
+			expect(document.querySelector('.checkout-page__sidebar').hidden).toBe(false);
+
+			document
+				.querySelector('[data-step-panel="payment"] [data-goto-step="shipping"]')
+				.click();
+
+			expect(document.querySelector('[data-step-panel="shipping"]').hidden).toBe(false);
+			expect(document.querySelector('[data-step-panel="payment"]').hidden).toBe(true);
+			expect(document.querySelector('.checkout-page__sidebar').hidden).toBe(false);
 		});
 	});
 });

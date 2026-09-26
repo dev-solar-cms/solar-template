@@ -15,12 +15,21 @@
 
 /**
  * Step keys that live on the single checkout page and can be switched between client-side, in
- * wizard order. "payment" is reserved for a future step that splits it out of "shipping" into its
- * own styled panel.
+ * wizard order.
  *
  * @type {string[]}
  */
 const IN_PAGE_STEPS = ['login', 'shipping', 'payment'];
+
+/**
+ * Step keys for which the order summary sidebar (`.checkout-page__sidebar`, shared by both of the
+ * form's "shipping" and "payment" panels) should be visible. It isn't itself a `[data-step-panel]`
+ * element — it stays in the DOM across both steps rather than being re-rendered — so its own
+ * visibility is toggled here directly instead of through the generic panel-hiding loop below.
+ *
+ * @type {string[]}
+ */
+const SIDEBAR_VISIBLE_STEPS = ['shipping', 'payment'];
 
 /** @type {((event: MouseEvent) => void)|null} */
 let checkoutStepsClickHandler = null;
@@ -101,9 +110,9 @@ function updateStepIndicator(activeStep) {
 }
 
 /**
- * Shows the given step's panel and hides every other `[data-step-panel]` section, then syncs the
- * step indicator to match. Does nothing if no panel matches (e.g. the "payment" step, not split
- * into its own panel yet).
+ * Shows the given step's panel and hides every other `[data-step-panel]` section, shows/hides the
+ * shared order summary sidebar to match, then syncs the step indicator. Does nothing if no panel
+ * matches the given step.
  *
  * @param {string} step Step key to show.
  * @return {void}
@@ -119,6 +128,11 @@ function showCheckoutStep(step) {
 	panels.forEach((panel) => {
 		panel.hidden = panel !== matchingPanel;
 	});
+
+	const sidebar = document.querySelector('.checkout-page__sidebar');
+	if (sidebar) {
+		sidebar.hidden = !SIDEBAR_VISIBLE_STEPS.includes(step);
+	}
 
 	updateStepIndicator(step);
 }

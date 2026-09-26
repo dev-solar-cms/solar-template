@@ -485,6 +485,16 @@
 	border: none;
 }
 
+.checkout-step__actions {
+	display: flex;
+	gap: 12px;
+	margin-top: 24px;
+}
+
+.checkout-step__actions-primary {
+	flex: 1;
+}
+
 // Login step (woocommerce/global/form-login.php's own markup lives inside .checkout-login-panel).
 
 [data-step-panel='login'] {
@@ -765,4 +775,103 @@
 
 .checkout-summary__line--shipping-methods {
 	display: block;
+}
+
+.checkout-summary__terms {
+	margin-top: 16px;
+	color: $color-muted;
+	font-size: 11px;
+	line-height: 1.6;
+
+	a {
+		color: $color-gold;
+	}
+}
+
+// -----------------------------------------------------------------------------------------------
+// Payment step (woocommerce/checkout/payment.php, payment-method.php)
+// -----------------------------------------------------------------------------------------------
+
+.payment-methods {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	margin-bottom: 24px;
+}
+
+.payment-methods__option {
+	border: 1.5px solid $color-border;
+	border-radius: $radius-content-card;
+	padding: 16px 18px;
+
+	label {
+		display: flex;
+		align-items: center;
+		gap: 14px;
+		cursor: pointer;
+	}
+
+	input[type='radio'] {
+		accent-color: $color-dark;
+		width: 18px;
+		height: 18px;
+	}
+}
+
+.payment-methods__option.is-selected {
+	border-width: 2px;
+	border-color: $color-dark;
+	background: rgba(13, 13, 13, 0.02);
+}
+
+.payment-methods__label {
+	flex: 1;
+	color: $color-dark;
+	font-size: 14.5px;
+	font-weight: $font-weight-bold;
+}
+
+.payment-methods__icon {
+	display: flex;
+	color: $color-muted;
+}
+
+.payment_box {
+	margin-top: 12px;
+	padding: 14px 16px;
+	border-radius: $radius-input;
+	background: $color-bg;
+	color: $color-muted;
+	font-size: 13px;
+	line-height: 1.6;
+}
+
+.checkout-payment__notice {
+	padding: 16px 18px;
+	border: 1.5px solid $color-border;
+	border-radius: $radius-content-card;
+	background: $color-surface;
+	color: $color-muted;
+	font-size: 13.5px;
+}
+
+.checkout-payment__secure-note {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-bottom: 24px;
+	color: $color-muted;
+	font-size: 12px;
+}
+
+.checkout-payment__submit {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	align-items: flex-end;
+	gap: 8px;
+}
+
+.checkout-payment__place-order {
+	width: 100%;
 }

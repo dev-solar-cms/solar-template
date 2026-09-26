@@ -13,7 +13,9 @@
  *          `woocommerce-checkout-review-order-table` class on its root element even though it is no
  *          longer a `<table>`: WooCommerce's own checkout.js targets that exact CSS selector to
  *          replace this template's output on every AJAX totals refresh, regardless of the actual
- *          markup underneath it.
+ *          markup underneath it. This same sidebar stays visible for both the "shipping" and
+ *          "payment" step panels (woocommerce/checkout/form-checkout.php), so its own terms/
+ *          privacy-policy note below the total is relevant on either one.
  *
  * @package Solar_Template
  */
@@ -121,4 +123,17 @@ defined( 'ABSPATH' ) || exit;
 	</div>
 
 	<?php do_action( 'woocommerce_review_order_after_order_total' ); ?>
+
+	<p class="checkout-summary__terms">
+		<?php
+		printf(
+			/* translators: 1: opening link tag to the terms and conditions page, 2: closing link tag, 3: opening link tag to the privacy policy page, 4: closing link tag. */
+			esc_html__( 'By placing your order, you accept our %1$sT&Cs%2$s and our %3$sprivacy policy%4$s.', 'solar-template' ),
+			'<a href="' . esc_url( \Solar_Template\Support\StoreLinks::page_url_by_slug( 'terms-and-conditions' ) ) . '">',
+			'</a>',
+			'<a href="' . esc_url( \Solar_Template\Support\StoreLinks::page_url_by_slug( 'privacy-policy' ) ) . '">',
+			'</a>'
+		); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- every dynamic part is already escaped above (esc_html__() on the source text, esc_url() on the hrefs), the rest is fixed markup.
+		?>
+	</p>
 </div>

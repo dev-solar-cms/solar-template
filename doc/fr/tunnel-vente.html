@@ -74,9 +74,9 @@
 			que sur trois pages séparées. <code>Checkout\CheckoutController::current_step()</code> ne
 			détermine donc que la sous-étape visible au tout premier chargement de cette page (Connexion
 			pour un visiteur non connecté, Livraison directement pour un client déjà connecté) — se
-			déplacer entre ces trois sous-étapes ensuite se fera côté client, sans jamais soumettre le
-			formulaire avant le clic final sur le bouton de paiement (étapes suivantes de ce même
-			chantier).
+			déplacer entre ces trois sous-étapes ensuite se fait côté client
+			(<code>assets/js/checkout.js</code>, <code>initCheckoutSteps()</code>), sans jamais
+			soumettre le formulaire avant le clic final sur le bouton de paiement.
 		</p>
 		<p>
 			Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif : la page
@@ -230,6 +230,51 @@
 			simulant directement la requête AJAX <code>update_order_review</code> de WooCommerce —
 			le total, l'état sélectionné des cartes radio et le fragment renvoyé reflètent bien le
 			changement de méthode. Aucun avertissement ni erreur PHP relevé.
+		</p>
+
+		<h2 id="paiement">Paiement</h2>
+		<p>
+			Le paiement dispose désormais de son propre panneau
+			(<code>woocommerce/checkout/payment.php</code>), séparé du panneau « Livraison » plutôt que
+			combiné avec lui comme précédemment : le panneau « Livraison » se termine par un bouton
+			« Procéder au paiement » qui bascule vers le panneau « Paiement » sans jamais soumettre le
+			formulaire, et celui-ci propose un bouton « ← Retour » symétrique. Le récapitulatif de
+			commande (<code>#order_review</code>) reste un seul et même élément du DOM, partagé par ces
+			deux panneaux (masqué uniquement pendant l'étape Connexion) plutôt que dupliqué, pour ne
+			jamais dupliquer l'identifiant/la classe CSS que le script <code>checkout.js</code> natif de
+			WooCommerce cible pour ses rafraîchissements AJAX.
+		</p>
+		<p>
+			<code>Solar_Template\Checkout\CheckoutController::detach_default_checkout_hooks()</code>
+			détache désormais aussi le hook natif (<code>woocommerce_checkout_payment</code>, accroché sur
+			<code>woocommerce_checkout_order_review</code>) qui aurait sinon rendu une seconde fois la
+			liste des moyens de paiement juste après le récapitulatif — le panneau « Paiement » l'appelle
+			lui-même directement (<code>woocommerce_checkout_payment()</code>), à l'endroit voulu.
+		</p>
+		<p>
+			Les moyens de paiement réellement configurés par la boutique s'affichent en cartes radio
+			(<code>woocommerce/checkout/payment-method.php</code>, même convention visuelle que les cartes
+			de méthode de livraison de l'étape précédente) avec une icône pertinente
+			(<code>Solar_Template\Checkout\PaymentGatewayIcons</code>) : les passerelles natives de
+			WooCommerce (virement bancaire, chèque, paiement à la livraison — aucune dépendance à un plugin
+			de paiement tiers, ce thème n'en installe ni n'en suppose aucun) ont chacune une icône dédiée ;
+			toute autre passerelle qu'une boutique activerait plus tard (une extension de paiement réelle,
+			par exemple) reçoit une icône carte générique plutôt que rien du tout.
+		</p>
+		<p>
+			Le bouton de validation reprend le texte « 🔒 Payer [montant] » de la maquette
+			(<code>Solar_Template\Checkout\CheckoutPayment</code>, filtre natif
+			<code>woocommerce_order_button_text</code>), calculé à partir du total réel et courant du
+			panier plutôt qu'un texte figé — il reste donc toujours exact, y compris après un changement de
+			méthode de livraison ou l'application d'un code promo.
+		</p>
+		<p>
+			Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif : les trois
+			passerelles natives (virement bancaire, chèque, paiement à la livraison) activées puis affichées
+			correctement avec leur icône respective, et une commande complète simulée avec la requête réelle
+			que le formulaire de paiement soumettrait (<code>?wc-ajax=checkout</code>) — confirmée créée avec
+			le bon moyen de paiement et le bon total (commande de test supprimée après vérification). Aucun
+			avertissement ni erreur PHP relevé.
 		</p>
 	</main>
 	<script src="../assets/doc.js"></script>

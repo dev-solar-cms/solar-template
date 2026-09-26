@@ -71,8 +71,8 @@
 			<code>Checkout\CheckoutController::current_step()</code> therefore only resolves which
 			sub-step is visible on that page's very first load (Login for a guest visitor, Shipping
 			directly for an already logged-in customer) — moving between those three sub-steps afterward
-			will happen client-side, never submitting the form before the final click on the payment
-			button (upcoming steps of this same body of work).
+			happens client-side (<code>assets/js/checkout.js</code>, <code>initCheckoutSteps()</code>),
+			never submitting the form before the final click on the payment button.
 		</p>
 		<p>
 			Verified end to end in the real Docker environment with WooCommerce active: the cart page
@@ -217,6 +217,49 @@
 			<code>update_order_review</code> AJAX request directly — the total, the radio cards' selected
 			state and the returned fragment all correctly reflect the method change. No PHP warning or
 			error raised.
+		</p>
+
+		<h2 id="payment">Payment</h2>
+		<p>
+			Payment now has its own panel (<code>woocommerce/checkout/payment.php</code>), separate from
+			the "Shipping" panel rather than combined with it as before: the "Shipping" panel now ends
+			with a "Proceed to payment" button that switches to the "Payment" panel without ever
+			submitting the form, and that panel offers a matching "← Back" button. The order summary
+			(<code>#order_review</code>) stays a single, shared DOM element across both panels (hidden
+			only during the Login step) rather than duplicated, so as to never duplicate the id/CSS class
+			WooCommerce's own <code>checkout.js</code> targets for its AJAX refreshes.
+		</p>
+		<p>
+			<code>Solar_Template\Checkout\CheckoutController::detach_default_checkout_hooks()</code> now
+			also detaches the native hook (<code>woocommerce_checkout_payment</code>, hooked onto
+			<code>woocommerce_checkout_order_review</code>) that would otherwise render the payment method
+			list a second time right after the order summary — the "Payment" panel calls it itself
+			(<code>woocommerce_checkout_payment()</code>), exactly where it belongs.
+		</p>
+		<p>
+			A store's actually configured payment gateways render as radio cards
+			(<code>woocommerce/checkout/payment-method.php</code>, the same visual convention as the
+			previous step's shipping method cards) with a relevant icon
+			(<code>Solar_Template\Checkout\PaymentGatewayIcons</code>): WooCommerce's own native
+			gateways (direct bank transfer, cheque payment, cash on delivery — no dependency on any
+			third-party payment plugin, this theme installs and assumes none) each get a dedicated icon;
+			any other gateway a store activates later (a real payment extension, say) gets a generic card
+			icon rather than nothing at all.
+		</p>
+		<p>
+			The submit button reuses the design handoff's own "🔒 Pay [amount]" copy
+			(<code>Solar_Template\Checkout\CheckoutPayment</code>, the native
+			<code>woocommerce_order_button_text</code> filter), computed from the cart's real, current
+			total rather than a fixed string — so it always stays accurate, including after a shipping
+			method change or a coupon being applied.
+		</p>
+		<p>
+			Verified end to end in the real Docker environment with WooCommerce active: the three native
+			gateways (direct bank transfer, cheque payment, cash on delivery) enabled and correctly
+			rendered with their respective icon, and a full order simulated with the exact request the
+			payment form would submit (<code>?wc-ajax=checkout</code>) — confirmed created with the right
+			payment method and total (test order deleted after verification). No PHP warning or error
+			raised.
 		</p>
 	</main>
 	<script src="../assets/doc.js"></script>

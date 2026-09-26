@@ -38,7 +38,7 @@ solar-template/
 │   ├── Newsletter/      # Stockage des inscrits à la newsletter (SubscriberRepository)
 │   ├── Catalog/         # Options/filtres/pagination/contrôleurs du catalogue produits
 │   ├── Product/         # Logique de la fiche produit (galerie, panneau, variations, onglets, produits similaires)
-│   └── Checkout/        # Tunnel de vente : routage, indicateur d'étapes, vue du panier, disposition des champs d'adresse
+│   └── Checkout/        # Tunnel de vente : routage, indicateur d'étapes, vue du panier, disposition des champs d'adresse, icônes/texte du paiement
 ├── template-parts/      # Fragments de gabarit réutilisables (`get_template_part()`)
 │   ├── product-card.php # Carte produit (image, badge, wishlist, overlay panier, prix, swatches)
 │   ├── blog-card.php    # Carte article de blog (image 16:10, badge catégorie, meta, titre, extrait, auteur)
@@ -75,10 +75,12 @@ solar-template/
 │   ├── global/
 │   │   └── form-login.php # Formulaire de connexion réutilisable, restylé (repris par la page paiement)
 │   └── checkout/
-│       ├── form-checkout.php # Structure de la page paiement : panneaux "login"/"shipping" basculés par assets/js/checkout.js
+│       ├── form-checkout.php # Structure de la page paiement : panneaux "login"/"shipping"/"payment" basculés par assets/js/checkout.js
 │       ├── form-billing.php # Champs d'adresse réels en grille 2 colonnes (Solar_Template\Checkout\CheckoutFieldsLayout)
 │       ├── form-shipping.php # Bascule « Livrer à une adresse différente » + note de commande
-│       └── review-order.php # Récapitulatif compact (mêmes styles que la barre latérale du panier), à l'intérieur de #order_review
+│       ├── review-order.php # Récapitulatif compact (mêmes styles que la barre latérale du panier), à l'intérieur de #order_review, partagé par les panneaux "shipping"/"payment"
+│       ├── payment.php   # Panneau paiement : moyens de paiement réels en cartes radio, note sécurité, bouton de validation
+│       └── payment-method.php # Une carte radio de moyen de paiement (icône via Solar_Template\Checkout\PaymentGatewayIcons)
 ├── languages/           # Fichiers `.mo` compilés (générés, ignorés par git sauf `.gitkeep`)
 ├── vite.config.js       # Configuration du pipeline de build des assets
 ├── .prettierrc.json     # Norme de formatage JS/SCSS, utilisée par `npm run format`
@@ -336,8 +338,8 @@ solar-template/
   (`/checkout/`, formulaire natif unique) : `Checkout\CheckoutController::current_step()` ne
   détermine que la sous-étape visible au premier chargement (Connexion pour un invité, Livraison
   directement pour un client déjà connecté) — se déplacer entre ces trois sous-étapes ensuite se
-  fait côté client (assets/js/checkout.js, étapes suivantes de ce même chantier), sans
-  jamais soumettre le formulaire avant le clic final sur « Payer ».
+  fait côté client (`assets/js/checkout.js`, `initCheckoutSteps()`), sans jamais soumettre le
+  formulaire avant le clic final sur « Payer ».
 - La page panier (`/cart/`) affiche les vrais articles du panier
   (`Checkout\CartView::items()` : image, nom, métadonnées de variante/gravure sur une seule
   ligne — `woocommerce/cart/cart-item-data.php` réimplémente la sortie par défaut de WooCommerce en
@@ -422,6 +424,29 @@ solar-template/
   avec deux méthodes de livraison de test (gratuite et à 5,99€, supprimées après vérification) :
   le total, l'état sélectionné des cartes radio et le fragment renvoyé reflètent bien le changement.
   Aucun avertissement ni erreur PHP relevé sur l'ensemble de la vérification.
+- Le paiement dispose désormais de son propre panneau (`woocommerce/checkout/payment.php`, rendu par
+  un appel direct à `woocommerce_checkout_payment()` depuis `form-checkout.php`), séparé du panneau
+  « Livraison » plutôt que combiné avec lui : un bouton « Procéder au paiement » quitte le panneau
+  adresse sans le soumettre, un bouton « ← Retour » fait l'inverse. Le récapitulatif de commande
+  (`#order_review`) reste un seul élément partagé, visible sur ces deux panneaux (masqué uniquement
+  pendant l'étape Connexion) plutôt que dupliqué, pour ne jamais dupliquer l'identifiant/la classe
+  CSS que le script `checkout.js` natif de WooCommerce cible pour ses rafraîchissements AJAX.
+  `Checkout\CheckoutController::detach_default_checkout_hooks()` détache aussi le hook natif qui
+  aurait sinon rendu une seconde fois la liste des moyens de paiement à la suite du récapitulatif.
+- Les moyens de paiement réellement configurés par la boutique s'affichent en cartes radio
+  (`woocommerce/checkout/payment-method.php`, même convention que les cartes de méthode de livraison)
+  avec une icône pertinente (`Solar_Template\Checkout\PaymentGatewayIcons`) — les passerelles
+  natives de WooCommerce (virement bancaire, chèque, paiement à la livraison ; aucune dépendance à un
+  plugin de paiement tiers, voir DECISIONS.md §2) ont chacune une icône dédiée, toute autre passerelle
+  qu'une boutique installerait plus tard reçoit une icône carte générique plutôt que rien.
+- Le bouton de validation reprend le texte « 🔒 Payer [montant] » de la maquette
+  (`Solar_Template\Checkout\CheckoutPayment`, filtre `woocommerce_order_button_text`), calculé à
+  partir du total réel et courant du panier plutôt qu'un texte figé.
+- **Vérifié de bout en bout dans l'environnement Docker réel** : trois passerelles natives activées
+  (virement bancaire, chèque, paiement à la livraison), une commande complète simulée avec la requête
+  réelle que le formulaire de paiement soumettrait (`?wc-ajax=checkout`) confirmée créée avec le bon
+  moyen de paiement et le bon total (commande de test supprimée après vérification). Aucun
+  avertissement ni erreur PHP relevé.
 
 ### Pied de page du thème (`footer.php`, `assets/scss/_footer.scss`)
 
