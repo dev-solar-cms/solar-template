@@ -1,0 +1,90 @@
+<!--
+	Créé le : 2026-09-26 10:00 CEST
+	Rôle : Page de documentation en français décrivant le tunnel de vente du thème, construit page
+	       par page.
+	Auteur : David ROMERA <d.romera.11@gmail.com>
+	Objectif : Documenter, en français, chaque page du tunnel de vente au fur et à mesure de sa
+	           construction.
+-->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Tunnel de vente — Documentation Solar Template</title>
+	<link rel="stylesheet" href="../assets/doc.css" />
+</head>
+<body>
+	<aside class="doc-sidebar">
+		<a class="doc-brand" href="index.html">Solar Template</a>
+		<nav>
+			<ul>
+				<li><a href="index.html">Accueil</a></li>
+				<li><a href="infrastructure.html">Infrastructure</a></li>
+				<li><a href="design-system.html">Système de design</a></li>
+				<li><a href="structure-commune.html">Structure commune</a></li>
+				<li><a href="page-accueil.html">Page d'accueil</a></li>
+				<li><a href="catalogue.html">Catalogue produits</a></li>
+				<li><a href="fiche-produit.html">Fiche produit</a></li>
+				<li><a href="tunnel-vente.html">Tunnel de vente</a></li>
+			</ul>
+		</nav>
+		<div class="doc-lang-switch">
+			<a href="../en/checkout.html">EN</a>
+			<a class="is-active" href="tunnel-vente.html">FR</a>
+		</div>
+	</aside>
+	<main class="doc-content">
+		<h1>Tunnel de vente</h1>
+		<p>
+			Le tunnel de vente (panier, connexion, livraison, paiement, confirmation) reste construit sur
+			de vraies pages WordPress/WooCommerce (<code>/panier/</code>, <code>/commande/</code>,
+			<code>/commande/order-received/...</code>, selon les réglages de permaliens de la boutique),
+			habillées par les propres gabarits du thème plutôt que remplacées par des vues dédiées.
+		</p>
+
+		<h2 id="routage-et-indicateur">Routage et indicateur d'étapes</h2>
+		<p>
+			<code>Solar_Template\Checkout\CheckoutController::template_include()</code> (accroché au
+			filtre WordPress <code>template_include</code>) sert le gabarit propre du thème,
+			<code>checkout.php</code>, dès que <code>is_cart()</code> ou <code>is_checkout()</code> est
+			vrai — même mécanisme de contrôleur que celui déjà en place pour le catalogue produits.
+			Ce choix évite de dépendre du slug de ces pages (configurable dans les réglages WooCommerce),
+			contrairement à un gabarit <code>page-{slug}.php</code> classique.
+		</p>
+		<p>
+			<code>checkout.php</code> ouvre le document avec <code>get_header('checkout')</code> /
+			<code>get_footer('checkout')</code>, chargeant <code>header-checkout.php</code> /
+			<code>footer-checkout.php</code> plutôt que les gabarits globaux du site : le tunnel n'a
+			volontairement ni navigation principale, ni mega menu, ni recherche, pour ne pas distraire le
+			client en cours d'achat. L'en-tête minimal n'affiche que la marque (lien vers l'accueil) et
+			une mention « Paiement 100% sécurisé » ; le pied de page minimal n'affiche que les liens
+			légaux, le contact, le copyright et une mention de paiement sécurisé SSL.
+		</p>
+		<p>
+			<code>Solar_Template\Checkout\StepIndicator::steps()</code> calcule, pour chacune des 5
+			étapes (Panier, Connexion, Livraison, Paiement, Confirmation), son état — complétée, active
+			ou future — par rapport à l'étape courante, et <code>template-parts/checkout/step-
+			indicator.php</code> l'affiche (cercles numérotés, ligne de progression, libellés), partagé
+			par toutes les pages du tunnel.
+		</p>
+		<p>
+			Décision technique : les étapes Connexion, Livraison et Paiement vivent en réalité sur une
+			seule et même page WooCommerce (<code>/commande/</code>, un formulaire natif unique) plutôt
+			que sur trois pages séparées. <code>Checkout\CheckoutController::current_step()</code> ne
+			détermine donc que la sous-étape visible au tout premier chargement de cette page (Connexion
+			pour un visiteur non connecté, Livraison directement pour un client déjà connecté) — se
+			déplacer entre ces trois sous-étapes ensuite se fera côté client, sans jamais soumettre le
+			formulaire avant le clic final sur le bouton de paiement (étapes suivantes de ce même
+			chantier).
+		</p>
+		<p>
+			Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif : la page
+			panier affiche l'indicateur avec l'étape « Panier » active et les quatre suivantes en attente ;
+			après ajout d'un produit au panier, la page de commande affiche « Panier » complétée et
+			« Connexion » active pour un visiteur non connecté. Aucun avertissement ni erreur PHP relevé.
+		</p>
+	</main>
+	<script src="../assets/doc.js"></script>
+</body>
+</html>

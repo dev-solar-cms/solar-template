@@ -1,0 +1,86 @@
+<!--
+	Created: 2026-09-26 10:00 CEST
+	Role: English documentation page describing the theme's checkout flow, built page by page.
+	Author: David ROMERA <d.romera.11@gmail.com>
+	Purpose: Document, in English, every checkout flow page as it is built.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Checkout — Solar Template documentation</title>
+	<link rel="stylesheet" href="../assets/doc.css" />
+</head>
+<body>
+	<aside class="doc-sidebar">
+		<a class="doc-brand" href="index.html">Solar Template</a>
+		<nav>
+			<ul>
+				<li><a href="index.html">Home</a></li>
+				<li><a href="infrastructure.html">Infrastructure</a></li>
+				<li><a href="design-system.html">Design system</a></li>
+				<li><a href="structure-commune.html">Common structure</a></li>
+				<li><a href="page-accueil.html">Home page</a></li>
+				<li><a href="catalog.html">Product catalog</a></li>
+				<li><a href="product-page.html">Product page</a></li>
+				<li><a href="checkout.html">Checkout</a></li>
+			</ul>
+		</nav>
+		<div class="doc-lang-switch">
+			<a class="is-active" href="checkout.html">EN</a>
+			<a href="../fr/tunnel-vente.html">FR</a>
+		</div>
+	</aside>
+	<main class="doc-content">
+		<h1>Checkout</h1>
+		<p>
+			The checkout flow (cart, login, shipping, payment, confirmation) stays built on real
+			WordPress/WooCommerce pages (<code>/cart/</code>, <code>/checkout/</code>,
+			<code>/checkout/order-received/...</code>, depending on the store's permalink settings),
+			dressed up by the theme's own templates rather than replaced by dedicated views.
+		</p>
+
+		<h2 id="routing-and-step-indicator">Routing and step indicator</h2>
+		<p>
+			<code>Solar_Template\Checkout\CheckoutController::template_include()</code> (hooked on
+			WordPress' <code>template_include</code> filter) serves the theme's own template,
+			<code>checkout.php</code>, as soon as <code>is_cart()</code> or <code>is_checkout()</code> is
+			true — the same controller mechanism already used for the product catalog. This avoids
+			depending on these pages' slug (configurable in the WooCommerce settings), unlike a classic
+			<code>page-{slug}.php</code> template.
+		</p>
+		<p>
+			<code>checkout.php</code> opens the document with <code>get_header('checkout')</code> /
+			<code>get_footer('checkout')</code>, loading <code>header-checkout.php</code> /
+			<code>footer-checkout.php</code> instead of the site's global templates: the flow
+			deliberately has no primary navigation, mega menu or search, so as not to distract the
+			customer mid-purchase. The minimal header only shows the brand (linking home) and a
+			"100% secure payment" note; the minimal footer only shows legal links, contact, copyright and
+			a secure SSL payment note.
+		</p>
+		<p>
+			<code>Solar_Template\Checkout\StepIndicator::steps()</code> computes, for each of the 5 steps
+			(Cart, Login, Shipping, Payment, Confirmation), its state — done, active or future — relative
+			to the current step, and <code>template-parts/checkout/step-indicator.php</code> renders it
+			(numbered circles, a progress line, labels), shared by every page of the flow.
+		</p>
+		<p>
+			Technical decision: the Login, Shipping and Payment steps actually live on a single
+			WooCommerce page (<code>/checkout/</code>, one native form) rather than three separate pages.
+			<code>Checkout\CheckoutController::current_step()</code> therefore only resolves which
+			sub-step is visible on that page's very first load (Login for a guest visitor, Shipping
+			directly for an already logged-in customer) — moving between those three sub-steps afterward
+			will happen client-side, never submitting the form before the final click on the payment
+			button (upcoming steps of this same body of work).
+		</p>
+		<p>
+			Verified end to end in the real Docker environment with WooCommerce active: the cart page
+			shows the indicator with the "Cart" step active and the next four pending; after adding a
+			product to the cart, the checkout page shows "Cart" done and "Login" active for a
+			not-logged-in visitor. No PHP warning or error raised.
+		</p>
+	</main>
+	<script src="../assets/doc.js"></script>
+</body>
+</html>

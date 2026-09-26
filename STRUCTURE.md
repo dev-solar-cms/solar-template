@@ -20,6 +20,9 @@ solar-template/
 ├── front-page.php     # Page d'accueil, assemblée section par section (template-parts/front-page/*)
 ├── archive-product.php # Catalogue produits (boutique + archives de catégorie/étiquette) : fil d'Ariane, titre, barre de filtres et résultats
 ├── single-product.php  # Fiche produit complète : fil d'Ariane, galerie, panneau, onglets, produits similaires (template-parts/single-product/*)
+├── checkout.php        # Gabarit du tunnel de vente (panier/connexion/livraison/paiement/confirmation), servi via template_include
+├── header-checkout.php # En-tête minimal du tunnel de vente (marque centrée + mention paiement sécurisé, pas de nav)
+├── footer-checkout.php # Pied de page minimal du tunnel de vente (liens légaux, copyright, mention SSL)
 ├── index.php          # Gabarit de repli ; appelle get_header()/get_footer()
 ├── screenshot.png     # 1200x900, requis par WordPress pour l'aperçu du thème
 ├── composer.json      # Dépendances PHP + autoload PSR-4 (Solar_Template\)
@@ -34,7 +37,8 @@ solar-template/
 │   ├── Database/        # Schéma et installation des tables `wp_solar_template_*`
 │   ├── Newsletter/      # Stockage des inscrits à la newsletter (SubscriberRepository)
 │   ├── Catalog/         # Options/filtres/pagination/contrôleurs du catalogue produits
-│   └── Product/         # Logique de la fiche produit (galerie, panneau, variations, onglets, produits similaires)
+│   ├── Product/         # Logique de la fiche produit (galerie, panneau, variations, onglets, produits similaires)
+│   └── Checkout/        # Tunnel de vente : routage (template_include), état de l'indicateur d'étapes
 ├── template-parts/      # Fragments de gabarit réutilisables (`get_template_part()`)
 │   ├── product-card.php # Carte produit (image, badge, wishlist, overlay panier, prix, swatches)
 │   ├── blog-card.php    # Carte article de blog (image 16:10, badge catégorie, meta, titre, extrait, auteur)
@@ -50,6 +54,8 @@ solar-template/
 │   │   ├── panel.php    # Colonne droite sticky : badges, titre, notation, statut de stock, description courte, réassurance, accordéon
 │   │   ├── tabs.php     # Onglets Description/Avis/Caractéristiques (motif ARIA tabs, avis WooCommerce natifs)
 │   │   └── related-products.php # Grille masonry des produits similaires WooCommerce réels (même carte produit)
+│   ├── checkout/        # Fragments du tunnel de vente
+│   │   └── step-indicator.php # Indicateur des 5 étapes (cercles/labels/ligne de progression), partagé par tout le tunnel
 │   └── front-page/      # Sections de la page d'accueil, une par fichier
 │       ├── hero.php     # Hero plein écran (accroche, titre 3 lignes, CTA, trust badges, carte flottante)
 │       ├── featured-products.php # Grille masonry des produits WooCommerce marqués « en vedette »
@@ -80,6 +86,7 @@ solar-template/
 │   ├── scss/_home-newsletter.scss # Section newsletter de la page d'accueil
 │   ├── scss/_catalog.scss # Catalogue produits (fil d'Ariane, titre/compteur, grille masonry, pagination)
 │   ├── scss/_product-page.scss # Fiche produit complète (fil d'Ariane, galerie, panneau, onglets, produits similaires)
+│   ├── scss/_checkout.scss # Tunnel de vente : en-tête/pied de page minimaux, indicateur d'étapes, gabarit des pages
 │   ├── js/main.js        # Point d'entrée JS (importe le SCSS, initialise les modules de comportement)
 │   ├── js/header.js      # Comportement de l'en-tête (mega menu, bascule de recherche)
 │   ├── js/newsletter.js  # Soumission AJAX des formulaires newsletter (`.js-newsletter-form`)
@@ -151,7 +158,7 @@ solar-template/
   CSS si le compte est à 0) pour pouvoir être ciblé par un futur rafraîchissement AJAX
   (`woocommerce_add_to_cart_fragments`), sans nouvelle logique JS à cette étape.
 - Les URLs des réseaux sociaux sont un filtre (`solar_template_social_links`), pas encore une
-  option d'administration — celle-ci arrive avec l'onglet « En-tête » du Groupe 10.
+  option d'administration — celle-ci arrive avec un futur écran d'administration.
 - Le mega menu de l'item « Collections » (`template-parts/mega-menu.php`,
   `assets/js/header.js`) s'ouvre/ferme au survol, au focus clavier et se ferme à l'échappement ou
   au clic extérieur. Son contenu (colonnes de liens) est du texte de remplacement, exposé via le
@@ -288,8 +295,33 @@ solar-template/
   catégorie/étiquette que les templates natifs de WooCommerce) et le composant carte produit
   existant (`Catalog\ProductCardMapper`) — ne s'affiche pas du tout sans aucun produit similaire.
   Grille à décalages « masonry » identiques à celle des produits vedettes de la page d'accueil : le
-  correctif de hauteur fixe des cartes (Groupe 04) vit déjà dans le composant carte produit partagé,
+  correctif de hauteur fixe des cartes, déjà apporté au catalogue produits, vit dans le composant carte produit partagé,
   donc cette section en hérite automatiquement sans code supplémentaire.
+
+### Tunnel de vente (`checkout.php`, `header-checkout.php`, `footer-checkout.php`, `inc/Checkout/`)
+
+**En cours de construction**, page par page.
+
+- Les pages panier/paiement/confirmation restent de vraies pages WordPress WooCommerce
+  (`/cart/`, `/checkout/`, `/checkout/order-received/...`) : plutôt que de créer des gabarits
+  `page-{slug}.php` fragiles (le slug de ces pages est configurable dans les réglages WooCommerce),
+  `Checkout\CheckoutController::template_include()` (hook `template_include`) sert le propre
+  gabarit du thème, `checkout.php`, dès que `is_cart()`/`is_checkout()` est vrai — même mécanisme de
+  contrôleur que `Catalog\CatalogController::apply_filters_to_main_query()`.
+- `checkout.php` ouvre le document avec `get_header('checkout')`/`get_footer('checkout')` (chargeant
+  `header-checkout.php`/`footer-checkout.php` plutôt que les gabarits globaux) : le tunnel n'a
+  volontairement ni navigation principale, ni mega menu, ni recherche, pour ne pas distraire le
+  client en cours d'achat — seulement la marque (lien vers l'accueil) et une mention « Paiement
+  100% sécurisé » en en-tête, des liens légaux/copyright en pied de page.
+- L'indicateur des 5 étapes (Panier/Connexion/Livraison/Paiement/Confirmation) est calculé par
+  `Checkout\StepIndicator::steps()` (étape en cours → `done`/`active`/`future` pour chacune) et
+  rendu par `template-parts/checkout/step-indicator.php`, partagé par toutes les pages du tunnel.
+  Les étapes Connexion/Livraison/Paiement vivent en réalité sur la même page réelle WooCommerce
+  (`/checkout/`, formulaire natif unique) : `Checkout\CheckoutController::current_step()` ne
+  détermine que la sous-étape visible au premier chargement (Connexion pour un invité, Livraison
+  directement pour un client déjà connecté) — se déplacer entre ces trois sous-étapes ensuite se
+  fait côté client (assets/js/checkout.js, étapes suivantes de ce même groupe de travail), sans
+  jamais soumettre le formulaire avant le clic final sur « Payer ».
 
 ### Pied de page du thème (`footer.php`, `assets/scss/_footer.scss`)
 
@@ -297,12 +329,12 @@ solar-template/
   (copyright, icônes de méthodes de paiement), conforme à la maquette.
 - Contenu piloté par `solar_template_footer_config()` (marque, colonnes de liens, newsletter),
   `solar_template_footer_payment_icons()` et `solar_template_footer_copyright()` — chacune
-  filtrable, en prévision de l'onglet « Pied de page » du Groupe 10 (pas encore construit).
+  filtrable, en prévision d'un futur écran d'administration (pas encore construit).
 - Les liens Boutique/Informations pointent vers l'équivalent le plus proche déjà disponible (page
   boutique WooCommerce, page des articles) ; les liens Légal (C.G.V., confidentialité, mentions
   légales, cookies) et « À propos » résolvent vers une page du même slug si elle existe
   (`solar_template_page_url_by_slug()`, partagée avec la navigation), sinon vers l'accueil — ces
-  pages légales elles-mêmes restent à construire (Groupe 09).
+  pages légales elles-mêmes restent à construire.
 - Le formulaire newsletter n'est que du balisage : aucune logique d'inscription n'est câblée à
   cette étape (hors périmètre, voir la fiche d'étape correspondante).
 - Le texte de copyright utilise un espace réservé littéral `{year}`, remplacé par l'année en cours

@@ -786,6 +786,34 @@ final class DefaultStrings {
 				'fr_FR' => 'Produits similaires',
 				'en_US' => 'Related products',
 			),
+			'Login'                                       => array(
+				'fr_FR' => 'Connexion',
+				'en_US' => 'Login',
+			),
+			'Shipping'                                    => array(
+				'fr_FR' => 'Livraison',
+				'en_US' => 'Shipping',
+			),
+			'Payment'                                     => array(
+				'fr_FR' => 'Paiement',
+				'en_US' => 'Payment',
+			),
+			'Confirmation'                                => array(
+				'fr_FR' => 'Confirmation',
+				'en_US' => 'Confirmation',
+			),
+			'Checkout progress'                           => array(
+				'fr_FR' => 'Progression de la commande',
+				'en_US' => 'Checkout progress',
+			),
+			'100% secure payment'                         => array(
+				'fr_FR' => 'Paiement 100% sécurisé',
+				'en_US' => '100% secure payment',
+			),
+			'Secure SSL payment'                          => array(
+				'fr_FR' => 'Paiement sécurisé SSL',
+				'en_US' => 'Secure SSL payment',
+			),
 		);
 	}
 

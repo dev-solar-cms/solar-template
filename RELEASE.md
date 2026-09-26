@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.4.11`.
+Version actuelle : `0.5.0`.
 
 ## Avant une release
 
@@ -30,6 +30,29 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.5.0 — début du tunnel de vente : routage et indicateur d'étapes
+
+- Le panier et le paiement restent de vraies pages WordPress/WooCommerce, désormais servies avec le
+  propre gabarit du thème (`template_include`) plutôt que le gabarit générique de page : un en-tête
+  et un pied de page minimaux (marque centrée, mention « Paiement 100% sécurisé », liens légaux),
+  sans navigation principale ni mega menu ni recherche, pour ne pas distraire le client en cours
+  d'achat.
+- Ajout d'un indicateur des 5 étapes du tunnel (Panier, Connexion, Livraison, Paiement,
+  Confirmation — cercles numérotés, ligne de progression, libellés), partagé par toutes les pages du
+  tunnel et reflétant correctement l'étape en cours à chaque chargement de page.
+- Décision technique : les étapes Connexion, Livraison et Paiement vivent en réalité sur une seule
+  page de paiement WooCommerce (un formulaire natif unique) plutôt que sur des pages séparées ;
+  l'indicateur ne détermine donc, pour l'instant, que la sous-étape visible au premier chargement de
+  cette page — le déplacement entre ces trois sous-étapes sans rechargement suit dans une prochaine
+  version.
+- Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif : la page panier
+  affiche l'étape « Panier » active ; après ajout d'un produit, la page de paiement affiche « Panier »
+  complétée et « Connexion » active pour un visiteur non connecté. Aucun avertissement ni erreur PHP
+  relevé.
+- Corrigé au passage : plusieurs fichiers déjà publiés (documentation et `STRUCTURE.md`)
+  mentionnaient par erreur un numéro de groupe/étape interne au projet, en violation de la règle de
+  confidentialité déjà appliquée ailleurs — reformulés en phrasing neutre.
 
 ### 0.4.11 — produits similaires et fiche produit complète
 
