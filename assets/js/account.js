@@ -8,9 +8,13 @@
  *          more results). Reads the AJAX endpoint/nonce/login state from
  *          `window.solarTemplateWishlist`, localized by `wp_localize_script()`. A logged-out
  *          visitor is sent to the login page instead of the request being silently rejected.
+ *          Also wires up the settings page's account-deletion form (`.account-danger-zone__form`)
+ *          with a native `confirm()` dialog as a second, JS-only confirmation layer on top of that
+ *          form's own required checkbox (see woocommerce/myaccount/form-edit-account.php).
  */
 
 let wishlistClickHandler = null;
+let accountDeletionSubmitHandler = null;
 
 /**
  * Wires up every `.product-card__wishlist` button on the page, current and future. Does nothing
@@ -95,4 +99,32 @@ async function handleToggle(button, config) {
 	} finally {
 		button.disabled = false;
 	}
+}
+
+/**
+ * Wires up the account-deletion form: a native `confirm()` dialog must be accepted before the form
+ * (already gated server-side by its own required checkbox) is allowed to submit. Delegated on
+ * `document` and defensive against repeated calls, same convention as the catalog filters' own
+ * listeners.
+ *
+ * @return {void}
+ */
+export function initAccountDeletionConfirm() {
+	if (accountDeletionSubmitHandler) {
+		document.removeEventListener('submit', accountDeletionSubmitHandler);
+	}
+
+	accountDeletionSubmitHandler = (event) => {
+		const form = event.target.closest('.account-danger-zone__form');
+
+		if (!form) {
+			return;
+		}
+
+		if (!window.confirm(form.dataset.confirm || '')) {
+			event.preventDefault();
+		}
+	};
+
+	document.addEventListener('submit', accountDeletionSubmitHandler);
 }

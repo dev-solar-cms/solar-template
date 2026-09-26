@@ -65,6 +65,17 @@ $overlay-white-70: rgba(255, 255, 255, 0.7);
 	}
 }
 
+.btn--danger {
+	background: $color-surface;
+	border-color: $color-error;
+	color: $color-error;
+
+	&:hover {
+		background: $color-error;
+		color: $color-surface;
+	}
+}
+
 .btn--outline-on-dark {
 	background: transparent;
 	border-color: $overlay-white-15;

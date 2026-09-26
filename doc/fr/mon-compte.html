@@ -232,6 +232,46 @@
 			confirme que le fichier est bien téléversé et son URL enregistrée. Données de test supprimées
 			après vérification. Aucun avertissement ni erreur PHP relevé.
 		</p>
+
+		<h2 id="parametres-du-compte">Paramètres du compte</h2>
+		<p>
+			<code>woocommerce/myaccount/form-edit-account.php</code> restyle désormais la page en trois
+			cartes (informations personnelles, mot de passe, zone de danger) tout en conservant intact le
+			vrai formulaire natif de WooCommerce — même nom de formulaire, même nonce, même
+			<code>action=save_account_details</code> — si bien que
+			<code>WC_Form_Handler::save_account_details()</code> continue de traiter prénom/nom/email/mot
+			de passe exactement comme le cœur de WooCommerce le ferait. Deux champs supplémentaires
+			(téléphone, date de naissance) voyagent dans ce même formulaire sous forme de simples méta
+			utilisateur, enregistrés par <code>Solar_Template\Account\AccountSettingsFields</code> sur le
+			hook <code>woocommerce_save_account_details</code> qui se déclenche juste après.
+		</p>
+		<p>
+			La zone de danger est un second formulaire, indépendant, géré par
+			<code>Solar_Template\Account\AccountDeletion</code> : une case à cocher obligatoire (« Je
+			comprends que cette action est irréversible ») fonctionne sans JavaScript, avec une boîte de
+			dialogue <code>confirm()</code> native en couche supplémentaire côté client
+			(<code>assets/js/account.js</code>, <code>initAccountDeletionConfirm()</code>). La suppression
+			elle-même reste 100% native WordPress/WooCommerce : les commandes réelles du client sont
+			supprimées définitivement via <code>WC_Order::delete(true)</code>, puis le compte lui-même via
+			<code>wp_delete_user()</code>, avant déconnexion et redirection vers l'accueil.
+		</p>
+		<p>
+			Bug détecté et corrigé pendant l'implémentation : le champ « Nom d'affichage » de WooCommerce
+			(<code>account_display_name</code>) est absent de la maquette, mais son propre contrôle de
+			champs obligatoires bloque systématiquement l'enregistrement s'il est totalement absent du
+			formulaire — corrigé en le conservant comme champ caché, pré-rempli avec la valeur actuelle,
+			plutôt que de le supprimer ou de désactiver ce contrôle natif.
+		</p>
+		<p>
+			Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif : la
+			modification réelle du prénom/nom/email/téléphone/date de naissance d'un compte de test
+			s'enregistre et se réaffiche correctement ; une date invalide est rejetée silencieusement (le
+			champ reste vide) sans jamais bloquer le reste de l'enregistrement ; la suppression d'un
+			second compte de test jetable, avec une vraie commande associée, confirme que la commande et
+			le compte sont bien définitivement supprimés, et que la tentative sans cocher la case affiche
+			bien un message d'erreur sans rien supprimer. Comptes et commande de test supprimés après
+			vérification. Aucun avertissement ni erreur PHP relevé.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

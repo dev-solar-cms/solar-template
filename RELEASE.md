@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.6.5`.
+Version actuelle : `0.6.6`.
 
 ## Avant une release
 
@@ -30,6 +30,28 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.6.6 — paramètres du compte et suppression de compte
+
+- La page « Paramètres » de l'espace client propose désormais trois sections : informations
+  personnelles (prénom, nom, email, téléphone, date de naissance optionnelle), changement de mot de
+  passe, et une zone de danger pour supprimer définitivement son compte.
+- Les champs natifs (prénom, nom, email, mot de passe) continuent d'être traités par le mécanisme
+  natif de WooCommerce ; téléphone et date de naissance sont deux nouveaux champs propres au thème,
+  enregistrés comme méta utilisateur simples.
+- La suppression de compte est entièrement native (aucune dépendance à un plugin RGPD/suppression
+  tiers) : les commandes réelles du client sont supprimées définitivement, puis le compte lui-même,
+  après une confirmation obligatoire (case à cocher, doublée d'une boîte de dialogue de
+  confirmation côté navigateur).
+- **Bug rencontré et corrigé** : le champ « Nom d'affichage » natif de WooCommerce, absent de la
+  maquette, est requis par son propre contrôle de champs obligatoires — son omission bloquait
+  systématiquement l'enregistrement. Corrigé en le conservant comme champ caché pré-rempli plutôt
+  que de le supprimer.
+- Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif : modification
+  réelle des informations d'un compte de test (y compris une date invalide correctement rejetée),
+  et suppression complète d'un second compte de test jetable avec une commande réelle associée
+  (commande et compte confirmés définitivement supprimés). Données de test supprimées après
+  vérification.
 
 ### 0.6.5 — demande de service après-vente native
 

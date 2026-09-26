@@ -13,7 +13,9 @@
 
 namespace Solar_Template;
 
+use Solar_Template\Account\AccountDeletion;
 use Solar_Template\Account\AccountEndpoints;
+use Solar_Template\Account\AccountSettingsFields;
 use Solar_Template\Account\ReorderHandler;
 use Solar_Template\Account\SupportRequestController;
 use Solar_Template\Account\WishlistController;
@@ -93,6 +95,9 @@ final class Theme {
 
 		add_action( 'woocommerce_account_sav_endpoint', array( SupportRequestController::class, 'render_sav_page' ) );
 		add_action( 'template_redirect', array( SupportRequestController::class, 'maybe_handle_submission' ) );
+
+		add_action( 'woocommerce_save_account_details', array( AccountSettingsFields::class, 'save_from_request' ) );
+		add_action( 'template_redirect', array( AccountDeletion::class, 'maybe_handle' ) );
 	}
 
 	/**

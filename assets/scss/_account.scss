@@ -861,3 +861,71 @@
 	font-size: 12.5px;
 	color: $color-muted;
 }
+
+// -------------------------------------------------------------------------------------------
+// Settings
+// -------------------------------------------------------------------------------------------
+
+.account-settings__body {
+	padding: 24px;
+}
+
+.account-settings__row {
+	margin-bottom: 16px;
+
+	&:last-of-type {
+		margin-bottom: 20px;
+	}
+}
+
+.account-settings__row--double {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 16px;
+
+	@media (max-width: 600px) {
+		grid-template-columns: 1fr;
+	}
+}
+
+.account-settings__row--narrow .form-row {
+	max-width: 180px;
+}
+
+.account-settings__optional {
+	font-weight: $font-weight-regular;
+	color: $color-muted;
+}
+
+.account-danger-zone {
+	border-color: #fecaca;
+	padding: 32px;
+}
+
+.account-danger-zone__title {
+	font-size: 17px;
+	font-weight: $font-weight-extrabold;
+	color: $color-error;
+	margin-bottom: 8px;
+}
+
+.account-danger-zone__text {
+	font-size: 13.5px;
+	color: $color-muted;
+	margin-bottom: 18px;
+}
+
+.account-danger-zone__form {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 14px;
+}
+
+.account-danger-zone__confirm {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 13px;
+	color: $color-dark;
+}

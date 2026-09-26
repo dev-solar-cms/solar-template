@@ -8,7 +8,7 @@
  */
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { initWishlistToggle } from '../../assets/js/account.js';
+import { initWishlistToggle, initAccountDeletionConfirm } from '../../assets/js/account.js';
 
 /**
  * Builds the slice of product-card.php's markup this behaviour attaches to.
@@ -132,5 +132,62 @@ describe('assets/js/account.js', () => {
 		await new Promise((resolve) => setTimeout(resolve, 0));
 
 		expect(window.location.href).toBe('https://example.test/my-account/');
+	});
+});
+
+describe('initAccountDeletionConfirm()', () => {
+	/**
+	 * Builds the settings page's danger-zone form fixture (form-edit-account.php's own markup).
+	 *
+	 * @return {void}
+	 */
+	function renderDeletionFormFixture() {
+		document.body.innerHTML = `
+			<form class="account-danger-zone__form" data-confirm="Are you sure?">
+				<input type="checkbox" name="solar_template_confirm_deletion" value="1" checked />
+				<button type="submit" name="solar_template_delete_account" value="1">Delete my account</button>
+			</form>
+		`;
+	}
+
+	afterEach(() => {
+		vi.restoreAllMocks();
+	});
+
+	it('lets the form submit when the confirm dialog is accepted', () => {
+		renderDeletionFormFixture();
+		vi.spyOn(window, 'confirm').mockReturnValue(true);
+		initAccountDeletionConfirm();
+
+		const form = document.querySelector('.account-danger-zone__form');
+		const event = new Event('submit', { bubbles: true, cancelable: true });
+		form.dispatchEvent(event);
+
+		expect(window.confirm).toHaveBeenCalledWith('Are you sure?');
+		expect(event.defaultPrevented).toBe(false);
+	});
+
+	it('blocks the submission when the confirm dialog is dismissed', () => {
+		renderDeletionFormFixture();
+		vi.spyOn(window, 'confirm').mockReturnValue(false);
+		initAccountDeletionConfirm();
+
+		const form = document.querySelector('.account-danger-zone__form');
+		const event = new Event('submit', { bubbles: true, cancelable: true });
+		form.dispatchEvent(event);
+
+		expect(event.defaultPrevented).toBe(true);
+	});
+
+	it('does not attach a duplicate listener when called more than once', () => {
+		renderDeletionFormFixture();
+		vi.spyOn(window, 'confirm').mockReturnValue(true);
+		initAccountDeletionConfirm();
+		initAccountDeletionConfirm();
+
+		const form = document.querySelector('.account-danger-zone__form');
+		form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+
+		expect(window.confirm).toHaveBeenCalledTimes(1);
 	});
 });

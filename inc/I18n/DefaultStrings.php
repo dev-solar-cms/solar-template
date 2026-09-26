@@ -1430,6 +1430,82 @@ final class DefaultStrings {
 				'fr_FR' => "Nouvelle demande S.A.V. de %1\$s (%2\$s)\nType : %3\$s\nCommande : %4\$s\n\n%5\$s",
 				'en_US' => "New support request from %1\$s (%2\$s)\nType: %3\$s\nOrder: %4\$s\n\n%5\$s",
 			),
+			'Account settings'                             => array(
+				'fr_FR' => 'Paramètres du compte',
+				'en_US' => 'Account settings',
+			),
+			'Personal information'                         => array(
+				'fr_FR' => 'Informations personnelles',
+				'en_US' => 'Personal information',
+			),
+			'First name'                                   => array(
+				'fr_FR' => 'Prénom',
+				'en_US' => 'First name',
+			),
+			'Last name'                                    => array(
+				'fr_FR' => 'Nom',
+				'en_US' => 'Last name',
+			),
+			'Phone'                                        => array(
+				'fr_FR' => 'Téléphone',
+				'en_US' => 'Phone',
+			),
+			'Date of birth'                                => array(
+				'fr_FR' => 'Date de naissance',
+				'en_US' => 'Date of birth',
+			),
+			'optional — birthday offer'                    => array(
+				'fr_FR' => 'optionnel — offre d\'anniversaire',
+				'en_US' => 'optional — birthday offer',
+			),
+			'Save changes'                                 => array(
+				'fr_FR' => 'Sauvegarder les modifications',
+				'en_US' => 'Save changes',
+			),
+			'Change password'                              => array(
+				'fr_FR' => 'Modifier le mot de passe',
+				'en_US' => 'Change password',
+			),
+			'Current password'                             => array(
+				'fr_FR' => 'Mot de passe actuel',
+				'en_US' => 'Current password',
+			),
+			'New password'                                 => array(
+				'fr_FR' => 'Nouveau mot de passe',
+				'en_US' => 'New password',
+			),
+			'Confirm'                                      => array(
+				'fr_FR' => 'Confirmer',
+				'en_US' => 'Confirm',
+			),
+			'Update password'                              => array(
+				'fr_FR' => 'Mettre à jour le mot de passe',
+				'en_US' => 'Update password',
+			),
+			'Danger zone'                                  => array(
+				'fr_FR' => 'Zone de danger',
+				'en_US' => 'Danger zone',
+			),
+			'Deleting your account is permanent. All of your data, orders and order history will be permanently erased.' => array(
+				'fr_FR' => 'La suppression de votre compte est irréversible. Toutes vos données, commandes et historiques seront définitivement effacés.',
+				'en_US' => 'Deleting your account is permanent. All of your data, orders and order history will be permanently erased.',
+			),
+			'I understand this action is irreversible.'    => array(
+				'fr_FR' => 'Je comprends que cette action est irréversible.',
+				'en_US' => 'I understand this action is irreversible.',
+			),
+			'Delete my account'                            => array(
+				'fr_FR' => 'Supprimer mon compte',
+				'en_US' => 'Delete my account',
+			),
+			'Are you sure you want to permanently delete your account? This cannot be undone.' => array(
+				'fr_FR' => 'Voulez-vous vraiment supprimer définitivement votre compte ? Cette action est irréversible.',
+				'en_US' => 'Are you sure you want to permanently delete your account? This cannot be undone.',
+			),
+			'Please confirm you understand this action is irreversible.' => array(
+				'fr_FR' => 'Merci de confirmer que vous comprenez que cette action est irréversible.',
+				'en_US' => 'Please confirm you understand this action is irreversible.',
+			),
 		);
 	}
 

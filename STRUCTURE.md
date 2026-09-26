@@ -39,7 +39,7 @@ solar-template/
 │   ├── Catalog/         # Options/filtres/pagination/contrôleurs du catalogue produits
 │   ├── Product/         # Logique de la fiche produit (galerie, panneau, variations, onglets, produits similaires)
 │   ├── Checkout/        # Tunnel de vente : routage, indicateur d'étapes, vue du panier, disposition des champs d'adresse, icônes/texte du paiement, vue de la confirmation de commande
-│   └── Account/         # Espace client : endpoints/menu, sidebar, tableau de bord, statut de commande, action « Recommander », liste/détail de commandes, liste de souhaits, adresses, téléchargements, demande S.A.V.
+│   └── Account/         # Espace client : endpoints/menu, sidebar, tableau de bord, statut de commande, action « Recommander », liste/détail de commandes, liste de souhaits, adresses, téléchargements, demande S.A.V., champs de paramètres (téléphone/naissance), suppression de compte
 ├── template-parts/      # Fragments de gabarit réutilisables (`get_template_part()`)
 │   ├── product-card.php # Carte produit (image, badge, wishlist, overlay panier, prix, swatches)
 │   ├── blog-card.php    # Carte article de blog (image 16:10, badge catégorie, meta, titre, extrait, auteur)
@@ -98,7 +98,8 @@ solar-template/
 │   ├── orders.php       # Tabs de statut (filtrage par lien simple) + délègue à orders-list.php
 │   ├── view-order.php   # En-tête restylé (numéro, date, statut) + tableau natif WooCommerce conservé
 │   ├── form-edit-address.php # Cartes de résumé facturation/livraison + formulaire d'édition en grille 2 colonnes
-│   └── downloads.php    # Lignes de téléchargement stylées (icône, restant, bouton), délègue à download-row.php
+│   ├── downloads.php    # Lignes de téléchargement stylées (icône, restant, bouton), délègue à download-row.php
+│   └── form-edit-account.php # Formulaire natif WooCommerce restylé en 3 cartes (infos personnelles + téléphone/naissance, mot de passe, zone de danger « supprimer mon compte »)
 ├── languages/           # Fichiers `.mo` compilés (générés, ignorés par git sauf `.gitkeep`)
 ├── vite.config.js       # Configuration du pipeline de build des assets
 ├── .prettierrc.json     # Norme de formatage JS/SCSS, utilisée par `npm run format`

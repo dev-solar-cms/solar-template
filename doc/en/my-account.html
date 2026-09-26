@@ -219,6 +219,45 @@
 			second request with a real PNG attachment confirms the file is genuinely uploaded and its URL
 			stored. Test data removed after verification. No PHP warning or error observed.
 		</p>
+
+		<h2 id="account-settings">Account settings</h2>
+		<p>
+			<code>woocommerce/myaccount/form-edit-account.php</code> now restyles the page into three
+			cards (personal information, password, danger zone) while keeping WooCommerce's own real,
+			native form completely intact — same form name, same nonce, same
+			<code>action=save_account_details</code> — so
+			<code>WC_Form_Handler::save_account_details()</code> keeps processing first/last name, email
+			and password exactly as WooCommerce core would. Two extra fields (phone, date of birth) ride
+			along in that same form as plain user meta, saved by
+			<code>Solar_Template\Account\AccountSettingsFields</code> on the
+			<code>woocommerce_save_account_details</code> hook that fires right after.
+		</p>
+		<p>
+			The danger zone is a second, independent form, handled by
+			<code>Solar_Template\Account\AccountDeletion</code>: a required checkbox ("I understand this
+			action is irreversible") works with no JavaScript, with a native <code>confirm()</code> dialog
+			as an extra client-side layer (<code>assets/js/account.js</code>,
+			<code>initAccountDeletionConfirm()</code>). The deletion itself stays 100% native WordPress/
+			WooCommerce: the customer's real orders are permanently deleted through
+			<code>WC_Order::delete(true)</code>, then the account itself through
+			<code>wp_delete_user()</code>, before logging out and redirecting to the homepage.
+		</p>
+		<p>
+			Bug found and fixed during implementation: WooCommerce's own "Display name" field
+			(<code>account_display_name</code>) is absent from the design handoff, but its own
+			required-fields check systematically blocks saving when the field is entirely missing from the
+			form — fixed by keeping it as a hidden field, pre-filled with the current value, rather than
+			dropping it or disabling that native check.
+		</p>
+		<p>
+			Verified end to end in the real Docker environment with WooCommerce active: genuinely updating
+			a test account's first/last name, email, phone and date of birth saves and displays correctly;
+			an invalid date is silently rejected (the field stays empty) without ever blocking the rest of
+			the save; deleting a second, disposable test account with a real order attached confirms the
+			order and the account are both genuinely and permanently deleted, and that attempting deletion
+			without checking the box shows an error message without deleting anything. Test accounts and
+			order removed after verification. No PHP warning or error observed.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>
