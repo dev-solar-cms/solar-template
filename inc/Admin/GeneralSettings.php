@@ -138,6 +138,22 @@ final class GeneralSettings implements SettingsTabInterface {
 				<p class="description"><?php esc_html_e( 'Signed-in administrators can still browse the real site while this is on.', 'solar-template' ); ?></p>
 			</td>
 		</tr>
+		<tr>
+			<th><?php esc_html_e( 'Cache & assets', 'solar-template' ); ?></th>
+			<td>
+				<button
+					type="button"
+					class="button"
+					id="solar-template-regenerate-cache"
+					data-nonce="<?php echo esc_attr( wp_create_nonce( 'solar_template_regenerate_cache' ) ); ?>"
+					data-ajax-url="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>"
+				>
+					<?php esc_html_e( 'Regenerate cache & assets', 'solar-template' ); ?>
+				</button>
+				<p class="description"><?php esc_html_e( 'Purges the theme cache and the PHP opcode cache, and recompiles the SCSS/JS build when the server has the tooling for it.', 'solar-template' ); ?></p>
+				<div class="solar-template-settings__cache-status" id="solar-template-cache-status" hidden></div>
+			</td>
+		</tr>
 		<?php
 	}
 

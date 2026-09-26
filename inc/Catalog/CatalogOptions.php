@@ -111,6 +111,23 @@ final class CatalogOptions {
 	}
 
 	/**
+	 * Returns the slug of the WooCommerce global attribute taxonomy used as the catalog sidebar's
+	 * "Brand" widget. See self::color_attribute_slug() for why this is filterable rather than
+	 * hardcoded — WooCommerce has no native "brand" taxonomy, so a site owner using a `pa_brand`-like
+	 * attribute for it needs a way to point this widget at it.
+	 *
+	 * @return string Taxonomy slug.
+	 */
+	public static function brand_attribute_slug(): string {
+		/**
+		 * Filters the taxonomy slug used as the catalog sidebar's "Brand" widget.
+		 *
+		 * @param string $taxonomy Taxonomy slug, e.g. `pa_brand`.
+		 */
+		return (string) apply_filters( 'solar_template_catalog_brand_attribute_slug', 'pa_brand' );
+	}
+
+	/**
 	 * Returns the product categories available as catalog filter options (slug, name, product count).
 	 *
 	 * Same graceful-degradation convention as Solar_Template\FrontPage\Categories::categories(): an empty array
@@ -246,23 +263,75 @@ final class CatalogOptions {
 	}
 
 	/**
-	 * Returns the catalog filter bar's position modifier class.
+	 * Returns the catalog filter bar's position: `top` (the design handoff's own sticky horizontal
+	 * bar), `sidebar-left`, or `sidebar-right` — the latter two move the very same filter bar/groups
+	 * into the vertical sidebar column (see archive-product.php), configured from the administration
+	 * "Products" tab (Solar_Template\Admin\ProductsSettings).
 	 *
-	 * Only `sticky-top` (the design handoff's own layout, applied by
-	 * template-parts/catalog-filters.php as a `catalog-filters--{position}` class) is styled today; a
-	 * future "Products" administration tab (Group 10 of the project roadmap) is expected to expose
-	 * this as a real site owner setting, once an alternative layout (e.g. a sidebar) exists to switch
-	 * to.
-	 *
-	 * @return string Position slug, e.g. `sticky-top`.
+	 * @return string Position slug: `top`, `sidebar-left`, or `sidebar-right`.
 	 */
 	public static function filters_position(): string {
 		/**
 		 * Filters the catalog filter bar's position.
 		 *
-		 * @param string $position `sticky-top` by default.
+		 * @param string $position `top` by default.
 		 */
-		return (string) apply_filters( 'solar_template_catalog_filters_position', 'sticky-top' );
+		$position = (string) apply_filters( 'solar_template_catalog_filters_position', 'top' );
+
+		return in_array( $position, array( 'top', 'sidebar-left', 'sidebar-right' ), true ) ? $position : 'top';
+	}
+
+	/**
+	 * Whether the catalog's optional sidebar widgets (Category/Price/Color/Brand/Rating quick links)
+	 * are enabled, configured from the administration "Products" tab. Independent from
+	 * self::filters_position(): the sidebar column exists whenever either this is enabled or the
+	 * filter bar itself has been moved into it.
+	 *
+	 * @return bool
+	 */
+	public static function sidebar_enabled(): bool {
+		/**
+		 * Filters whether the catalog's sidebar widgets are enabled.
+		 *
+		 * @param bool $enabled False by default.
+		 */
+		return (bool) apply_filters( 'solar_template_catalog_sidebar_enabled', false );
+	}
+
+	/**
+	 * Returns which of the catalog sidebar's widgets are enabled, in display order.
+	 *
+	 * @return array<int, string> Subset of `category`, `price`, `color`, `brand`, `rating`.
+	 */
+	public static function sidebar_widgets(): array {
+		$valid = array( 'category', 'price', 'color', 'brand', 'rating' );
+
+		/**
+		 * Filters the catalog sidebar's enabled widgets.
+		 *
+		 * @param array<int, string> $widgets Every widget by default.
+		 */
+		$widgets = (array) apply_filters( 'solar_template_catalog_sidebar_widgets', $valid );
+
+		return array_values( array_intersect( $valid, $widgets ) );
+	}
+
+	/**
+	 * Whether the catalog page renders a sidebar column at all: either the sidebar widgets are
+	 * enabled, or the filter bar itself has been moved there.
+	 *
+	 * @return bool
+	 */
+	public static function has_sidebar_column(): bool {
+		return self::sidebar_enabled() || 'top' !== self::filters_position();
+	}
+
+	/**
+	 * @return string `left` or `right`, resolved from self::filters_position() (defaulting to `left`
+	 *                  when the filter bar itself stays at the top but the sidebar widgets are on).
+	 */
+	public static function sidebar_side(): string {
+		return 'sidebar-right' === self::filters_position() ? 'right' : 'left';
 	}
 
 	/**

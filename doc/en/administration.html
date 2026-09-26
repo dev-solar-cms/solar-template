@@ -117,14 +117,99 @@
 			left there for this purpose.
 		</p>
 
+		<h2 id="home">Home page tab</h2>
+		<p>
+			A list of <code>front-page.php</code>'s seven sections (Hero, Featured products,
+			Categories, Our story, Testimonials, Blog, Newsletter), reorderable via native HTML5 drag
+			& drop (no library) with an enable/disable checkbox per section. Order and visibility are
+			two comma-separated slug lists (<code>home.sections_order</code>/
+			<code>home.sections_enabled</code>), resolved by a pure, unit-tested function,
+			<code>Solar_Template\Admin\HomeSettings::resolve_order()</code> (any known slug missing from
+			the submitted list is appended at the end, never silently dropped).
+			<code>front-page.php</code> now loops over <code>HomeSettings::visible_sections()</code>
+			instead of a fixed list of <code>get_template_part()</code> calls: reordering or unticking a
+			section here genuinely changes what renders, and in what order.
+		</p>
+
+		<h2 id="products">Products tab</h2>
+		<p>
+			Columns and products per page (hooked onto the existing
+			<code>solar_template_catalog_columns</code>/<code>loop_shop_per_page</code> filters). Filter
+			bar position — Top / Sidebar left / Sidebar right: the <strong>same</strong>
+			<code>template-parts/catalog-filters.php</code> bar (Category/Price/Color/Size/Rating) just
+			switches from a horizontal to a vertical layout depending on
+			<code>Solar_Template\Catalog\CatalogOptions::filters_position()</code>, no code
+			duplication. An independent sidebar of widgets can also be enabled, regardless of that
+			position setting: <code>Solar_Template\Catalog\CatalogSidebar</code> and
+			<code>template-parts/catalog-sidebar-widgets.php</code> offer Category/Price/Color/Brand/
+			Rating as plain links (not a second `&lt;form&gt;`, so it never clobbers whatever filters
+			the page's other form already has active), reusing the exact same query mechanism as the
+			bar (<code>CatalogFilters::url()</code>/<code>remove_url()</code>). "Brand" is a genuinely
+			new filter dimension — a filterable attribute taxonomy, same as Color/Size
+			(<code>CatalogOptions::brand_attribute_slug()</code>, `pa_brand` by default), not a
+			decorative label. Related products: enable/disable and how many to show, hooked onto
+			<code>Solar_Template\Product\ProductRelated::products()</code>. Custom engraving: a
+			site-wide toggle, section label, field type (single vs. multiple lines), and default
+			surcharge — all new filters on <code>Solar_Template\Product\ProductEngraving</code>
+			(<code>solar_template_engraving_*</code>); a product's own toggle (Group 05) is still
+			required on top of this site-wide one for that product to actually offer it.
+		</p>
+
+		<h2 id="blog">Blog tab</h2>
+		<p>
+			Articles per page (applied to the index/category/tag archive main query via
+			<code>pre_get_posts</code>), the featured-article block toggle, grid columns, share buttons
+			(Facebook/X/Pinterest as real links to those networks, plus "Copy link" reusing the
+			existing native Web Share/clipboard button —
+			<code>Solar_Template\Blog\ArticleShare</code>), and the number of related articles (0 hides
+			that section entirely). Disabling the featured block doesn't make the sticky post
+			disappear: it goes back to being a plain grid post like any other — a bug found during this
+			step's own Docker verification (WordPress still re-inserted the sticky post ahead of the
+			configured per-page count unless <code>ignore_sticky_posts</code> was explicitly set in
+			that case) was fixed in
+			<code>Solar_Template\Blog\BlogController::exclude_featured_post()</code>.
+		</p>
+
+		<h2 id="translations">Translations tab</h2>
+		<p>
+			Default language and automatic detection, genuinely applied to the front-end visitor (and
+			only there — never in <code>wp-admin</code>) through WordPress' own
+			<code>determine_locale</code> filter.
+			<code>Solar_Template\Admin\TranslationsSettings::resolve_locale()</code> and
+			<code>match_accept_language()</code> are pure, unit-tested functions matching the browser's
+			own <code>Accept-Language</code> header against the theme's active languages
+			(<code>Solar_Template\I18n\Translator</code>) — an exact match first (`fr-FR` → `fr_FR`),
+			then a same-primary-subtag one (`fr` → the first active `fr_*` language), before falling
+			back to the configured default language and then the site's own language. A "Manage
+			languages" link points to a real, working placeholder page: the add-a-language menu and the
+			full translation editor remain the project roadmap's next group (DECISIONS.md §9),
+			deliberately out of scope here. Until that editor exists, this tab lists every active
+			language with a download link for its already-compiled `.mo`, and a drag & drop zone to
+			import a `.po`/`.mo` file (the `gettext/gettext` library, already a dependency): the entries
+			it contains are written into the very same catalog that future editor will use, then the
+			chosen language is recompiled immediately.
+		</p>
+
+		<h2 id="cache">Cache &amp; asset regeneration</h2>
+		<p>
+			A button at the bottom of the General tab (<code>Solar_Template\Admin\CacheRegenerator</code>,
+			AJAX action <code>solar_template_regenerate_cache</code>) purges the theme's own cache
+			(<code>Solar_Template\Support\TransientCache</code>, behind the
+			<code>Contracts\CacheInterface</code> a future cache implementation will reuse), WordPress'
+			object cache and PHP's opcode cache when available, then reruns `npm run build` when Node
+			tooling is actually present server-side — this Docker container ships PHP only, so that last
+			step reports itself skipped there instead of silently failing. Each step's result renders
+			under the button with no page reload.
+		</p>
+
 		<p>
 			Verified end to end in the real Docker environment: every field re-reads correctly after a
 			real save (nonce included), every setting visibly changes the real front end (colors/fonts/
 			roundness, header layout/promo/social/transparency, footer columns/newsletter/payment/
-			copyright, WooCommerce's own displayed currency), and maintenance mode returns a real 503 to
-			a logged-out visitor while an administrator keeps browsing normally. No PHP warning or error
-			observed. The Home page/Products/Blog/Translations tabs and the cache/build regeneration
-			button remain for a future pass.
+			copyright, WooCommerce's own displayed currency, home page section order/visibility, catalog
+			layout and sidebar widgets, custom engraving, blog pagination/featured/columns/share/related),
+			and maintenance mode returns a real 503 to a logged-out visitor while an administrator keeps
+			browsing normally. No PHP warning or error observed.
 		</p>
 	</main>
 	<script src="../assets/doc.js"></script>

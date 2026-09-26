@@ -339,3 +339,150 @@
 .catalog-active-filters__clear:hover {
 	color: $color-dark;
 }
+
+// Optional sidebar column (archive-product.php, template-parts/catalog-sidebar-widgets.php) —
+// enabled from the administration "Products" tab (Solar_Template\Admin\ProductsSettings), either
+// for the sidebar quick-link widgets, the filter bar itself, or both together.
+
+.catalog__body {
+	display: block;
+}
+
+.catalog--has-sidebar .catalog__body {
+	display: grid;
+	grid-template-columns: 260px 1fr;
+	gap: 32px;
+	align-items: start;
+}
+
+.catalog--has-sidebar.catalog--sidebar-right .catalog__body {
+	grid-template-columns: 1fr 260px;
+}
+
+.catalog--has-sidebar.catalog--sidebar-right .catalog-filters--vertical,
+.catalog--has-sidebar.catalog--sidebar-right .catalog-widgets {
+	order: 2;
+}
+
+.catalog--has-sidebar.catalog--sidebar-right .catalog__main {
+	order: 1;
+}
+
+// Vertical variant of the filter bar (template-parts/catalog-filters.php), used when it has been
+// moved into the sidebar column: every group's panel stays permanently open (block layout) instead
+// of a dropdown, so the toggle button becomes a plain section heading.
+
+.catalog-filters--vertical {
+	position: static;
+	border-bottom: none;
+	margin-bottom: 0;
+}
+
+.catalog-filters--vertical .catalog-filters__inner {
+	padding: 0;
+	max-width: none;
+	margin: 0;
+}
+
+.catalog-filters--vertical .catalog-filters__bar {
+	flex-direction: column;
+	align-items: stretch;
+	height: auto;
+	overflow: visible;
+	gap: 20px;
+}
+
+.catalog-filters--vertical .catalog-filters__group {
+	border-bottom: 1px solid $color-border;
+	padding-bottom: 16px;
+}
+
+.catalog-filters--vertical .catalog-filters__toggle {
+	width: 100%;
+	justify-content: space-between;
+	border: none;
+	background: transparent;
+	padding: 0;
+	height: auto;
+	cursor: default;
+}
+
+.catalog-filters--vertical .catalog-filters__toggle svg {
+	display: none;
+}
+
+.catalog-filters--vertical .catalog-filters__panel {
+	position: static;
+	box-shadow: none;
+	border: none;
+	padding: 10px 0 0;
+	max-height: none;
+	min-width: 0;
+}
+
+.catalog-filters--vertical .catalog-filters__panel[hidden] {
+	display: flex;
+}
+
+.catalog-filters--vertical .catalog-filters__spacer,
+.catalog-filters--vertical .catalog-filters__sort {
+	display: none;
+}
+
+// Sidebar quick-link widgets (template-parts/catalog-sidebar-widgets.php).
+
+.catalog-widgets {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+}
+
+.catalog-widgets__widget {
+	border-bottom: 1px solid $color-border;
+	padding-bottom: 20px;
+}
+
+.catalog-widgets__title {
+	font-size: 13px;
+	font-weight: $font-weight-semibold;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	margin: 0 0 12px;
+	color: $color-dark;
+}
+
+.catalog-widgets__list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.catalog-widgets__link {
+	font-size: 13px;
+	color: $color-muted;
+	text-decoration: none;
+}
+
+.catalog-widgets__link:hover {
+	color: $color-dark;
+}
+
+.catalog-widgets__link.is-active {
+	color: $color-dark;
+	font-weight: $font-weight-semibold;
+}
+
+@media (max-width: 900px) {
+	.catalog--has-sidebar .catalog__body {
+		grid-template-columns: 1fr;
+	}
+
+	.catalog--has-sidebar.catalog--sidebar-right .catalog-filters--vertical,
+	.catalog--has-sidebar.catalog--sidebar-right .catalog-widgets,
+	.catalog--has-sidebar.catalog--sidebar-right .catalog__main {
+		order: initial;
+	}
+}

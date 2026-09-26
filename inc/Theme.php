@@ -20,12 +20,16 @@ use Solar_Template\Account\ReorderHandler;
 use Solar_Template\Account\SupportRequestController;
 use Solar_Template\Account\WishlistController;
 use Solar_Template\Admin\AppearanceSettings;
+use Solar_Template\Admin\BlogSettings;
+use Solar_Template\Admin\CacheRegenerator;
 use Solar_Template\Admin\FooterSettings;
 use Solar_Template\Admin\GeneralSettings;
 use Solar_Template\Admin\HeaderSettings;
 use Solar_Template\Admin\MaintenanceMode;
 use Solar_Template\Admin\Notices;
+use Solar_Template\Admin\ProductsSettings;
 use Solar_Template\Admin\SettingsPage;
+use Solar_Template\Admin\TranslationsSettings;
 use Solar_Template\Blog\BlogController;
 use Solar_Template\Catalog\CatalogController;
 use Solar_Template\Checkout\CheckoutController;
@@ -133,6 +137,28 @@ final class Theme {
 		add_filter( 'solar_template_footer_config', array( FooterSettings::class, 'apply_footer_config' ), 20 );
 		add_filter( 'solar_template_footer_payment_icons', array( FooterSettings::class, 'apply_payment_icons' ) );
 		add_filter( 'solar_template_footer_copyright', array( FooterSettings::class, 'apply_copyright' ) );
+
+		add_filter( 'solar_template_catalog_columns', array( ProductsSettings::class, 'apply_columns' ) );
+		add_filter( 'loop_shop_per_page', array( ProductsSettings::class, 'apply_products_per_page' ) );
+		add_filter( 'solar_template_catalog_filters_position', array( ProductsSettings::class, 'apply_filters_position' ) );
+		add_filter( 'solar_template_catalog_sidebar_enabled', array( ProductsSettings::class, 'apply_sidebar_enabled' ) );
+		add_filter( 'solar_template_catalog_sidebar_widgets', array( ProductsSettings::class, 'apply_sidebar_widgets' ) );
+		add_filter( 'solar_template_engraving_enabled', array( ProductsSettings::class, 'apply_engraving_enabled' ) );
+		add_filter( 'solar_template_engraving_label', array( ProductsSettings::class, 'apply_engraving_label' ) );
+		add_filter( 'solar_template_engraving_field_type', array( ProductsSettings::class, 'apply_engraving_field_type' ) );
+		add_filter( 'solar_template_engraving_default_price', array( ProductsSettings::class, 'apply_engraving_default_price' ) );
+
+		add_action( 'pre_get_posts', array( BlogSettings::class, 'apply_posts_per_page' ) );
+		add_filter( 'solar_template_blog_featured_enabled', array( BlogSettings::class, 'apply_featured_enabled' ) );
+		add_filter( 'solar_template_blog_columns', array( BlogSettings::class, 'apply_columns' ) );
+		add_filter( 'solar_template_blog_share_networks', array( BlogSettings::class, 'apply_share_networks' ) );
+		add_filter( 'solar_template_related_articles_count', array( BlogSettings::class, 'apply_related_count' ) );
+
+		add_action( 'admin_menu', array( TranslationsSettings::class, 'register_languages_menu' ) );
+		add_filter( 'determine_locale', array( TranslationsSettings::class, 'filter_locale' ) );
+		add_action( 'admin_post_solar_template_import_translations', array( TranslationsSettings::class, 'handle_import' ) );
+
+		add_action( 'wp_ajax_solar_template_regenerate_cache', array( CacheRegenerator::class, 'handle_ajax_request' ) );
 	}
 
 	/**

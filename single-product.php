@@ -24,6 +24,7 @@ use Solar_Template\Product\ProductDescription;
 use Solar_Template\Product\ProductEngraving;
 use Solar_Template\Product\ProductGallery;
 use Solar_Template\Product\ProductPanel;
+use Solar_Template\Admin\ProductsSettings;
 use Solar_Template\Product\ProductRelated;
 use Solar_Template\Product\ProductReviews;
 use Solar_Template\Product\ProductSpecifications;
@@ -82,7 +83,7 @@ while ( have_posts() ) :
 
 	$solar_related_products_args = array(
 		'heading'  => ProductRelated::heading(),
-		'products' => ProductRelated::products( $solar_product ),
+		'products' => ProductsSettings::is_related_enabled() ? ProductRelated::products( $solar_product, ProductsSettings::related_count() ) : array(),
 	);
 	?>
 	<main class="product-page">

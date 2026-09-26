@@ -34,6 +34,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use Solar_Template\Product\ProductEngraving;
+
 $panel = wp_parse_args(
 	$args ?? array(),
 	array(
@@ -168,7 +170,7 @@ $panel = wp_parse_args(
 				<div class="product-panel__engraving">
 					<div class="product-panel__engraving-header">
 						<div>
-							<div class="product-panel__engraving-title"><?php esc_html_e( 'Custom engraving', 'solar-template' ); ?></div>
+							<div class="product-panel__engraving-title"><?php echo esc_html( ProductEngraving::label() ); ?></div>
 							<div class="product-panel__engraving-subtitle">
 								<?php
 								printf(
@@ -191,13 +193,22 @@ $panel = wp_parse_args(
 						</label>
 					</div>
 					<div class="product-panel__engraving-field">
-						<input
-							type="text"
-							name="solar_template_engraving_text"
-							class="product-panel__engraving-input"
-							maxlength="<?php echo esc_attr( (string) $panel['engraving']['max_length'] ); ?>"
-							placeholder="<?php echo esc_attr( sprintf( /* translators: %d: maximum number of characters. */ __( 'Your engraving text (max. %d characters)', 'solar-template' ), $panel['engraving']['max_length'] ) ); ?>"
-						/>
+						<?php if ( 'textarea' === ProductEngraving::field_type() ) : ?>
+							<textarea
+								name="solar_template_engraving_text"
+								class="product-panel__engraving-input"
+								maxlength="<?php echo esc_attr( (string) $panel['engraving']['max_length'] ); ?>"
+								placeholder="<?php echo esc_attr( sprintf( /* translators: %d: maximum number of characters. */ __( 'Your engraving text (max. %d characters)', 'solar-template' ), $panel['engraving']['max_length'] ) ); ?>"
+							></textarea>
+						<?php else : ?>
+							<input
+								type="text"
+								name="solar_template_engraving_text"
+								class="product-panel__engraving-input"
+								maxlength="<?php echo esc_attr( (string) $panel['engraving']['max_length'] ); ?>"
+								placeholder="<?php echo esc_attr( sprintf( /* translators: %d: maximum number of characters. */ __( 'Your engraving text (max. %d characters)', 'solar-template' ), $panel['engraving']['max_length'] ) ); ?>"
+							/>
+						<?php endif; ?>
 					</div>
 				</div>
 			<?php endif; ?>

@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use Solar_Template\Blog\BlogOptions;
 use Solar_Template\Blog\PostCardMapper;
 
 if ( ! have_posts() ) {
@@ -22,7 +23,7 @@ if ( ! have_posts() ) {
 	return;
 }
 ?>
-<div class="blog-grid">
+<div class="blog-grid" style="--blog-columns: <?php echo esc_attr( (string) BlogOptions::columns() ); ?>;">
 	<?php
 	while ( have_posts() ) :
 		the_post();

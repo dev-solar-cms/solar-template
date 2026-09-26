@@ -32,10 +32,20 @@ final class FeaturedPost {
 
 	/**
 	 * @return array|null template-parts/blog/featured-article.php's `$args`
-	 *                     (see PostCardMapper::map_featured()), or null when no post is sticky or it
-	 *                     is not published.
+	 *                     (see PostCardMapper::map_featured()), or null when no post is sticky, it is
+	 *                     not published, or the section is disabled from the administration "Blog" tab
+	 *                     (Solar_Template\Admin\BlogSettings).
 	 */
 	public static function current(): ?array {
+		/**
+		 * Filters whether the blog index's featured article block is enabled.
+		 *
+		 * @param bool $enabled True by default.
+		 */
+		if ( ! apply_filters( 'solar_template_blog_featured_enabled', true ) ) {
+			return null;
+		}
+
 		$post_id = self::id();
 
 		if ( 0 === $post_id ) {

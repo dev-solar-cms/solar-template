@@ -31,10 +31,58 @@ final class ProductEngraving {
 
 	/**
 	 * @param \WC_Product $product Product to check.
-	 * @return bool True when custom engraving is enabled for this product.
+	 * @return bool True when custom engraving is enabled for this product and not disabled
+	 *              site-wide from the administration "Products" tab
+	 *              (Solar_Template\Admin\ProductsSettings).
 	 */
 	public static function is_enabled( \WC_Product $product ): bool {
+		if ( ! self::is_globally_enabled() ) {
+			return false;
+		}
+
 		return 'yes' === $product->get_meta( self::META_ENABLED, true );
+	}
+
+	/**
+	 * Whether the custom engraving feature is enabled site-wide, configured from the administration
+	 * "Products" tab. A per-product toggle still governs whether any given product actually offers it
+	 * (see self::is_enabled()).
+	 *
+	 * @return bool
+	 */
+	public static function is_globally_enabled(): bool {
+		/**
+		 * Filters whether the custom engraving feature is enabled site-wide.
+		 *
+		 * @param bool $enabled True by default.
+		 */
+		return (bool) apply_filters( 'solar_template_engraving_enabled', true );
+	}
+
+	/**
+	 * @return string The section's label, shown above the toggle on the product page.
+	 */
+	public static function label(): string {
+		/**
+		 * Filters the custom engraving section's label.
+		 *
+		 * @param string $label 'Custom engraving' by default.
+		 */
+		return (string) apply_filters( 'solar_template_engraving_label', __( 'Custom engraving', 'solar-template' ) );
+	}
+
+	/**
+	 * @return string `text` (single line) or `textarea` (multiple lines).
+	 */
+	public static function field_type(): string {
+		/**
+		 * Filters the custom engraving text field's type.
+		 *
+		 * @param string $field_type `text` by default.
+		 */
+		$field_type = (string) apply_filters( 'solar_template_engraving_field_type', 'text' );
+
+		return 'textarea' === $field_type ? 'textarea' : 'text';
 	}
 
 	/**
@@ -44,7 +92,16 @@ final class ProductEngraving {
 	public static function price( \WC_Product $product ): float {
 		$price = $product->get_meta( self::META_PRICE, true );
 
-		return '' !== $price ? (float) $price : self::DEFAULT_PRICE;
+		if ( '' !== $price ) {
+			return (float) $price;
+		}
+
+		/**
+		 * Filters the custom engraving surcharge used for a product with no price of its own set.
+		 *
+		 * @param float $default_price self::DEFAULT_PRICE by default.
+		 */
+		return (float) apply_filters( 'solar_template_engraving_default_price', self::DEFAULT_PRICE );
 	}
 
 	/**

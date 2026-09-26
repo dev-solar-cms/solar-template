@@ -39,14 +39,29 @@ final class RelatedArticles {
 	}
 
 	/**
+	 * @return int Configured number of related articles to show, from the administration "Blog" tab
+	 *              (Solar_Template\Admin\BlogSettings). 0 disables the section entirely.
+	 */
+	public static function default_limit(): int {
+		/**
+		 * Filters the number of related articles shown on the article page.
+		 *
+		 * @param int $limit 3 by default.
+		 */
+		return max( 0, (int) apply_filters( 'solar_template_related_articles_count', 3 ) );
+	}
+
+	/**
 	 * @param \WP_Post $post   Current article.
-	 * @param int      $limit  Maximum number of related articles to return.
+	 * @param int|null $limit  Maximum number of related articles to return, self::default_limit()
+	 *                          when null. 0 always returns an empty list.
 	 * @return array<int, array> List of template-parts/blog-card.php `$args` arrays.
 	 */
-	public static function posts( \WP_Post $post, int $limit = 3 ): array {
+	public static function posts( \WP_Post $post, ?int $limit = null ): array {
+		$limit        = $limit ?? self::default_limit();
 		$category_ids = wp_get_post_categories( $post->ID );
 
-		if ( empty( $category_ids ) ) {
+		if ( $limit <= 0 || empty( $category_ids ) ) {
 			return array();
 		}
 

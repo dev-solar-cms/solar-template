@@ -24,8 +24,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 use Solar_Template\Catalog\CatalogFilters;
 use Solar_Template\Catalog\CatalogOptions;
 
-$active_filters = CatalogFilters::active();
-$price_bounds   = CatalogOptions::price_bounds();
+$active_filters   = CatalogFilters::active();
+$price_bounds     = CatalogOptions::price_bounds();
+$filters_position = CatalogOptions::filters_position();
+$is_vertical      = 'top' !== $filters_position;
 
 $filter_groups = array();
 
@@ -126,7 +128,7 @@ $filter_groups[] = array(
 );
 
 ?>
-<form id="catalog-filters" class="catalog-filters catalog-filters--<?php echo esc_attr( CatalogOptions::filters_position() ); ?>" method="get">
+<form id="catalog-filters" class="catalog-filters catalog-filters--<?php echo esc_attr( $filters_position ); ?><?php echo $is_vertical ? ' catalog-filters--vertical' : ''; ?>" method="get">
 	<div class="catalog-filters__inner">
 	<div class="catalog-filters__bar">
 		<?php foreach ( $filter_groups as $group ) : ?>

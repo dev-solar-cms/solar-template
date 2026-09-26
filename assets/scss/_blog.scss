@@ -192,12 +192,12 @@
 
 .blog-grid {
 	display: grid;
-	grid-template-columns: repeat(3, 1fr);
+	grid-template-columns: repeat(var(--blog-columns, 3), 1fr);
 	gap: $spacing-grid-gap-blog;
 	margin-bottom: 64px;
 
 	@media (max-width: 900px) {
-		grid-template-columns: repeat(2, 1fr);
+		grid-template-columns: repeat(min(2, var(--blog-columns, 3)), 1fr);
 	}
 
 	@media (max-width: 600px) {
@@ -368,6 +368,17 @@
 	font-size: 14.5px;
 	font-weight: $font-weight-bold;
 	color: $color-dark;
+}
+
+.article-share-buttons {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	flex-wrap: wrap;
+}
+
+.article-share-link {
+	font-size: 13px;
 }
 
 // -------------------------------------------------------------------------------------------

@@ -551,14 +551,16 @@ solar-template/
   persistance passe par `Solar_Template\Admin\SettingsRepository`, une clé/valeur simple sur la
   table `wp_solar_template_settings` déjà créée par le Groupe 00 (clés `{onglet}.{champ}`) plutôt
   que par `wp_options`.
-- Chaque onglet (`GeneralSettings`, `AppearanceSettings`, `HeaderSettings`, `FooterSettings`)
-  implémente `Solar_Template\Admin\SettingsTabInterface` et expose aussi les accesseurs de lecture
-  utilisés ailleurs dans le thème (même convention « contenu + admin » que
+- Chaque onglet (`GeneralSettings`, `AppearanceSettings`, `HeaderSettings`, `FooterSettings`,
+  `HomeSettings`, `ProductsSettings`, `BlogSettings`, `TranslationsSettings`) implémente
+  `Solar_Template\Admin\SettingsTabInterface` et expose aussi les accesseurs de lecture utilisés
+  ailleurs dans le thème (même convention « contenu + admin » que
   `Solar_Template\Header\MegaMenu`) :
   - **Général** : nom boutique/logo/favicon (media uploader natif), devise + position du symbole
     (appliquées à WooCommerce via `pre_option_woocommerce_currency`/`..._currency_pos` quand
     configurées), mode maintenance (page 503 réelle pour tout visiteur non-administrateur,
-    `Solar_Template\Admin\MaintenanceMode`).
+    `Solar_Template\Admin\MaintenanceMode`), et le bouton « Régénérer le cache & les assets »
+    (`Solar_Template\Admin\CacheRegenerator`, voir plus bas).
   - **Apparence** : couleurs principale/accent/fond, polices Google Fonts (texte courant + titres),
     arrondi des éléments — appliqués au front **sans reconstruction des assets** via des propriétés
     CSS personnalisées imprimées dans `wp_head` (`AppearanceSettings::print_style_overrides()`),
@@ -572,14 +574,65 @@ solar-template/
   - **Pied de page** : nombre de colonnes réel (branché sur `solar_template_footer_config`),
     colonne newsletter, icônes de paiement (branché sur `solar_template_footer_payment_icons`),
     texte copyright (branché sur `solar_template_footer_copyright`, support `{year}` déjà existant).
+  - **Page d'accueil** : liste des sections de `front-page.php` réordonnable par glisser-déposer
+    natif (`assets/js` inline de `SettingsPage`, drag & drop HTML5, aucune librairie) avec bascule
+    actif/inactif par section — l'ordre/la visibilité sont deux listes de slugs séparées par des
+    virgules (`home.sections_order`/`home.sections_enabled`), résolues par
+    `HomeSettings::visible_sections()` (fonction pure `resolve_order()` testée unitairement) et
+    consommées directement par `front-page.php`, qui boucle dessus au lieu d'une liste figée
+    d'appels `get_template_part()`.
+  - **Produits** : colonnes/produits par page (branchés sur les filtres existants
+    `solar_template_catalog_columns`/`loop_shop_per_page`), position de la barre de filtres — En
+    haut / Sidebar gauche / Sidebar droite, la **même** barre de `template-parts/catalog-filters.php`
+    étant simplement basculée en disposition verticale (`Solar_Template\Catalog\CatalogOptions::
+    filters_position()`, valeurs `top`/`sidebar-left`/`sidebar-right`) — et une sidebar de widgets
+    indépendante (`Solar_Template\Catalog\CatalogSidebar`,
+    `template-parts/catalog-sidebar-widgets.php` : Catégorie/Prix/Couleur/Marque/Note, en simples
+    liens réutilisant `CatalogFilters::url()`/`remove_url()`, donc la même mécanique de requête que
+    la barre — la « Marque » est un nouveau 5e axe de filtre, une taxonomie d'attribut filtrable
+    comme Couleur/Taille, `Solar_Template\Catalog\CatalogOptions::brand_attribute_slug()`, défaut
+    `pa_brand`). Produits similaires (activer/désactiver + nombre, branché sur
+    `Solar_Template\Product\ProductRelated::products()`). Gravure personnalisée : bascule globale,
+    libellé, type de champ (une ligne / plusieurs lignes) et prix par défaut, tous ajoutés comme
+    filtres sur `Solar_Template\Product\ProductEngraving` (`solar_template_engraving_*`) —
+    l'activation par produit (Groupe 05) reste nécessaire en plus de cette bascule globale.
+  - **Blog** : articles par page (appliqué à la requête principale de l'index/des archives via
+    `pre_get_posts`), bascule du bloc « à la une » (`solar_template_blog_featured_enabled`, lu par
+    `Solar_Template\Blog\FeaturedPost::current()` — désactivé, l'article épinglé redevient un
+    article normal de la grille au lieu de disparaître, `BlogController::exclude_featured_post()`
+    passant alors `ignore_sticky_posts` à vrai pour éviter que WordPress ne le réinsère quand même
+    en tête au-delà du nombre par page), colonnes de la grille, boutons de partage
+    (Facebook/X/Pinterest en vrais liens de partage + « Copier le lien » réutilisant le bouton
+    natif existant, `Solar_Template\Blog\ArticleShare`), nombre d'articles connexes (0 masque la
+    section entièrement).
+  - **Traductions** : langue par défaut et détection automatique, réellement appliquées au visiteur
+    du front via le filtre `determine_locale` (jamais en `wp-admin`) —
+    `TranslationsSettings::resolve_locale()`/`match_accept_language()` sont des fonctions pures
+    (testées unitairement) qui comparent l'en-tête `Accept-Language` du navigateur aux langues
+    actives de `Solar_Template\I18n\Translator`. Un lien « Gérer les langues » pointe vers une page
+    d'attente (`TranslationsSettings::LANGUAGES_MENU_SLUG`) : le menu d'ajout de langue et
+    l'éditeur de traduction eux-mêmes restent le Groupe suivant de la feuille de route
+    (DECISIONS.md §9). Téléchargement des `.mo` déjà compilés, et import d'un fichier `.po`/`.mo`
+    (gettext/gettext, déjà une dépendance) comme filet de secours, écrivant dans le même catalogue
+    que l'éditeur futur.
+- Bouton « Régénérer le cache & les assets » (bas de l'onglet Général,
+  `Solar_Template\Admin\CacheRegenerator`, action AJAX `solar_template_regenerate_cache`) : vide le
+  cache du thème (`Solar_Template\Support\TransientCache`, derrière `Contracts\CacheInterface` —
+  l'interface qu'une future implémentation de cache réutilisera), le cache d'objets WordPress et le
+  cache opcode PHP si disponible, puis relance `npm run build` si l'outillage Node est présent
+  côté serveur — ce conteneur Docker n'embarque que PHP, donc cette étape s'y signale ignorée
+  plutôt que d'échouer. Retour JSON détaillé par étape, affiché sous le bouton sans recharger la
+  page.
 - Vérifié de bout en bout dans l'environnement Docker réel : chaque champ sauvegardé se relit
   correctement, chaque réglage modifie effectivement le rendu front (couleur/police/arrondi,
   disposition/promo/réseaux/transparence du header, colonnes/newsletter/paiement/copyright du
-  footer, devise WooCommerce), le mode maintenance bloque un visiteur non connecté (503) tout en
-  laissant un administrateur connecté naviguer normalement. Aucune erreur ni avertissement PHP
-  observé.
-- Onglets Page d'accueil/Produits/Blog/Traductions et bouton de régénération cache/build restent à
-  construire (prochaines étapes de la feuille de route).
+  footer, devise WooCommerce, ordre/visibilité des sections d'accueil, disposition et widgets du
+  catalogue, gravure personnalisée, pagination/à la une/colonnes/partage/connexes du blog, langue
+  par défaut/détection automatique du front), le mode maintenance bloque un visiteur non connecté
+  (503) tout en laissant un administrateur connecté naviguer normalement. Aucune erreur ni
+  avertissement PHP observé. Bug trouvé et corrigé pendant cette vérification : désactiver le bloc
+  « à la une » du blog sans neutraliser `ignore_sticky_posts` laissait WordPress réinsérer quand
+  même l'article épinglé en tête de la requête, au-delà du nombre configuré par page.
 
 ### À noter
 - `template-claude-code.html` (s'il est présent à la racine) est une maquette HTML exportée, ignorée par git — à utiliser comme référence visuelle/structurelle pour construire les vrais gabarits, jamais comme code à exécuter ou copier tel quel.

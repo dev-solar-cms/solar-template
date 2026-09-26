@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.7.2`.
+Version actuelle : `0.7.3`.
 
 ## Avant une release
 
@@ -30,6 +30,49 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.7.3 — réglages du thème (Page d'accueil, Produits, Blog, Traductions, cache/assets)
+
+- **Onglet Page d'accueil** : liste des sept sections de `front-page.php`, réordonnable par
+  glisser-déposer natif (HTML5, sans librairie) avec bascule actif/inactif par section. Ordre et
+  visibilité sont deux listes de slugs (`home.sections_order`/`home.sections_enabled`), résolues
+  par une fonction pure et testée unitairement (`HomeSettings::resolve_order()` — tout slug connu
+  absent de la liste soumise est rajouté en fin, jamais perdu). `front-page.php` boucle désormais
+  sur `HomeSettings::visible_sections()` au lieu d'une liste figée de `get_template_part()`.
+- **Onglet Produits** : colonnes/produits par page (filtres déjà existants), position de la barre
+  de filtres (En haut / Sidebar gauche / Sidebar droite — la même barre bascule simplement en
+  disposition verticale), une sidebar de widgets indépendante (Catégorie/Prix/Couleur/Marque/Note,
+  en simples liens réutilisant la mécanique de requête existante — « Marque » est un nouvel axe de
+  filtre à part entière, une taxonomie d'attribut filtrable comme Couleur/Taille), produits
+  similaires (activer/désactiver + nombre), et la gravure personnalisée (bascule globale, libellé,
+  type de champ une/plusieurs lignes, prix par défaut — s'ajoute à l'activation par produit du
+  Groupe 05, qui reste nécessaire).
+- **Onglet Blog** : articles par page, bascule de l'article à la une, colonnes, boutons de partage
+  (Facebook/X/Pinterest en vrais liens + « Copier le lien » réutilisant le bouton natif existant),
+  et nombre d'articles connexes (0 masque la section). Bug trouvé et corrigé pendant la
+  vérification Docker : désactiver le bloc « à la une » sans neutraliser `ignore_sticky_posts`
+  laissait WordPress réinsérer quand même l'article épinglé en tête de la requête, au-delà du
+  nombre configuré par page — corrigé dans `BlogController::exclude_featured_post()`.
+- **Onglet Traductions** : langue par défaut et détection automatique, réellement appliquées au
+  visiteur du front (jamais en `wp-admin`) via le filtre natif `determine_locale` de WordPress
+  (fonctions pures testées unitairement comparant l'en-tête `Accept-Language` aux langues actives
+  du thème). Un lien « Gérer les langues » pointe vers une page d'attente réelle et fonctionnelle
+  (le menu d'ajout de langue et l'éditeur de traduction complet restent le Groupe 11). En
+  attendant, téléchargement des `.mo` déjà compilés et import d'un fichier `.po`/`.mo` comme filet
+  de secours (bibliothèque `gettext/gettext`, déjà une dépendance), écrivant dans le même
+  catalogue que l'éditeur futur.
+- **Bouton de régénération cache & assets** : au bas de l'onglet Général, une action AJAX vide le
+  cache propre du thème, le cache d'objets WordPress et le cache opcode PHP, puis relance
+  `npm run build` si l'outillage Node est réellement présent côté serveur (ignoré proprement sinon
+  — ce conteneur Docker n'embarque que PHP) ; le résultat détaillé de chaque étape s'affiche sous
+  le bouton sans recharger la page.
+- Vérifié de bout en bout dans l'environnement Docker réel : chaque réglage modifie effectivement
+  le rendu du site (ordre/visibilité des sections d'accueil sur la vraie page d'accueil,
+  disposition et widgets du catalogue avec un filtre « Marque » fonctionnel, gravure personnalisée
+  avec libellé/type de champ/prix personnalisés, pagination/à la une/colonnes/partage/connexes du
+  blog, langue par défaut et détection automatique via un vrai en-tête `Accept-Language`, import
+  réel d'un fichier `.po` avec relecture immédiate côté front). Aucune erreur ni avertissement PHP
+  observé.
 
 ### 0.7.2 — réglages du thème (Général, Apparence, En-tête, Pied de page)
 

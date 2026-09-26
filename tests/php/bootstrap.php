@@ -364,6 +364,21 @@ if ( ! function_exists( '__' ) ) {
 	}
 }
 
+if ( ! function_exists( 'apply_filters' ) ) {
+	/**
+	 * Minimal stand-in for WordPress' own apply_filters(): no test in this suite registers a real
+	 * callback, so this always returns $value unchanged — enough to exercise a class' own default
+	 * value without a full hook system.
+	 *
+	 * @param string $tag   Filter name (ignored in this stand-in).
+	 * @param mixed  $value Value to filter.
+	 * @return mixed $value, unchanged.
+	 */
+	function apply_filters( string $tag, $value ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- stand-in mirrors the real function's signature.
+		return $value;
+	}
+}
+
 if ( ! function_exists( 'get_template_part' ) ) {
 	/**
 	 * Minimal stand-in for WordPress' template-part loader: requires the theme file directly with

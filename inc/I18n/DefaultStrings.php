@@ -2022,6 +2022,246 @@ final class DefaultStrings {
 				'fr_FR' => '© {year} %s — Tous droits réservés',
 				'en_US' => '© {year} %s — All rights reserved',
 			),
+			'0 hides the "Related articles" section entirely.' => array(
+				'fr_FR' => '0 masque entièrement la section « Articles similaires ».',
+				'en_US' => '0 hides the "Related articles" section entirely.',
+			),
+			'A product also needs its own "Custom engraving" toggle (Product data > General) to actually offer it.' => array(
+				'fr_FR' => 'Un produit doit également avoir sa propre option « Gravure personnalisée » activée (Données du produit > Général) pour réellement la proposer.',
+				'en_US' => 'A product also needs its own "Custom engraving" toggle (Product data > General) to actually offer it.',
+			),
+			'A sidebar column also appears whenever the filter bar position above is set to a sidebar, even with this disabled.' => array(
+				'fr_FR' => 'Une colonne latérale apparaît aussi dès que la position de la barre de filtres ci-dessus est réglée sur une position latérale, même si ceci est désactivé.',
+				'en_US' => 'A sidebar column also appears whenever the filter bar position above is set to a sidebar, even with this disabled.',
+			),
+			'Adding a language and the full translation editor are coming in a future update. In the meantime, the "Translations" tab lets you pick a default language, enable automatic detection, and import a .po/.mo file for one of the languages already installed.' => array(
+				'fr_FR' => "L'ajout de langue et l'éditeur de traduction complet arriveront dans une future mise à jour. En attendant, l'onglet « Traductions » permet de choisir une langue par défaut, d'activer la détection automatique et d'importer un fichier .po/.mo pour l'une des langues déjà installées.",
+				'en_US' => 'Adding a language and the full translation editor are coming in a future update. In the meantime, the "Translations" tab lets you pick a default language, enable automatic detection, and import a .po/.mo file for one of the languages already installed.',
+			),
+			'Applies to any product with no surcharge of its own set.' => array(
+				'fr_FR' => "S'applique à tout produit sans supplément qui lui est propre.",
+				'en_US' => 'Applies to any product with no surcharge of its own set.',
+			),
+			'Articles per page'                            => array(
+				'fr_FR' => 'Articles par page',
+				'en_US' => 'Articles per page',
+			),
+			'Asset build (npm run build)'                  => array(
+				'fr_FR' => 'Compilation des assets (npm run build)',
+				'en_US' => 'Asset build (npm run build)',
+			),
+			'Assets rebuilt.'                              => array(
+				'fr_FR' => 'Assets recompilés.',
+				'en_US' => 'Assets rebuilt.',
+			),
+			'Automatic detection'                          => array(
+				'fr_FR' => 'Détection automatique',
+				'en_US' => 'Automatic detection',
+			),
+			'Brand'                                        => array(
+				'fr_FR' => 'Marque',
+				'en_US' => 'Brand',
+			),
+			'Cache & assets'                               => array(
+				'fr_FR' => 'Cache et assets',
+				'en_US' => 'Cache & assets',
+			),
+			'Categories'                                   => array(
+				'fr_FR' => 'Catégories',
+				'en_US' => 'Categories',
+			),
+			'Columns'                                      => array(
+				'fr_FR' => 'Colonnes',
+				'en_US' => 'Columns',
+			),
+			'Compiled file'                                => array(
+				'fr_FR' => 'Fichier compilé',
+				'en_US' => 'Compiled file',
+			),
+			'Could not run the build command.'             => array(
+				'fr_FR' => "Impossible d'exécuter la commande de compilation.",
+				'en_US' => 'Could not run the build command.',
+			),
+			'Default language'                             => array(
+				'fr_FR' => 'Langue par défaut',
+				'en_US' => 'Default language',
+			),
+			'Default surcharge (%s)'                       => array(
+				'fr_FR' => 'Supplément par défaut (%s)',
+				'en_US' => 'Default surcharge (%s)',
+			),
+			'Download .mo'                                 => array(
+				'fr_FR' => 'Télécharger le .mo',
+				'en_US' => 'Download .mo',
+			),
+			'Drag & drop a .po or .mo file here, or click to choose one.' => array(
+				'fr_FR' => 'Glissez-déposez un fichier .po ou .mo ici, ou cliquez pour en choisir un.',
+				'en_US' => 'Drag & drop a .po or .mo file here, or click to choose one.',
+			),
+			'Drag to reorder. Untick a section to hide it from the home page.' => array(
+				'fr_FR' => "Glissez pour réordonner. Décochez une section pour la masquer de la page d'accueil.",
+				'en_US' => 'Drag to reorder. Untick a section to hide it from the home page.',
+			),
+			'Enabled site-wide'                            => array(
+				'fr_FR' => 'Activé pour tout le site',
+				'en_US' => 'Enabled site-wide',
+			),
+			'Featured products'                            => array(
+				'fr_FR' => 'Produits en vedette',
+				'en_US' => 'Featured products',
+			),
+			'Field type'                                   => array(
+				'fr_FR' => 'Type de champ',
+				'en_US' => 'Field type',
+			),
+			'Filter bar position'                          => array(
+				'fr_FR' => 'Position de la barre de filtres',
+				'en_US' => 'Filter bar position',
+			),
+			'Hero'                                         => array(
+				'fr_FR' => 'Héros',
+				'en_US' => 'Hero',
+			),
+			'Home page'                                    => array(
+				'fr_FR' => "Page d'accueil",
+				'en_US' => 'Home page',
+			),
+			'Import'                                       => array(
+				'fr_FR' => 'Importer',
+				'en_US' => 'Import',
+			),
+			'Import completed and the language recompiled.' => array(
+				'fr_FR' => 'Import terminé et la langue recompilée.',
+				'en_US' => 'Import completed and the language recompiled.',
+			),
+			'Import failed — please check the file and try again.' => array(
+				'fr_FR' => "Échec de l'import — merci de vérifier le fichier et de réessayer.",
+				'en_US' => 'Import failed — please check the file and try again.',
+			),
+			'Import translations'                          => array(
+				'fr_FR' => 'Importer des traductions',
+				'en_US' => 'Import translations',
+			),
+			'Language'                                     => array(
+				'fr_FR' => 'Langue',
+				'en_US' => 'Language',
+			),
+			'Languages'                                    => array(
+				'fr_FR' => 'Langues',
+				'en_US' => 'Languages',
+			),
+			'Manage languages →'                           => array(
+				'fr_FR' => 'Gérer les langues →',
+				'en_US' => 'Manage languages →',
+			),
+			'Multiple lines'                               => array(
+				'fr_FR' => 'Plusieurs lignes',
+				'en_US' => 'Multiple lines',
+			),
+			'Not compiled yet'                             => array(
+				'fr_FR' => 'Pas encore compilé',
+				'en_US' => 'Not compiled yet',
+			),
+			'Number shown'                                 => array(
+				'fr_FR' => 'Nombre affiché',
+				'en_US' => 'Number shown',
+			),
+			'Object cache'                                 => array(
+				'fr_FR' => "Cache d'objets",
+				'en_US' => 'Object cache',
+			),
+			'PHP opcode cache'                             => array(
+				'fr_FR' => 'Cache opcode PHP',
+				'en_US' => 'PHP opcode cache',
+			),
+			'Products'                                     => array(
+				'fr_FR' => 'Produits',
+				'en_US' => 'Products',
+			),
+			'Products per page'                            => array(
+				'fr_FR' => 'Produits par page',
+				'en_US' => 'Products per page',
+			),
+			'Purges the theme cache and the PHP opcode cache, and recompiles the SCSS/JS build when the server has the tooling for it.' => array(
+				'fr_FR' => "Purge le cache du thème et le cache opcode PHP, et recompile le build SCSS/JS lorsque le serveur dispose de l'outillage nécessaire.",
+				'en_US' => 'Purges the theme cache and the PHP opcode cache, and recompiles the SCSS/JS build when the server has the tooling for it.',
+			),
+			'Regenerate cache & assets'                    => array(
+				'fr_FR' => 'Régénérer le cache et les assets',
+				'en_US' => 'Regenerate cache & assets',
+			),
+			'Section label'                                => array(
+				'fr_FR' => 'Libellé de la section',
+				'en_US' => 'Section label',
+			),
+			'Sections'                                     => array(
+				'fr_FR' => 'Sections',
+				'en_US' => 'Sections',
+			),
+			'Share buttons'                                => array(
+				'fr_FR' => 'Boutons de partage',
+				'en_US' => 'Share buttons',
+			),
+			'Share on Facebook'                            => array(
+				'fr_FR' => 'Partager sur Facebook',
+				'en_US' => 'Share on Facebook',
+			),
+			'Share on Pinterest'                           => array(
+				'fr_FR' => 'Partager sur Pinterest',
+				'en_US' => 'Share on Pinterest',
+			),
+			'Share on X'                                   => array(
+				'fr_FR' => 'Partager sur X',
+				'en_US' => 'Share on X',
+			),
+			'Shows the sticky post in a featured block above the blog index grid.' => array(
+				'fr_FR' => "Affiche l'article épinglé dans un bloc à la une au-dessus de la grille du blog.",
+				'en_US' => 'Shows the sticky post in a featured block above the blog index grid.',
+			),
+			'Sidebar'                                      => array(
+				'fr_FR' => 'Barre latérale',
+				'en_US' => 'Sidebar',
+			),
+			'Sidebar left'                                 => array(
+				'fr_FR' => 'Barre latérale gauche',
+				'en_US' => 'Sidebar left',
+			),
+			'Sidebar right'                                => array(
+				'fr_FR' => 'Barre latérale droite',
+				'en_US' => 'Sidebar right',
+			),
+			'Single line'                                  => array(
+				'fr_FR' => 'Une seule ligne',
+				'en_US' => 'Single line',
+			),
+			'Skipped — Node.js tooling is not available on this server.' => array(
+				'fr_FR' => "Ignoré — l'outillage Node.js n'est pas disponible sur ce serveur.",
+				'en_US' => 'Skipped — Node.js tooling is not available on this server.',
+			),
+			'Theme cache'                                  => array(
+				'fr_FR' => 'Cache du thème',
+				'en_US' => 'Theme cache',
+			),
+			'Top'                                          => array(
+				'fr_FR' => 'En haut',
+				'en_US' => 'Top',
+			),
+			'Translations'                                 => array(
+				'fr_FR' => 'Traductions',
+				'en_US' => 'Translations',
+			),
+			'You are not allowed to do this.'              => array(
+				'fr_FR' => "Vous n'êtes pas autorisé à faire cela.",
+				'en_US' => 'You are not allowed to do this.',
+			),
+			'You are not allowed to import translations.'  => array(
+				'fr_FR' => "Vous n'êtes pas autorisé à importer des traductions.",
+				'en_US' => 'You are not allowed to import translations.',
+			),
+			'default'                                      => array(
+				'fr_FR' => 'défaut',
+				'en_US' => 'default',
+			),
 		);
 	}
 

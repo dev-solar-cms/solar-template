@@ -32,6 +32,7 @@ final class CatalogFilters {
 	 *     category: string[],
 	 *     color: string[],
 	 *     size: string[],
+	 *     brand: string[],
 	 *     rating: int[],
 	 *     min_price: float|null,
 	 *     max_price: float|null,
@@ -42,10 +43,12 @@ final class CatalogFilters {
 		$category_slugs = wp_list_pluck( CatalogOptions::category_options(), 'slug' );
 		$color_slugs    = wp_list_pluck( CatalogOptions::attribute_options( CatalogOptions::color_attribute_slug() ), 'slug' );
 		$size_slugs     = wp_list_pluck( CatalogOptions::attribute_options( CatalogOptions::size_attribute_slug() ), 'slug' );
+		$brand_slugs    = wp_list_pluck( CatalogOptions::attribute_options( CatalogOptions::brand_attribute_slug() ), 'slug' );
 
 		$requested_category = array_map( 'sanitize_title', (array) ( $raw['filter_category'] ?? array() ) );
 		$requested_color    = array_map( 'sanitize_title', (array) ( $raw['filter_color'] ?? array() ) );
 		$requested_size     = array_map( 'sanitize_title', (array) ( $raw['filter_size'] ?? array() ) );
+		$requested_brand    = array_map( 'sanitize_title', (array) ( $raw['filter_brand'] ?? array() ) );
 		$requested_rating   = array_map( 'absint', (array) ( $raw['filter_rating'] ?? array() ) );
 		$requested_rating   = array_filter(
 			$requested_rating,
@@ -66,6 +69,7 @@ final class CatalogFilters {
 			'category'  => array_values( array_intersect( $requested_category, $category_slugs ) ),
 			'color'     => array_values( array_intersect( $requested_color, $color_slugs ) ),
 			'size'      => array_values( array_intersect( $requested_size, $size_slugs ) ),
+			'brand'     => array_values( array_intersect( $requested_brand, $brand_slugs ) ),
 			'rating'    => array_values( array_unique( $requested_rating ) ),
 			'min_price' => $min_price,
 			'max_price' => $max_price,
@@ -191,7 +195,7 @@ final class CatalogFilters {
 
 		$query_args = array();
 
-		foreach ( array( 'category', 'color', 'size', 'rating' ) as $dimension ) {
+		foreach ( array( 'category', 'color', 'size', 'brand', 'rating' ) as $dimension ) {
 			if ( ! empty( $filters[ $dimension ] ) ) {
 				$query_args[ 'filter_' . $dimension ] = $filters[ $dimension ];
 			}
@@ -221,7 +225,7 @@ final class CatalogFilters {
 	 * @return string
 	 */
 	public static function clear_url( ?string $base_url = null ): string {
-		$keys = array( 'filter_category', 'filter_color', 'filter_size', 'filter_rating', 'min_price', 'max_price' );
+		$keys = array( 'filter_category', 'filter_color', 'filter_size', 'filter_brand', 'filter_rating', 'min_price', 'max_price' );
 
 		return null !== $base_url ? remove_query_arg( $keys, $base_url ) : remove_query_arg( $keys );
 	}
@@ -232,7 +236,7 @@ final class CatalogFilters {
 	 * every other currently active filter untouched.
 	 *
 	 * @param array       $filters   See self::sanitize()'s return type.
-	 * @param string      $dimension One of `category`, `color`, `size`, `rating`, `price`.
+	 * @param string      $dimension One of `category`, `color`, `size`, `brand`, `rating`, `price`.
 	 * @param string|int  $value     The value to remove; ignored when $dimension is `price`.
 	 * @param string|null $base_url  See self::url()'s $base_url parameter.
 	 * @return string
@@ -330,6 +334,17 @@ final class CatalogFilters {
 			}
 		}
 
+		$brand_names = wp_list_pluck( CatalogOptions::attribute_options( CatalogOptions::brand_attribute_slug() ), 'name', 'slug' );
+
+		foreach ( $filters['brand'] as $slug ) {
+			if ( isset( $brand_names[ $slug ] ) ) {
+				$chips[] = array(
+					'label' => $brand_names[ $slug ],
+					'url'   => self::remove_url( $filters, 'brand', $slug, $base_url ),
+				);
+			}
+		}
+
 		$rating_labels = wp_list_pluck( CatalogOptions::rating_options(), 'label', 'value' );
 
 		foreach ( $filters['rating'] as $stars ) {
@@ -400,6 +415,16 @@ final class CatalogFilters {
 				'taxonomy' => $size_taxonomy,
 				'field'    => 'slug',
 				'terms'    => $filters['size'],
+			);
+		}
+
+		$brand_taxonomy = CatalogOptions::brand_attribute_slug();
+
+		if ( ! empty( $filters['brand'] ) && taxonomy_exists( $brand_taxonomy ) ) {
+			$tax_query[] = array(
+				'taxonomy' => $brand_taxonomy,
+				'field'    => 'slug',
+				'terms'    => $filters['brand'],
 			);
 		}
 

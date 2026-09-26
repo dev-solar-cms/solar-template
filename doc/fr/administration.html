@@ -128,15 +128,106 @@
 			effet.
 		</p>
 
+		<h2 id="home">Onglet Page d'accueil</h2>
+		<p>
+			Une liste des sept sections de <code>front-page.php</code> (Héros, Produits en vedette,
+			Catégories, Notre histoire, Témoignages, Blog, Newsletter), réordonnable par glisser-déposer
+			natif (HTML5, sans librairie JS) et avec une case à cocher activer/désactiver par section.
+			L'ordre et la visibilité sont deux listes de slugs séparées par des virgules
+			(<code>home.sections_order</code>/<code>home.sections_enabled</code>), résolues par une
+			fonction pure et testée unitairement,
+			<code>Solar_Template\Admin\HomeSettings::resolve_order()</code> (tout slug connu absent de
+			la liste soumise est rajouté en fin, jamais perdu). <code>front-page.php</code> boucle
+			désormais sur <code>HomeSettings::visible_sections()</code> au lieu d'une liste figée
+			d'appels <code>get_template_part()</code> : réordonner ou décocher une section ici change
+			réellement ce qui s'affiche, et dans quel ordre.
+		</p>
+
+		<h2 id="products">Onglet Produits</h2>
+		<p>
+			Colonnes et produits par page (branchés sur les filtres déjà existants
+			<code>solar_template_catalog_columns</code>/<code>loop_shop_per_page</code>). Position de
+			la barre de filtres — En haut / Sidebar gauche / Sidebar droite : la <strong>même</strong>
+			barre de <code>template-parts/catalog-filters.php</code> (Catégorie/Prix/Couleur/Taille/
+			Note) passe simplement d'une disposition horizontale à verticale selon
+			<code>Solar_Template\Catalog\CatalogOptions::filters_position()</code>, sans dupliquer son
+			code. Une sidebar de widgets, indépendante de ce réglage de position, peut aussi être
+			activée : <code>Solar_Template\Catalog\CatalogSidebar</code> et
+			<code>template-parts/catalog-sidebar-widgets.php</code> proposent Catégorie/Prix/Couleur/
+			Marque/Note en simples liens (pas un second formulaire, pour ne jamais écraser les filtres
+			déjà actifs d'un autre formulaire de la page), réutilisant exactement la même mécanique de
+			requête que la barre (<code>CatalogFilters::url()</code>/<code>remove_url()</code>). La
+			« Marque » est un nouvel axe de filtre à part entière — une taxonomie d'attribut filtrable,
+			comme Couleur/Taille (<code>CatalogOptions::brand_attribute_slug()</code>, `pa_brand` par
+			défaut), pas une simple étiquette décorative. Produits similaires : activer/désactiver et
+			nombre affiché, branchés sur <code>Solar_Template\Product\ProductRelated::products()</code>.
+			Gravure personnalisée : bascule globale, libellé de section, type de champ (une ligne ou
+			plusieurs lignes) et prix par défaut — tous de nouveaux filtres sur
+			<code>Solar_Template\Product\ProductEngraving</code>
+			(<code>solar_template_engraving_*</code>) ; l'activation propre à chaque produit (Groupe 05)
+			reste nécessaire en plus de cette bascule globale pour qu'un produit donné la propose
+			réellement.
+		</p>
+
+		<h2 id="blog">Onglet Blog</h2>
+		<p>
+			Articles par page (appliqué à la requête principale de l'index et des archives catégorie/
+			étiquette via <code>pre_get_posts</code>), bascule du bloc « à la une », colonnes de la
+			grille, boutons de partage (Facebook/X/Pinterest en vrais liens de partage vers ces réseaux,
+			plus « Copier le lien » qui réutilise le bouton natif Web Share/presse-papiers déjà
+			existant — <code>Solar_Template\Blog\ArticleShare</code>), et nombre d'articles connexes (0
+			masque entièrement cette section). Désactiver le bloc « à la une » ne fait pas disparaître
+			l'article épinglé : il redevient un article normal de la grille, comme n'importe quel autre
+			— un bug trouvé pendant la vérification Docker de cette étape (WordPress réinsérait quand
+			même l'article épinglé en tête de la requête, au-delà du nombre configuré par page, tant que
+			<code>ignore_sticky_posts</code> n'était pas explicitement activé dans ce cas précis) a été
+			corrigé dans <code>Solar_Template\Blog\BlogController::exclude_featured_post()</code>.
+		</p>
+
+		<h2 id="translations">Onglet Traductions</h2>
+		<p>
+			Langue par défaut et détection automatique, réellement appliquées au visiteur du front (et
+			seulement à lui — jamais en <code>wp-admin</code>) via le filtre natif
+			<code>determine_locale</code> de WordPress.
+			<code>Solar_Template\Admin\TranslationsSettings::resolve_locale()</code> et
+			<code>match_accept_language()</code> sont des fonctions pures, testées unitairement, qui
+			comparent l'en-tête <code>Accept-Language</code> du navigateur aux langues actives du
+			catalogue du thème (<code>Solar_Template\I18n\Translator</code>) — correspondance exacte
+			d'abord (`fr-FR` → `fr_FR`), puis même sous-étiquette principale (`fr` → la première langue
+			`fr_*` active), avant de retomber sur la langue par défaut configurée puis sur la langue du
+			site elle-même. Un lien « Gérer les langues » pointe vers une page d'attente réelle et
+			fonctionnelle : le menu d'ajout de langue et l'éditeur de traduction complet restent le
+			prochain groupe de la feuille de route (DECISIONS.md §9), volontairement hors périmètre
+			ici. En attendant cet éditeur, cet onglet liste chaque langue active avec un lien de
+			téléchargement de son `.mo` déjà compilé, et une zone de glisser-déposer pour importer un
+			fichier `.po` ou `.mo` (bibliothèque `gettext/gettext`, déjà une dépendance du thème) : les
+			entrées qu'il contient sont écrites dans le même catalogue que l'éditeur futur, puis la
+			langue choisie est recompilée immédiatement.
+		</p>
+
+		<h2 id="cache">Régénération cache &amp; assets</h2>
+		<p>
+			Un bouton en bas de l'onglet Général (<code>Solar_Template\Admin\CacheRegenerator</code>,
+			action AJAX <code>solar_template_regenerate_cache</code>) vide le cache propre du thème
+			(<code>Solar_Template\Support\TransientCache</code>, derrière l'interface
+			<code>Contracts\CacheInterface</code> qu'une future implémentation de cache réutilisera), le
+			cache d'objets WordPress et le cache opcode PHP quand il est disponible, puis relance
+			`npm run build` si l'outillage Node est réellement présent côté serveur — ce conteneur
+			Docker n'embarque que PHP, cette dernière étape s'y signale donc « ignorée » plutôt que
+			d'échouer silencieusement. Le résultat détaillé de chaque étape s'affiche sous le bouton
+			sans recharger la page.
+		</p>
+
 		<p>
 			Vérifié de bout en bout dans l'environnement Docker réel : chaque champ se relit
 			correctement après une vraie sauvegarde (nonce compris), chaque réglage modifie visiblement
 			le vrai rendu front (couleurs/polices/arrondi, disposition/promo/réseaux/transparence de
 			l'en-tête, colonnes/newsletter/paiement/copyright du pied de page, devise réellement
-			affichée par WooCommerce), et le mode maintenance renvoie une vraie 503 à un visiteur non
-			connecté tout en laissant un administrateur naviguer normalement. Aucun avertissement ni
-			erreur PHP relevé. Les onglets Page d'accueil/Produits/Blog/Traductions et le bouton de
-			régénération cache/build restent pour une prochaine passe.
+			affichée par WooCommerce, ordre/visibilité des sections d'accueil, disposition et widgets du
+			catalogue, gravure personnalisée, pagination/à la une/colonnes/partage/connexes du blog,
+			langue par défaut et détection automatique du front), et le mode maintenance renvoie une
+			vraie 503 à un visiteur non connecté tout en laissant un administrateur naviguer
+			normalement. Aucun avertissement ni erreur PHP relevé.
 		</p>
 	</main>
 	<script src="../assets/doc.js"></script>

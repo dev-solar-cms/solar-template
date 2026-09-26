@@ -347,7 +347,7 @@ export function initProductTabs() {
 function wireEngravingToggle(form, onChange) {
 	const toggle = form.querySelector('.product-panel__engraving-toggle');
 	const field = form.querySelector('.product-panel__engraving-field');
-	const input = field ? field.querySelector('input') : null;
+	const input = field ? field.querySelector('input, textarea') : null;
 	const surcharge = toggle ? parseFloat(toggle.dataset.surcharge || '0') || 0 : 0;
 
 	if (toggle) {

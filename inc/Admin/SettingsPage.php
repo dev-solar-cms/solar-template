@@ -40,6 +40,10 @@ final class SettingsPage {
 			AppearanceSettings::class,
 			HeaderSettings::class,
 			FooterSettings::class,
+			HomeSettings::class,
+			ProductsSettings::class,
+			BlogSettings::class,
+			TranslationsSettings::class,
 		);
 	}
 
@@ -304,6 +308,17 @@ final class SettingsPage {
 			.solar-template-settings__toggle:checked { background: #2271b1; }
 			.solar-template-settings__toggle::before { content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: #fff; border-radius: 50%; transition: left 0.15s ease; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3); }
 			.solar-template-settings__toggle:checked::before { left: 22px; }
+			.solar-template-settings__sortable { list-style: none; margin: 10px 0 0; padding: 0; max-width: 420px; }
+			.solar-template-settings__sortable-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid #c3c4c7; border-radius: 3px; background: #fff; margin-bottom: 6px; cursor: grab; }
+			.solar-template-settings__sortable-item.is-dragging { opacity: 0.4; }
+			.solar-template-settings__sortable-item label { display: flex; align-items: center; gap: 8px; font-weight: 400; }
+			.solar-template-settings__sortable-handle { color: #a7aaad; font-size: 15px; line-height: 1; }
+			.solar-template-settings__dropzone { border: 2px dashed #c3c4c7; border-radius: 4px; padding: 24px; text-align: center; color: #646970; max-width: 480px; }
+			.solar-template-settings__dropzone.is-dragover { border-color: #2271b1; background: #ecf5fd; }
+			.solar-template-settings__lang-table { border-collapse: collapse; max-width: 560px; }
+			.solar-template-settings__lang-table th, .solar-template-settings__lang-table td { padding: 6px 10px; border-bottom: 1px solid #e0e0e0; text-align: left; font-size: 13px; }
+			.solar-template-settings__cache-status { margin-top: 10px; font-size: 13px; }
+			.solar-template-settings__cache-status ul { margin: 6px 0 0 18px; }
 		</style>
 		<script>
 			document.addEventListener('click', function (event) {
@@ -340,6 +355,128 @@ final class SettingsPage {
 					removePreview.innerHTML = '<span style="font-size:10px;color:#646970;"><?php echo esc_js( __( 'No file', 'solar-template' ) ); ?></span>';
 				}
 			});
+
+			// Native HTML5 drag & drop reordering for any `[data-solar-sortable]` list (currently only
+			// the Home page tab's section list) — updates its sibling hidden `#st-sections-order`
+			// input on every drop so the sanitized order submitted matches what's visually shown.
+			document.querySelectorAll('[data-solar-sortable]').forEach(function (list) {
+				var draggedItem = null;
+
+				list.querySelectorAll('.solar-template-settings__sortable-item').forEach(function (item) {
+					item.addEventListener('dragstart', function () {
+						draggedItem = item;
+						item.classList.add('is-dragging');
+					});
+					item.addEventListener('dragend', function () {
+						item.classList.remove('is-dragging');
+						draggedItem = null;
+						updateSortableOrder(list);
+					});
+					item.addEventListener('dragover', function (event) {
+						event.preventDefault();
+						if (!draggedItem || draggedItem === item) {
+							return;
+						}
+						var rect = item.getBoundingClientRect();
+						var isAfter = event.clientY - rect.top > rect.height / 2;
+						list.insertBefore(draggedItem, isAfter ? item.nextSibling : item);
+					});
+				});
+			});
+
+			function updateSortableOrder(list) {
+				var order = Array.from(list.querySelectorAll('.solar-template-settings__sortable-item')).map(function (item) {
+					return item.dataset.slug;
+				});
+				var input = document.getElementById('st-sections-order');
+				if (input) {
+					input.value = order.join(',');
+				}
+			}
+
+			// Native drag & drop file picker for `[data-solar-dropzone]` (currently only the
+			// Translations tab's .po/.mo import zone) — forwards onto its own file input; a plain
+			// click on the zone (or the browser's own file picker) works exactly the same way.
+			document.querySelectorAll('[data-solar-dropzone]').forEach(function (zone) {
+				var input = zone.querySelector('input[type="file"]');
+				if (!input) {
+					return;
+				}
+				zone.addEventListener('click', function () {
+					input.click();
+				});
+				['dragenter', 'dragover'].forEach(function (eventName) {
+					zone.addEventListener(eventName, function (event) {
+						event.preventDefault();
+						zone.classList.add('is-dragover');
+					});
+				});
+				['dragleave', 'drop'].forEach(function (eventName) {
+					zone.addEventListener(eventName, function (event) {
+						event.preventDefault();
+						zone.classList.remove('is-dragover');
+					});
+				});
+				zone.addEventListener('drop', function (event) {
+					if (event.dataTransfer && event.dataTransfer.files.length) {
+						input.files = event.dataTransfer.files;
+						var label = zone.querySelector('[data-solar-dropzone-filename]');
+						if (label) {
+							label.textContent = event.dataTransfer.files[0].name;
+						}
+					}
+				});
+				input.addEventListener('change', function () {
+					var label = zone.querySelector('[data-solar-dropzone-filename]');
+					if (label && input.files.length) {
+						label.textContent = input.files[0].name;
+					}
+				});
+			});
+
+			// "Regenerate cache & assets" button (General tab) — fires the AJAX action and renders a
+			// per-step status list from the JSON response.
+			var cacheButton = document.getElementById('solar-template-regenerate-cache');
+			if (cacheButton) {
+				cacheButton.addEventListener('click', function () {
+					var status = document.getElementById('solar-template-cache-status');
+					cacheButton.disabled = true;
+					status.hidden = false;
+					status.innerHTML = '<?php echo esc_js( __( 'Working…', 'solar-template' ) ); ?>';
+
+					var body = new URLSearchParams();
+					body.set('action', 'solar_template_regenerate_cache');
+					body.set('nonce', cacheButton.dataset.nonce);
+
+					fetch(cacheButton.dataset.ajaxUrl, { method: 'POST', credentials: 'same-origin', body: body })
+						.then(function (response) {
+							return response.json();
+						})
+						.then(function (json) {
+							cacheButton.disabled = false;
+
+							if (!json.success) {
+								status.textContent = (json.data && json.data.message) || '<?php echo esc_js( __( 'Something went wrong.', 'solar-template' ) ); ?>';
+								return;
+							}
+
+							var list = document.createElement('ul');
+							json.data.steps.forEach(function (step) {
+								var item = document.createElement('li');
+								var icon = step.success === true ? '✓' : step.success === false ? '✗' : '–';
+								item.textContent = icon + ' ' + step.label + (step.message ? ' — ' + step.message : '');
+								list.appendChild(item);
+							});
+
+							status.innerHTML = '';
+							status.appendChild(list);
+						})
+						.catch(function () {
+							cacheButton.disabled = false;
+							status.textContent = '<?php echo esc_js( __( 'Something went wrong.', 'solar-template' ) ); ?>';
+						});
+				});
+			}
 		</script>
 		<?php
 	}

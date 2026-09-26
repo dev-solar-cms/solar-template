@@ -4,11 +4,13 @@
  * Role: Single article header template-part (template-parts/single-article/header.php).
  * Author: David ROMERA <d.romera.11@gmail.com>
  * Purpose: Render the article's meta line (category/date/reading time), title, and the author bar
- *          with a native share button (assets/js/blog.js, `initArticleShare()` — the Web Share API
- *          where available, a "copy link" clipboard fallback otherwise). The mockup's own "Save"
- *          button has no defined feature/back end anywhere in the project (article bookmarking is
- *          out of scope) and is deliberately left out, same reasoning as other steps' unspecified-
- *          behaviour trims.
+ *          with the share buttons the administration "Blog" tab enables
+ *          (Solar_Template\Blog\ArticleShare::networks()): Facebook/X/Pinterest as plain, real
+ *          share links (no JavaScript needed), and "Copy link" as the existing native button
+ *          (assets/js/blog.js, `initArticleShare()` — the Web Share API where available, a
+ *          clipboard fallback otherwise). The mockup's own "Save" button has no defined feature/
+ *          back end anywhere in the project (article bookmarking is out of scope) and is
+ *          deliberately left out, same reasoning as other steps' unspecified-behaviour trims.
  *
  * @package Solar_Template
  * @var array $args {category: string, date: string, reading_time_label: string, title: string,
@@ -18,6 +20,8 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+use Solar_Template\Blog\ArticleShare;
 
 $defaults = array(
 	'category'           => '',
@@ -58,13 +62,29 @@ $header = wp_parse_args( $args ?? array(), $defaults );
 		<?php endif; ?>
 	</div>
 
-	<button
-		type="button"
-		class="article-share-button btn-link"
-		data-share-title="<?php echo esc_attr( $header['title'] ); ?>"
-		data-share-url="<?php echo esc_url( $header['permalink'] ); ?>"
-		data-copied-label="<?php esc_attr_e( 'Link copied!', 'solar-template' ); ?>"
-	>
-		<?php esc_html_e( 'Share', 'solar-template' ); ?>
-	</button>
+	<div class="article-share-buttons">
+		<?php foreach ( ArticleShare::networks() as $network ) : ?>
+			<?php if ( 'copy_link' === $network ) : ?>
+				<button
+					type="button"
+					class="article-share-button btn-link"
+					data-share-title="<?php echo esc_attr( $header['title'] ); ?>"
+					data-share-url="<?php echo esc_url( $header['permalink'] ); ?>"
+					data-copied-label="<?php esc_attr_e( 'Link copied!', 'solar-template' ); ?>"
+				>
+					<?php echo esc_html( ArticleShare::label( $network ) ); ?>
+				</button>
+			<?php else : ?>
+				<a
+					class="article-share-link btn-link"
+					href="<?php echo esc_url( ArticleShare::share_url( $network, $header['title'], $header['permalink'] ) ); ?>"
+					target="_blank"
+					rel="noopener noreferrer"
+					aria-label="<?php echo esc_attr( ArticleShare::label( $network ) ); ?>"
+				>
+					<?php echo esc_html( ArticleShare::label( $network ) ); ?>
+				</a>
+			<?php endif; ?>
+		<?php endforeach; ?>
+	</div>
 </div>

@@ -5,11 +5,14 @@
  *       regardless of the "reading" setting (a static page or the latest posts).
  * Author: David ROMERA <d.romera.11@gmail.com>
  * Purpose: Assemble the home page's sections, each a self-contained template-part under
- *          template-parts/front-page/. Built incrementally, one section at a time, per the
- *          project roadmap; sections are added here in the order they land.
+ *          template-parts/front-page/. Order and visibility come from
+ *          Solar_Template\Admin\HomeSettings (the administration "Home page" tab) rather than a
+ *          fixed list, so reordering/disabling a section there actually changes what renders here.
  *
  * @package Solar_Template
  */
+
+use Solar_Template\Admin\HomeSettings;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -19,13 +22,9 @@ get_header();
 ?>
 
 <main id="primary" class="front-page">
-	<?php get_template_part( 'template-parts/front-page/hero' ); ?>
-	<?php get_template_part( 'template-parts/front-page/featured-products' ); ?>
-	<?php get_template_part( 'template-parts/front-page/categories' ); ?>
-	<?php get_template_part( 'template-parts/front-page/brand-story' ); ?>
-	<?php get_template_part( 'template-parts/front-page/testimonials' ); ?>
-	<?php get_template_part( 'template-parts/front-page/blog-preview' ); ?>
-	<?php get_template_part( 'template-parts/front-page/newsletter' ); ?>
+	<?php foreach ( HomeSettings::visible_sections() as $section ) : ?>
+		<?php get_template_part( $section['template_part'] ); ?>
+	<?php endforeach; ?>
 </main>
 
 <?php
