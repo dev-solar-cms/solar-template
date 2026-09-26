@@ -26,6 +26,10 @@ solar-template/
 ├── checkout.php        # Gabarit du tunnel de vente (panier/connexion/livraison/paiement/confirmation), servi via template_include
 ├── header-checkout.php # En-tête minimal du tunnel de vente (marque centrée + mention paiement sécurisé, pas de nav)
 ├── footer-checkout.php # Pied de page minimal du tunnel de vente (liens légaux, copyright, mention SSL)
+├── page.php            # Gabarit générique d'une Page WordPress (titre + contenu)
+├── page-contact.php    # Page « Contact » (auto-sélectionné pour la page de slug `contact`) : formulaire natif, coordonnées, placeholder carte, FAQ
+├── page-templates/
+│   └── legal-page.php  # Template de page sélectionnable « Page légale » (onglets C.G.V./Confidentialité/Mentions légales/Cookies + sommaire auto-généré)
 ├── index.php          # Gabarit de repli ; appelle get_header()/get_footer()
 ├── screenshot.png     # 1200x900, requis par WordPress pour l'aperçu du thème
 ├── composer.json      # Dépendances PHP + autoload PSR-4 (Solar_Template\)
@@ -43,7 +47,8 @@ solar-template/
 │   ├── Product/         # Logique de la fiche produit (galerie, panneau, variations, onglets, produits similaires)
 │   ├── Checkout/        # Tunnel de vente : routage, indicateur d'étapes, vue du panier, disposition des champs d'adresse, icônes/texte du paiement, vue de la confirmation de commande
 │   ├── Account/         # Espace client : endpoints/menu, sidebar, tableau de bord, statut de commande, action « Recommander », liste/détail de commandes, liste de souhaits, adresses, téléchargements, demande S.A.V., champs de paramètres (téléphone/naissance), suppression de compte
-│   └── Blog/            # Blog : mapping carte article (normal + à la une), temps de lecture, hero, filtre catégories, article à la une, pagination, fil d'Ariane/auteur/articles connexes de l'article
+│   ├── Blog/            # Blog : mapping carte article (normal + à la une), temps de lecture, hero, filtre catégories, article à la une, pagination, fil d'Ariane/auteur/articles connexes de l'article
+│   └── Pages/           # Pages statiques : template/onglets/sommaire de la page légale, coordonnées + FAQ + traitement du formulaire de contact
 ├── template-parts/      # Fragments de gabarit réutilisables (`get_template_part()`)
 │   ├── product-card.php # Carte produit (image, badge, wishlist, overlay panier, prix, swatches)
 │   ├── blog-card.php    # Carte article de blog (image 16:10, badge catégorie, meta, titre, extrait, auteur)
@@ -89,6 +94,12 @@ solar-template/
 │       ├── tags.php      # Tags réels de l'article en pills
 │       ├── author-card.php # Carte auteur (avatar/initiale, bio réelle, lien vers ses articles)
 │       └── related.php   # Grille d'articles connexes (même carte article)
+│   └── pages/            # Fragments des pages statiques
+│       ├── legal-tabs.php # Bande d'onglets C.G.V./Confidentialité/Mentions légales/Cookies (liens réels)
+│       ├── legal-toc.php # Sommaire sticky auto-généré + encart « Besoin d'aide ? »
+│       ├── contact-form.php # Formulaire de contact natif + état de succès
+│       ├── contact-info.php # Coordonnées, indicateur ouvert/fermé réel, réseaux sociaux, carte temps de réponse
+│       └── contact-faq.php # FAQ en accordéon natif (`<details>`/`<summary>`)
 ├── woocommerce/         # Surcharges de gabarits natifs WooCommerce (voir « Tunnel de vente » ci-dessous)
 │   ├── cart/            # Page panier : articles, code promo, récapitulatif
 │   │   ├── cart.php     # Liste des articles réels du panier + formulaire de code promo
@@ -140,6 +151,8 @@ solar-template/
 │   ├── scss/_product-page.scss # Fiche produit complète (fil d'Ariane, galerie, panneau, onglets, produits similaires)
 │   ├── scss/_checkout.scss # Tunnel de vente : en-tête/pied de page minimaux, indicateur d'étapes, panier, adresse, méthodes de livraison, récapitulatif
 │   ├── scss/_account.scss # Espace client : mise en page sidebar, navigation, tableau de bord, badge de statut de commande
+│   ├── scss/_legal-page.scss # Page légale : hero, bande d'onglets, sommaire sticky, typographie de l'article
+│   ├── scss/_contact.scss # Page contact : hero, formulaire + coordonnées, placeholder carte, FAQ accordéon
 │   ├── js/main.js        # Point d'entrée JS (importe le SCSS, initialise les modules de comportement)
 │   ├── js/header.js      # Comportement de l'en-tête (mega menu, bascule de recherche)
 │   ├── js/newsletter.js  # Soumission AJAX des formulaires newsletter (`.js-newsletter-form`)

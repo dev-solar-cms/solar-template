@@ -1,0 +1,137 @@
+<!--
+	Créé le : 2026-09-26 23:30 CEST
+	Rôle : Page de documentation en français décrivant les pages statiques du thème, construites page par page.
+	Auteur : David ROMERA <d.romera.11@gmail.com>
+	Objectif : Documenter, en français, le template de page légale et la page de contact au fur et à mesure de leur construction.
+-->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Pages statiques — Documentation Solar Template</title>
+	<link rel="stylesheet" href="../assets/doc.css" />
+</head>
+<body>
+	<aside class="doc-sidebar">
+		<a class="doc-brand" href="index.html">Solar Template</a>
+		<nav>
+			<ul>
+				<li><a href="index.html">Accueil</a></li>
+				<li><a href="infrastructure.html">Infrastructure</a></li>
+				<li><a href="design-system.html">Système de design</a></li>
+				<li><a href="structure-commune.html">Structure commune</a></li>
+				<li><a href="page-accueil.html">Page d'accueil</a></li>
+				<li><a href="catalogue.html">Catalogue produits</a></li>
+				<li><a href="fiche-produit.html">Fiche produit</a></li>
+				<li><a href="tunnel-vente.html">Tunnel de vente</a></li>
+				<li><a href="mon-compte.html">Espace client</a></li>
+				<li><a href="blog.html">Blog</a></li>
+				<li><a href="pages-statiques.html">Pages statiques</a></li>
+			</ul>
+		</nav>
+		<div class="doc-lang-switch">
+			<a href="../en/static-pages.html">EN</a>
+			<a class="is-active" href="pages-statiques.html">FR</a>
+		</div>
+	</aside>
+	<main class="doc-content">
+		<h1>Pages statiques</h1>
+		<p>
+			Les dernières pages génériques du thème : un template « Page légale » sélectionnable (C.G.V.,
+			Politique de confidentialité, Mentions légales, Cookies), une page de contact native, et un
+			gabarit de repli simple pour toute autre Page WordPress.
+		</p>
+
+		<h2 id="legal-page">Template de page légale</h2>
+		<p>
+			<code>page-templates/legal-page.php</code> est un template de page sélectionnable (choisi
+			depuis le panneau Attributs de page de l'éditeur, enregistré via le filtre
+			<code>theme_page_templates</code>). Il affiche un hero sombre (le vrai titre de la page et sa
+			date de dernière modification), une bande d'onglets reliant les propres pages C.G.V./
+			Politique de confidentialité/Mentions légales/Cookies du site (celles qui existent parmi ces
+			quatre — une page manquante se replie simplement sur l'accueil du site plutôt qu'un lien
+			cassé), et un sommaire sticky à côté du vrai contenu de la page.
+		</p>
+		<p>
+			Le sommaire est généré automatiquement depuis les titres <code>&lt;h2&gt;</code> de la page :
+			<code>Solar_Template\Pages\LegalPageController::annotate_headings()</code> ajoute un attribut
+			<code>id</code> stable à chaque titre qui n'en a pas déjà un (un id défini par l'auteur est
+			toujours conservé tel quel), et renvoie la liste ordonnée que ces ancres pointent — une pure
+			transformation de chaîne sans dépendance à WordPress, testée unitairement directement (texte
+			accentué, titres en double, balisage à l'intérieur d'un titre).
+		</p>
+		<p>
+			Décision technique : plutôt que de coder en dur un texte légal français, chacune des quatre
+			pages légales est une vraie Page WordPress indépendante que le propriétaire du site rédige et
+			structure avec de vrais titres <code>&lt;h2&gt;</code> — le template ne fournit que les
+			onglets/le sommaire/la typographie autour du contenu existant.
+		</p>
+
+		<h2 id="contact-page">Page de contact</h2>
+		<p>
+			<code>page-contact.php</code> est automatiquement sélectionné par la hiérarchie de gabarits
+			propre de WordPress pour la page dont le slug est <code>contact</code> — aucune sélection
+			manuelle de template nécessaire, même convention basée sur le fichier que
+			<code>archive-product.php</code>/<code>single-product.php</code>. Il affiche un formulaire de
+			contact natif, un panneau de coordonnées, un placeholder de carte et la FAQ en accordéon.
+		</p>
+		<p>
+			Le formulaire lui-même est une soumission POST classique (sans AJAX), traitée par
+			<code>Solar_Template\Pages\ContactController::maybe_handle_submission()</code> — aucun plugin
+			de formulaire tiers. La protection anti-spam est un nonce WordPress plus un champ honeypot
+			caché : un vrai visiteur ne le voit ni ne le remplit jamais, donc toute soumission avec ce
+			champ rempli est silencieusement redirigée vers le même état de succès qu'un visiteur légitime
+			verrait, sans envoyer aucun email — sans jamais indiquer à un robot que sa soumission a été
+			rejetée. La validation des champs (champs requis, format email, consentement RGPD) est une
+			fonction pure sans dépendance à WordPress, testée unitairement directement. Une soumission
+			valide envoie un email à l'administrateur du site via <code>wp_mail()</code> natif, avec
+			l'adresse du visiteur définie comme adresse de réponse (Reply-To).
+		</p>
+		<p>
+			Le panneau de coordonnées (adresse, téléphone, email, horaires, réseaux sociaux, temps de
+			réponse garanti) provient d'un unique tableau filtrable
+			(<code>Solar_Template\Pages\ContactInfo::config()</code>), même convention de contenu
+			éditorial placeholder que les sections Hero/Notre histoire de la page d'accueil — un futur
+			écran d'administration est censé s'accrocher à ce filtre avec les vraies coordonnées du
+			propriétaire du site. L'indicateur « ouvert »/« fermé » est en revanche réel : calculé à partir
+			des horaires hebdomadaires configurés et du jour/de l'heure actuels réels, pas d'une valeur
+			codée en dur.
+		</p>
+		<p>
+			La carte reste un placeholder (aucun service Google Maps ou autre service cartographique tiers
+			intégré), conformément au périmètre explicite de cette étape.
+		</p>
+
+		<h2 id="faq">FAQ en accordéon</h2>
+		<p>
+			La section FAQ de la page de contact est un accordéon natif
+			<code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code> — s'ouvre et se ferme correctement à
+			la souris comme au clavier sans aucun JavaScript, par conception. Le contenu
+			(<code>Solar_Template\Pages\Faq::heading()</code>/<code>items()</code>) est un unique tableau
+			filtrable, même convention que les témoignages de la page d'accueil — aucun type de contenu
+			personnalisé ni écran d'administration dédié pour cette étape.
+		</p>
+
+		<h2 id="generic-page">Gabarit de page générique</h2>
+		<p>
+			<code>page.php</code> est le gabarit de repli par défaut de WordPress pour toute Page qui
+			n'utilise pas un gabarit plus spécifique — un titre et un contenu simples, remplaçant
+			<code>index.php</code> que le thème utilisait auparavant comme repli pour les pages.
+		</p>
+		<p>
+			Vérifié de bout en bout dans l'environnement Docker réel : une page C.G.V. avec plusieurs
+			vraies sections <code>&lt;h2&gt;</code> a montré la bande d'onglets, un sommaire
+			auto-généré avec des ancres fonctionnelles, et des traductions françaises correctes résolues
+			via le catalogue de traduction du thème ; le formulaire de la page de contact a été soumis
+			avec des données valides (vrai état de succès, tentative de notification par email de
+			l'administrateur via <code>wp_mail()</code>), des données invalides (état d'erreur, aucun
+			email envoyé) et un champ honeypot rempli (faux état de succès, aucun email envoyé) — les trois
+			cas confirmés. Les pages/contenus de test utilisés pour cette vérification ont été conservés
+			comme contenu de départ réel du site, puisqu'il s'agit des pages réelles dont le site a
+			désormais besoin.
+		</p>
+	</main>
+	<script src="../assets/doc.js"></script>
+</body>
+</html>

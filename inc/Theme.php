@@ -29,6 +29,8 @@ use Solar_Template\Database\Installer;
 use Solar_Template\Header\Cart;
 use Solar_Template\Header\Nav;
 use Solar_Template\Newsletter\NewsletterController;
+use Solar_Template\Pages\ContactController;
+use Solar_Template\Pages\LegalPageController;
 use Solar_Template\Product\EngravingAdminFields;
 use Solar_Template\Product\EngravingCart;
 use Solar_Template\Product\ProductController;
@@ -100,6 +102,9 @@ final class Theme {
 
 		add_action( 'woocommerce_save_account_details', array( AccountSettingsFields::class, 'save_from_request' ) );
 		add_action( 'template_redirect', array( AccountDeletion::class, 'maybe_handle' ) );
+
+		add_filter( 'theme_page_templates', array( LegalPageController::class, 'register_template' ) );
+		add_action( 'template_redirect', array( ContactController::class, 'maybe_handle_submission' ) );
 	}
 
 	/**

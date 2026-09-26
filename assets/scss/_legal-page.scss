@@ -1,0 +1,210 @@
+// Created: 2026-09-26 22:00 CEST
+// Role: Legal page component partial (assets/scss/_legal-page.scss).
+// Author: David ROMERA <d.romera.11@gmail.com>
+// Purpose: Dark hero, tab strip, sticky table of contents and article typography for
+//          page-templates/legal-page.php, built from the shared design tokens/mixins.
+
+@use 'tokens' as *;
+
+// -------------------------------------------------------------------------------------------
+// Hero
+// -------------------------------------------------------------------------------------------
+
+.legal-page-hero {
+	background: $color-dark;
+	padding: 56px 0;
+}
+
+.legal-page-hero__inner {
+	max-width: $container-max-width;
+	margin: 0 auto;
+	padding: 0 $container-padding-x;
+}
+
+.legal-page-hero__eyebrow {
+	margin: 0 0 10px;
+	color: $color-gold;
+	@include type-caption;
+}
+
+.legal-page-hero__title {
+	margin: 0 0 12px;
+	color: $color-surface;
+	@include type-h1;
+	font-size: clamp(32px, 3.5vw, 48px);
+}
+
+.legal-page-hero__updated {
+	margin: 0;
+	color: rgba(255, 255, 255, 0.4);
+	font-size: 14px;
+}
+
+// -------------------------------------------------------------------------------------------
+// Tab strip
+// -------------------------------------------------------------------------------------------
+
+.legal-tabs {
+	background: $color-surface;
+	border-bottom: 1px solid $color-border;
+}
+
+.legal-tabs__inner {
+	max-width: $container-max-width;
+	margin: 0 auto;
+	padding: 0 $container-padding-x;
+	display: flex;
+	gap: 0;
+	overflow-x: auto;
+}
+
+.legal-tabs__link {
+	padding: 14px 20px;
+	font-size: 13px;
+	font-weight: $font-weight-medium;
+	color: $color-muted;
+	border-bottom: 2px solid transparent;
+	white-space: nowrap;
+
+	&:hover {
+		color: $color-dark;
+	}
+
+	&--active {
+		color: $color-dark;
+		font-weight: $font-weight-bold;
+		border-bottom-color: $color-dark;
+	}
+}
+
+// -------------------------------------------------------------------------------------------
+// Content + table of contents
+// -------------------------------------------------------------------------------------------
+
+.legal-page__inner {
+	max-width: $container-max-width;
+	margin: 0 auto;
+	padding: 56px $container-padding-x 96px;
+}
+
+.legal-page__grid {
+	display: grid;
+	grid-template-columns: 220px 1fr;
+	gap: 64px;
+	align-items: start;
+
+	@media (max-width: 900px) {
+		grid-template-columns: 1fr;
+	}
+}
+
+.legal-toc {
+	position: sticky;
+	top: 120px;
+}
+
+.legal-toc__label {
+	margin-bottom: 16px;
+	color: $color-muted;
+	@include type-caption;
+}
+
+.legal-toc__list {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+}
+
+.legal-toc__item {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 12px;
+	border-radius: 5px;
+	border-left: 2px solid transparent;
+	font-size: 13px;
+	color: $color-muted;
+
+	&:hover {
+		color: $color-dark;
+		border-left-color: $color-border;
+	}
+}
+
+.legal-toc__number {
+	font-size: 11px;
+	font-weight: $font-weight-bold;
+	color: $color-muted-light;
+}
+
+.legal-toc__help {
+	margin-top: 28px;
+	padding: 16px;
+	background: $color-bg;
+	border-radius: 7px;
+	border: 1px solid $color-border;
+}
+
+.legal-toc__help-title {
+	margin-bottom: 6px;
+	font-size: 12px;
+	font-weight: $font-weight-bold;
+	color: $color-dark;
+}
+
+.legal-toc__help-text {
+	margin: 0 0 10px;
+	font-size: 12px;
+	line-height: 1.6;
+	color: $color-muted;
+}
+
+.legal-toc__help-link {
+	font-size: 12.5px;
+	font-weight: $font-weight-bold;
+	color: $color-gold;
+
+	&:hover {
+		color: $color-gold-dark;
+	}
+}
+
+.legal-page__content {
+	max-width: 720px;
+	font-size: 14.5px;
+	line-height: 1.85;
+	color: #3a3a3a;
+
+	h2 {
+		margin: 0 0 16px;
+		padding-bottom: 12px;
+		border-bottom: 2px solid $color-border;
+		color: $color-dark;
+		font-size: 20px;
+		font-weight: $font-weight-extrabold;
+	}
+
+	> * + h2 {
+		margin-top: 48px;
+	}
+
+	p {
+		margin: 0 0 14px;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	strong {
+		color: $color-dark;
+	}
+
+	a {
+		color: $color-gold;
+
+		&:hover {
+			color: $color-gold-dark;
+		}
+	}
+}

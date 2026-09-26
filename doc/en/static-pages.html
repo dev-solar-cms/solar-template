@@ -1,0 +1,133 @@
+<!--
+	Created: 2026-09-26 23:30 CEST
+	Role: English documentation page describing the theme's static pages, built page by page.
+	Author: David ROMERA <d.romera.11@gmail.com>
+	Purpose: Document, in English, the legal page template and the contact page as they get built.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Static pages — Solar Template documentation</title>
+	<link rel="stylesheet" href="../assets/doc.css" />
+</head>
+<body>
+	<aside class="doc-sidebar">
+		<a class="doc-brand" href="index.html">Solar Template</a>
+		<nav>
+			<ul>
+				<li><a href="index.html">Home</a></li>
+				<li><a href="infrastructure.html">Infrastructure</a></li>
+				<li><a href="design-system.html">Design system</a></li>
+				<li><a href="structure-commune.html">Common structure</a></li>
+				<li><a href="page-accueil.html">Home page</a></li>
+				<li><a href="catalog.html">Product catalog</a></li>
+				<li><a href="product-page.html">Product page</a></li>
+				<li><a href="checkout.html">Checkout</a></li>
+				<li><a href="my-account.html">My account</a></li>
+				<li><a href="blog.html">Blog</a></li>
+				<li><a href="static-pages.html">Static pages</a></li>
+			</ul>
+		</nav>
+		<div class="doc-lang-switch">
+			<a class="is-active" href="static-pages.html">EN</a>
+			<a href="../fr/pages-statiques.html">FR</a>
+		</div>
+	</aside>
+	<main class="doc-content">
+		<h1>Static pages</h1>
+		<p>
+			The theme's remaining generic pages: a selectable "Legal Page" template (Terms & Conditions,
+			Privacy Policy, Legal Notice, Cookies), a native contact page, and a plain fallback template
+			for any other WordPress Page.
+		</p>
+
+		<h2 id="legal-page">Legal page template</h2>
+		<p>
+			<code>page-templates/legal-page.php</code> is a selectable page template (chosen from the
+			Page Attributes panel in the block editor, registered via the
+			<code>theme_page_templates</code> filter). It renders a dark hero (the page's own real title
+			and last-modified date), a tab strip linking the site's own C.G.V./Privacy Policy/Legal
+			Notice/Cookies pages (whichever of those four exist — a missing one simply falls back to the
+			site's front page instead of a broken link), and a sticky table of contents next to the
+			page's real content.
+		</p>
+		<p>
+			The table of contents is auto-generated from the page's own <code>&lt;h2&gt;</code> headings:
+			<code>Solar_Template\Pages\LegalPageController::annotate_headings()</code> adds a stable
+			<code>id</code> attribute to every heading that doesn't already have one (an author-set id is
+			always kept as-is), and returns the ordered list those anchors point to — a pure string
+			transform with no WordPress dependency, unit tested directly (accented text, duplicate
+			heading text, inline markup inside a heading).
+		</p>
+		<p>
+			Technical decision: rather than hardcoding French legal copy, each of the four legal pages is
+			a real, independent WordPress Page the site owner writes and structures with real
+			<code>&lt;h2&gt;</code> headings — the template only supplies the tabs/table of
+			contents/typography around whatever content exists.
+		</p>
+
+		<h2 id="contact-page">Contact page</h2>
+		<p>
+			<code>page-contact.php</code> is automatically matched by WordPress' own page template
+			hierarchy for the page whose slug is <code>contact</code> — no manual template selection
+			needed, same file-based convention as <code>archive-product.php</code>/
+			<code>single-product.php</code>. It renders a native contact form, a store details panel, a
+			map placeholder, and the FAQ accordion.
+		</p>
+		<p>
+			The form itself is a plain (non-AJAX) POST, handled by
+			<code>Solar_Template\Pages\ContactController::maybe_handle_submission()</code> — no
+			third-party form plugin. Anti-spam is a WordPress nonce plus a hidden honeypot field: a real
+			visitor never sees or fills it, so any submission with that field filled in is silently
+			redirected to the same success state a legitimate visitor would see, without sending any
+			mail — never tipping off a bot that its submission was rejected. Field validation (required
+			fields, email format, RGPD consent) is a pure function with no WordPress dependency, unit
+			tested directly. A valid submission emails the site admin via native <code>wp_mail()</code>,
+			with the visitor's own address set as the Reply-To.
+		</p>
+		<p>
+			The store details panel (address, phone, email, hours, social links, guaranteed response
+			time) comes from a single filterable array
+			(<code>Solar_Template\Pages\ContactInfo::config()</code>), same editorial-placeholder
+			convention as the home page's Hero/Brand story sections — a future administration screen is
+			expected to hook into this filter with the site owner's real details. The "open now"/"closed
+			now" indicator is real, though: computed from the configured weekly schedule against the
+			actual current day/time, not a hardcoded value.
+		</p>
+		<p>
+			The map itself stays a placeholder (no Google Maps or other third-party mapping service
+			wired in), per this page's own explicit scope.
+		</p>
+
+		<h2 id="faq">FAQ accordion</h2>
+		<p>
+			The FAQ section on the contact page is a native <code>&lt;details&gt;</code>/
+			<code>&lt;summary&gt;</code> accordion — opens and closes correctly with both mouse and
+			keyboard with no JavaScript at all, by design. Content
+			(<code>Solar_Template\Pages\Faq::heading()</code>/<code>items()</code>) is a single
+			filterable array, same convention as the home page's testimonials — no dedicated custom post
+			type or admin screen for this step.
+		</p>
+
+		<h2 id="generic-page">Generic page fallback</h2>
+		<p>
+			<code>page.php</code> is WordPress' default fallback template for any Page that doesn't use a
+			more specific one — a plain title and content, replacing <code>index.php</code> as the
+			fallback the theme previously used for pages.
+		</p>
+		<p>
+			Verified end to end in the real Docker environment: a Terms & Conditions page with several
+			real <code>&lt;h2&gt;</code> sections showed the tab strip, an auto-generated table of
+			contents with working anchors, and correct French translations resolved through the theme's
+			own translation catalog; the contact page's form was submitted with a valid payload (real
+			success state, admin notification email attempted through <code>wp_mail()</code>), an invalid
+			payload (error state, no email sent) and a filled-in honeypot field (fake success state, no
+			email sent) — all three confirmed. Test pages/content used for this verification were kept as
+			the site's real starter content, since they are the actual pages the site now needs to exist.
+		</p>
+	</main>
+	<script src="../assets/doc.js"></script>
+</body>
+</html>

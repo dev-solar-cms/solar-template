@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.7.0`.
+Version actuelle : `0.7.1`.
 
 ## Avant une release
 
@@ -30,6 +30,43 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.7.1 — pages statiques (page légale, contact, FAQ)
+
+- Ajout d'un template de page sélectionnable « Page légale » (`page-templates/legal-page.php`,
+  enregistré via le filtre `theme_page_templates`) : hero avec titre/date de dernière modification
+  réels, bande d'onglets vers les propres pages C.G.V./Politique de confidentialité/Mentions
+  légales/Cookies du site (une page manquante se replie simplement sur l'accueil plutôt qu'un lien
+  cassé), et un sommaire sticky généré automatiquement depuis les titres `<h2>` de la page — un
+  titre sans identifiant en reçoit un généré depuis son texte (avec gestion des doublons et des
+  caractères accentués), un identifiant déjà posé par l'auteur est toujours conservé tel quel.
+- Ajout d'une page de contact native (`page-contact.php`, sélectionnée automatiquement pour la
+  page de slug `contact` par la hiérarchie de gabarits de WordPress) : formulaire natif
+  (prénom/nom/email/sujet/message/consentement RGPD), traité en PHP pur sans aucun plugin de
+  formulaire tiers — nonce WordPress plus un champ honeypot caché comme protection anti-spam de
+  base (une soumission avec ce champ rempli est redirigée vers le même état de succès qu'une
+  soumission légitime, sans envoyer aucun email, pour ne jamais révéler à un robot que sa
+  soumission a été rejetée), envoi à l'administrateur via `wp_mail()` natif avec l'adresse du
+  visiteur en Reply-To, et état de succès/erreur affiché après redirection. Un panneau de
+  coordonnées (adresse, téléphone, email, horaires, réseaux sociaux, temps de réponse garanti)
+  complète le formulaire ; l'indicateur « ouvert »/« fermé » est calculé pour de vrai à partir des
+  horaires configurés et de l'heure actuelle. La carte reste un placeholder, aucun service de
+  cartographie tiers n'étant intégré.
+- Ajout d'une FAQ en accordéon natif (`<details>`/`<summary>`, aucun JavaScript) sur la page de
+  contact, avec un contenu éditorial filtrable (même convention que les témoignages de la page
+  d'accueil).
+- Ajout d'un gabarit de page générique (`page.php`), remplaçant `index.php` comme repli pour toute
+  Page WordPress qui n'utilise pas un template plus spécifique.
+- Vérifié de bout en bout dans l'environnement Docker réel : cinq vraies pages créées (Contact,
+  C.G.V., Politique de confidentialité, Mentions légales, Cookies, ces quatre dernières avec le
+  template « Page légale » assigné) confirment le rendu des onglets/sommaire avec de vraies
+  ancres, une soumission de formulaire valide (état de succès, tentative d'envoi d'email via
+  `wp_mail()`), une soumission invalide (état d'erreur, aucun email envoyé) et une soumission avec
+  le champ honeypot rempli (faux état de succès, aucun email envoyé). Les traductions françaises de
+  toutes les nouvelles chaînes ont été vérifiées via le catalogue du thème. Aucune régression
+  observée sur l'accueil, la boutique, le blog, le panier ou l'espace client. Ces cinq pages sont
+  conservées comme contenu de départ réel du site plutôt que supprimées après test, puisqu'il
+  s'agit des pages dont le site a désormais réellement besoin.
 
 ### 0.7.0 — blog complet (index, archives, article)
 

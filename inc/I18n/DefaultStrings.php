@@ -1578,6 +1578,230 @@ final class DefaultStrings {
 				'fr_FR' => 'Accueil',
 				'en_US' => 'Home',
 			),
+			'Legal Page'                                   => array(
+				'fr_FR' => 'Page légale',
+				'en_US' => 'Legal Page',
+			),
+			'Legal information'                            => array(
+				'fr_FR' => 'Informations légales',
+				'en_US' => 'Legal information',
+			),
+			'Last updated: %s'                             => array(
+				'fr_FR' => 'Dernière mise à jour : %s',
+				'en_US' => 'Last updated: %s',
+			),
+			'Legal pages'                                  => array(
+				'fr_FR' => 'Pages légales',
+				'en_US' => 'Legal pages',
+			),
+			'Table of contents'                            => array(
+				'fr_FR' => 'Sommaire',
+				'en_US' => 'Table of contents',
+			),
+			'Need help?'                                   => array(
+				'fr_FR' => "Besoin d'aide ?",
+				'en_US' => 'Need help?',
+			),
+			'Our team replies within 24 business hours.'   => array(
+				'fr_FR' => 'Notre équipe répond sous 24h ouvrées.',
+				'en_US' => 'Our team replies within 24 business hours.',
+			),
+			'Get in touch'                                 => array(
+				'fr_FR' => 'Nous contacter',
+				'en_US' => 'Get in touch',
+			),
+			'We are here for you'                          => array(
+				'fr_FR' => 'Nous sommes là pour vous',
+				'en_US' => 'We are here for you',
+			),
+			'Contact us'                                   => array(
+				'fr_FR' => 'Contactez-nous',
+				'en_US' => 'Contact us',
+			),
+			'Our team replies within 24 business hours, Monday to Friday, 9am to 6pm.' => array(
+				'fr_FR' => 'Notre équipe vous répond sous 24h ouvrées, du lundi au vendredi de 9h à 18h.',
+				'en_US' => 'Our team replies within 24 business hours, Monday to Friday, 9am to 6pm.',
+			),
+			'Interactive map coming soon'                  => array(
+				'fr_FR' => 'Carte interactive à venir',
+				'en_US' => 'Interactive map coming soon',
+			),
+			'Send a message'                               => array(
+				'fr_FR' => 'Envoyer un message',
+				'en_US' => 'Send a message',
+			),
+			'Please fill in every required field with a valid email address.' => array(
+				'fr_FR' => 'Merci de renseigner tous les champs requis avec une adresse email valide.',
+				'en_US' => 'Please fill in every required field with a valid email address.',
+			),
+			'Company'                                      => array(
+				'fr_FR' => 'Société',
+				'en_US' => 'Company',
+			),
+			'Select a subject'                             => array(
+				'fr_FR' => 'Sélectionnez un sujet',
+				'en_US' => 'Select a subject',
+			),
+			'Message'                                      => array(
+				'fr_FR' => 'Message',
+				'en_US' => 'Message',
+			),
+			'Describe your request in detail…'             => array(
+				'fr_FR' => 'Décrivez votre demande en détail…',
+				'en_US' => 'Describe your request in detail…',
+			),
+			'I agree that my data will be used to process my request, in accordance with the %s.' => array(
+				'fr_FR' => "J'accepte que mes données soient utilisées pour traiter ma demande, conformément à la %s.",
+				'en_US' => 'I agree that my data will be used to process my request, in accordance with the %s.',
+			),
+			'privacy policy'                               => array(
+				'fr_FR' => 'politique de confidentialité',
+				'en_US' => 'privacy policy',
+			),
+			'Send message'                                 => array(
+				'fr_FR' => 'Envoyer le message',
+				'en_US' => 'Send message',
+			),
+			'Your data is protected · Guaranteed reply within 24 business hours' => array(
+				'fr_FR' => 'Vos données sont protégées · Réponse garantie sous 24h ouvrées',
+				'en_US' => 'Your data is protected · Guaranteed reply within 24 business hours',
+			),
+			'Message sent!'                                => array(
+				'fr_FR' => 'Message envoyé !',
+				'en_US' => 'Message sent!',
+			),
+			'Thank you for your message. Our team will get back to you as soon as possible, within 24 business hours.' => array(
+				'fr_FR' => 'Merci pour votre message. Notre équipe vous répondra dans les meilleurs délais, sous 24h ouvrées.',
+				'en_US' => 'Thank you for your message. Our team will get back to you as soon as possible, within 24 business hours.',
+			),
+			'Send another message'                         => array(
+				'fr_FR' => 'Envoyer un autre message',
+				'en_US' => 'Send another message',
+			),
+			'Our details'                                  => array(
+				'fr_FR' => 'Nos coordonnées',
+				'en_US' => 'Our details',
+			),
+			'Address'                                      => array(
+				'fr_FR' => 'Adresse',
+				'en_US' => 'Address',
+			),
+			'12 rue de la Mode'                            => array(
+				'fr_FR' => '12 rue de la Mode',
+				'en_US' => '12 rue de la Mode',
+			),
+			'75001 Paris, France'                          => array(
+				'fr_FR' => '75001 Paris, France',
+				'en_US' => '75001 Paris, France',
+			),
+			'Email'                                        => array(
+				'fr_FR' => 'Email',
+				'en_US' => 'Email',
+			),
+			'Hours'                                        => array(
+				'fr_FR' => 'Horaires',
+				'en_US' => 'Hours',
+			),
+			'Mon – Fri: 9am – 6pm'                         => array(
+				'fr_FR' => 'Lun – Ven : 9h – 18h',
+				'en_US' => 'Mon – Fri: 9am – 6pm',
+			),
+			'● Open now'                                   => array(
+				'fr_FR' => '● Ouvert maintenant',
+				'en_US' => '● Open now',
+			),
+			'● Closed now'                                 => array(
+				'fr_FR' => '● Fermé actuellement',
+				'en_US' => '● Closed now',
+			),
+			'Follow us'                                    => array(
+				'fr_FR' => 'Nous suivre',
+				'en_US' => 'Follow us',
+			),
+			'< 24h'                                        => array(
+				'fr_FR' => '< 24h',
+				'en_US' => '< 24h',
+			),
+			'Guaranteed response time'                     => array(
+				'fr_FR' => 'Temps de réponse garanti',
+				'en_US' => 'Guaranteed response time',
+			),
+			'Monday to Friday, business days. For urgent matters, prefer our live chat.' => array(
+				'fr_FR' => 'Du lundi au vendredi, jours ouvrés. Pour les urgences, préférez notre chat en direct.',
+				'en_US' => 'Monday to Friday, business days. For urgent matters, prefer our live chat.',
+			),
+			'FAQ'                                          => array(
+				'fr_FR' => 'FAQ',
+				'en_US' => 'FAQ',
+			),
+			'Frequently asked questions'                   => array(
+				'fr_FR' => 'Questions fréquentes',
+				'en_US' => 'Frequently asked questions',
+			),
+			'What are the delivery times?'                 => array(
+				'fr_FR' => 'Quels sont les délais de livraison ?',
+				'en_US' => 'What are the delivery times?',
+			),
+			'Standard delivery takes 3 to 5 business days via tracked shipping. For urgent orders, Express delivery (24-48h) is available for a small fee. Shipping is free from €60 of purchase.' => array(
+				'fr_FR' => 'Nos livraisons standards sont effectuées sous 3 à 5 jours ouvrés avec suivi. Pour les commandes urgentes, une option Express (24-48h) est disponible moyennant un supplément. La livraison est offerte dès 60 € d\'achat.',
+				'en_US' => 'Standard delivery takes 3 to 5 business days via tracked shipping. For urgent orders, Express delivery (24-48h) is available for a small fee. Shipping is free from €60 of purchase.',
+			),
+			'How do I return or exchange an item?'         => array(
+				'fr_FR' => 'Comment effectuer un retour ou un échange ?',
+				'en_US' => 'How do I return or exchange an item?',
+			),
+			'You have 30 days from receiving your order to return an item in its original condition (unworn, tags attached, original packaging). Log in to your account and follow the return procedure. Refunds are processed within 5 to 7 business days.' => array(
+				'fr_FR' => 'Vous disposez de 30 jours à compter de la réception de votre commande pour retourner un article dans son état d\'origine (non porté, étiquettes attachées, emballage d\'origine). Connectez-vous à votre espace client et suivez la procédure de retour. Le remboursement est effectué sous 5 à 7 jours ouvrés.',
+				'en_US' => 'You have 30 days from receiving your order to return an item in its original condition (unworn, tags attached, original packaging). Log in to your account and follow the return procedure. Refunds are processed within 5 to 7 business days.',
+			),
+			'Do you ship internationally?'                 => array(
+				'fr_FR' => 'Proposez-vous des livraisons internationales ?',
+				'en_US' => 'Do you ship internationally?',
+			),
+			'Yes, we ship across Europe. Rates and delivery times vary by destination country; additional fees may apply for some countries.' => array(
+				'fr_FR' => 'Oui, nous livrons dans toute l\'Europe. Les tarifs et délais varient selon le pays de destination ; des frais supplémentaires peuvent s\'appliquer pour certains pays.',
+				'en_US' => 'Yes, we ship across Europe. Rates and delivery times vary by destination country; additional fees may apply for some countries.',
+			),
+			'How can I track my order?'                    => array(
+				'fr_FR' => 'Comment puis-je suivre ma commande ?',
+				'en_US' => 'How can I track my order?',
+			),
+			'As soon as your order ships, you receive a confirmation email with your tracking number. You can also track your order in real time from your account, under "My orders".' => array(
+				'fr_FR' => 'Dès expédition, vous recevez un email de confirmation avec votre numéro de suivi. Vous pouvez également suivre votre commande en temps réel depuis votre espace client, section « Mes commandes ».',
+				'en_US' => 'As soon as your order ships, you receive a confirmation email with your tracking number. You can also track your order in real time from your account, under "My orders".',
+			),
+			'How do I personalize a product (engraving, embroidery)?' => array(
+				'fr_FR' => 'Comment personnaliser un produit (gravure, broderie) ?',
+				'en_US' => 'How do I personalize a product (engraving, embroidery)?',
+			),
+			'On eligible product pages, a personalization option is available directly. Enable it, enter your text and a surcharge applies. Personalized orders cannot be exchanged.' => array(
+				'fr_FR' => 'Sur les fiches produits éligibles, une option de personnalisation est disponible directement. Activez-la, saisissez votre texte : un supplément s\'applique. Les commandes personnalisées ne sont pas échangeables.',
+				'en_US' => 'On eligible product pages, a personalization option is available directly. Enable it, enter your text and a surcharge applies. Personalized orders cannot be exchanged.',
+			),
+			'Product question'                             => array(
+				'fr_FR' => 'Question sur un produit',
+				'en_US' => 'Product question',
+			),
+			'Order tracking'                               => array(
+				'fr_FR' => 'Suivi de commande',
+				'en_US' => 'Order tracking',
+			),
+			'Partnership / Press'                          => array(
+				'fr_FR' => 'Partenariat / Presse',
+				'en_US' => 'Partnership / Press',
+			),
+			'Other request'                                => array(
+				'fr_FR' => 'Autre demande',
+				'en_US' => 'Other request',
+			),
+			"New contact message from %1\$s (%2\$s)\nSubject: %3\$s\n\n%4\$s" => array(
+				'fr_FR' => "Nouveau message de contact de %1\$s (%2\$s)\nSujet : %3\$s\n\n%4\$s",
+				'en_US' => "New contact message from %1\$s (%2\$s)\nSubject: %3\$s\n\n%4\$s",
+			),
+			'New contact message: %s'                      => array(
+				'fr_FR' => 'Nouveau message de contact : %s',
+				'en_US' => 'New contact message: %s',
+			),
 		);
 	}
 

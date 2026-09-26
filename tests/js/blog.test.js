@@ -48,7 +48,10 @@ describe('assets/js/blog.js', () => {
 		button.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
 
 		await vi.waitFor(() => expect(shareMock).toHaveBeenCalledTimes(1));
-		expect(shareMock).toHaveBeenCalledWith({ title: 'Guide', url: 'https://example.test/guide/' });
+		expect(shareMock).toHaveBeenCalledWith({
+			title: 'Guide',
+			url: 'https://example.test/guide/',
+		});
 	});
 
 	it('falls back to copying the link when the Web Share API is unavailable', async () => {
@@ -63,7 +66,9 @@ describe('assets/js/blog.js', () => {
 		const button = document.querySelector('.article-share-button');
 		button.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
 
-		await vi.waitFor(() => expect(writeTextMock).toHaveBeenCalledWith('https://example.test/guide/'));
+		await vi.waitFor(() =>
+			expect(writeTextMock).toHaveBeenCalledWith('https://example.test/guide/'),
+		);
 		expect(button.textContent).toBe('Link copied!');
 	});
 
