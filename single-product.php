@@ -6,8 +6,9 @@
  * Author: David ROMERA <d.romera.11@gmail.com>
  * Purpose: Render the product page: breadcrumb, then a two-column layout with the image gallery
  *          (template-parts/single-product/gallery.php) on the left and the sticky product panel
- *          (template-parts/single-product/panel.php) on the right. Grows section by section, same
- *          convention as front-page.php/archive-product.php.
+ *          (template-parts/single-product/panel.php) on the right, followed by the Description/
+ *          Reviews/Specifications tabs (template-parts/single-product/tabs.php). Grows section by
+ *          section, same convention as front-page.php/archive-product.php.
  *
  * @package Solar_Template
  */
@@ -18,9 +19,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use Solar_Template\Product\ProductBadges;
 use Solar_Template\Product\ProductCartForm;
+use Solar_Template\Product\ProductDescription;
 use Solar_Template\Product\ProductEngraving;
 use Solar_Template\Product\ProductGallery;
 use Solar_Template\Product\ProductPanel;
+use Solar_Template\Product\ProductReviews;
+use Solar_Template\Product\ProductSpecifications;
 use Solar_Template\Product\ProductStock;
 
 get_header();
@@ -57,6 +61,22 @@ while ( have_posts() ) :
 		'trust_badges'       => ProductPanel::trust_badges(),
 		'accordion_sections' => ProductPanel::accordion_sections(),
 	);
+
+	$solar_product_tabs_args = array(
+		'product_id'     => $solar_product->get_id(),
+		'description'    => array(
+			'content' => ProductDescription::content( $solar_product ),
+			'image'   => ProductDescription::secondary_image( $solar_product_images ),
+		),
+		'reviews'        => array(
+			'enabled'           => ProductReviews::enabled( $solar_product ),
+			'can_submit'        => ProductReviews::can_submit( $solar_product ),
+			'summary'           => ProductReviews::summary( $solar_product ),
+			'list'              => ProductReviews::list( $solar_product ),
+			'comment_form_args' => ProductReviews::comment_form_args( $solar_product ),
+		),
+		'specifications' => ProductSpecifications::rows( $solar_product ),
+	);
 	?>
 	<main class="product-page">
 		<div class="product-page__inner">
@@ -77,6 +97,8 @@ while ( have_posts() ) :
 				<?php get_template_part( 'template-parts/single-product/panel', null, $solar_product_panel_args ); ?>
 			</div>
 		</div>
+
+		<?php get_template_part( 'template-parts/single-product/tabs', null, $solar_product_tabs_args ); ?>
 	</main>
 	<?php
 endwhile;

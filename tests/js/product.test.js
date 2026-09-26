@@ -9,7 +9,12 @@
  */
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { formatPrice, initProductGallery, initProductVariations } from '../../assets/js/product.js';
+import {
+	formatPrice,
+	initProductGallery,
+	initProductTabs,
+	initProductVariations,
+} from '../../assets/js/product.js';
 
 /**
  * Builds the slice of gallery.php's markup this behaviour attaches to.
@@ -289,6 +294,114 @@ describe('assets/js/product.js', () => {
 			};
 
 			expect(formatPrice(1234.5, format)).toBe('1 234,50&nbsp;€');
+		});
+	});
+});
+
+/**
+ * Builds the slice of tabs.php's markup this behaviour attaches to: three tabs, "Description"
+ * active initially.
+ *
+ * @return {void}
+ */
+function renderTabsFixture() {
+	document.body.innerHTML = `
+		<div class="product-tabs" id="reviews">
+			<div class="product-tabs__list" role="tablist">
+				<button type="button" role="tab" id="product-tab-description" aria-controls="product-tabpanel-description" aria-selected="true" tabindex="0" class="product-tabs__tab is-active" data-tab="description">Description</button>
+				<button type="button" role="tab" id="product-tab-reviews" aria-controls="product-tabpanel-reviews" aria-selected="false" tabindex="-1" class="product-tabs__tab" data-tab="reviews">Reviews (2)</button>
+				<button type="button" role="tab" id="product-tab-specifications" aria-controls="product-tabpanel-specifications" aria-selected="false" tabindex="-1" class="product-tabs__tab" data-tab="specifications">Specifications</button>
+			</div>
+			<div role="tabpanel" id="product-tabpanel-description" aria-labelledby="product-tab-description" class="product-tabs__panel"></div>
+			<div role="tabpanel" id="product-tabpanel-reviews" aria-labelledby="product-tab-reviews" class="product-tabs__panel" hidden></div>
+			<div role="tabpanel" id="product-tabpanel-specifications" aria-labelledby="product-tab-specifications" class="product-tabs__panel" hidden></div>
+		</div>
+	`;
+}
+
+describe('assets/js/product.js', () => {
+	beforeEach(() => {
+		renderTabsFixture();
+		window.location.hash = '';
+	});
+
+	describe('initProductTabs', () => {
+		it('activates a tab on click: updates aria-selected/tabindex and shows only its panel', () => {
+			initProductTabs();
+
+			document
+				.getElementById('product-tab-reviews')
+				.dispatchEvent(new Event('click', { bubbles: true }));
+
+			expect(
+				document.getElementById('product-tab-reviews').getAttribute('aria-selected'),
+			).toBe('true');
+			expect(document.getElementById('product-tab-reviews').tabIndex).toBe(0);
+			expect(
+				document.getElementById('product-tab-description').getAttribute('aria-selected'),
+			).toBe('false');
+			expect(document.getElementById('product-tab-description').tabIndex).toBe(-1);
+			expect(document.getElementById('product-tabpanel-reviews').hidden).toBe(false);
+			expect(document.getElementById('product-tabpanel-description').hidden).toBe(true);
+		});
+
+		it('moves to and activates the next tab on ArrowRight, wrapping past the last one', () => {
+			initProductTabs();
+
+			const descriptionTab = document.getElementById('product-tab-description');
+			const specificationsTab = document.getElementById('product-tab-specifications');
+
+			descriptionTab.dispatchEvent(
+				new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }),
+			);
+			expect(
+				document.getElementById('product-tab-reviews').getAttribute('aria-selected'),
+			).toBe('true');
+
+			document
+				.getElementById('product-tab-reviews')
+				.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+			expect(specificationsTab.getAttribute('aria-selected')).toBe('true');
+
+			specificationsTab.dispatchEvent(
+				new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }),
+			);
+			expect(descriptionTab.getAttribute('aria-selected')).toBe('true');
+		});
+
+		it('jumps to the first/last tab on Home/End', () => {
+			initProductTabs();
+
+			document
+				.getElementById('product-tab-description')
+				.dispatchEvent(new KeyboardEvent('keydown', { key: 'End', bubbles: true }));
+			expect(
+				document.getElementById('product-tab-specifications').getAttribute('aria-selected'),
+			).toBe('true');
+
+			document
+				.getElementById('product-tab-specifications')
+				.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home', bubbles: true }));
+			expect(
+				document.getElementById('product-tab-description').getAttribute('aria-selected'),
+			).toBe('true');
+		});
+
+		it('activates the reviews tab on load when the URL hash targets it', () => {
+			window.location.hash = '#reviews';
+
+			initProductTabs();
+
+			expect(
+				document.getElementById('product-tab-reviews').getAttribute('aria-selected'),
+			).toBe('true');
+			expect(document.getElementById('product-tabpanel-reviews').hidden).toBe(false);
+		});
+
+		it('does nothing on a page without product tabs', () => {
+			document.body.innerHTML = '<p>No tabs here</p>';
+
+			expect(() => initProductTabs()).not.toThrow();
 		});
 	});
 });

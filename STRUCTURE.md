@@ -47,7 +47,8 @@ solar-template/
 │   ├── catalog-active-filters.php # Rangée de chips des filtres actifs (retrait individuel + « Effacer tout »)
 │   ├── single-product/  # Fragments de la fiche produit, un par section (en construction)
 │   │   ├── gallery.php  # Image principale 4:5 + bande de miniatures (changement au clic, sans rechargement)
-│   │   └── panel.php    # Colonne droite sticky : badges, titre, notation, statut de stock, description courte, réassurance, accordéon
+│   │   ├── panel.php    # Colonne droite sticky : badges, titre, notation, statut de stock, description courte, réassurance, accordéon
+│   │   └── tabs.php     # Onglets Description/Avis/Caractéristiques (motif ARIA tabs, avis WooCommerce natifs)
 │   └── front-page/      # Sections de la page d'accueil, une par fichier
 │       ├── hero.php     # Hero plein écran (accroche, titre 3 lignes, CTA, trust badges, carte flottante)
 │       ├── featured-products.php # Grille masonry des produits WooCommerce marqués « en vedette »
@@ -265,6 +266,22 @@ solar-template/
   (`woocommerce_get_item_data`) et la persiste comme meta de la ligne de commande
   (`woocommerce_checkout_create_order_line_item`) — la valeur saisie se retrouve donc bien dans la
   commande, pas seulement dans le panier.
+- Sous le panneau, des onglets Description/Avis/Caractéristiques
+  (`template-parts/single-product/tabs.php`), suivant le motif ARIA « tabs » (navigation clavier
+  flèches/Home/End en plus du clic) — un onglet ne s'affiche que s'il a un contenu réel, le
+  produit entier ne s'affiche pas si aucun des trois n'en a. `Product\ProductDescription::content()`
+  lit le vrai contenu de l'article produit (comme le ferait `the_content()`), avec en second
+  colonne la deuxième image de la galerie du produit (pas de texte éditorial factice, contrairement
+  au hero/à la page « notre histoire » : hors du périmètre de cette étape). `Product\ProductReviews`
+  réimplémente `woocommerce/templates/single-product-reviews.php` (résumé de note + distribution
+  par étoile depuis `WC_Product::get_rating_counts()`, liste des avis approuvés avec badge « Achat
+  vérifié » via `wc_review_is_from_verified_owner()`, formulaire de soumission natif via
+  `comment_form()`) avec les chaînes du catalogue du thème plutôt que le domaine de traduction de
+  WooCommerce (même convention que `ProductStock`). `Product\ProductSpecifications::rows()`
+  reproduit les règles de sélection de `wc_display_product_attributes()` (poids, dimensions, puis
+  chaque attribut visible) pour renvoyer des lignes brutes plutôt que d'échapper à un template
+  WooCommerce complet. Le lien existant du panneau vers `#reviews` active directement l'onglet Avis
+  au chargement (`assets/js/product.js`, `initProductTabs()`).
 
 ### Pied de page du thème (`footer.php`, `assets/scss/_footer.scss`)
 

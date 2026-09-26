@@ -678,6 +678,106 @@ final class DefaultStrings {
 				'fr_FR' => 'Gravure',
 				'en_US' => 'Engraving',
 			),
+			'Description'                                 => array(
+				'fr_FR' => 'Description',
+				'en_US' => 'Description',
+			),
+			'Review (%d)'                                 => array(
+				'fr_FR'  => 'Avis (%d)',
+				'en_US'  => 'Review (%d)',
+				'plural' => array(
+					'fr_FR' => 'Avis (%d)',
+					'en_US' => 'Reviews (%d)',
+				),
+			),
+			'Specifications'                              => array(
+				'fr_FR' => 'Caractéristiques',
+				'en_US' => 'Specifications',
+			),
+			'Weight'                                      => array(
+				'fr_FR' => 'Poids',
+				'en_US' => 'Weight',
+			),
+			'Dimensions'                                  => array(
+				'fr_FR' => 'Dimensions',
+				'en_US' => 'Dimensions',
+			),
+			'Product information'                         => array(
+				'fr_FR' => 'Informations produit',
+				'en_US' => 'Product information',
+			),
+			'Based on %d verified review'                 => array(
+				'fr_FR'  => 'Basé sur %d avis vérifié',
+				'en_US'  => 'Based on %d verified review',
+				'plural' => array(
+					'fr_FR' => 'Basé sur %d avis vérifiés',
+					'en_US' => 'Based on %d verified reviews',
+				),
+			),
+			'%d★'                                         => array(
+				'fr_FR' => '%d★',
+				'en_US' => '%d★',
+			),
+			'Verified purchase'                           => array(
+				'fr_FR' => 'Achat vérifié',
+				'en_US' => 'Verified purchase',
+			),
+			'There are no reviews yet.'                   => array(
+				'fr_FR' => "Il n'y a pas encore d'avis.",
+				'en_US' => 'There are no reviews yet.',
+			),
+			'Leave a review'                              => array(
+				'fr_FR' => 'Laisser un avis',
+				'en_US' => 'Leave a review',
+			),
+			'Add a review'                                => array(
+				'fr_FR' => 'Ajouter un avis',
+				'en_US' => 'Add a review',
+			),
+			'Be the first to review "%s"'                 => array(
+				'fr_FR' => 'Soyez le premier à donner votre avis sur « %s »',
+				'en_US' => 'Be the first to review "%s"',
+			),
+			'Submit review'                               => array(
+				'fr_FR' => "Publier l'avis",
+				'en_US' => 'Submit review',
+			),
+			'You must be %1$slogged in%2$s to post a review.' => array(
+				'fr_FR' => 'Vous devez être %1$sconnecté%2$s pour publier un avis.',
+				'en_US' => 'You must be %1$slogged in%2$s to post a review.',
+			),
+			'Your rating'                                 => array(
+				'fr_FR' => 'Votre note',
+				'en_US' => 'Your rating',
+			),
+			'Rate…'                                       => array(
+				'fr_FR' => 'Noter…',
+				'en_US' => 'Rate…',
+			),
+			'Perfect'                                     => array(
+				'fr_FR' => 'Parfait',
+				'en_US' => 'Perfect',
+			),
+			'Good'                                        => array(
+				'fr_FR' => 'Bien',
+				'en_US' => 'Good',
+			),
+			'Average'                                     => array(
+				'fr_FR' => 'Moyen',
+				'en_US' => 'Average',
+			),
+			'Not that bad'                                => array(
+				'fr_FR' => 'Pas si mal',
+				'en_US' => 'Not that bad',
+			),
+			'Very poor'                                   => array(
+				'fr_FR' => 'Très mauvais',
+				'en_US' => 'Very poor',
+			),
+			'Your review'                                 => array(
+				'fr_FR' => 'Votre avis',
+				'en_US' => 'Your review',
+			),
 		);
 	}
 

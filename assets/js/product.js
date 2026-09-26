@@ -8,8 +8,10 @@
  *          Solar_Template\Product\ProductController): recompute the displayed price, the hidden
  *          `variation_id` submitted with the "Add to cart" form, and that button's disabled state;
  *          and, when custom engraving is enabled for the product, add its surcharge to that same
- *          displayed price while it is toggled on. Does nothing (and throws no error) on a page
- *          without the relevant markup.
+ *          displayed price while it is toggled on. Also wires up the Description/Reviews/
+ *          Specifications tabs (template-parts/single-product/tabs.php) following the WAI-ARIA tabs
+ *          keyboard pattern. Does nothing (and throws no error) on a page without the relevant
+ *          markup.
  */
 
 /**
@@ -256,6 +258,82 @@ export function initProductVariations() {
 			});
 		});
 	});
+}
+
+/**
+ * Wires up the product tabs (Description/Reviews/Specifications) following the WAI-ARIA tabs
+ * pattern: clicking a tab, or pressing Left/Right/Home/End while one is focused, activates it
+ * (updates `aria-selected`/`tabindex`, shows its panel, hides the others). If the page loaded with
+ * `#reviews` in the URL (the product panel's own "→ N reviews" link), the reviews tab activates
+ * immediately so that link's target is actually visible.
+ *
+ * @return {void}
+ */
+export function initProductTabs() {
+	const container = document.querySelector('.product-tabs');
+
+	if (!container) {
+		return;
+	}
+
+	const tabs = Array.from(container.querySelectorAll('[role="tab"]'));
+	const panels = Array.from(container.querySelectorAll('[role="tabpanel"]'));
+
+	if (!tabs.length) {
+		return;
+	}
+
+	/**
+	 * @param {HTMLElement} tab Tab to activate.
+	 * @return {void}
+	 */
+	function activate(tab) {
+		tabs.forEach((otherTab) => {
+			const isActive = otherTab === tab;
+
+			otherTab.setAttribute('aria-selected', String(isActive));
+			otherTab.tabIndex = isActive ? 0 : -1;
+			otherTab.classList.toggle('is-active', isActive);
+		});
+
+		panels.forEach((panel) => {
+			panel.hidden = panel.id !== tab.getAttribute('aria-controls');
+		});
+	}
+
+	tabs.forEach((tab, index) => {
+		tab.addEventListener('click', () => activate(tab));
+
+		tab.addEventListener('keydown', (event) => {
+			let targetIndex = null;
+
+			if ('ArrowRight' === event.key) {
+				targetIndex = (index + 1) % tabs.length;
+			} else if ('ArrowLeft' === event.key) {
+				targetIndex = (index - 1 + tabs.length) % tabs.length;
+			} else if ('Home' === event.key) {
+				targetIndex = 0;
+			} else if ('End' === event.key) {
+				targetIndex = tabs.length - 1;
+			}
+
+			if (null === targetIndex) {
+				return;
+			}
+
+			event.preventDefault();
+			tabs[targetIndex].focus();
+			activate(tabs[targetIndex]);
+		});
+	});
+
+	if ('#reviews' === window.location.hash) {
+		const reviewsTab = tabs.find((tab) => 'reviews' === tab.dataset.tab);
+
+		if (reviewsTab) {
+			activate(reviewsTab);
+		}
+	}
 }
 
 /**

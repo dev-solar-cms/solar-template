@@ -189,6 +189,56 @@
 			creation confirms that text is persisted as its meta — test product deleted after
 			verification. No PHP warning or error found.
 		</p>
+
+		<h2 id="tabs">Description/Reviews/Specifications tabs</h2>
+		<p>
+			Below the panel, <code>template-parts/single-product/tabs.php</code> renders three tabs
+			(Description, Reviews, Specifications), following the WAI-ARIA "tabs" accessibility pattern
+			(<code>role="tablist"/"tab"/"tabpanel"</code>): switching tabs works identically at the mouse
+			and the keyboard (Left/Right arrows, Home/End), via <code>assets/js/product.js</code>
+			(<code>initProductTabs()</code>). A tab only renders when it has real content — a product
+			with no description, no open reviews and no attribute renders none of the three, and the
+			whole tabs section renders nothing at all in that case.
+		</p>
+		<p>
+			<code>Solar_Template\Product\ProductDescription::content()</code> reads the product's real
+			post content, filtered exactly like the <code>the_content()</code> template tag would — no
+			editorial placeholder copy. This tab's second column shows the product gallery's second
+			image when one exists (unlike the home page's hero or "our story" section, this step defines
+			no extra editorial block of its own — out of scope).
+		</p>
+		<p>
+			<code>Solar_Template\Product\ProductReviews</code> reimplements
+			<code>woocommerce/templates/single-product-reviews.php</code> with the theme's own
+			translation catalog instead of WooCommerce's own text domain (same convention as
+			<code>ProductStock</code>): a rating summary (average, stars, per-star distribution from
+			<code>WC_Product::get_rating_counts()</code>), the list of actually approved reviews (author,
+			rating, date, a "Verified purchase" badge via
+			<code>wc_review_is_from_verified_owner()</code> when the store enables that setting), and a
+			real, native submission form (<code>comment_form()</code>, with the same star rating field as
+			WooCommerce's own native form) — tucked behind a native
+			<code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code> disclosure, consistent with the
+			product panel's own accordion. The panel's existing "→ N reviews" link targets
+			<code>#reviews</code>; on load, if the URL carries that hash, <code>initProductTabs()</code>
+			activates the reviews tab directly.
+		</p>
+		<p>
+			<code>Solar_Template\Product\ProductSpecifications::rows()</code> mirrors the native
+			<code>wc_display_product_attributes()</code> function's own selection rules (weight,
+			dimensions, then every visible product attribute — term names for a taxonomy attribute, its
+			plain option list otherwise) without calling it directly: that WooCommerce function echoes a
+			full template of its own rather than returning data, while this theme needs the raw rows for
+			its own table.
+		</p>
+		<p>
+			Verified end to end in the real Docker environment with WooCommerce active, in both installed
+			languages: a test product with a description, a color attribute, a weight and dimensions
+			confirms all three tabs and their real data; two test reviews (5 and 4 stars) confirm the
+			summary, the per-star distribution and the list — test product and reviews deleted after
+			verification. An existing product with neither description nor attribute confirms the
+			graceful degradation (only the Reviews tab renders, with the "There are no reviews yet."
+			message). No PHP warning or error found.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

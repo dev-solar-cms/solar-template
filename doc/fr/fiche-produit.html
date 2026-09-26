@@ -202,6 +202,57 @@
 			ce texte est bien persisté comme méta de la ligne — produit de test supprimé après
 			vérification. Aucun avertissement ni erreur PHP relevé.
 		</p>
+
+		<h2 id="onglets">Onglets Description/Avis/Caractéristiques</h2>
+		<p>
+			Sous le panneau, <code>template-parts/single-product/tabs.php</code> affiche trois onglets
+			(Description, Avis, Caractéristiques), en suivant le motif d'accessibilité ARIA « tabs »
+			(<code>role="tablist"/"tab"/"tabpanel"</code>) : changer d'onglet fonctionne aussi bien au
+			clic qu'au clavier (flèches gauche/droite, Origine/Fin), via
+			<code>assets/js/product.js</code> (<code>initProductTabs()</code>). Un onglet ne s'affiche
+			que s'il a un contenu réel — un produit sans description, sans avis ouverts et sans attribut
+			n'affiche aucun des trois, et la fiche produit n'affiche aucune section onglets du tout dans
+			ce cas.
+		</p>
+		<p>
+			<code>Solar_Template\Product\ProductDescription::content()</code> lit le vrai contenu de
+			l'article du produit, filtré exactement comme le ferait la balise de gabarit
+			<code>the_content()</code> — pas de texte éditorial factice. La seconde colonne de cet onglet
+			affiche la deuxième image de la galerie du produit quand elle existe (contrairement au hero
+			ou à la section « notre histoire » de la page d'accueil, cette étape ne définit aucun bloc
+			éditorial supplémentaire — hors de son périmètre).
+		</p>
+		<p>
+			<code>Solar_Template\Product\ProductReviews</code> réimplémente le contenu de
+			<code>woocommerce/templates/single-product-reviews.php</code> avec les chaînes du catalogue
+			du thème plutôt que le domaine de traduction de WooCommerce (même convention que
+			<code>ProductStock</code>) : résumé de note (moyenne, étoiles, distribution par étoile depuis
+			<code>WC_Product::get_rating_counts()</code>), liste des avis réellement approuvés (auteur,
+			note, date, badge « Achat vérifié » via <code>wc_review_is_from_verified_owner()</code> quand
+			le réglage de la boutique l'active), et un vrai formulaire de soumission natif
+			(<code>comment_form()</code>, avec le même champ de notation par étoiles que le formulaire
+			natif de WooCommerce) — repliable derrière un <code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code>
+			natif, cohérent avec l'accordéon du panneau produit. Le lien existant du panneau
+			(« → N avis ») pointe vers <code>#reviews</code> ; au chargement, si l'URL contient ce hash,
+			<code>initProductTabs()</code> active directement l'onglet Avis.
+		</p>
+		<p>
+			<code>Solar_Template\Product\ProductSpecifications::rows()</code> reproduit les règles de
+			sélection de la fonction native <code>wc_display_product_attributes()</code> (poids,
+			dimensions, puis chaque attribut visible du produit — nom de terme pour un attribut de
+			taxonomie, liste d'options sinon) sans l'appeler directement : cette fonction WooCommerce
+			affiche elle-même un template complet plutôt que de renvoyer des données, alors que ce thème
+			a besoin des lignes brutes pour son propre tableau.
+		</p>
+		<p>
+			Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif, dans les
+			deux langues installées : un produit de test avec description, attribut couleur, poids et
+			dimensions confirme les trois onglets et leurs données réelles ; deux avis de test (notes 5
+			et 4) confirment le résumé, la distribution par étoile et la liste — produit et avis de test
+			supprimés après vérification. Un produit existant sans description ni attribut confirme la
+			dégradation gracieuse (seul l'onglet Avis s'affiche, avec le message « Il n'y a pas encore
+			d'avis. »). Aucun avertissement ni erreur PHP relevé.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

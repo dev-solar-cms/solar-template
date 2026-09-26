@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.4.9`.
+Version actuelle : `0.4.10`.
 
 ## Avant une release
 
@@ -30,6 +30,29 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.4.10 — onglets Description/Avis/Caractéristiques de la fiche produit
+
+- Ajout, sous le panneau produit, de trois onglets (Description, Avis, Caractéristiques), suivant
+  le motif d'accessibilité ARIA « tabs » : changer d'onglet fonctionne aussi bien à la souris qu'au
+  clavier (flèches gauche/droite, Origine/Fin). Un onglet ne s'affiche que s'il a un contenu réel —
+  un produit sans description, sans avis ouverts et sans attribut n'affiche aucune section onglets
+  du tout.
+- La description reprend le vrai contenu de l'article du produit (comme le ferait `the_content()`),
+  avec la deuxième image de la galerie du produit en second panneau plutôt qu'un texte éditorial
+  factice.
+- Les avis sont natifs WooCommerce (résumé de note et distribution par étoile depuis les vraies
+  données du produit, liste des avis approuvés avec badge « Achat vérifié », formulaire de
+  soumission natif fonctionnel) — traduits via le catalogue propre au thème plutôt que le domaine
+  de traduction de WooCommerce, cohérent avec le reste de la fiche produit. Le lien existant du
+  panneau vers les avis active désormais directement cet onglet.
+- Le tableau des caractéristiques reprend les mêmes règles de sélection que la fonction native de
+  WooCommerce (poids, dimensions, puis chaque attribut visible du produit).
+- Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif, dans les deux
+  langues installées : un produit de test avec description, attribut couleur, poids/dimensions et
+  deux avis confirme les trois onglets et leurs données réelles — produit et avis de test supprimés
+  après vérification. Un produit existant sans description ni attribut confirme la dégradation
+  gracieuse (seul l'onglet Avis s'affiche). Aucun avertissement ni erreur PHP relevé.
 
 ### 0.4.9 — option de personnalisation (gravure) de la fiche produit
 
