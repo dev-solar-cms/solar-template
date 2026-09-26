@@ -48,7 +48,8 @@ solar-template/
 │   ├── Checkout/        # Tunnel de vente : routage, indicateur d'étapes, vue du panier, disposition des champs d'adresse, icônes/texte du paiement, vue de la confirmation de commande
 │   ├── Account/         # Espace client : endpoints/menu, sidebar, tableau de bord, statut de commande, action « Recommander », liste/détail de commandes, liste de souhaits, adresses, téléchargements, demande S.A.V., champs de paramètres (téléphone/naissance), suppression de compte
 │   ├── Blog/            # Blog : mapping carte article (normal + à la une), temps de lecture, hero, filtre catégories, article à la une, pagination, fil d'Ariane/auteur/articles connexes de l'article
-│   └── Pages/           # Pages statiques : template/onglets/sommaire de la page légale, coordonnées + FAQ + traitement du formulaire de contact
+│   ├── Pages/           # Pages statiques : template/onglets/sommaire de la page légale, coordonnées + FAQ + traitement du formulaire de contact
+│   └── Admin/           # Réglages du thème : framework d'onglets (Settings API), onglets Général/Apparence/En-tête/Pied de page, mode maintenance
 ├── template-parts/      # Fragments de gabarit réutilisables (`get_template_part()`)
 │   ├── product-card.php # Carte produit (image, badge, wishlist, overlay panier, prix, swatches)
 │   ├── blog-card.php    # Carte article de blog (image 16:10, badge catégorie, meta, titre, extrait, auteur)
@@ -539,6 +540,46 @@ solar-template/
   cette étape (hors périmètre, voir la fiche d'étape correspondante).
 - Le texte de copyright utilise un espace réservé littéral `{year}`, remplacé par l'année en cours
   au rendu plutôt qu'à la traduction, pour ne jamais devenir obsolète.
+
+### Administration du thème (`inc/Admin/`)
+
+- Page de réglages intégrée au thème (pas un plugin séparé, DECISIONS.md §1), enregistrée comme
+  menu admin de premier niveau (`Solar_Template\Admin\SettingsPage`), avec un chrome commun
+  (en-tête, notice de sauvegarde, layout à onglets 180px + contenu) et un formulaire par onglet
+  (nonce WordPress, `register_setting()`/`add_settings_section()`/`add_settings_field()` pour
+  suivre la même convention Settings API que tout autre écran d'options WordPress). La
+  persistance passe par `Solar_Template\Admin\SettingsRepository`, une clé/valeur simple sur la
+  table `wp_solar_template_settings` déjà créée par le Groupe 00 (clés `{onglet}.{champ}`) plutôt
+  que par `wp_options`.
+- Chaque onglet (`GeneralSettings`, `AppearanceSettings`, `HeaderSettings`, `FooterSettings`)
+  implémente `Solar_Template\Admin\SettingsTabInterface` et expose aussi les accesseurs de lecture
+  utilisés ailleurs dans le thème (même convention « contenu + admin » que
+  `Solar_Template\Header\MegaMenu`) :
+  - **Général** : nom boutique/logo/favicon (media uploader natif), devise + position du symbole
+    (appliquées à WooCommerce via `pre_option_woocommerce_currency`/`..._currency_pos` quand
+    configurées), mode maintenance (page 503 réelle pour tout visiteur non-administrateur,
+    `Solar_Template\Admin\MaintenanceMode`).
+  - **Apparence** : couleurs principale/accent/fond, polices Google Fonts (texte courant + titres),
+    arrondi des éléments — appliqués au front **sans reconstruction des assets** via des propriétés
+    CSS personnalisées imprimées dans `wp_head` (`AppearanceSettings::print_style_overrides()`),
+    que `assets/scss/_tokens.scss` lit désormais avec `var(--solar-*, valeur-par-défaut)` au lieu
+    d'une valeur Sass figée — voir le commentaire en tête de ce fichier pour le détail de cette
+    convention et ses limites (nuances dorées dérivées non suivies).
+  - **En-tête** : disposition (3 variantes CSS réelles), mega menu (branché sur le filtre existant
+    `solar_template_header_mega_menu_enabled`), barre de promotion, réseaux sociaux (branché sur
+    `solar_template_social_links`, désormais avec Pinterest en 4e réseau par défaut), en-tête
+    transparent sur l'accueil (`assets/js/header.js` bascule l'état « scrolled »).
+  - **Pied de page** : nombre de colonnes réel (branché sur `solar_template_footer_config`),
+    colonne newsletter, icônes de paiement (branché sur `solar_template_footer_payment_icons`),
+    texte copyright (branché sur `solar_template_footer_copyright`, support `{year}` déjà existant).
+- Vérifié de bout en bout dans l'environnement Docker réel : chaque champ sauvegardé se relit
+  correctement, chaque réglage modifie effectivement le rendu front (couleur/police/arrondi,
+  disposition/promo/réseaux/transparence du header, colonnes/newsletter/paiement/copyright du
+  footer, devise WooCommerce), le mode maintenance bloque un visiteur non connecté (503) tout en
+  laissant un administrateur connecté naviguer normalement. Aucune erreur ni avertissement PHP
+  observé.
+- Onglets Page d'accueil/Produits/Blog/Traductions et bouton de régénération cache/build restent à
+  construire (prochaines étapes de la feuille de route).
 
 ### À noter
 - `template-claude-code.html` (s'il est présent à la racine) est une maquette HTML exportée, ignorée par git — à utiliser comme référence visuelle/structurelle pour construire les vrais gabarits, jamais comme code à exécuter ou copier tel quel.

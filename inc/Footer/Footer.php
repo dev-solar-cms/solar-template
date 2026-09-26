@@ -33,7 +33,7 @@ final class Footer {
 	 * @return array{
 	 *     brand: array{name: string, description: string},
 	 *     columns: array<int, array{heading: string, links: array<int, array{label: string, url: string}>}>,
-	 *     newsletter: array{heading: string, description: string},
+	 *     newsletter: array{heading: string, description: string}|null,
 	 * }
 	 */
 	public static function config(): array {

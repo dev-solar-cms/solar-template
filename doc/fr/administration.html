@@ -1,0 +1,144 @@
+<!--
+	Créé le : 2026-09-26 23:50 CEST
+	Rôle : Page de documentation en français décrivant l'écran de réglages propre du thème.
+	Auteur : David ROMERA <d.romera.11@gmail.com>
+	Objectif : Documenter, en français, chaque onglet d'administration au fur et à mesure de sa construction.
+-->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Administration — Documentation Solar Template</title>
+	<link rel="stylesheet" href="../assets/doc.css" />
+</head>
+<body>
+	<aside class="doc-sidebar">
+		<a class="doc-brand" href="index.html">Solar Template</a>
+		<nav>
+			<ul>
+				<li><a href="index.html">Accueil</a></li>
+				<li><a href="infrastructure.html">Infrastructure</a></li>
+				<li><a href="design-system.html">Système de design</a></li>
+				<li><a href="structure-commune.html">Structure commune</a></li>
+				<li><a href="page-accueil.html">Page d'accueil</a></li>
+				<li><a href="catalogue.html">Catalogue produits</a></li>
+				<li><a href="fiche-produit.html">Fiche produit</a></li>
+				<li><a href="tunnel-vente.html">Tunnel de vente</a></li>
+				<li><a href="mon-compte.html">Espace client</a></li>
+				<li><a href="blog.html">Blog</a></li>
+				<li><a href="pages-statiques.html">Pages statiques</a></li>
+				<li><a href="administration.html">Administration</a></li>
+			</ul>
+		</nav>
+		<div class="doc-lang-switch">
+			<a href="../en/administration.html">EN</a>
+			<a class="is-active" href="administration.html">FR</a>
+		</div>
+	</aside>
+	<main class="doc-content">
+		<h1>Administration</h1>
+		<p>
+			L'écran de réglages propre du thème, construit directement dans le thème via la Settings
+			API de WordPress plutôt que dans un plugin séparé. Une page de menu admin de premier niveau
+			« Solar Template » affiche une disposition à onglets verticale (colonne de navigation +
+			contenu, reprenant le chrome admin de la maquette de handoff), avec un formulaire par
+			onglet.
+		</p>
+
+		<h2 id="framework">Framework de réglages</h2>
+		<p>
+			<code>Solar_Template\Admin\SettingsPage</code> enregistre le menu admin, affiche le chrome
+			commun (en-tête, notice de sauvegarde) et délègue les champs/la validation de chaque onglet
+			à son implémentation de <code>Solar_Template\Admin\SettingsTabInterface</code> — ajouter un
+			futur onglet ne demande que d'implémenter cette interface et de la lister dans
+			<code>SettingsPage::tabs()</code>, sans autre modification. Les champs sont enregistrés avec
+			les vraies primitives Settings API
+			(<code>register_setting()</code>/<code>add_settings_section()</code>/
+			<code>add_settings_field()</code>), même convention que n'importe quel autre écran d'options
+			WordPress ; la persistance réelle passe par
+			<code>Solar_Template\Admin\SettingsRepository</code>, un simple wrapper clé/valeur (clés à
+			points <code>{onglet}.{champ}</code>) autour de <code>wp_solar_template_settings</code> — la
+			table de réglages génériques déjà créée (et pré-remplie avec quelques-unes de ces clés
+			exactes) lors de la mise en place initiale des tables du projet, en prévision de cet écran.
+		</p>
+
+		<h2 id="general">Onglet Général</h2>
+		<p>
+			Nom de la boutique (se replie sur le titre du site quand il est vide — utilisé par la marque
+			de l'en-tête et, via le filtre <code>wp_mail_from_name</code>, les emails transactionnels),
+			logo/favicon via le téléverseur média natif de WordPress, devise et position du symbole
+			(appliquées à WooCommerce lui-même via les filtres génériques
+			<code>pre_option_woocommerce_currency</code>/<code>..._currency_pos</code> quand
+			configurées, sinon laissées intactes), et le mode maintenance.
+			<code>Solar_Template\Admin\MaintenanceMode</code> affiche une vraie page 503 minimale à
+			quiconque n'est pas un administrateur connecté tant que ce réglage est actif — les
+			administrateurs continuent de parcourir le vrai site pour vérifier leurs changements.
+		</p>
+
+		<h2 id="appearance">Onglet Apparence</h2>
+		<p>
+			Couleurs principale/accent/fond (avec des pastilles de présets cliquables), polices Google
+			Fonts (texte courant + titres), et un unique préréglage « arrondi des éléments » (Carré/
+			Subtil/Arrondi/Pill). Ces réglages s'appliquent au vrai front <strong>sans reconstruire les
+			assets compilés</strong> : les tokens couleur/arrondi/police de
+			<code>assets/scss/_tokens.scss</code> sont désormais définis en
+			<code>var(--solar-*, &lt;valeur compilée par défaut&gt;)</code> plutôt qu'en valeur Sass
+			figée — un changement d'une ligne par token que chacun de ses usages dans toute la feuille
+			de style compilée hérite automatiquement, puisque Sass ne fait que substituer la valeur du
+			token partout où il est référencé.
+			<code>Solar_Template\Admin\AppearanceSettings::print_style_overrides()</code> imprime
+			ensuite les vraies valeurs enregistrées comme propriétés personnalisées `:root` dans
+			`wp_head`, après la feuille de style compilée, et <code>enqueue_google_fonts()</code>
+			charge les familles de polices choisies. Quelques fonctions couleur Sass codées en dur
+			(<code>color.adjust()</code>, qui a besoin d'une vraie couleur au moment de la compilation
+			et ne peut pas opérer sur une expression `var()`) ont été converties vers l'équivalent en
+			<code>color-mix()</code> CSS natif, pour la même raison. Les nuances dorées dérivées
+			(survol/clair) restent statiques : suivre la teinte d'une couleur d'accent totalement
+			personnalisée demanderait du calcul de couleur au moment de l'exécution, hors périmètre de
+			cette passe.
+		</p>
+
+		<h2 id="header">Onglet En-tête</h2>
+		<p>
+			Disposition (3 vraies variantes CSS — la disposition centrée par défaut inchangée, « logo
+			gauche, navigation centrée » et « logo gauche, navigation droite » réorganisent le même
+			balisage d'en-tête via des classes modificatrices et la propriété CSS `order`, sans
+			changement de balisage), bascule du mega menu (branchée sur le filtre
+			`solar_template_header_mega_menu_enabled` déjà laissé pour cela par le Groupe 02), une barre
+			de promotion, 4 URLs de réseaux sociaux (branchées sur le filtre existant
+			`solar_template_social_links` — Pinterest devient un 4e réseau par défaut aux côtés
+			d'Instagram/Facebook/X), et une option d'en-tête transparent sur l'accueil. L'en-tête
+			transparent chevauche le hero au lieu de le repousser, jusqu'à ce que
+			<code>initTransparentHeader()</code> d'<code>assets/js/header.js</code> ajoute une classe
+			`--scrolled` passé un petit seuil de défilement, rétablissant l'en-tête sticky/opaque normal
+			— sans quoi le texte deviendrait illisible une fois le hero sombre dépassé au défilement.
+		</p>
+
+		<h2 id="footer">Onglet Pied de page</h2>
+		<p>
+			Nombre de colonnes (2 à 5 ; la colonne de marque, et la colonne newsletter si activée,
+			occupent chacune un emplacement, le reste va aux colonnes Boutique/Informations/Légal dans
+			cet ordre — une fonction pure et testée unitairement,
+			<code>FooterSettings::resolve_visible_columns()</code>, réduit la liste), la bascule de la
+			colonne newsletter, les badges de moyens de paiement (Visa/Mastercard/PayPal/Stripe/Apple
+			Pay/Google Pay), et le texte de copyright (le support de `{year}` existait déjà depuis le
+			Groupe 02). Les quatre se branchent sur les filtres
+			(`solar_template_footer_config`/`..._payment_icons`/`..._copyright`) déjà laissés à cet
+			effet.
+		</p>
+
+		<p>
+			Vérifié de bout en bout dans l'environnement Docker réel : chaque champ se relit
+			correctement après une vraie sauvegarde (nonce compris), chaque réglage modifie visiblement
+			le vrai rendu front (couleurs/polices/arrondi, disposition/promo/réseaux/transparence de
+			l'en-tête, colonnes/newsletter/paiement/copyright du pied de page, devise réellement
+			affichée par WooCommerce), et le mode maintenance renvoie une vraie 503 à un visiteur non
+			connecté tout en laissant un administrateur naviguer normalement. Aucun avertissement ni
+			erreur PHP relevé. Les onglets Page d'accueil/Produits/Blog/Traductions et le bouton de
+			régénération cache/build restent pour une prochaine passe.
+		</p>
+	</main>
+	<script src="../assets/doc.js"></script>
+</body>
+</html>

@@ -1802,6 +1802,226 @@ final class DefaultStrings {
 				'fr_FR' => 'Nouveau message de contact : %s',
 				'en_US' => 'New contact message: %s',
 			),
+			'Solar Template'                               => array(
+				'fr_FR' => 'Solar Template',
+				'en_US' => 'Solar Template',
+			),
+			'WooCommerce theme · Full configuration'       => array(
+				'fr_FR' => 'Thème WooCommerce · Configuration complète',
+				'en_US' => 'WooCommerce theme · Full configuration',
+			),
+			'View site'                                    => array(
+				'fr_FR' => 'Voir le site',
+				'en_US' => 'View site',
+			),
+			'Settings saved.'                              => array(
+				'fr_FR' => 'Réglages enregistrés.',
+				'en_US' => 'Settings saved.',
+			),
+			'You are not allowed to change these settings.' => array(
+				'fr_FR' => "Vous n'êtes pas autorisé à modifier ces réglages.",
+				'en_US' => 'You are not allowed to change these settings.',
+			),
+			'General'                                      => array(
+				'fr_FR' => 'Général',
+				'en_US' => 'General',
+			),
+			'Appearance'                                   => array(
+				'fr_FR' => 'Apparence',
+				'en_US' => 'Appearance',
+			),
+			'Header'                                       => array(
+				'fr_FR' => 'En-tête',
+				'en_US' => 'Header',
+			),
+			'Footer'                                       => array(
+				'fr_FR' => 'Pied de page',
+				'en_US' => 'Footer',
+			),
+			'Shop name'                                    => array(
+				'fr_FR' => 'Nom de la boutique',
+				'en_US' => 'Shop name',
+			),
+			'Shown in the header and transactional emails.' => array(
+				'fr_FR' => 'Affiché dans l\'en-tête et les emails transactionnels.',
+				'en_US' => 'Shown in the header and transactional emails.',
+			),
+			'Logo'                                         => array(
+				'fr_FR' => 'Logo',
+				'en_US' => 'Logo',
+			),
+			'Favicon'                                      => array(
+				'fr_FR' => 'Favicon',
+				'en_US' => 'Favicon',
+			),
+			'Recommended: PNG/SVG/WebP, 320×80px.'         => array(
+				'fr_FR' => 'Formats recommandés : PNG, SVG, WebP. Taille recommandée : 320×80px.',
+				'en_US' => 'Recommended: PNG/SVG/WebP, 320×80px.',
+			),
+			'Recommended: 32×32 or 64×64px, ICO or PNG.'   => array(
+				'fr_FR' => 'Format recommandé : 32×32 ou 64×64px, ICO ou PNG.',
+				'en_US' => 'Recommended: 32×32 or 64×64px, ICO or PNG.',
+			),
+			'Choose a file'                                => array(
+				'fr_FR' => 'Choisir un fichier',
+				'en_US' => 'Choose a file',
+			),
+			'No file'                                      => array(
+				'fr_FR' => 'Aucun fichier',
+				'en_US' => 'No file',
+			),
+			'Currency'                                     => array(
+				'fr_FR' => 'Devise',
+				'en_US' => 'Currency',
+			),
+			"Use WooCommerce's own setting"                => array(
+				'fr_FR' => 'Utiliser le réglage propre à WooCommerce',
+				'en_US' => "Use WooCommerce's own setting",
+			),
+			'Symbol position'                              => array(
+				'fr_FR' => 'Position du symbole',
+				'en_US' => 'Symbol position',
+			),
+			'Before (€ 89.00)'                             => array(
+				'fr_FR' => 'Avant (€ 89,00)',
+				'en_US' => 'Before (€ 89.00)',
+			),
+			'After (89.00 €)'                              => array(
+				'fr_FR' => 'Après (89,00 €)',
+				'en_US' => 'After (89.00 €)',
+			),
+			'Maintenance mode'                             => array(
+				'fr_FR' => 'Mode maintenance',
+				'en_US' => 'Maintenance mode',
+			),
+			'Show a maintenance page to visitors'          => array(
+				'fr_FR' => 'Afficher une page de maintenance aux visiteurs',
+				'en_US' => 'Show a maintenance page to visitors',
+			),
+			'Signed-in administrators can still browse the real site while this is on.' => array(
+				'fr_FR' => 'Les administrateurs connectés peuvent continuer à parcourir le vrai site tant que ce réglage est actif.',
+				'en_US' => 'Signed-in administrators can still browse the real site while this is on.',
+			),
+			'Site under maintenance'                       => array(
+				'fr_FR' => 'Site en maintenance',
+				'en_US' => 'Site under maintenance',
+			),
+			"We're currently performing some updates. Please check back shortly." => array(
+				'fr_FR' => 'Nous effectuons actuellement quelques mises à jour. Merci de revenir un peu plus tard.',
+				'en_US' => "We're currently performing some updates. Please check back shortly.",
+			),
+			'Primary color'                                => array(
+				'fr_FR' => 'Couleur principale',
+				'en_US' => 'Primary color',
+			),
+			'Buttons, headings, dark navigation.'          => array(
+				'fr_FR' => 'Couleur des boutons, titres, navigation sombre.',
+				'en_US' => 'Buttons, headings, dark navigation.',
+			),
+			'Accent color'                                 => array(
+				'fr_FR' => "Couleur d'accent",
+				'en_US' => 'Accent color',
+			),
+			'Golden accent for badges, prices, CTAs, active links.' => array(
+				'fr_FR' => 'Couleur dorée pour les badges, prix, CTA, liens actifs.',
+				'en_US' => 'Golden accent for badges, prices, CTAs, active links.',
+			),
+			'Background color'                             => array(
+				'fr_FR' => 'Couleur de fond',
+				'en_US' => 'Background color',
+			),
+			'Overall page background.'                     => array(
+				'fr_FR' => 'Fond général des pages.',
+				'en_US' => 'Overall page background.',
+			),
+			'Main font'                                    => array(
+				'fr_FR' => 'Police principale',
+				'en_US' => 'Main font',
+			),
+			'Loaded via Google Fonts. Applies to all running text.' => array(
+				'fr_FR' => 'Chargée via Google Fonts. Applique à tout le texte courant.',
+				'en_US' => 'Loaded via Google Fonts. Applies to all running text.',
+			),
+			'Heading font'                                 => array(
+				'fr_FR' => 'Police des titres',
+				'en_US' => 'Heading font',
+			),
+			'Same as the main font'                        => array(
+				'fr_FR' => 'Même que la police principale',
+				'en_US' => 'Same as the main font',
+			),
+			'Element roundness'                            => array(
+				'fr_FR' => 'Arrondi des éléments',
+				'en_US' => 'Element roundness',
+			),
+			'Header layout'                                => array(
+				'fr_FR' => "Disposition de l'en-tête",
+				'en_US' => 'Header layout',
+			),
+			'Mega menu'                                    => array(
+				'fr_FR' => 'Méga menu',
+				'en_US' => 'Mega menu',
+			),
+			'Shows the "Collections" mega menu on the primary navigation.' => array(
+				'fr_FR' => 'Affiche le méga menu « Collections » sur la navigation principale.',
+				'en_US' => 'Shows the "Collections" mega menu on the primary navigation.',
+			),
+			'Promo bar'                                    => array(
+				'fr_FR' => 'Barre de promotion',
+				'en_US' => 'Promo bar',
+			),
+			'e.g. Free shipping over €60 🚚'                => array(
+				'fr_FR' => 'ex. Livraison offerte dès 60€ 🚚',
+				'en_US' => 'e.g. Free shipping over €60 🚚',
+			),
+			'Information bar shown above the main header.' => array(
+				'fr_FR' => "Barre d'information affichée au-dessus de l'en-tête principal.",
+				'en_US' => 'Information bar shown above the main header.',
+			),
+			'Social links'                                 => array(
+				'fr_FR' => 'Réseaux sociaux',
+				'en_US' => 'Social links',
+			),
+			'Transparent header'                           => array(
+				'fr_FR' => 'En-tête transparent',
+				'en_US' => 'Transparent header',
+			),
+			'Enabled on the home page only'                => array(
+				'fr_FR' => "Activé sur la page d'accueil uniquement",
+				'en_US' => 'Enabled on the home page only',
+			),
+			'Enabled'                                      => array(
+				'fr_FR' => 'Activé',
+				'en_US' => 'Enabled',
+			),
+			'Number of columns'                            => array(
+				'fr_FR' => 'Nombre de colonnes',
+				'en_US' => 'Number of columns',
+			),
+			'Brand column and (if enabled) the newsletter column always take one slot each; the rest go to Shop/Information/Legal, in that order.' => array(
+				'fr_FR' => 'La colonne de marque et (si activée) la colonne newsletter occupent toujours chacune un emplacement ; le reste va aux colonnes Boutique/Informations/Légal, dans cet ordre.',
+				'en_US' => 'Brand column and (if enabled) the newsletter column always take one slot each; the rest go to Shop/Information/Legal, in that order.',
+			),
+			'Newsletter column'                            => array(
+				'fr_FR' => 'Colonne newsletter',
+				'en_US' => 'Newsletter column',
+			),
+			'Payment icons'                                => array(
+				'fr_FR' => 'Icônes de paiement',
+				'en_US' => 'Payment icons',
+			),
+			'Copyright text'                               => array(
+				'fr_FR' => 'Texte copyright',
+				'en_US' => 'Copyright text',
+			),
+			'Supports {year} for the current year.'        => array(
+				'fr_FR' => 'Supporte {year} pour insérer automatiquement l\'année en cours.',
+				'en_US' => 'Supports {year} for the current year.',
+			),
+			'© {year} %s — All rights reserved'            => array(
+				'fr_FR' => '© {year} %s — Tous droits réservés',
+				'en_US' => '© {year} %s — All rights reserved',
+			),
 		);
 	}
 

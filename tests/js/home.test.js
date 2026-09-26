@@ -17,22 +17,28 @@ const { css } = sass.compile(resolve(process.cwd(), 'assets/scss/main.scss'), {
 
 describe('front page: hero', () => {
 	it('renders full-viewport on a dark background, as a two-column grid', () => {
-		expect(css).toMatch(/\.hero\s*{[^}]*background:\s*#0d0d0d/);
+		expect(css).toMatch(/\.hero\s*{[^}]*background:\s*var\(--solar-color-dark, #0d0d0d\)/);
 		expect(css).toMatch(/\.hero\s*{[^}]*grid-template-columns:\s*1fr 1fr/);
 	});
 
 	it('accents the middle heading line in gold italics', () => {
-		expect(css).toMatch(/\.hero__heading-line--accent\s*{[^}]*color:\s*#c9a96e/);
+		expect(css).toMatch(
+			/\.hero__heading-line--accent\s*{[^}]*color:\s*var\(--solar-color-gold, #c9a96e\)/,
+		);
 		expect(css).toMatch(/\.hero__heading-line--accent\s*{[^}]*font-style:\s*italic/);
 	});
 
 	it('gives the floating highlight card the modal radius and a blurred light background', () => {
-		expect(css).toMatch(/\.hero__highlight\s*{[^}]*border-radius:\s*10px/);
+		expect(css).toMatch(
+			/\.hero__highlight\s*{[^}]*border-radius:\s*var\(--solar-radius, 10px\)/,
+		);
 		expect(css).toMatch(/\.hero__highlight\s*{[^}]*backdrop-filter:\s*blur\(12px\)/);
 	});
 
 	it('fills the highlight progress bar in gold', () => {
-		expect(css).toMatch(/\.hero__highlight-progress-bar\s*{[^}]*background:\s*#c9a96e/);
+		expect(css).toMatch(
+			/\.hero__highlight-progress-bar\s*{[^}]*background:\s*var\(--solar-color-gold, #c9a96e\)/,
+		);
 	});
 });
 
@@ -52,7 +58,9 @@ describe('front page: featured products', () => {
 
 describe('front page: categories', () => {
 	it('lays out the asymmetric 1.4fr/1fr/1fr grid on a dark background', () => {
-		expect(css).toMatch(/\.home-categories\s*{[^}]*background:\s*#0d0d0d/);
+		expect(css).toMatch(
+			/\.home-categories\s*{[^}]*background:\s*var\(--solar-color-dark, #0d0d0d\)/,
+		);
 		expect(css).toMatch(
 			/\.home-categories__grid\s*{[^}]*grid-template-columns:\s*1\.4fr 1fr 1fr/,
 		);
@@ -71,13 +79,19 @@ describe('front page: categories', () => {
 
 describe('front page: brand story', () => {
 	it('gives the image the content card radius and a 4:5 aspect ratio', () => {
-		expect(css).toMatch(/\.brand-story__image\s*{[^}]*border-radius:\s*8px/);
+		expect(css).toMatch(
+			/\.brand-story__image\s*{[^}]*border-radius:\s*var\(--solar-radius, 8px\)/,
+		);
 		expect(css).toMatch(/\.brand-story__image\s*{[^}]*aspect-ratio:\s*4\/5/);
 	});
 
 	it('renders the floating stat highlight in gold on a dark card', () => {
-		expect(css).toMatch(/\.brand-story__highlight\s*{[^}]*background:\s*#0d0d0d/);
-		expect(css).toMatch(/\.brand-story__highlight-value\s*{[^}]*color:\s*#c9a96e/);
+		expect(css).toMatch(
+			/\.brand-story__highlight\s*{[^}]*background:\s*var\(--solar-color-dark, #0d0d0d\)/,
+		);
+		expect(css).toMatch(
+			/\.brand-story__highlight-value\s*{[^}]*color:\s*var\(--solar-color-gold, #c9a96e\)/,
+		);
 	});
 
 	it('lays out the three stats in an even grid', () => {
@@ -92,19 +106,27 @@ describe('front page: testimonials', () => {
 		expect(css).toMatch(
 			/\.testimonials__grid\s*{[^}]*grid-template-columns:\s*repeat\(3,\s*1fr\)/,
 		);
-		expect(css).toMatch(/\.testimonials__item\s*{[^}]*border-radius:\s*10px/);
+		expect(css).toMatch(
+			/\.testimonials__item\s*{[^}]*border-radius:\s*var\(--solar-radius, 10px\)/,
+		);
 	});
 
 	it('inverts the middle card to a dark background with light text', () => {
-		expect(css).toMatch(/\.testimonials__item--inverted\s*{[^}]*background:\s*#0d0d0d/);
+		expect(css).toMatch(
+			/\.testimonials__item--inverted\s*{[^}]*background:\s*var\(--solar-color-dark, #0d0d0d\)/,
+		);
 		expect(css).toMatch(
 			/\.testimonials__item--inverted \.testimonials__author-name\s*{[^}]*color:\s*#ffffff/,
 		);
 	});
 
 	it('colors the star rating and quote mark in gold', () => {
-		expect(css).toMatch(/\.testimonials__rating\s*{[^}]*color:\s*#c9a96e/);
-		expect(css).toMatch(/\.testimonials__quote-mark\s*{[^}]*color:\s*#c9a96e/);
+		expect(css).toMatch(
+			/\.testimonials__rating\s*{[^}]*color:\s*var\(--solar-color-gold, #c9a96e\)/,
+		);
+		expect(css).toMatch(
+			/\.testimonials__quote-mark\s*{[^}]*color:\s*var\(--solar-color-gold, #c9a96e\)/,
+		);
 	});
 });
 
@@ -117,19 +139,23 @@ describe('front page: blog preview', () => {
 
 	it('underlines the "view all" link in gold on hover', () => {
 		expect(css).toMatch(
-			/\.blog-preview__view-all:hover\s*{[^}]*color:\s*#c9a96e[^}]*border-color:\s*#c9a96e/,
+			/\.blog-preview__view-all:hover\s*{[^}]*color:\s*var\(--solar-color-gold, #c9a96e\)[^}]*border-color:\s*var\(--solar-color-gold, #c9a96e\)/,
 		);
 	});
 });
 
 describe('front page: newsletter', () => {
 	it('renders centered on a dark background', () => {
-		expect(css).toMatch(/\.home-newsletter\s*{[^}]*background:\s*#0d0d0d/);
+		expect(css).toMatch(
+			/\.home-newsletter\s*{[^}]*background:\s*var\(--solar-color-dark, #0d0d0d\)/,
+		);
 		expect(css).toMatch(/\.home-newsletter__inner\s*{[^}]*text-align:\s*center/);
 	});
 
 	it('fills the submit button in gold with a darker hover state', () => {
-		expect(css).toMatch(/\.home-newsletter__submit\s*{[^}]*background:\s*#c9a96e/);
+		expect(css).toMatch(
+			/\.home-newsletter__submit\s*{[^}]*background:\s*var\(--solar-color-gold, #c9a96e\)/,
+		);
 		expect(css).toMatch(/\.home-newsletter__submit:hover\s*{[^}]*background:\s*#a8803e/);
 	});
 

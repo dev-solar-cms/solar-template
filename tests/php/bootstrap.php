@@ -208,6 +208,130 @@ if ( ! function_exists( '__' ) ) {
 	}
 
 	/**
+	 * Close enough stand-in for WordPress' own sanitize_text_field(): strips tags and trims,
+	 * skipping the extra whitespace-collapsing/invalid-UTF8 handling the real function also does
+	 * (not exercised by the current test suite).
+	 *
+	 * @param string $text Raw text.
+	 * @return string
+	 */
+	function sanitize_text_field( string $text ): string {
+		return trim( strip_tags( $text ) ); // phpcs:ignore WordPress.WP.AlternativeFunctions.strip_tags_strip_tags -- stand-in for the real WordPress function, not real output sanitization.
+	}
+
+	/**
+	 * @param string $text Raw text.
+	 * @return string Same stand-in as sanitize_text_field(); the real function also normalizes
+	 *                line breaks, not exercised by the current test suite.
+	 */
+	function sanitize_textarea_field( string $text ): string {
+		return trim( strip_tags( $text ) ); // phpcs:ignore WordPress.WP.AlternativeFunctions.strip_tags_strip_tags -- stand-in for the real WordPress function, not real output sanitization.
+	}
+
+	/**
+	 * Stand-in for WordPress' own sanitize_key(): lowercase, only [a-z0-9_-] kept.
+	 *
+	 * @param string $key Raw key.
+	 * @return string
+	 */
+	function sanitize_key( string $key ): string {
+		return preg_replace( '/[^a-z0-9_-]/', '', strtolower( $key ) );
+	}
+
+	/**
+	 * Minimal stand-in for WordPress' own esc_url_raw(): trims and rejects anything not starting
+	 * with a small allow-list of schemes/a relative path (the real function's full behaviour —
+	 * entity-encoding, a configurable protocol allow-list — isn't exercised by the current test
+	 * suite).
+	 *
+	 * @param string $url Raw URL.
+	 * @return string
+	 */
+	function esc_url_raw( string $url ): string {
+		$url = trim( $url );
+
+		if ( '' === $url ) {
+			return '';
+		}
+
+		return preg_match( '~^(https?://|/|#)~i', $url ) ? $url : '';
+	}
+
+	/**
+	 * Stand-in for WordPress' own sanitize_hex_color(): '' or a real #rgb/#rrggbb value, null
+	 * otherwise (matching the real function's "invalid" return value).
+	 *
+	 * @param string $color Raw color value.
+	 * @return string|null
+	 */
+	function sanitize_hex_color( string $color ): ?string {
+		if ( '' === $color ) {
+			return '';
+		}
+
+		return preg_match( '/^#([A-Fa-f0-9]{3}){1,2}$/', $color ) ? $color : null;
+	}
+
+	/**
+	 * Stand-in for WordPress' own absint(): absolute value, cast to a non-negative integer.
+	 *
+	 * @param mixed $value Raw value.
+	 * @return int
+	 */
+	function absint( $value ): int {
+		return abs( (int) $value );
+	}
+
+	/**
+	 * Stand-in for WordPress' own checked()/selected(): echoes ` checked="checked"`/
+	 * ` selected="selected"` when both values are loosely equal, used by their respective
+	 * matching function pointers below (`checked()` mirrors this file's other bare-function-name
+	 * pattern; `selected()` is a distinct function per WordPress' own API).
+	 *
+	 * @param mixed $checked_value Value being tested.
+	 * @param mixed $current       Value it's compared against.
+	 * @param bool  $should_echo   Whether to also echo the resulting attribute.
+	 * @return string
+	 */
+	function checked( $checked_value, $current = true, bool $should_echo = true ): string {
+		return solar_template_test_checked_selected_helper( $checked_value, $current, $should_echo, 'checked' );
+	}
+
+	/**
+	 * @param mixed $selected_value Value being tested.
+	 * @param mixed $current        Value it's compared against.
+	 * @param bool  $should_echo    Whether to also echo the resulting attribute.
+	 * @return string
+	 */
+	function selected( $selected_value, $current = true, bool $should_echo = true ): string {
+		return solar_template_test_checked_selected_helper( $selected_value, $current, $should_echo, 'selected' );
+	}
+
+	/**
+	 * Shared implementation behind the checked()/selected() stand-ins above, matching WordPress'
+	 * own internal `__checked_selected_helper()`.
+	 *
+	 * @param mixed  $value   Value being tested.
+	 * @param mixed  $current Value it's compared against.
+	 * @param bool   $echo    Whether to also echo the resulting attribute.
+	 * @param string $type    'checked' or 'selected'.
+	 * @return string
+	 */
+	function solar_template_test_checked_selected_helper( $value, $current, bool $should_echo, string $type ): string {
+		if ( (string) $value !== (string) $current ) {
+			return '';
+		}
+
+		$result = " {$type}='{$type}'";
+
+		if ( $should_echo ) {
+			echo $result; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- this *is* the stand-in for the real escaping function.
+		}
+
+		return $result;
+	}
+
+	/**
 	 * Plain stand-in for WordPress' permalink lookup (no real post/routing available here).
 	 *
 	 * @param int $post_id Post/product ID.

@@ -20,13 +20,15 @@ const { css } = sass.compile(resolve(process.cwd(), 'assets/scss/main.scss'), {
 
 describe('design system: buttons', () => {
 	it('renders the primary CTA in gold with dark text and the button radius', () => {
-		expect(css).toMatch(/\.btn--primary\s*{[^}]*background:\s*#c9a96e/);
-		expect(css).toMatch(/\.btn--primary\s*{[^}]*color:\s*#0d0d0d/);
-		expect(css).toMatch(/\.btn\s*{[^}]*border-radius:\s*5px/);
+		expect(css).toMatch(
+			/\.btn--primary\s*{[^}]*background:\s*var\(--solar-color-gold, #c9a96e\)/,
+		);
+		expect(css).toMatch(/\.btn--primary\s*{[^}]*color:\s*var\(--solar-color-dark, #0d0d0d\)/);
+		expect(css).toMatch(/\.btn\s*{[^}]*border-radius:\s*var\(--solar-radius, 5px\)/);
 	});
 
 	it('renders the dark full-width CTA with its hover state', () => {
-		expect(css).toMatch(/\.btn--dark\s*{[^}]*background:\s*#0d0d0d/);
+		expect(css).toMatch(/\.btn--dark\s*{[^}]*background:\s*var\(--solar-color-dark, #0d0d0d\)/);
 		expect(css).toMatch(/\.btn--dark:hover\s*{[^}]*background:\s*#1a1a1a/);
 	});
 
@@ -39,9 +41,13 @@ describe('design system: buttons', () => {
 
 describe('design system: badges', () => {
 	it('renders the New/Exclusive/Sale corner badges with the badge radius', () => {
-		expect(css).toMatch(/\.badge\s*{[^}]*border-radius:\s*3px/);
-		expect(css).toMatch(/\.badge--new\s*{[^}]*background:\s*#0d0d0d/);
-		expect(css).toMatch(/\.badge--exclusive\s*{[^}]*background:\s*#c9a96e/);
+		expect(css).toMatch(/\.badge\s*{[^}]*border-radius:\s*var\(--solar-radius, 3px\)/);
+		expect(css).toMatch(
+			/\.badge--new\s*{[^}]*background:\s*var\(--solar-color-dark, #0d0d0d\)/,
+		);
+		expect(css).toMatch(
+			/\.badge--exclusive\s*{[^}]*background:\s*var\(--solar-color-gold, #c9a96e\)/,
+		);
 		expect(css).toMatch(/\.badge--sale\s*{[^}]*background:\s*#c05a2a/);
 	});
 
@@ -56,13 +62,17 @@ describe('design system: badges', () => {
 describe('design system: pills', () => {
 	it('renders the pill radius and the active/inactive states', () => {
 		expect(css).toMatch(/\.pill\s*{[^}]*border-radius:\s*99px/);
-		expect(css).toMatch(/\.pill\.is-active\s*{[^}]*background:\s*#0d0d0d/);
+		expect(css).toMatch(
+			/\.pill\.is-active\s*{[^}]*background:\s*var\(--solar-color-dark, #0d0d0d\)/,
+		);
 	});
 });
 
 describe('design system: product card', () => {
 	it('gives the media block the card radius and a 3:4 aspect ratio', () => {
-		expect(css).toMatch(/\.product-card__media\s*{[^}]*border-radius:\s*6px/);
+		expect(css).toMatch(
+			/\.product-card__media\s*{[^}]*border-radius:\s*var\(--solar-radius, 6px\)/,
+		);
 		expect(css).toMatch(/\.product-card__media\s*{[^}]*aspect-ratio:\s*3\/4/);
 	});
 
@@ -83,7 +93,9 @@ describe('design system: product card', () => {
 
 describe('design system: blog card', () => {
 	it('gives the media block the card radius and a 16:10 aspect ratio', () => {
-		expect(css).toMatch(/\.blog-card__media\s*{[^}]*border-radius:\s*6px/);
+		expect(css).toMatch(
+			/\.blog-card__media\s*{[^}]*border-radius:\s*var\(--solar-radius, 6px\)/,
+		);
 		expect(css).toMatch(/\.blog-card__media\s*{[^}]*aspect-ratio:\s*16\/10/);
 	});
 

@@ -2,10 +2,46 @@
  * Created: 2026-09-25 08:30 CEST
  * Role: Front-end behaviour for the sticky site header (assets/js/header.js).
  * Author: David ROMERA <d.romera.11@gmail.com>
- * Purpose: Open/close the "Collections" mega menu (hover, keyboard focus, Escape, outside click)
- *          and the full-screen search overlay (toggle button, close button, Escape, outside
- *          click), moving focus into the search field on open and back to the toggle on close.
+ * Purpose: Open/close the "Collections" mega menu (hover, keyboard focus, Escape, outside click),
+ *          the full-screen search overlay (toggle button, close button, Escape, outside click,
+ *          moving focus into the search field on open and back to the toggle on close), and the
+ *          transparent-on-home header's scroll-based solidify behaviour (Header administration
+ *          tab).
  */
+
+/**
+ * Scroll threshold (px) past which the transparent-on-home header (`.site-header--transparent-home`,
+ * see Solar_Template\Admin\HeaderSettings::is_transparent_on_home()) switches to its normal
+ * sticky/opaque appearance, by toggling `.site-header--scrolled`.
+ *
+ * @type {number}
+ */
+const TRANSPARENT_HEADER_SCROLL_THRESHOLD = 40;
+
+/**
+ * Wires up the transparent-on-home header: adds/removes `.site-header--scrolled` as the page
+ * scrolls past TRANSPARENT_HEADER_SCROLL_THRESHOLD, in either direction. A no-op when the header
+ * doesn't have the `.site-header--transparent-home` modifier class (every other page/setting).
+ *
+ * @return {void}
+ */
+export function initTransparentHeader() {
+	const header = document.getElementById('site-header');
+
+	if (!header || !header.classList.contains('site-header--transparent-home')) {
+		return;
+	}
+
+	const updateScrolledState = () => {
+		header.classList.toggle(
+			'site-header--scrolled',
+			window.scrollY > TRANSPARENT_HEADER_SCROLL_THRESHOLD,
+		);
+	};
+
+	updateScrolledState();
+	window.addEventListener('scroll', updateScrolledState, { passive: true });
+}
 
 /**
  * Wires up the "Collections" mega menu panel rendered by template-parts/mega-menu.php.

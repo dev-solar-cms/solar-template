@@ -1,0 +1,132 @@
+<!--
+	Created: 2026-09-26 23:50 CEST
+	Role: English documentation page describing the theme's own settings admin screen.
+	Author: David ROMERA <d.romera.11@gmail.com>
+	Purpose: Document, in English, each administration tab as it gets built.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Administration — Solar Template documentation</title>
+	<link rel="stylesheet" href="../assets/doc.css" />
+</head>
+<body>
+	<aside class="doc-sidebar">
+		<a class="doc-brand" href="index.html">Solar Template</a>
+		<nav>
+			<ul>
+				<li><a href="index.html">Home</a></li>
+				<li><a href="infrastructure.html">Infrastructure</a></li>
+				<li><a href="design-system.html">Design system</a></li>
+				<li><a href="structure-commune.html">Common structure</a></li>
+				<li><a href="page-accueil.html">Home page</a></li>
+				<li><a href="catalog.html">Product catalog</a></li>
+				<li><a href="product-page.html">Product page</a></li>
+				<li><a href="checkout.html">Checkout</a></li>
+				<li><a href="my-account.html">My account</a></li>
+				<li><a href="blog.html">Blog</a></li>
+				<li><a href="static-pages.html">Static pages</a></li>
+				<li><a href="administration.html">Administration</a></li>
+			</ul>
+		</nav>
+		<div class="doc-lang-switch">
+			<a class="is-active" href="administration.html">EN</a>
+			<a href="../fr/administration.html">FR</a>
+		</div>
+	</aside>
+	<main class="doc-content">
+		<h1>Administration</h1>
+		<p>
+			The theme's own settings screen, built directly into the theme via the WordPress Settings
+			API rather than a separate plugin. A "Solar Template" top-level admin menu page renders a
+			vertical tab layout (a nav column plus content, mirroring the design handoff's own admin
+			chrome), with one form per tab.
+		</p>
+
+		<h2 id="framework">Settings framework</h2>
+		<p>
+			<code>Solar_Template\Admin\SettingsPage</code> registers the admin menu, renders the shared
+			chrome (header, save feedback notice) and dispatches each tab's own fields/sanitization to
+			its <code>Solar_Template\Admin\SettingsTabInterface</code> implementation — adding a future
+			tab only means implementing that interface and listing it in
+			<code>SettingsPage::tabs()</code>, no other file changes. Fields are registered with the
+			real <code>register_setting()</code>/<code>add_settings_section()</code>/
+			<code>add_settings_field()</code> Settings API primitives, same convention as any other
+			WordPress options screen; actual persistence goes through
+			<code>Solar_Template\Admin\SettingsRepository</code>, a plain key/value wrapper (dotted
+			<code>{tab}.{field}</code> keys) around <code>wp_solar_template_settings</code> — the
+			generic settings table already created (and seeded with a few of these exact keys) back
+			when the project's database tables were first laid out, anticipating this screen.
+		</p>
+
+		<h2 id="general">General tab</h2>
+		<p>
+			Shop name (falls back to the site's own title when empty — used by the header brand and,
+			via the <code>wp_mail_from_name</code> filter, transactional email), logo/favicon through
+			WordPress' native media uploader, currency and symbol position (applied to WooCommerce
+			itself through the generic <code>pre_option_woocommerce_currency</code>/
+			<code>..._currency_pos</code> filters when configured, left alone otherwise), and
+			maintenance mode. <code>Solar_Template\Admin\MaintenanceMode</code> renders a real minimal
+			503 page to anyone who isn't a signed-in administrator while it's on — administrators keep
+			browsing the real site to check their changes.
+		</p>
+
+		<h2 id="appearance">Appearance tab</h2>
+		<p>
+			Primary/accent/background colors (with clickable preset swatches), main/heading Google
+			Fonts, and a single "element roundness" preset (Square/Subtle/Rounded/Pill). These apply to
+			the real front end <strong>without rebuilding the compiled assets</strong>:
+			<code>assets/scss/_tokens.scss</code>'s own color/radius/font-family tokens are now defined
+			as <code>var(--solar-*, &lt;compiled default&gt;)</code> instead of a plain Sass value — a
+			one-line change per token that every one of its usages across the whole compiled stylesheet
+			automatically inherits, since Sass just substitutes the token's string value everywhere it's
+			referenced. <code>Solar_Template\Admin\AppearanceSettings::print_style_overrides()</code>
+			then prints the real, saved values as `:root` custom properties in `wp_head`, after the
+			compiled stylesheet, and <code>enqueue_google_fonts()</code> loads the chosen font families.
+			A couple of hardcoded Sass color functions (<code>color.adjust()</code>, which needs a real
+			compile-time color and can't operate on a `var()` expression) were converted to the
+			equivalent plain CSS <code>color-mix()</code> calls, for the same reason. Derived gold hover/
+			light shades stay static — following a fully custom accent color's own tint would need
+			runtime color math, out of scope for this pass.
+		</p>
+
+		<h2 id="header">Header tab</h2>
+		<p>
+			Layout (3 real CSS variants — the default centered one unchanged, "left logo, centered nav"
+			and "left logo, right nav" reorder the same header markup via modifier classes and the
+			`order` CSS property, no markup change), mega menu toggle (hooked onto the
+			`solar_template_header_mega_menu_enabled` filter Group 02 already left for this), a promo
+			bar, 4 social network URLs (hooked onto the existing `solar_template_social_links` filter —
+			Pinterest is now a 4th default network alongside Instagram/Facebook/X), and a
+			transparent-on-home option. The transparent header overlaps the hero instead of pushing it
+			down, until <code>assets/js/header.js</code>'s <code>initTransparentHeader()</code> adds a
+			`--scrolled` class past a small scroll threshold, restoring the normal sticky/opaque header —
+			without it, text would become illegible once the visitor scrolls past the dark hero.
+		</p>
+
+		<h2 id="footer">Footer tab</h2>
+		<p>
+			Column count (2–5; the brand column, and the newsletter column when enabled, each reserve
+			one slot, the rest go to Shop/Information/Legal in that order — a pure, unit-tested
+			<code>FooterSettings::resolve_visible_columns()</code> trims the list), the newsletter
+			column toggle, payment method badges (Visa/Mastercard/PayPal/Stripe/Apple Pay/Google Pay),
+			and the copyright text (`{year}` support already existed from Group 02). All four hook onto
+			the filters (`solar_template_footer_config`/`..._payment_icons`/`..._copyright`) already
+			left there for this purpose.
+		</p>
+
+		<p>
+			Verified end to end in the real Docker environment: every field re-reads correctly after a
+			real save (nonce included), every setting visibly changes the real front end (colors/fonts/
+			roundness, header layout/promo/social/transparency, footer columns/newsletter/payment/
+			copyright, WooCommerce's own displayed currency), and maintenance mode returns a real 503 to
+			a logged-out visitor while an administrator keeps browsing normally. No PHP warning or error
+			observed. The Home page/Products/Blog/Translations tabs and the cache/build regeneration
+			button remain for a future pass.
+		</p>
+	</main>
+	<script src="../assets/doc.js"></script>
+</body>
+</html>

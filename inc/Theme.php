@@ -19,7 +19,13 @@ use Solar_Template\Account\AccountSettingsFields;
 use Solar_Template\Account\ReorderHandler;
 use Solar_Template\Account\SupportRequestController;
 use Solar_Template\Account\WishlistController;
+use Solar_Template\Admin\AppearanceSettings;
+use Solar_Template\Admin\FooterSettings;
+use Solar_Template\Admin\GeneralSettings;
+use Solar_Template\Admin\HeaderSettings;
+use Solar_Template\Admin\MaintenanceMode;
 use Solar_Template\Admin\Notices;
+use Solar_Template\Admin\SettingsPage;
 use Solar_Template\Blog\BlogController;
 use Solar_Template\Catalog\CatalogController;
 use Solar_Template\Checkout\CheckoutController;
@@ -105,6 +111,28 @@ final class Theme {
 
 		add_filter( 'theme_page_templates', array( LegalPageController::class, 'register_template' ) );
 		add_action( 'template_redirect', array( ContactController::class, 'maybe_handle_submission' ) );
+
+		add_action( 'admin_menu', array( SettingsPage::class, 'register_menu' ) );
+		add_action( 'admin_init', array( SettingsPage::class, 'register_settings_api_metadata' ) );
+		add_action( 'admin_init', array( SettingsPage::class, 'maybe_handle_save' ) );
+		add_action( 'admin_enqueue_scripts', array( SettingsPage::class, 'enqueue_media_uploader' ) );
+
+		add_action( 'template_redirect', array( MaintenanceMode::class, 'maybe_block_request' ), 1 );
+
+		add_filter( 'pre_option_woocommerce_currency', array( GeneralSettings::class, 'filter_currency_pre_option' ) );
+		add_filter( 'pre_option_woocommerce_currency_pos', array( GeneralSettings::class, 'filter_currency_position_pre_option' ) );
+		add_filter( 'wp_mail_from_name', array( GeneralSettings::class, 'filter_mail_from_name' ) );
+		add_action( 'wp_head', array( GeneralSettings::class, 'print_favicon' ) );
+
+		add_action( 'wp_enqueue_scripts', array( AppearanceSettings::class, 'enqueue_google_fonts' ), 20 );
+		add_action( 'wp_head', array( AppearanceSettings::class, 'print_style_overrides' ), 20 );
+
+		add_filter( 'solar_template_header_mega_menu_enabled', array( HeaderSettings::class, 'apply_mega_menu_enabled' ) );
+		add_filter( 'solar_template_social_links', array( HeaderSettings::class, 'apply_social_links' ) );
+
+		add_filter( 'solar_template_footer_config', array( FooterSettings::class, 'apply_footer_config' ), 20 );
+		add_filter( 'solar_template_footer_payment_icons', array( FooterSettings::class, 'apply_payment_icons' ) );
+		add_filter( 'solar_template_footer_copyright', array( FooterSettings::class, 'apply_copyright' ) );
 	}
 
 	/**

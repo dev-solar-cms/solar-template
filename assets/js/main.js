@@ -9,7 +9,7 @@
  */
 
 import '../scss/main.scss';
-import { initMegaMenu, initSearchOverlay } from './header.js';
+import { initMegaMenu, initSearchOverlay, initTransparentHeader } from './header.js';
 import { initNewsletterForms } from './newsletter.js';
 import { initCatalogFilters } from './catalog.js';
 import { initProductGallery, initProductVariations, initProductTabs } from './product.js';
@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	document.documentElement.classList.add('solar-template-ready');
 	initMegaMenu();
 	initSearchOverlay();
+	initTransparentHeader();
 	initNewsletterForms();
 	initCatalogFilters();
 	initProductGallery();

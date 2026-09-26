@@ -10,9 +10,15 @@
 // Colors
 // -----------------------------------------------------------------------------------------------
 
-$color-bg: #f8f6f2; // General background (warm white)
-$color-dark: #0d0d0d; // Main text, primary buttons
-$color-gold: #c9a96e; // Accent gold — badges, prices, active links, CTAs
+// $color-bg/$color-dark/$color-gold are wrapped in var(--solar-*, …) — set on :root by
+// Solar_Template\Admin\AppearanceSettings::print_style_overrides(), after the compiled stylesheet
+// — so the Appearance admin tab's background/primary/accent colors take effect on every one of
+// this token's usages, everywhere in the compiled CSS, without a full theme rebuild. Derived gold
+// shades below stay static: following a custom accent color's own hover/light shades would need
+// runtime color math (e.g. CSS color-mix()), out of scope for this pass.
+$color-bg: var(--solar-color-bg, #f8f6f2); // General background (warm white)
+$color-dark: var(--solar-color-dark, #0d0d0d); // Main text, primary buttons
+$color-gold: var(--solar-color-gold, #c9a96e); // Accent gold — badges, prices, active links, CTAs
 $color-gold-dark: #a8803e; // Gold on hover
 $color-gold-light: #ead9b8; // Light gold — subtle backgrounds
 $color-muted: #7a7672; // Secondary text, placeholders
@@ -30,11 +36,18 @@ $color-dark-hover: #1a1a1a; // Hover state of dark (full-width/CTA) buttons
 // Typography
 // -----------------------------------------------------------------------------------------------
 
-$font-family-base:
+// Same var()-override convention as the colors above: the Appearance admin tab's "Main font"/
+// "Heading font" fields override these at runtime via a printed :root custom property, with the
+// Google Font stylesheet for a non-default choice enqueued alongside (see
+// Solar_Template\Admin\AppearanceSettings::enqueue_google_fonts()).
+$font-family-base: var(
+	--solar-font-body,
 	'Plus Jakarta Sans',
 	-apple-system,
 	BlinkMacSystemFont,
-	sans-serif;
+	sans-serif
+);
+$font-heading-family: var(--solar-font-heading, inherit);
 
 $font-weight-light: 300;
 $font-weight-regular: 400;
@@ -88,13 +101,16 @@ $spacing-grid-gap-blog: clamp(28px, 1vw + 24px, 32px);
 // Geometry
 // -----------------------------------------------------------------------------------------------
 
-$radius-card: 6px; // Product cards, images
-$radius-content-card: 8px; // Content cards (blog, testimonials)
-$radius-modal: 10px; // Modals
-$radius-button: 5px;
-$radius-badge: 3px; // Corner badges (New/Exclusive/Sale)
+// All wrapped in var(--solar-radius, …) except $radius-pill (always fully rounded — a pill's
+// roundedness is its shape, not a "how rounded" preference) so the Appearance admin tab's single
+// "Element roundness" preset (Square/Subtle/Rounded/Pill) restyles every one of these uniformly.
+$radius-card: var(--solar-radius, 6px); // Product cards, images
+$radius-content-card: var(--solar-radius, 8px); // Content cards (blog, testimonials)
+$radius-modal: var(--solar-radius, 10px); // Modals
+$radius-button: var(--solar-radius, 5px);
+$radius-badge: var(--solar-radius, 3px); // Corner badges (New/Exclusive/Sale)
 $radius-pill: 99px; // Pills, filter chips
-$radius-input: 5px;
+$radius-input: var(--solar-radius, 5px);
 
 $shadow-card-hover: 0 12px 40px rgba(0, 0, 0, 0.12);
 $shadow-admin: 0 1px 1px rgba(0, 0, 0, 0.04);

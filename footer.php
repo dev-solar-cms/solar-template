@@ -6,9 +6,9 @@
  * Purpose: Render the footer (brand/shop/information/legal columns, a newsletter sign-up form,
  *          payment method badges, copyright line) and close the document opened by header.php.
  *          Content comes from filterable configuration (Solar_Template\Footer\Footer::config() and
- *          friends) rather than hardcoded values, ready for the future Group 10 administration
- *          screen to hook into. The newsletter form is markup only — no submission handling, out
- *          of scope for this step.
+ *          friends), with the Header/Footer administration tabs now hooked into those same
+ *          filters (Solar_Template\Admin\FooterSettings). The newsletter form is markup only — no
+ *          submission handling, out of scope for this step.
  *
  * @package Solar_Template
  */
@@ -17,11 +17,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$footer_config = \Solar_Template\Footer\Footer::config();
+$footer_config        = \Solar_Template\Footer\Footer::config();
+$footer_columns_total = 1 + count( $footer_config['columns'] ) + ( $footer_config['newsletter'] ? 1 : 0 );
 ?>
 <footer class="site-footer">
 	<div class="site-footer__inner">
-		<div class="site-footer__columns">
+		<div class="site-footer__columns site-footer__columns--count-<?php echo esc_attr( (string) $footer_columns_total ); ?>">
 			<div class="site-footer__brand-column">
 				<span class="site-footer__brand"><?php echo esc_html( $footer_config['brand']['name'] ); ?></span>
 				<p class="site-footer__brand-description"><?php echo esc_html( $footer_config['brand']['description'] ); ?></p>
@@ -51,25 +52,27 @@ $footer_config = \Solar_Template\Footer\Footer::config();
 				</div>
 			<?php endforeach; ?>
 
-			<div class="site-footer__newsletter-column">
-				<span class="site-footer__column-heading"><?php echo esc_html( $footer_config['newsletter']['heading'] ); ?></span>
-				<p class="site-footer__newsletter-description"><?php echo esc_html( $footer_config['newsletter']['description'] ); ?></p>
-				<form class="site-footer__newsletter-form">
-					<label class="screen-reader-text" for="site-footer-newsletter-email">
-						<?php esc_html_e( 'Email address', 'solar-template' ); ?>
-					</label>
-					<input
-						type="email"
-						id="site-footer-newsletter-email"
-						name="email"
-						class="site-footer__newsletter-input"
-						placeholder="<?php echo esc_attr__( 'email@example.com', 'solar-template' ); ?>"
-					/>
-					<button type="submit" class="site-footer__newsletter-submit" aria-label="<?php esc_attr_e( 'Subscribe', 'solar-template' ); ?>">
-						→
-					</button>
-				</form>
-			</div>
+			<?php if ( $footer_config['newsletter'] ) : ?>
+				<div class="site-footer__newsletter-column">
+					<span class="site-footer__column-heading"><?php echo esc_html( $footer_config['newsletter']['heading'] ); ?></span>
+					<p class="site-footer__newsletter-description"><?php echo esc_html( $footer_config['newsletter']['description'] ); ?></p>
+					<form class="site-footer__newsletter-form">
+						<label class="screen-reader-text" for="site-footer-newsletter-email">
+							<?php esc_html_e( 'Email address', 'solar-template' ); ?>
+						</label>
+						<input
+							type="email"
+							id="site-footer-newsletter-email"
+							name="email"
+							class="site-footer__newsletter-input"
+							placeholder="<?php echo esc_attr__( 'email@example.com', 'solar-template' ); ?>"
+						/>
+						<button type="submit" class="site-footer__newsletter-submit" aria-label="<?php esc_attr_e( 'Subscribe', 'solar-template' ); ?>">
+							→
+						</button>
+					</form>
+				</div>
+			<?php endif; ?>
 		</div>
 
 		<div class="site-footer__bottom">

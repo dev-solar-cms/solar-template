@@ -29,6 +29,24 @@ $footer-column-link-color: rgba(255, 255, 255, 0.5);
 	margin-bottom: 64px;
 }
 
+// Column count comes from the Footer administration tab (brand + Shop/Information/Legal + the
+// newsletter column when enabled) — footer.php computes the real rendered count.
+.site-footer__columns--count-2 {
+	grid-template-columns: 2fr 1fr;
+}
+
+.site-footer__columns--count-3 {
+	grid-template-columns: 2fr 1fr 1fr;
+}
+
+.site-footer__columns--count-4 {
+	grid-template-columns: 2fr 1fr 1fr 1fr;
+}
+
+.site-footer__columns--count-5 {
+	grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr;
+}
+
 .site-footer__brand {
 	display: block;
 	font-size: 14px;

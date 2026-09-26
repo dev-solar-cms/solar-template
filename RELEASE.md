@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.7.1`.
+Version actuelle : `0.7.2`.
 
 ## Avant une release
 
@@ -30,6 +30,47 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.7.2 — réglages du thème (Général, Apparence, En-tête, Pied de page)
+
+- Ajout d'une page de réglages intégrée au thème (menu admin de premier niveau « Solar Template »,
+  pas un plugin séparé) : chrome commun (en-tête, notice de sauvegarde), disposition à onglets
+  verticale, un formulaire par onglet avec nonce WordPress, champs enregistrés via les vraies
+  primitives Settings API (`register_setting()`/`add_settings_section()`/`add_settings_field()`).
+  La persistance passe par une table de réglages génériques clé/valeur déjà créée (et pré-remplie
+  avec certaines de ces clés) lors de la mise en place initiale des tables du projet.
+- **Onglet Général** : nom de boutique (utilisé par la marque de l'en-tête et, via
+  `wp_mail_from_name`, les emails transactionnels), logo/favicon via le téléverseur média natif,
+  devise et position du symbole (appliquées à WooCommerce via des filtres `pre_option_*` génériques
+  quand configurées), et un mode maintenance qui affiche une vraie page 503 à tout visiteur
+  non-administrateur tout en laissant les administrateurs connectés naviguer normalement.
+- **Onglet Apparence** : couleurs principale/accent/fond, polices Google Fonts (texte courant et
+  titres), et un préréglage d'arrondi des éléments — appliqués au front **sans reconstruire les
+  assets compilés**, via des propriétés CSS personnalisées imprimées dans `wp_head` que les tokens
+  de design du thème lisent désormais avec un mécanisme `var(--solar-*, valeur par défaut)` plutôt
+  qu'une valeur figée à la compilation.
+- **Onglet En-tête** : disposition (3 variantes réelles), bascule du mega menu et des réseaux
+  sociaux (branchées sur des filtres déjà laissés à cet effet, Pinterest ajouté comme 4e réseau par
+  défaut), barre de promotion, et un en-tête transparent sur la page d'accueil qui redevient opaque
+  au défilement.
+- **Onglet Pied de page** : nombre de colonnes réel, bascule de la colonne newsletter, icônes de
+  paiement, et texte de copyright — branchés sur les filtres déjà laissés à cet effet lors de la
+  mise en place de la structure commune du thème.
+- Bug corrigé pendant le développement : la conversion des couleurs de token en propriétés
+  personnalisées CSS cassait la compilation SCSS partout où une fonction Sass de calcul de couleur
+  au moment de la compilation (`color.adjust()`) était appliquée à l'une de ces couleurs — corrigé
+  en remplaçant ces quelques usages par l'équivalent CSS natif `color-mix()`, calculé pour de vrai
+  au moment de l'affichage plutôt qu'à la compilation. Un deuxième bug (position/devise WooCommerce
+  jamais appliquée) venait d'un ordre d'opérations incorrect entre normalisation de casse et
+  validation de la clé du réglage — corrigé et couvert par un test.
+- Vérifié de bout en bout dans l'environnement Docker réel : chaque champ sauvegardé se relit
+  correctement, chaque réglage modifie effectivement le rendu front (constaté visuellement pour les
+  couleurs/polices/arrondi, la disposition/le mega menu/la barre de promo/les réseaux sociaux/la
+  transparence de l'en-tête, les colonnes/la newsletter/les icônes de paiement/le copyright du pied
+  de page, et la devise réellement affichée par WooCommerce), et le mode maintenance bloque bien un
+  visiteur non connecté (503) sans jamais bloquer un administrateur connecté. Aucune erreur ni
+  avertissement PHP observé. Réglages de test réinitialisés à leurs valeurs par défaut après
+  vérification.
 
 ### 0.7.1 — pages statiques (page légale, contact, FAQ)
 

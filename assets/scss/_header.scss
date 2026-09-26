@@ -57,6 +57,12 @@ $header-nav-height: 44px;
 	color: $color-dark;
 }
 
+.site-header__logo {
+	display: block;
+	max-height: 32px;
+	width: auto;
+}
+
 .site-header__actions {
 	display: flex;
 	gap: 20px;
@@ -295,4 +301,91 @@ $header-nav-height: 44px;
 	color: $color-gold;
 	line-height: 0;
 	cursor: pointer;
+}
+
+// -------------------------------------------------------------------------------------------
+// Promo bar (Header administration tab)
+// -------------------------------------------------------------------------------------------
+
+.site-promo-bar {
+	background: $color-dark;
+	color: $color-surface;
+	text-align: center;
+	font-size: 12.5px;
+	font-weight: $font-weight-semibold;
+	letter-spacing: 0.02em;
+	padding: 9px $container-padding-x;
+}
+
+// -------------------------------------------------------------------------------------------
+// Header layout variants (Header administration tab)
+// -------------------------------------------------------------------------------------------
+// The default ("centered") layout is the markup's own natural order, styled above. These
+// modifiers reorder the same three topbar children (no markup change) and realign the nav row.
+
+.site-header--layout-left-center,
+.site-header--layout-left-right {
+	.site-header__topbar-inner {
+		justify-content: flex-start;
+	}
+
+	.site-header__brand {
+		order: 1;
+	}
+
+	.site-header__social {
+		order: 2;
+		margin-left: 24px;
+	}
+
+	.site-header__actions {
+		order: 3;
+		margin-left: auto;
+	}
+}
+
+.site-header--layout-left-center .site-header__nav-inner {
+	justify-content: center;
+}
+
+.site-header--layout-left-right .site-header__nav-inner {
+	justify-content: flex-end;
+}
+
+// -------------------------------------------------------------------------------------------
+// Transparent header on the home page (Header administration tab)
+// -------------------------------------------------------------------------------------------
+// Overlaps the hero instead of pushing it down, until assets/js/header.js's initTransparentHeader()
+// adds --scrolled past a small scroll threshold, restoring the normal sticky/opaque header.
+
+.site-header--transparent-home {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+
+	&:not(.site-header--scrolled) {
+		.site-header__topbar {
+			background: transparent;
+			box-shadow: none;
+		}
+
+		.site-header__nav {
+			background: transparent;
+		}
+
+		.site-header__brand,
+		.site-header__social-link,
+		.site-header__action {
+			color: $color-surface;
+		}
+
+		.site-header__menu-link {
+			color: rgba(255, 255, 255, 0.75);
+		}
+	}
+
+	&.site-header--scrolled {
+		position: fixed;
+	}
 }

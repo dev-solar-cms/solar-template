@@ -5,9 +5,12 @@
 //          built entirely from the shared design tokens.
 
 @use 'tokens' as *;
-@use 'sass:color';
 
-$home-categories-item-bg: color.adjust($color-dark, $lightness: 7%);
+// A plain CSS color-mix() rather than a Sass color.adjust(): $color-dark now resolves to a
+// var(--solar-color-dark, …) expression (see _tokens.scss), which Sass's own color functions can't
+// operate on at compile time — this keeps the 7%-lighter tint following the Appearance admin tab's
+// primary color at runtime instead of freezing it to the compiled default.
+$home-categories-item-bg: color-mix(in srgb, $color-dark 93%, white 7%);
 
 .home-categories {
 	padding: 100px 0;

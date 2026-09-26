@@ -18,6 +18,16 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+$solar_template_header_classes = array_filter(
+	array(
+		'site-header',
+		\Solar_Template\Admin\HeaderSettings::layout_class(),
+		( \Solar_Template\Admin\HeaderSettings::is_transparent_on_home() && is_front_page() ) ? 'site-header--transparent-home' : '',
+	)
+);
+
+$solar_template_promo_bar_text = \Solar_Template\Admin\HeaderSettings::promo_bar_text();
 ?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
@@ -31,7 +41,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <a class="skip-link screen-reader-text" href="#primary"><?php esc_html_e( 'Skip to content', 'solar-template' ); ?></a>
 
-<header class="site-header" id="site-header">
+<?php if ( '' !== $solar_template_promo_bar_text ) : ?>
+	<div class="site-promo-bar"><?php echo esc_html( $solar_template_promo_bar_text ); ?></div>
+<?php endif; ?>
+
+<header class="<?php echo esc_attr( implode( ' ', $solar_template_header_classes ) ); ?>" id="site-header">
 	<div class="site-header__topbar">
 		<div class="site-header__topbar-inner">
 			<div class="site-header__social">
@@ -47,7 +61,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 			</div>
 
 			<a class="site-header__brand" href="<?php echo esc_url( home_url( '/' ) ); ?>">
-				<?php bloginfo( 'name' ); ?>
+				<?php
+				$solar_template_logo_id  = \Solar_Template\Admin\GeneralSettings::logo_id();
+				$solar_template_logo_url = $solar_template_logo_id ? wp_get_attachment_image_url( $solar_template_logo_id, 'medium' ) : '';
+				?>
+				<?php if ( $solar_template_logo_url ) : ?>
+					<img class="site-header__logo" src="<?php echo esc_url( $solar_template_logo_url ); ?>" alt="<?php echo esc_attr( \Solar_Template\Admin\GeneralSettings::shop_name() ); ?>" />
+				<?php else : ?>
+					<?php echo esc_html( \Solar_Template\Admin\GeneralSettings::shop_name() ); ?>
+				<?php endif; ?>
 			</a>
 
 			<div class="site-header__actions">

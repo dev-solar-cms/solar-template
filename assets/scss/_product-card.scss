@@ -14,7 +14,6 @@
 //          different overall heights and visibly drift out of alignment with each other.
 
 @use 'tokens' as *;
-@use 'sass:color';
 
 $product-card-category-font-size: 10px;
 $product-card-category-letter-spacing: 0.12em;
@@ -106,7 +105,9 @@ $product-card-body-min-height: $product-card-body-padding-top + $product-card-ca
 	z-index: 1;
 	border: 0;
 	padding: 12px;
-	background: color.adjust($color-dark, $alpha: -0.15);
+	// Plain CSS color-mix() (see _home-categories.scss's own comment on this) so the overlay
+	// follows the Appearance admin tab's primary color at runtime.
+	background: color-mix(in srgb, $color-dark 85%, transparent);
 	color: $color-surface;
 	@include type-small($font-weight-bold);
 	letter-spacing: 0.08em;
@@ -188,6 +189,6 @@ $product-card-body-min-height: $product-card-body-padding-top + $product-card-ca
 .product-card__swatch {
 	width: $product-card-swatch-size;
 	height: $product-card-swatch-size;
-	border: 1px solid color.adjust($color-dark, $alpha: -0.9);
+	border: 1px solid color-mix(in srgb, $color-dark 10%, transparent);
 	border-radius: 50%;
 }
