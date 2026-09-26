@@ -15,6 +15,7 @@ import { initCatalogFilters } from './catalog.js';
 import { initProductGallery, initProductVariations, initProductTabs } from './product.js';
 import { initCartQuantitySteppers, initCheckoutSteps } from './checkout.js';
 import { initWishlistToggle, initAccountDeletionConfirm } from './account.js';
+import { initArticleShare } from './blog.js';
 
 document.addEventListener('DOMContentLoaded', () => {
 	document.documentElement.classList.add('solar-template-ready');
@@ -29,4 +30,5 @@ document.addEventListener('DOMContentLoaded', () => {
 	initCheckoutSteps();
 	initWishlistToggle();
 	initAccountDeletionConfirm();
+	initArticleShare();
 });

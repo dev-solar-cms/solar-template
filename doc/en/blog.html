@@ -1,0 +1,146 @@
+<!--
+	Created: 2026-09-26 23:00 CEST
+	Role: English documentation page describing the theme's blog, built page by page.
+	Author: David ROMERA <d.romera.11@gmail.com>
+	Purpose: Document, in English, each blog page as it gets built.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Blog — Solar Template documentation</title>
+	<link rel="stylesheet" href="../assets/doc.css" />
+</head>
+<body>
+	<aside class="doc-sidebar">
+		<a class="doc-brand" href="index.html">Solar Template</a>
+		<nav>
+			<ul>
+				<li><a href="index.html">Home</a></li>
+				<li><a href="infrastructure.html">Infrastructure</a></li>
+				<li><a href="design-system.html">Design system</a></li>
+				<li><a href="structure-commune.html">Common structure</a></li>
+				<li><a href="page-accueil.html">Home page</a></li>
+				<li><a href="catalog.html">Product catalog</a></li>
+				<li><a href="product-page.html">Product page</a></li>
+				<li><a href="checkout.html">Checkout</a></li>
+				<li><a href="my-account.html">My account</a></li>
+				<li><a href="blog.html">Blog</a></li>
+			</ul>
+		</nav>
+		<div class="doc-lang-switch">
+			<a class="is-active" href="blog.html">EN</a>
+			<a href="../fr/blog.html">FR</a>
+		</div>
+	</aside>
+	<main class="doc-content">
+		<h1>Blog</h1>
+		<p>
+			The blog stays built on WordPress' own real pages/templates: the index
+			(<code>home.php</code>, loaded for the "Posts page" configured under Settings > Reading —
+			this theme using a static homepage, <code>front-page.php</code>), category/tag archives
+			(<code>archive.php</code>, which WordPress automatically falls back to when no dedicated
+			<code>category.php</code>/<code>tag.php</code> exists — same reasoning as
+			<code>archive-product.php</code> for WooCommerce) and the article page (<code>single.php</code>).
+			No fake article: categories, tags, the featured article and related articles all come from
+			real WordPress data.
+		</p>
+		<p>
+			Technical decision: at the time this page was built, no separate "Posts page" was configured
+			(Settings > Reading was set to "Your latest posts", so the homepage and the blog index
+			technically coincided at the same URL) — fixed by creating a dedicated homepage and a "Blog"
+			page, then configuring Settings > Reading to "A static page" with those two pages
+			respectively. Verified the homepage (<code>front-page.php</code>) still renders correctly
+			after this change (the front page stays first in WordPress' own template hierarchy whenever
+			it exists, regardless of this setting).
+		</p>
+
+		<h2 id="index-and-archives">Blog index and archives</h2>
+		<p>
+			<code>home.php</code> assembles a dark hero (editorial copy, filterable through
+			<code>Solar_Template\Blog\BlogHero::heading()</code>, same convention as the home page's other
+			editorial sections), a sticky row of category pills
+			(<code>template-parts/blog/category-filter.php</code>,
+			<code>Solar_Template\Blog\CategoryFilters::items()</code> — every pill is a real link to that
+			category's own archive, no JavaScript needed), the featured article on the first page only
+			(see below), then a 3-column grid of the main query's real posts and its pagination.
+		</p>
+		<p>
+			<code>archive.php</code> shares the exact same structure for category/tag archives, with a
+			hero built from the real displayed term's own data
+			(<code>Solar_Template\Blog\BlogHero::archive_heading()</code> — the term's real name/
+			description, no editorial placeholder) instead of the index's own copy, and without the
+			featured article block (specific to the unfiltered index).
+		</p>
+		<p>
+			Pagination (<code>template-parts/blog/pagination.php</code>,
+			<code>Solar_Template\Blog\BlogPagination::links()</code>) is built directly on top of
+			WordPress' own native <code>paginate_links()</code>, restyled into circles, rather than a
+			custom implementation.
+		</p>
+		<p>
+			Verified end to end in the real Docker environment: 12 test articles spread across 3 real
+			categories (one marked featured) confirmed the hero, the active pill per visited page, the
+			grid, and real 2-page pagination; category and tag archives showed the right articles. Test
+			data removed after verification, no PHP warning or error observed.
+		</p>
+
+		<h2 id="featured-article">Featured article</h2>
+		<p>
+			The featured block (a 50/50 grid, <code>template-parts/blog/featured-article.php</code>) is
+			backed by WordPress' own native "Sticky post" feature
+			(<code>Solar_Template\Blog\FeaturedPost::current()</code> reads the <code>sticky_posts</code>
+			option directly) rather than a new custom field — no sticky post, and the block simply does
+			not render. To avoid it appearing twice, that article is excluded from the numbered grid below
+			(<code>Solar_Template\Blog\BlogController::exclude_featured_post()</code>, a
+			<code>pre_get_posts</code> hook scoped to the index's own main query).
+		</p>
+		<p>
+			Verified end to end in the real Docker environment: marking a test article as sticky shows it
+			correctly at the top of the index (and only there, never in the grid), removing it makes the
+			block disappear entirely. Test article removed after verification.
+		</p>
+
+		<h2 id="grid-and-pagination">Article grid and pagination</h2>
+		<p>
+			The grid (<code>template-parts/blog/grid.php</code>) reuses the existing design system's
+			blog card component as-is (<code>template-parts/blog-card.php</code>,
+			<code>Solar_Template\Blog\PostCardMapper::map()</code>), already used by the home page's blog
+			preview — no component duplicated. Navigating between archive pages works through plain links
+			(<code>?paged=N</code>), no JavaScript required.
+		</p>
+
+		<h2 id="blog-article">Blog article</h2>
+		<p>
+			<code>single.php</code> renders a breadcrumb (Home / Blog / truncated title), a full-width
+			featured image (21:8 ratio, dark gradient overlay), the article's meta line (category, date,
+			real reading time computed by <code>Solar_Template\Blog\ReadingTime</code>), the title, an
+			author bar with a native "Share" button (<code>assets/js/blog.js</code>,
+			<code>initArticleShare()</code>: the browser's own Web Share API where available, a "copy
+			link to clipboard" fallback otherwise), then the article's real content
+			(<code>the_content()</code>) with rich typographic styling (blockquotes, figures/captions,
+			lists).
+		</p>
+		<p>
+			Below that: the article's real WordPress tags as pills, an author card (a real avatar or
+			initial, the author's real WordPress profile bio — the native "Biographical Info" field, no
+			invented editorial content — entirely hidden with no bio filled in), and a "Related articles"
+			section (same category, same card component as the grid).
+		</p>
+		<p>
+			Technical decision: the design handoff's own "Save" button and view counter ("1,247 views")
+			have no defined feature anywhere else in the project (no article-bookmarking system, no
+			native WordPress view counter) — deliberately left out rather than inventing an unspecified
+			feature, same reasoning as other steps in this project.
+		</p>
+		<p>
+			Verified end to end in the real Docker environment: a test article with an H2 heading, a
+			blockquote, a captioned image, a list and two tags shows every piece of rich formatting
+			matching the design; the Share button genuinely copies the article's real link. Test article
+			and data removed after verification, no PHP warning or error observed.
+		</p>
+	</main>
+	<script src="../assets/doc.js"></script>
+</body>
+</html>

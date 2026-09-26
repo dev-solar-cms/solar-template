@@ -20,6 +20,9 @@ solar-template/
 ├── front-page.php     # Page d'accueil, assemblée section par section (template-parts/front-page/*)
 ├── archive-product.php # Catalogue produits (boutique + archives de catégorie/étiquette) : fil d'Ariane, titre, barre de filtres et résultats
 ├── single-product.php  # Fiche produit complète : fil d'Ariane, galerie, panneau, onglets, produits similaires (template-parts/single-product/*)
+├── home.php            # Index du blog (page « Articles » de Réglages > Lecture) : hero, filtre catégories, article à la une (1re page uniquement), grille + pagination
+├── archive.php          # Archives catégorie/étiquette du blog (même structure que home.php, sans article à la une)
+├── single.php          # Article de blog complet : fil d'Ariane, image à la une, méta/titre/partage, contenu riche, tags, carte auteur, articles connexes (template-parts/single-article/*)
 ├── checkout.php        # Gabarit du tunnel de vente (panier/connexion/livraison/paiement/confirmation), servi via template_include
 ├── header-checkout.php # En-tête minimal du tunnel de vente (marque centrée + mention paiement sécurisé, pas de nav)
 ├── footer-checkout.php # Pied de page minimal du tunnel de vente (liens légaux, copyright, mention SSL)
@@ -39,7 +42,8 @@ solar-template/
 │   ├── Catalog/         # Options/filtres/pagination/contrôleurs du catalogue produits
 │   ├── Product/         # Logique de la fiche produit (galerie, panneau, variations, onglets, produits similaires)
 │   ├── Checkout/        # Tunnel de vente : routage, indicateur d'étapes, vue du panier, disposition des champs d'adresse, icônes/texte du paiement, vue de la confirmation de commande
-│   └── Account/         # Espace client : endpoints/menu, sidebar, tableau de bord, statut de commande, action « Recommander », liste/détail de commandes, liste de souhaits, adresses, téléchargements, demande S.A.V., champs de paramètres (téléphone/naissance), suppression de compte
+│   ├── Account/         # Espace client : endpoints/menu, sidebar, tableau de bord, statut de commande, action « Recommander », liste/détail de commandes, liste de souhaits, adresses, téléchargements, demande S.A.V., champs de paramètres (téléphone/naissance), suppression de compte
+│   └── Blog/            # Blog : mapping carte article (normal + à la une), temps de lecture, hero, filtre catégories, article à la une, pagination, fil d'Ariane/auteur/articles connexes de l'article
 ├── template-parts/      # Fragments de gabarit réutilisables (`get_template_part()`)
 │   ├── product-card.php # Carte produit (image, badge, wishlist, overlay panier, prix, swatches)
 │   ├── blog-card.php    # Carte article de blog (image 16:10, badge catégorie, meta, titre, extrait, auteur)
@@ -65,7 +69,7 @@ solar-template/
 │   │   ├── wishlist.php # Grille des produits sauvegardés (composant carte produit réutilisé)
 │   │   ├── download-row.php # Une ligne de téléchargement (icône, référence commande, restant, bouton)
 │   │   └── sav.php      # Formulaire de demande S.A.V. + liste des demandes du client
-│   └── front-page/      # Sections de la page d'accueil, une par fichier
+│   ├── front-page/      # Sections de la page d'accueil, une par fichier
 │       ├── hero.php     # Hero plein écran (accroche, titre 3 lignes, CTA, trust badges, carte flottante)
 │       ├── featured-products.php # Grille masonry des produits WooCommerce marqués « en vedette »
 │       ├── categories.php # Grille asymétrique des catégories produit WooCommerce
@@ -73,6 +77,18 @@ solar-template/
 │       ├── testimonials.php # Grille de 3 témoignages, carte du milieu en style inversé
 │       ├── blog-preview.php # Grille des 3 derniers articles de blog réels
 │       └── newsletter.php # Formulaire d'inscription newsletter (traité en AJAX)
+│   ├── blog/             # Fragments partagés par home.php/archive.php
+│   │   ├── hero.php      # Hero sombre (index du blog ou archive catégorie/étiquette)
+│   │   ├── category-filter.php # Pills des catégories réelles, liens simples (aucun JS)
+│   │   ├── featured-article.php # Bloc article à la une (grille 50/50), 1re page de l'index uniquement
+│   │   ├── grid.php      # Grille 3 colonnes des articles de la requête courante (composant carte article)
+│   │   └── pagination.php # Pagination numérotée (cercles), `paginate_links()` natif restylé
+│   └── single-article/  # Fragments de l'article de blog, un par section
+│       ├── hero.php      # Image à la une pleine largeur (21:8, dégradé sombre)
+│       ├── header.php    # Méta (catégorie/date/lecture), titre, barre auteur + bouton Partager
+│       ├── tags.php      # Tags réels de l'article en pills
+│       ├── author-card.php # Carte auteur (avatar/initiale, bio réelle, lien vers ses articles)
+│       └── related.php   # Grille d'articles connexes (même carte article)
 ├── woocommerce/         # Surcharges de gabarits natifs WooCommerce (voir « Tunnel de vente » ci-dessous)
 │   ├── cart/            # Page panier : articles, code promo, récapitulatif
 │   │   ├── cart.php     # Liste des articles réels du panier + formulaire de code promo

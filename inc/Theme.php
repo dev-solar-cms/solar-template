@@ -20,6 +20,7 @@ use Solar_Template\Account\ReorderHandler;
 use Solar_Template\Account\SupportRequestController;
 use Solar_Template\Account\WishlistController;
 use Solar_Template\Admin\Notices;
+use Solar_Template\Blog\BlogController;
 use Solar_Template\Catalog\CatalogController;
 use Solar_Template\Checkout\CheckoutController;
 use Solar_Template\Checkout\CheckoutFieldsLayout;
@@ -64,6 +65,7 @@ final class Theme {
 		add_filter( 'nav_menu_link_attributes', array( Nav::class, 'primary_nav_link_attributes' ), 10, 3 );
 
 		add_action( 'pre_get_posts', array( CatalogController::class, 'apply_filters_to_main_query' ) );
+		add_action( 'pre_get_posts', array( BlogController::class, 'exclude_featured_post' ) );
 
 		add_filter( 'template_include', array( CheckoutController::class, 'template_include' ) );
 		add_action( 'wp', array( CheckoutController::class, 'detach_default_checkout_hooks' ) );

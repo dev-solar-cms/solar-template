@@ -1506,6 +1506,78 @@ final class DefaultStrings {
 				'fr_FR' => 'Merci de confirmer que vous comprenez que cette action est irréversible.',
 				'en_US' => 'Please confirm you understand this action is irreversible.',
 			),
+			'Journal & inspiration'                        => array(
+				'fr_FR' => 'Journal & inspirations',
+				'en_US' => 'Journal & inspiration',
+			),
+			'Blog & News'                                  => array(
+				'fr_FR' => 'Blog & Actualités',
+				'en_US' => 'Blog & News',
+			),
+			'Style tips, care guides, trends and a look behind the scenes of our selection.' => array(
+				'fr_FR' => "Conseils de style, guides d'entretien, tendances et coulisses de notre sélection.",
+				'en_US' => 'Style tips, care guides, trends and a look behind the scenes of our selection.',
+			),
+			'All articles'                                 => array(
+				'fr_FR' => 'Tous les articles',
+				'en_US' => 'All articles',
+			),
+			'Filter articles by category'                  => array(
+				'fr_FR' => 'Filtrer les articles par catégorie',
+				'en_US' => 'Filter articles by category',
+			),
+			'%d min read'                                  => array(
+				'fr_FR'  => '%d min de lecture',
+				'en_US'  => '%d min read',
+				'plural' => array(
+					'fr_FR' => '%d min de lecture',
+					'en_US' => '%d min read',
+				),
+			),
+			'Featured article'                             => array(
+				'fr_FR' => 'À la une',
+				'en_US' => 'Featured article',
+			),
+			'Read the article'                             => array(
+				'fr_FR' => "Lire l'article",
+				'en_US' => 'Read the article',
+			),
+			'No article to show yet.'                      => array(
+				'fr_FR' => 'Aucun article à afficher pour le moment.',
+				'en_US' => 'No article to show yet.',
+			),
+			'Article pages'                                => array(
+				'fr_FR' => 'Pages d\'articles',
+				'en_US' => 'Article pages',
+			),
+			'Share'                                        => array(
+				'fr_FR' => 'Partager',
+				'en_US' => 'Share',
+			),
+			'Link copied!'                                 => array(
+				'fr_FR' => 'Lien copié !',
+				'en_US' => 'Link copied!',
+			),
+			'Tags:'                                        => array(
+				'fr_FR' => 'Tags :',
+				'en_US' => 'Tags:',
+			),
+			'View their articles →'                        => array(
+				'fr_FR' => 'Voir ses articles →',
+				'en_US' => 'View their articles →',
+			),
+			'Also worth reading'                           => array(
+				'fr_FR' => 'À lire aussi',
+				'en_US' => 'Also worth reading',
+			),
+			'Related articles'                             => array(
+				'fr_FR' => 'Articles connexes',
+				'en_US' => 'Related articles',
+			),
+			'Home'                                         => array(
+				'fr_FR' => 'Accueil',
+				'en_US' => 'Home',
+			),
 		);
 	}
 

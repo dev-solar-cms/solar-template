@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.6.6`.
+Version actuelle : `0.7.0`.
 
 ## Avant une release
 
@@ -30,6 +30,32 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.7.0 — blog complet (index, archives, article)
+
+- Le blog est désormais entièrement fonctionnel : un index (`home.php`) avec un hero éditorial, une
+  rangée de pills de catégories réelles (liens simples, sans JavaScript), l'article épinglé
+  natif WordPress affiché en tête (grille 50/50), puis une grille 3 colonnes des vrais articles et
+  une pagination numérotée native restylée.
+- Les archives de catégorie/étiquette (`archive.php`) partagent la même structure, avec un hero
+  utilisant les vraies données du terme affiché plutôt qu'un contenu éditorial.
+- La page d'un article (`single.php`) affiche un fil d'Ariane, une image à la une pleine largeur,
+  la méta (catégorie/date/temps de lecture réel), un bouton « Partager » natif (API Web Share du
+  navigateur avec repli sur la copie du lien), le contenu réel de l'article avec une mise en forme
+  riche (citations, figures légendées, listes), les vrais tags, une carte auteur (biographie réelle
+  du profil WordPress) et une section d'articles connexes.
+- **Décision/bug rencontré** : aucune « page des articles » distincte n'était configurée dans
+  Réglages > Lecture, rendant le blog inaccessible par une vraie URL — corrigé en créant une page
+  d'accueil dédiée et une page « Blog », puis en configurant Réglages > Lecture en conséquence ;
+  vérifié que la page d'accueil réelle du thème continue de s'afficher normalement après ce
+  changement.
+- Aucune fonctionnalité inventée au-delà de la maquette : le compteur de vues et le bouton
+  « Sauvegarder » d'un article, sans spécification ailleurs dans le projet, sont volontairement
+  omis.
+- Vérifié de bout en bout dans l'environnement Docker réel : articles de test répartis sur
+  plusieurs catégories (dont un épinglé, avec tags et mise en forme riche) confirment l'index,
+  les archives, la pagination sur 2 pages et la page article complète. Données de test supprimées
+  après vérification.
 
 ### 0.6.6 — paramètres du compte et suppression de compte
 

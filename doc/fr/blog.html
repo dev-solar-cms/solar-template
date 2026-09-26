@@ -1,0 +1,152 @@
+<!--
+	Créé le : 2026-09-26 23:00 CEST
+	Rôle : Page de documentation en français décrivant le blog du thème, construit page par page.
+	Auteur : David ROMERA <d.romera.11@gmail.com>
+	Objectif : Documenter, en français, chaque page du blog au fur et à mesure de sa construction.
+-->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Blog — Documentation Solar Template</title>
+	<link rel="stylesheet" href="../assets/doc.css" />
+</head>
+<body>
+	<aside class="doc-sidebar">
+		<a class="doc-brand" href="index.html">Solar Template</a>
+		<nav>
+			<ul>
+				<li><a href="index.html">Accueil</a></li>
+				<li><a href="infrastructure.html">Infrastructure</a></li>
+				<li><a href="design-system.html">Système de design</a></li>
+				<li><a href="structure-commune.html">Structure commune</a></li>
+				<li><a href="page-accueil.html">Page d'accueil</a></li>
+				<li><a href="catalogue.html">Catalogue produits</a></li>
+				<li><a href="fiche-produit.html">Fiche produit</a></li>
+				<li><a href="tunnel-vente.html">Tunnel de vente</a></li>
+				<li><a href="mon-compte.html">Espace client</a></li>
+				<li><a href="blog.html">Blog</a></li>
+			</ul>
+		</nav>
+		<div class="doc-lang-switch">
+			<a href="../en/blog.html">EN</a>
+			<a class="is-active" href="blog.html">FR</a>
+		</div>
+	</aside>
+	<main class="doc-content">
+		<h1>Blog</h1>
+		<p>
+			Le blog reste construit sur les vraies pages/gabarits natifs de WordPress : l'index
+			(<code>home.php</code>, chargé pour la « page des articles » configurée dans Réglages >
+			Lecture — ce thème utilisant une page d'accueil statique, <code>front-page.php</code>), les
+			archives catégorie/étiquette (<code>archive.php</code>, WordPress s'y repliant automatiquement
+			en l'absence de <code>category.php</code>/<code>tag.php</code> dédiés — même raisonnement que
+			<code>archive-product.php</code> pour WooCommerce) et l'article (<code>single.php</code>).
+			Aucun article factice : catégories, tags, article à la une et articles connexes viennent
+			tous de vraies données WordPress.
+		</p>
+		<p>
+			Décision technique : au moment de construire cette page, aucune « page des articles »
+			distincte n'était configurée (Réglages > Lecture était sur « Vos derniers articles », donc
+			l'accueil et l'index du blog se confondaient techniquement au même endroit) — corrigé en
+			créant une page d'accueil dédiée et une page « Blog », puis en configurant Réglages > Lecture
+			sur « Une page statique » avec ces deux pages respectives. Vérifié que l'accueil
+			(<code>front-page.php</code>) continue de s'afficher correctement après ce changement (la
+			page d'accueil reste prioritaire dans la hiérarchie de gabarits de WordPress dès lors qu'elle
+			existe, quel que soit ce réglage).
+		</p>
+
+		<h2 id="index-et-archives">Index du blog et archives</h2>
+		<p>
+			<code>home.php</code> assemble un hero sombre (accroche éditoriale, filtrable via
+			<code>Solar_Template\Blog\BlogHero::heading()</code>, même convention que les autres sections
+			éditoriales de la page d'accueil), une rangée de pills de catégories sticky
+			(<code>template-parts/blog/category-filter.php</code>,
+			<code>Solar_Template\Blog\CategoryFilters::items()</code> — chaque pill est un vrai lien vers
+			l'archive de la catégorie, aucun JavaScript nécessaire), l'article à la une sur la première
+			page uniquement (voir ci-dessous), puis une grille 3 colonnes des articles réels de la requête
+			principale et sa pagination.
+		</p>
+		<p>
+			<code>archive.php</code> partage exactement la même structure pour les archives
+			catégorie/étiquette, avec un hero utilisant les vraies données du terme affiché
+			(<code>Solar_Template\Blog\BlogHero::archive_heading()</code> — nom et description réels du
+			terme, aucun contenu éditorial factice) plutôt que l'accroche de l'index, et sans le bloc
+			article à la une (propre à l'index non filtré).
+		</p>
+		<p>
+			La pagination (<code>template-parts/blog/pagination.php</code>,
+			<code>Solar_Template\Blog\BlogPagination::links()</code>) s'appuie directement sur la
+			fonction native <code>paginate_links()</code> de WordPress, restylée en cercles, plutôt que
+			sur une implémentation maison.
+		</p>
+		<p>
+			Vérifié de bout en bout dans l'environnement Docker réel : 12 articles de test répartis sur 3
+			catégories réelles (dont un marqué à la une) confirment le hero, les pills actives selon la
+			page visitée, la grille et une pagination réelle sur 2 pages ; les archives de catégorie et
+			d'étiquette affichent les bons articles. Données de test supprimées après vérification, aucun
+			avertissement ni erreur PHP relevé.
+		</p>
+
+		<h2 id="article-a-la-une">Article à la une</h2>
+		<p>
+			Le bloc « à la une » (grille 50/50, <code>template-parts/blog/featured-article.php</code>)
+			s'appuie sur la fonctionnalité native « Article épinglé » de WordPress
+			(<code>Solar_Template\Blog\FeaturedPost::current()</code> lit directement l'option
+			<code>sticky_posts</code>) plutôt qu'un nouveau champ personnalisé — aucun article épinglé,
+			et le bloc ne s'affiche simplement pas. Pour éviter qu'il apparaisse deux fois, cet article
+			est exclu de la grille numérotée en dessous
+			(<code>Solar_Template\Blog\BlogController::exclude_featured_post()</code>, hook
+			<code>pre_get_posts</code> limité à la requête principale de l'index).
+		</p>
+		<p>
+			Vérifié de bout en bout dans l'environnement Docker réel : marquer un article de test comme
+			épinglé l'affiche correctement en tête de l'index (et seulement là, pas dans la grille), le
+			retirer fait disparaître le bloc entièrement. Article de test supprimé après vérification.
+		</p>
+
+		<h2 id="grille-et-pagination">Grille d'articles et pagination</h2>
+		<p>
+			La grille (<code>template-parts/blog/grid.php</code>) réutilise tel quel le composant carte
+			article du système de design (<code>template-parts/blog-card.php</code>,
+			<code>Solar_Template\Blog\PostCardMapper::map()</code>), déjà utilisé par l'aperçu blog de la
+			page d'accueil — aucune duplication de composant. La navigation entre pages d'archive
+			fonctionne par lien simple (<code>?paged=N</code>), sans JavaScript.
+		</p>
+
+		<h2 id="article-de-blog">Article de blog</h2>
+		<p>
+			<code>single.php</code> affiche un fil d'Ariane (Accueil / Blog / titre tronqué), une image à
+			la une pleine largeur (ratio 21:8, dégradé sombre superposé), la méta de l'article (catégorie,
+			date, temps de lecture réel calculé par <code>Solar_Template\Blog\ReadingTime</code>), le
+			titre, une barre auteur avec un bouton « Partager » natif
+			(<code>assets/js/blog.js</code>, <code>initArticleShare()</code> : l'API Web Share du
+			navigateur quand elle est disponible, une copie du lien dans le presse-papiers sinon), puis le
+			vrai contenu de l'article (<code>the_content()</code>) avec une mise en forme typographique
+			riche (citations, figures/légendes, listes).
+		</p>
+		<p>
+			Suivent les vrais tags WordPress de l'article en pills, une carte auteur (avatar réel ou
+			initiale, biographie réelle du profil WordPress — le champ natif « Informations
+			biographiques », aucune donnée éditoriale inventée — masquée entièrement sans biographie
+			renseignée) et une section « Articles connexes » (même catégorie, même composant carte
+			article que la grille).
+		</p>
+		<p>
+			Décision technique : le bouton « Sauvegarder » de la maquette et le compteur de lectures
+			(« 1 247 lectures ») n'ont aucune fonctionnalité définie ailleurs dans le projet (pas de
+			système de favoris d'article, pas de compteur de vues natif à WordPress) — volontairement
+			omis plutôt que d'inventer une fonctionnalité non spécifiée, même raisonnement que d'autres
+			étapes du projet.
+		</p>
+		<p>
+			Vérifié de bout en bout dans l'environnement Docker réel : un article de test avec titres de
+			niveau 2, citation, image légendée, liste et deux tags affiche toute la mise en forme riche
+			conforme à la maquette ; le bouton Partager copie bien le lien réel de l'article. Article et
+			données de test supprimés après vérification, aucun avertissement ni erreur PHP relevé.
+		</p>
+	</main>
+	<script src="../assets/doc.js"></script>
+</body>
+</html>
