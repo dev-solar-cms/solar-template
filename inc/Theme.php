@@ -15,6 +15,7 @@ namespace Solar_Template;
 
 use Solar_Template\Account\AccountEndpoints;
 use Solar_Template\Account\ReorderHandler;
+use Solar_Template\Account\SupportRequestController;
 use Solar_Template\Account\WishlistController;
 use Solar_Template\Admin\Notices;
 use Solar_Template\Catalog\CatalogController;
@@ -89,6 +90,9 @@ final class Theme {
 		add_action( 'woocommerce_account_wishlist_endpoint', array( WishlistController::class, 'render_wishlist_page' ) );
 		add_action( 'wp_ajax_solar_template_wishlist_toggle', array( WishlistController::class, 'handle_toggle' ) );
 		add_action( 'wp_ajax_nopriv_solar_template_wishlist_toggle', array( WishlistController::class, 'handle_toggle' ) );
+
+		add_action( 'woocommerce_account_sav_endpoint', array( SupportRequestController::class, 'render_sav_page' ) );
+		add_action( 'template_redirect', array( SupportRequestController::class, 'maybe_handle_submission' ) );
 	}
 
 	/**

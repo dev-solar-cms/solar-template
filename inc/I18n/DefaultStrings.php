@@ -1326,6 +1326,110 @@ final class DefaultStrings {
 				'fr_FR' => 'Parcourir les produits',
 				'en_US' => 'Browse products',
 			),
+			'Defective product'                            => array(
+				'fr_FR' => 'Produit défectueux',
+				'en_US' => 'Defective product',
+			),
+			'Delivery issue'                               => array(
+				'fr_FR' => 'Problème de livraison',
+				'en_US' => 'Delivery issue',
+			),
+			'Return / Exchange'                            => array(
+				'fr_FR' => 'Retour / Échange',
+				'en_US' => 'Return / Exchange',
+			),
+			'Other'                                        => array(
+				'fr_FR' => 'Autre',
+				'en_US' => 'Other',
+			),
+			'Your request has been sent. Our team will get back to you shortly.' => array(
+				'fr_FR' => 'Votre demande a été envoyée. Notre équipe vous répondra rapidement.',
+				'en_US' => 'Your request has been sent. Our team will get back to you shortly.',
+			),
+			'Please fill in every required field.'         => array(
+				'fr_FR' => 'Merci de remplir tous les champs obligatoires.',
+				'en_US' => 'Please fill in every required field.',
+			),
+			'New request'                                  => array(
+				'fr_FR' => 'Nouvelle demande',
+				'en_US' => 'New request',
+			),
+			'Related order'                                => array(
+				'fr_FR' => 'Commande concernée',
+				'en_US' => 'Related order',
+			),
+			'Select an order'                              => array(
+				'fr_FR' => 'Sélectionnez une commande',
+				'en_US' => 'Select an order',
+			),
+			'Request type'                                 => array(
+				'fr_FR' => 'Type de demande',
+				'en_US' => 'Request type',
+			),
+			'Select a type'                                => array(
+				'fr_FR' => 'Sélectionnez un type',
+				'en_US' => 'Select a type',
+			),
+			'Subject'                                      => array(
+				'fr_FR' => 'Sujet',
+				'en_US' => 'Subject',
+			),
+			'Briefly describe your issue'                  => array(
+				'fr_FR' => 'Décrivez brièvement votre problème',
+				'en_US' => 'Briefly describe your issue',
+			),
+			'Detailed description'                         => array(
+				'fr_FR' => 'Description détaillée',
+				'en_US' => 'Detailed description',
+			),
+			'Explain your situation in detail…'            => array(
+				'fr_FR' => 'Expliquez votre situation en détail…',
+				'en_US' => 'Explain your situation in detail…',
+			),
+			'Photos / documents'                           => array(
+				'fr_FR' => 'Photos / documents',
+				'en_US' => 'Photos / documents',
+			),
+			'optional'                                     => array(
+				'fr_FR' => 'facultatif',
+				'en_US' => 'optional',
+			),
+			'PNG, JPG, PDF — max. 10 MB'                   => array(
+				'fr_FR' => 'PNG, JPG, PDF — max. 10 Mo',
+				'en_US' => 'PNG, JPG, PDF — max. 10 MB',
+			),
+			'Send request'                                 => array(
+				'fr_FR' => 'Envoyer la demande',
+				'en_US' => 'Send request',
+			),
+			'You have no active support request at the moment.' => array(
+				'fr_FR' => "Vous n'avez aucune demande S.A.V. active pour le moment.",
+				'en_US' => 'You have no active support request at the moment.',
+			),
+			'Your requests'                                => array(
+				'fr_FR' => 'Vos demandes',
+				'en_US' => 'Your requests',
+			),
+			'Open'                                         => array(
+				'fr_FR' => 'Ouverte',
+				'en_US' => 'Open',
+			),
+			'Closed'                                       => array(
+				'fr_FR' => 'Fermée',
+				'en_US' => 'Closed',
+			),
+			'None'                                         => array(
+				'fr_FR' => 'Aucune',
+				'en_US' => 'None',
+			),
+			'New support request: %s'                      => array(
+				'fr_FR' => 'Nouvelle demande S.A.V. : %s',
+				'en_US' => 'New support request: %s',
+			),
+			"New support request from %1\$s (%2\$s)\nType: %3\$s\nOrder: %4\$s\n\n%5\$s" => array(
+				'fr_FR' => "Nouvelle demande S.A.V. de %1\$s (%2\$s)\nType : %3\$s\nCommande : %4\$s\n\n%5\$s",
+				'en_US' => "New support request from %1\$s (%2\$s)\nType: %3\$s\nOrder: %4\$s\n\n%5\$s",
+			),
 		);
 	}
 

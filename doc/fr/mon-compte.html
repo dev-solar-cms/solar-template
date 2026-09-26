@@ -206,6 +206,32 @@
 			téléchargement sert bien le fichier réel. Produit et commande de test supprimés après
 			vérification. Aucun avertissement ni erreur PHP relevé.
 		</p>
+
+		<h2 id="demande-sav">Demande S.A.V.</h2>
+		<p>
+			Le nouvel endpoint « Demande S.A.V. » de l'espace client
+			(<code>Solar_Template\Account\SupportRequestController::render_sav_page()</code>, via
+			<code>template-parts/account/sav.php</code>) propose un formulaire natif (commande concernée
+			facultative, type de demande, sujet, description détaillée, pièce jointe facultative) et la
+			liste des demandes déjà envoyées par le client. Aucun système de ticketing complet : une seule
+			table dédiée (<code>wp_solar_template_support_requests</code>,
+			<code>Solar_Template\Account\SupportRequestRepository</code>) et un email natif
+			(<code>wp_mail()</code>) au responsable du site à chaque nouvelle demande.
+		</p>
+		<p>
+			Le formulaire fonctionne en soumission classique (rechargement de page), sans AJAX — inutile
+			pour cette étape. La pièce jointe éventuelle est traitée par le gestionnaire natif
+			d'upload de WordPress (<code>wp_handle_upload()</code>, extensions PNG/JPG/PDF, 10&nbsp;Mo
+			maximum) ; un fichier invalide ou absent n'empêche jamais l'envoi de la demande elle-même.
+		</p>
+		<p>
+			Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif : une demande
+			de test s'enregistre, déclenche l'appel <code>wp_mail()</code> vers l'administrateur, apparaît
+			immédiatement dans la liste du client avec le statut « Ouverte », et met à jour la statistique
+			correspondante du tableau de bord ; une seconde demande avec une pièce jointe réelle (PNG)
+			confirme que le fichier est bien téléversé et son URL enregistrée. Données de test supprimées
+			après vérification. Aucun avertissement ni erreur PHP relevé.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

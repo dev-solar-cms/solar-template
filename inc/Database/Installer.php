@@ -41,6 +41,7 @@ final class Installer {
 		self::seed_default_settings();
 		self::create_newsletter_table();
 		self::create_wishlist_table();
+		self::create_support_requests_table();
 
 		// Newly registered My Account endpoints ("wishlist", "sav" — see
 		// Solar_Template\Account\AccountEndpoints) only resolve once WordPress' rewrite rules are
@@ -294,6 +295,45 @@ final class Installer {
 			created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			PRIMARY KEY  (id),
 			UNIQUE KEY user_product (user_id,product_id)
+		) {$charset_collate};";
+	}
+
+	/**
+	 * Creates (or updates) `wp_solar_template_support_requests`, storing each customer's support
+	 * request (see Solar_Template\Account\SupportRequestRepository).
+	 *
+	 * @return void
+	 */
+	public static function create_support_requests_table(): void {
+		global $wpdb;
+
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+
+		dbDelta( self::support_requests_table_sql( $wpdb->prefix, $wpdb->get_charset_collate() ) );
+	}
+
+	/**
+	 * Builds the `CREATE TABLE` statement for `wp_solar_template_support_requests`.
+	 *
+	 * @param string $prefix          WordPress table prefix (`$wpdb->prefix`).
+	 * @param string $charset_collate Charset/collation clause (`$wpdb->get_charset_collate()`).
+	 * @return string SQL statement, formatted for `dbDelta()`.
+	 */
+	public static function support_requests_table_sql( string $prefix, string $charset_collate ): string {
+		$table = $prefix . 'solar_template_support_requests';
+
+		return "CREATE TABLE {$table} (
+			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			user_id bigint(20) unsigned NOT NULL,
+			order_id bigint(20) unsigned NULL,
+			request_type varchar(50) NOT NULL,
+			subject varchar(191) NOT NULL,
+			message text NOT NULL,
+			attachment_url varchar(500) NOT NULL DEFAULT '',
+			status varchar(20) NOT NULL DEFAULT 'open',
+			created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			PRIMARY KEY  (id),
+			KEY user_id (user_id)
 		) {$charset_collate};";
 	}
 }

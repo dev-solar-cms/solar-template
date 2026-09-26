@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.6.4`.
+Version actuelle : `0.6.5`.
 
 ## Avant une release
 
@@ -30,6 +30,18 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.6.5 — demande de service après-vente native
+
+- L'espace client propose désormais une page « Demande S.A.V. » : un formulaire natif (commande
+  concernée facultative, type de demande, sujet, description, pièce jointe facultative) et la liste
+  des demandes déjà envoyées par le client, sans dépendance à un plugin de ticketing tiers.
+- Chaque nouvelle demande est enregistrée et déclenche un email natif au responsable du site.
+- La statistique « S.A.V. » du tableau de bord reflète désormais le vrai nombre de demandes
+  actives du client.
+- Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif : une demande de
+  test (avec et sans pièce jointe) s'enregistre, apparaît dans la liste du client et met à jour la
+  statistique du tableau de bord.
 
 ### 0.6.4 — page des téléchargements restylée
 

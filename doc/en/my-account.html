@@ -194,6 +194,31 @@
 			remaining download count, and the download button genuinely serves the real file. Test
 			product and order removed after verification. No PHP warning or error observed.
 		</p>
+
+		<h2 id="support-request">Support request</h2>
+		<p>
+			The account area's new "Support request" endpoint
+			(<code>Solar_Template\Account\SupportRequestController::render_sav_page()</code>, via
+			<code>template-parts/account/sav.php</code>) offers a native form (optional related order,
+			request type, subject, detailed description, optional attachment) and the list of requests
+			the customer already submitted. No full ticketing system: a single dedicated table
+			(<code>wp_solar_template_support_requests</code>,
+			<code>Solar_Template\Account\SupportRequestRepository</code>) and a native email
+			(<code>wp_mail()</code>) to the site admin on every new request.
+		</p>
+		<p>
+			The form works as a plain submission (page reload), no AJAX — unnecessary for this step. Any
+			attachment is handled by WordPress' own native upload handler
+			(<code>wp_handle_upload()</code>, PNG/JPG/PDF, 10 MB max); an invalid or missing file never
+			blocks the request itself from being submitted.
+		</p>
+		<p>
+			Verified end to end in the real Docker environment with WooCommerce active: a test request
+			saves, triggers the <code>wp_mail()</code> call to the admin, immediately appears in the
+			customer's own list with an "Open" status, and updates the dashboard's matching stat; a
+			second request with a real PNG attachment confirms the file is genuinely uploaded and its URL
+			stored. Test data removed after verification. No PHP warning or error observed.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

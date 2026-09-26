@@ -1,13 +1,13 @@
 <?php
 /**
  * Created: 2026-09-26 17:35 CEST
- * Role: Test double standing in for WordPress' `$wpdb`, used only by
- *       Solar_Template\Account\WishlistRepository's tests.
+ * Role: Test double standing in for WordPress' `$wpdb`, used by
+ *       Solar_Template\Account\WishlistRepository/SupportRequestRepository's tests.
  * Author: David ROMERA <d.romera.11@gmail.com>
  * Purpose: Provide a minimal in-memory implementation of the handful of `$wpdb` methods
- *          WishlistRepository relies on, so that class can be unit tested without a real
- *          WordPress/MySQL install. Not a general-purpose SQL engine: it only understands the
- *          specific queries WishlistRepository issues.
+ *          WishlistRepository/SupportRequestRepository rely on, so those classes can be unit
+ *          tested without a real WordPress/MySQL install. Not a general-purpose SQL engine: it
+ *          only understands the specific queries they issue.
  *
  * @package Solar_Template
  */
@@ -34,6 +34,20 @@ final class FakeWpdb {
 	private array $rows = array();
 
 	/**
+	 * Support request rows, each a plain associative array of column => value.
+	 *
+	 * @var array<int, array<string, mixed>>
+	 */
+	private array $support_requests = array();
+
+	/**
+	 * Mimics `$wpdb->insert_id` after a support request insert.
+	 *
+	 * @var int
+	 */
+	public int $insert_id = 0;
+
+	/**
 	 * Mimics `$wpdb->prepare()`: substitutes `%d` placeholders.
 	 *
 	 * @param string $query SQL with placeholders.
@@ -44,9 +58,11 @@ final class FakeWpdb {
 		$i = 0;
 
 		return preg_replace_callback(
-			'/%d/',
-			static function () use ( &$i, $args ): string {
-				return (string) (int) $args[ $i++ ];
+			'/%[ds]/',
+			static function ( array $matches ) use ( &$i, $args ): string {
+				$value = $args[ $i++ ];
+
+				return '%d' === $matches[0] ? (string) (int) $value : "'" . addslashes( (string) $value ) . "'";
 			},
 			$query
 		);
@@ -63,11 +79,41 @@ final class FakeWpdb {
 			return $this->matches( (int) $matches[1], (int) $matches[2] ) ? 1 : 0;
 		}
 
+		if ( str_contains( $query, 'solar_template_support_requests' ) && preg_match( "/WHERE user_id = (\d+) AND status = '([^']*)'/", $query, $matches ) ) {
+			return count(
+				array_filter(
+					$this->support_requests,
+					fn( $row ) => $row['user_id'] === (int) $matches[1] && $row['status'] === $matches[2]
+				)
+			);
+		}
+
 		if ( preg_match( '/WHERE user_id = (\d+)$/', $query, $matches ) ) {
 			return count( array_filter( $this->rows, fn( $row ) => $row['user_id'] === (int) $matches[1] ) );
 		}
 
 		return 0;
+	}
+
+	/**
+	 * Mimics `$wpdb->get_results()` for `SupportRequestRepository::for_user()`.
+	 *
+	 * @param string $query Already-prepared SQL.
+	 * @return object[]
+	 */
+	public function get_results( string $query ): array {
+		if ( preg_match( '/WHERE user_id = (\d+)/', $query, $matches ) ) {
+			$user_id = (int) $matches[1];
+
+			return array_values(
+				array_map(
+					static fn( array $row ): object => (object) $row,
+					array_reverse( array_filter( $this->support_requests, fn( $row ) => $row['user_id'] === $user_id ) )
+				)
+			);
+		}
+
+		return array();
 	}
 
 	/**
@@ -105,6 +151,16 @@ final class FakeWpdb {
 				'user_id'    => (int) $data['user_id'],
 				'product_id' => (int) $data['product_id'],
 			);
+
+			return 1;
+		}
+
+		if ( str_contains( $table, 'solar_template_support_requests' ) ) {
+			$data['status']  = 'open';
+			$data['user_id'] = (int) $data['user_id'];
+
+			$this->support_requests[] = $data;
+			$this->insert_id          = count( $this->support_requests );
 
 			return 1;
 		}
