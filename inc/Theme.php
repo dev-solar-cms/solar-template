@@ -15,6 +15,7 @@ namespace Solar_Template;
 
 use Solar_Template\Account\AccountEndpoints;
 use Solar_Template\Account\ReorderHandler;
+use Solar_Template\Account\WishlistController;
 use Solar_Template\Admin\Notices;
 use Solar_Template\Catalog\CatalogController;
 use Solar_Template\Checkout\CheckoutController;
@@ -53,6 +54,7 @@ final class Theme {
 		add_action( 'wp_enqueue_scripts', array( NewsletterController::class, 'enqueue_script' ), 20 );
 		add_action( 'wp_enqueue_scripts', array( CatalogController::class, 'enqueue_script' ), 20 );
 		add_action( 'wp_enqueue_scripts', array( ProductController::class, 'enqueue_script' ), 20 );
+		add_action( 'wp_enqueue_scripts', array( WishlistController::class, 'enqueue_script' ), 20 );
 
 		add_filter( 'woocommerce_add_to_cart_fragments', array( Cart::class, 'cart_fragments' ) );
 		add_filter( 'nav_menu_css_class', array( Nav::class, 'primary_nav_item_classes' ), 10, 3 );
@@ -83,6 +85,10 @@ final class Theme {
 		add_filter( 'woocommerce_account_menu_items', array( AccountEndpoints::class, 'menu_items' ) );
 		add_filter( 'woocommerce_endpoint_title', array( AccountEndpoints::class, 'endpoint_title' ), 10, 2 );
 		add_action( 'template_redirect', array( ReorderHandler::class, 'maybe_handle' ) );
+
+		add_action( 'woocommerce_account_wishlist_endpoint', array( WishlistController::class, 'render_wishlist_page' ) );
+		add_action( 'wp_ajax_solar_template_wishlist_toggle', array( WishlistController::class, 'handle_toggle' ) );
+		add_action( 'wp_ajax_nopriv_solar_template_wishlist_toggle', array( WishlistController::class, 'handle_toggle' ) );
 	}
 
 	/**

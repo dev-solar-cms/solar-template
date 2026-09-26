@@ -39,7 +39,7 @@ solar-template/
 │   ├── Catalog/         # Options/filtres/pagination/contrôleurs du catalogue produits
 │   ├── Product/         # Logique de la fiche produit (galerie, panneau, variations, onglets, produits similaires)
 │   ├── Checkout/        # Tunnel de vente : routage, indicateur d'étapes, vue du panier, disposition des champs d'adresse, icônes/texte du paiement, vue de la confirmation de commande
-│   └── Account/         # Espace client : endpoints/menu, sidebar, tableau de bord, statut de commande, action « Recommander », liste/détail de commandes
+│   └── Account/         # Espace client : endpoints/menu, sidebar, tableau de bord, statut de commande, action « Recommander », liste/détail de commandes, liste de souhaits
 ├── template-parts/      # Fragments de gabarit réutilisables (`get_template_part()`)
 │   ├── product-card.php # Carte produit (image, badge, wishlist, overlay panier, prix, swatches)
 │   ├── blog-card.php    # Carte article de blog (image 16:10, badge catégorie, meta, titre, extrait, auteur)
@@ -61,7 +61,8 @@ solar-template/
 │   │   ├── sidebar.php  # Bloc utilisateur + navigation à icônes (Solar_Template\Account\AccountProfile/AccountNav)
 │   │   ├── dashboard.php # Message d'accueil, cartes de statistiques, commandes récentes, liens rapides
 │   │   ├── orders-list.php # Tabs de statut + cartes de commande + pagination
-│   │   └── order-card.php # Une carte de commande (en-tête coloré, miniatures, actions)
+│   │   ├── order-card.php # Une carte de commande (en-tête coloré, miniatures, actions)
+│   │   └── wishlist.php # Grille des produits sauvegardés (composant carte produit réutilisé)
 │   └── front-page/      # Sections de la page d'accueil, une par fichier
 │       ├── hero.php     # Hero plein écran (accroche, titre 3 lignes, CTA, trust badges, carte flottante)
 │       ├── featured-products.php # Grille masonry des produits WooCommerce marqués « en vedette »
@@ -123,7 +124,8 @@ solar-template/
 │   ├── js/newsletter.js  # Soumission AJAX des formulaires newsletter (`.js-newsletter-form`)
 │   ├── js/catalog.js     # Barre de filtres du catalogue : panneaux, état actif, soumission AJAX
 │   ├── js/product.js     # Fiche produit : changement d'image de la galerie au clic sur une miniature
-	├── js/checkout.js    # Panier (stepper de quantité) + assistant multi-étapes de la page paiement (login/shipping)
+│   ├── js/checkout.js    # Panier (stepper de quantité) + assistant multi-étapes de la page paiement (login/shipping)
+│   ├── js/account.js     # Bascule ♡/♥ de la wishlist en AJAX sur les cartes produit
 │   └── dist/             # Sortie compilée (générée par `npm run build`/`dev`, ignorée par git)
 ├── phpunit.xml.dist     # Configuration PHPUnit, utilisée par `composer test`
 ├── tests/php/           # Tests unitaires PHP (bootstrap minimal, pas une installation WordPress complète)

@@ -552,3 +552,27 @@
 	margin-bottom: 24px;
 	padding: 20px 24px;
 }
+
+// -------------------------------------------------------------------------------------------
+// Wishlist
+// -------------------------------------------------------------------------------------------
+
+.account-wishlist__count {
+	font-size: 18px;
+	font-weight: $font-weight-regular;
+	color: $color-muted;
+}
+
+.account-wishlist__grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: $spacing-grid-gap-products;
+
+	@media (max-width: 900px) {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	@media (max-width: 600px) {
+		grid-template-columns: 1fr;
+	}
+}

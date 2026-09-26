@@ -40,6 +40,7 @@ final class Installer {
 		self::create_settings_table();
 		self::seed_default_settings();
 		self::create_newsletter_table();
+		self::create_wishlist_table();
 
 		// Newly registered My Account endpoints ("wishlist", "sav" — see
 		// Solar_Template\Account\AccountEndpoints) only resolve once WordPress' rewrite rules are
@@ -259,6 +260,40 @@ final class Installer {
 			subscribed_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			PRIMARY KEY  (id),
 			UNIQUE KEY email (email)
+		) {$charset_collate};";
+	}
+
+	/**
+	 * Creates (or updates) `wp_solar_template_wishlist`, storing each customer's saved products (see
+	 * Solar_Template\Account\WishlistRepository).
+	 *
+	 * @return void
+	 */
+	public static function create_wishlist_table(): void {
+		global $wpdb;
+
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+
+		dbDelta( self::wishlist_table_sql( $wpdb->prefix, $wpdb->get_charset_collate() ) );
+	}
+
+	/**
+	 * Builds the `CREATE TABLE` statement for `wp_solar_template_wishlist`.
+	 *
+	 * @param string $prefix          WordPress table prefix (`$wpdb->prefix`).
+	 * @param string $charset_collate Charset/collation clause (`$wpdb->get_charset_collate()`).
+	 * @return string SQL statement, formatted for `dbDelta()`.
+	 */
+	public static function wishlist_table_sql( string $prefix, string $charset_collate ): string {
+		$table = $prefix . 'solar_template_wishlist';
+
+		return "CREATE TABLE {$table} (
+			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			user_id bigint(20) unsigned NOT NULL,
+			product_id bigint(20) unsigned NOT NULL,
+			created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			PRIMARY KEY  (id),
+			UNIQUE KEY user_product (user_id,product_id)
 		) {$charset_collate};";
 	}
 }

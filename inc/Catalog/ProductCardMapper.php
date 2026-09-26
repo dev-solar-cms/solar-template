@@ -11,6 +11,8 @@
 
 namespace Solar_Template\Catalog;
 
+use Solar_Template\Account\WishlistRepository;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -44,6 +46,7 @@ final class ProductCardMapper {
 		$category   = ( $categories && ! is_wp_error( $categories ) ) ? reset( $categories )->name : '';
 
 		return array(
+			'product_id'       => $product->get_id(),
 			'image_url'        => $image_id ? wp_get_attachment_image_url( $image_id, 'medium' ) : null,
 			'image_alt'        => $image_id ? get_post_meta( $image_id, '_wp_attachment_image_alt', true ) : '',
 			'permalink'        => get_permalink( $product->get_id() ),
@@ -54,7 +57,9 @@ final class ProductCardMapper {
 			'regular_price'    => '' !== $regular ? (float) $regular : null,
 			'currency_symbol'  => get_woocommerce_currency_symbol(),
 			'discount_percent' => $discount_percent,
-			'in_wishlist'      => false,
+			'in_wishlist'      => is_user_logged_in()
+				? ( new WishlistRepository( $GLOBALS['wpdb'] ) )->is_wishlisted( get_current_user_id(), $product->get_id() )
+				: false,
 			'swatches'         => array(),
 		);
 	}

@@ -1270,6 +1270,14 @@ final class DefaultStrings {
 				'fr_FR' => 'l j F Y à H\hi',
 				'en_US' => 'l jS \o\f F Y, h:ia',
 			),
+			'This product could not be found.'             => array(
+				'fr_FR' => "Ce produit n'a pas été trouvé.",
+				'en_US' => 'This product could not be found.',
+			),
+			'You have not saved any product yet.'          => array(
+				'fr_FR' => "Vous n'avez encore sauvegardé aucun produit.",
+				'en_US' => 'You have not saved any product yet.',
+			),
 		);
 	}
 

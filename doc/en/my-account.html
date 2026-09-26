@@ -116,6 +116,36 @@
 			detail page shows the right number/status/item table, and the "Reorder" link keeps working
 			from this list. No PHP warning or error observed.
 		</p>
+
+		<h2 id="wishlist">Wishlist</h2>
+		<p>
+			The heart button already present on every product card (a shared design-system component)
+			now genuinely toggles via AJAX (<code>assets/js/account.js</code>,
+			<code>initWishlistToggle()</code>, delegated on <code>document</code> so it also covers cards
+			added dynamically by the catalog) and persists in a dedicated
+			<code>wp_solar_template_wishlist</code> table
+			(<code>Solar_Template\Account\WishlistRepository</code>) — a logged-out visitor is sent to the
+			login page rather than having the request fail silently.
+		</p>
+		<p>
+			<code>Solar_Template\Catalog\ProductCardMapper::map()</code> now computes each product card's
+			real "saved" state from that table, for the logged-in customer. The account area's new
+			"Wishlist" endpoint
+			(<code>Solar_Template\Account\WishlistController::render_wishlist_page()</code>) shows a grid
+			of saved products, reusing the existing product card component as-is.
+		</p>
+		<p>
+			Technical decision: this step only touches product cards (catalog, home page, related
+			products) — the design's own wishlist button on the product page's panel, mentioned
+			elsewhere in the handoff, stays out of this step's scope (its own wording only mentions
+			"product cards").
+		</p>
+		<p>
+			Verified end to end in the real Docker environment with WooCommerce active: toggling a
+			product from the shop grid persists its state (page reload, dashboard, "Wishlist" page), and
+			removing it makes it disappear from that page (test product removed after verification). No
+			PHP warning or error observed.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

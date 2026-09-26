@@ -4,10 +4,10 @@
  * Role: My Account dashboard view-model (Solar_Template\Account).
  * Author: David ROMERA <d.romera.11@gmail.com>
  * Purpose: Build the dashboard's stat cards and recent orders table from the logged-in customer's
- *          real orders. The "Wishlist"/"S.A.V." stat counts are hardcoded to 0 here and wired to
- *          their real repositories once those features exist (see
- *          Solar_Template\Account\WishlistRepository/SupportRequestRepository, added a few steps
- *          later), same incremental convention as the front page sections.
+ *          real orders and wishlist. The "S.A.V." stat count is hardcoded to 0 here and wired to
+ *          its real repository once that feature exists (see
+ *          Solar_Template\Account\SupportRequestRepository, added a few steps later), same
+ *          incremental convention as the front page sections.
  *
  * @package Solar_Template
  */
@@ -31,10 +31,12 @@ final class Dashboard {
 		$statuses    = self::customer_order_statuses( $user_id );
 		$in_progress = count( array_filter( $statuses, array( OrderStatusPresenter::class, 'is_in_progress' ) ) );
 
+		global $wpdb;
+
 		return array(
 			'in_progress'      => $in_progress,
 			'total'            => count( $statuses ),
-			'wishlist'         => 0,
+			'wishlist'         => ( new WishlistRepository( $wpdb ) )->count_for( $user_id ),
 			'support_requests' => 0,
 		);
 	}

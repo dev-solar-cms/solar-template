@@ -13,6 +13,7 @@
  *          `wc_price()`.
  *
  * Expected `$args` keys (all optional, see $defaults below):
+ * - product_id (int) real WC_Product ID, used by the wishlist toggle button's AJAX request
  * - image_url (string|null), image_alt (string)
  * - permalink (string) product page URL
  * - badge (array{type: string, label: string}|null) type is one of new|exclusive|sale
@@ -31,6 +32,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 $defaults = array(
+	'product_id'       => 0,
 	'image_url'        => null,
 	'image_alt'        => '',
 	'permalink'        => '#',
@@ -71,6 +73,7 @@ use Solar_Template\Support\PriceFormatter;
 			class="product-card__wishlist<?php echo $product['in_wishlist'] ? ' is-active' : ''; ?>"
 			aria-label="<?php echo esc_attr__( 'Add to wishlist', 'solar-template' ); ?>"
 			aria-pressed="<?php echo $product['in_wishlist'] ? 'true' : 'false'; ?>"
+			data-product-id="<?php echo esc_attr( (string) $product['product_id'] ); ?>"
 		>
 			<svg viewBox="0 0 24 24" fill="<?php echo $product['in_wishlist'] ? 'currentColor' : 'none'; ?>" stroke="currentColor" stroke-width="2" aria-hidden="true">
 				<path d="M12 21s-7.5-4.6-10-9.2C0.3 8.4 1.9 4.8 5.3 4.1c2-.4 3.9.5 5 2.1 1.1-1.6 3-2.5 5-2.1 3.4.7 5 4.3 3.3 7.7C19.5 16.4 12 21 12 21z" stroke-linecap="round" stroke-linejoin="round"/>

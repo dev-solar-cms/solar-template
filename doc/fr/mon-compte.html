@@ -122,6 +122,36 @@
 			d'une commande affiche le bon numéro/statut/tableau d'articles, et le lien « Recommander »
 			continue de fonctionner depuis cette liste. Aucun avertissement ni erreur PHP relevé.
 		</p>
+
+		<h2 id="liste-de-souhaits">Liste de souhaits</h2>
+		<p>
+			Le bouton cœur déjà présent sur chaque carte produit (composant partagé depuis le système de
+			design) bascule désormais réellement en AJAX
+			(<code>assets/js/account.js</code>, <code>initWishlistToggle()</code>, délégué sur
+			<code>document</code> pour couvrir aussi les cartes ajoutées dynamiquement par le catalogue) et
+			persiste dans une table dédiée <code>wp_solar_template_wishlist</code>
+			(<code>Solar_Template\Account\WishlistRepository</code>) — un visiteur non connecté est
+			redirigé vers la page de connexion plutôt que de voir la requête échouer silencieusement.
+		</p>
+		<p>
+			<code>Solar_Template\Catalog\ProductCardMapper::map()</code> calcule désormais le vrai état
+			« sauvegardé » de chaque carte produit à partir de cette table, pour le client connecté.
+			Le nouvel endpoint « Liste de souhaits » de l'espace client
+			(<code>Solar_Template\Account\WishlistController::render_wishlist_page()</code>) affiche une
+			grille des produits sauvegardés en réutilisant tel quel le composant carte produit existant.
+		</p>
+		<p>
+			Décision technique : cette étape ne modifie que les cartes produit (catalogue, page d'accueil,
+			produits similaires) — le propre bouton wishlist du panneau de fiche produit, mentionné
+			ailleurs dans la maquette, reste hors périmètre de cette étape (dont le texte ne mentionne que
+			les « cartes produits »).
+		</p>
+		<p>
+			Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif : basculer un
+			produit depuis la grille boutique persiste bien son état (rechargement de page, tableau de
+			bord, page « Liste de souhaits »), et le retirer le fait disparaître de cette page (produit de
+			test retiré après vérification). Aucun avertissement ni erreur PHP relevé.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

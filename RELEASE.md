@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.6.1`.
+Version actuelle : `0.6.2`.
 
 ## Avant une release
 
@@ -30,6 +30,19 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.6.2 — liste de souhaits native
+
+- Le bouton cœur des cartes produit (catalogue, page d'accueil, produits similaires) fonctionne
+  désormais réellement : bascule en AJAX, persiste par compte client dans une table dédiée du
+  thème, et se reflète immédiatement sur la carte, le tableau de bord et la nouvelle page « Liste
+  de souhaits » de l'espace client.
+- Un visiteur non connecté cliquant ce bouton est redirigé vers la page de connexion plutôt que de
+  voir la requête échouer silencieusement.
+- Aucune dépendance à un plugin de wishlist tiers : stockage, endpoint AJAX et page de listing sont
+  natifs au thème.
+- Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif : ajouter puis
+  retirer un produit persiste correctement entre les pages et les rechargements.
 
 ### 0.6.1 — liste et détail des commandes dans l'espace client
 
