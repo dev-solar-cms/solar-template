@@ -46,91 +46,91 @@ final class DefaultStrings {
 				'fr_FR' => "Solar Template est conçu pour WooCommerce. Merci d'<a href=\"%s\">installer et d'activer WooCommerce</a> pour activer les fonctionnalités boutique.",
 				'en_US' => 'Solar Template is designed for WooCommerce. Please <a href="%s">install and activate WooCommerce</a> to enable the storefront features.',
 			),
-			'Add to wishlist'                             => array(
+			'Add to wishlist'                              => array(
 				'fr_FR' => 'Ajouter à la liste de souhaits',
 				'en_US' => 'Add to wishlist',
 			),
-			'Add to cart'                                 => array(
+			'Add to cart'                                  => array(
 				'fr_FR' => 'Ajouter au panier',
 				'en_US' => 'Add to cart',
 			),
-			'−%d%%'                                       => array(
+			'−%d%%'                                        => array(
 				'fr_FR' => '−%d %%',
 				'en_US' => '−%d%%',
 			),
-			'Skip to content'                             => array(
+			'Skip to content'                              => array(
 				'fr_FR' => 'Aller au contenu',
 				'en_US' => 'Skip to content',
 			),
-			'Instagram'                                   => array(
+			'Instagram'                                    => array(
 				'fr_FR' => 'Instagram',
 				'en_US' => 'Instagram',
 			),
-			'Facebook'                                    => array(
+			'Facebook'                                     => array(
 				'fr_FR' => 'Facebook',
 				'en_US' => 'Facebook',
 			),
-			'X (Twitter)'                                 => array(
+			'X (Twitter)'                                  => array(
 				'fr_FR' => 'X (Twitter)',
 				'en_US' => 'X (Twitter)',
 			),
-			'Search'                                      => array(
+			'Search'                                       => array(
 				'fr_FR' => 'Rechercher',
 				'en_US' => 'Search',
 			),
-			'My account'                                  => array(
+			'My account'                                   => array(
 				'fr_FR' => 'Mon compte',
 				'en_US' => 'My account',
 			),
-			'Cart'                                        => array(
+			'Cart'                                         => array(
 				'fr_FR' => 'Panier',
 				'en_US' => 'Cart',
 			),
-			'Primary Navigation'                          => array(
+			'Primary Navigation'                           => array(
 				'fr_FR' => 'Navigation principale',
 				'en_US' => 'Primary Navigation',
 			),
-			'Shop'                                        => array(
+			'Shop'                                         => array(
 				'fr_FR' => 'Boutique',
 				'en_US' => 'Shop',
 			),
-			'New In'                                      => array(
+			'New In'                                       => array(
 				'fr_FR' => 'Nouveautés',
 				'en_US' => 'New In',
 			),
-			'Collections'                                 => array(
+			'Collections'                                  => array(
 				'fr_FR' => 'Collections',
 				'en_US' => 'Collections',
 			),
-			'Sale'                                        => array(
+			'Sale'                                         => array(
 				'fr_FR' => 'Promotions',
 				'en_US' => 'Sale',
 			),
-			'Blog'                                        => array(
+			'Blog'                                         => array(
 				'fr_FR' => 'Blog',
 				'en_US' => 'Blog',
 			),
-			'Contact'                                     => array(
+			'Contact'                                      => array(
 				'fr_FR' => 'Contact',
 				'en_US' => 'Contact',
 			),
-			'Shop by category'                            => array(
+			'Shop by category'                             => array(
 				'fr_FR' => 'Acheter par catégorie',
 				'en_US' => 'Shop by category',
 			),
-			'Best Sellers'                                => array(
+			'Best Sellers'                                 => array(
 				'fr_FR' => 'Meilleures ventes',
 				'en_US' => 'Best Sellers',
 			),
-			'Limited Edition'                             => array(
+			'Limited Edition'                              => array(
 				'fr_FR' => 'Édition limitée',
 				'en_US' => 'Limited Edition',
 			),
-			'Featured'                                    => array(
+			'Featured'                                     => array(
 				'fr_FR' => 'En vedette',
 				'en_US' => 'Featured',
 			),
-			'View All Collections'                        => array(
+			'View All Collections'                         => array(
 				'fr_FR' => 'Voir toutes les collections',
 				'en_US' => 'View All Collections',
 			),
@@ -138,55 +138,55 @@ final class DefaultStrings {
 				'fr_FR' => 'Thème WooCommerce moderne et configurable pour valoriser vos produits.',
 				'en_US' => 'A modern, configurable WooCommerce theme to showcase your products.',
 			),
-			'All Products'                                => array(
+			'All Products'                                 => array(
 				'fr_FR' => 'Tous les produits',
 				'en_US' => 'All Products',
 			),
-			'Information'                                 => array(
+			'Information'                                  => array(
 				'fr_FR' => 'Informations',
 				'en_US' => 'Information',
 			),
-			'About'                                       => array(
+			'About'                                        => array(
 				'fr_FR' => 'À propos',
 				'en_US' => 'About',
 			),
-			'Legal'                                       => array(
+			'Legal'                                        => array(
 				'fr_FR' => 'Légal',
 				'en_US' => 'Legal',
 			),
-			'Terms & Conditions'                          => array(
+			'Terms & Conditions'                           => array(
 				'fr_FR' => 'C.G.V.',
 				'en_US' => 'Terms & Conditions',
 			),
-			'Privacy Policy'                              => array(
+			'Privacy Policy'                               => array(
 				'fr_FR' => 'Confidentialité',
 				'en_US' => 'Privacy Policy',
 			),
-			'Legal Notice'                                => array(
+			'Legal Notice'                                 => array(
 				'fr_FR' => 'Mentions légales',
 				'en_US' => 'Legal Notice',
 			),
-			'Cookies'                                     => array(
+			'Cookies'                                      => array(
 				'fr_FR' => 'Cookies',
 				'en_US' => 'Cookies',
 			),
-			'Newsletter'                                  => array(
+			'Newsletter'                                   => array(
 				'fr_FR' => 'Newsletter',
 				'en_US' => 'Newsletter',
 			),
-			'Get exclusive offers first.'                 => array(
+			'Get exclusive offers first.'                  => array(
 				'fr_FR' => 'Offres exclusives en avant-première.',
 				'en_US' => 'Get exclusive offers first.',
 			),
-			'Email address'                               => array(
+			'Email address'                                => array(
 				'fr_FR' => 'Adresse e-mail',
 				'en_US' => 'Email address',
 			),
-			'email@example.com'                           => array(
+			'email@example.com'                            => array(
 				'fr_FR' => 'email@exemple.com',
 				'en_US' => 'email@example.com',
 			),
-			'Subscribe'                                   => array(
+			'Subscribe'                                    => array(
 				'fr_FR' => "S'abonner",
 				'en_US' => 'Subscribe',
 			),
@@ -194,31 +194,31 @@ final class DefaultStrings {
 				'fr_FR' => '© {year} %s — Thème WordPress WooCommerce · Tous droits réservés',
 				'en_US' => '© {year} %s — WordPress WooCommerce theme · All rights reserved',
 			),
-			'Search this site'                            => array(
+			'Search this site'                             => array(
 				'fr_FR' => 'Rechercher sur ce site',
 				'en_US' => 'Search this site',
 			),
-			'Search products, articles…'                  => array(
+			'Search products, articles…'                   => array(
 				'fr_FR' => 'Rechercher des produits, des articles…',
 				'en_US' => 'Search products, articles…',
 			),
-			'Close search'                                => array(
+			'Close search'                                 => array(
 				'fr_FR' => 'Fermer la recherche',
 				'en_US' => 'Close search',
 			),
-			'Spring · Summer 2025 Collection'             => array(
+			'Spring · Summer 2025 Collection'              => array(
 				'fr_FR' => 'Collection Printemps · Été 2025',
 				'en_US' => 'Spring · Summer 2025 Collection',
 			),
-			'The essentials,'                             => array(
+			'The essentials,'                              => array(
 				'fr_FR' => "L'essentiel,",
 				'en_US' => 'The essentials,',
 			),
-			'reimagined'                                  => array(
+			'reimagined'                                   => array(
 				'fr_FR' => 'repensé',
 				'en_US' => 'reimagined',
 			),
-			'for you.'                                    => array(
+			'for you.'                                     => array(
 				'fr_FR' => 'pour vous.',
 				'en_US' => 'for you.',
 			),
@@ -226,67 +226,67 @@ final class DefaultStrings {
 				'fr_FR' => 'Découvrez notre sélection premium de produits soigneusement choisis pour allier qualité, design et durabilité.',
 				'en_US' => 'Discover our premium selection of products, carefully chosen to combine quality, design and durability.',
 			),
-			'Explore the shop'                            => array(
+			'Explore the shop'                             => array(
 				'fr_FR' => 'Explorer la boutique',
 				'en_US' => 'Explore the shop',
 			),
-			'See what’s new →'                            => array(
+			'See what’s new →'                             => array(
 				'fr_FR' => 'Voir les nouveautés →',
 				'en_US' => 'See what’s new →',
 			),
-			'Free shipping from €60'                      => array(
+			'Free shipping from €60'                       => array(
 				'fr_FR' => 'Livraison offerte dès 60€',
 				'en_US' => 'Free shipping from €60',
 			),
-			'Returns within 30 days'                      => array(
+			'Returns within 30 days'                       => array(
 				'fr_FR' => 'Retours sous 30 jours',
 				'en_US' => 'Returns within 30 days',
 			),
-			'Secure payment'                              => array(
+			'Secure payment'                               => array(
 				'fr_FR' => 'Paiement sécurisé',
 				'en_US' => 'Secure payment',
 			),
-			'Favorite pick'                               => array(
+			'Favorite pick'                                => array(
 				'fr_FR' => 'Coup de cœur',
 				'en_US' => 'Favorite pick',
 			),
-			'Summer 2025 Collection'                      => array(
+			'Summer 2025 Collection'                       => array(
 				'fr_FR' => 'Collection Été 2025',
 				'en_US' => 'Summer 2025 Collection',
 			),
-			'38% already claimed · Limited stock'         => array(
+			'38% already claimed · Limited stock'          => array(
 				'fr_FR' => '38% déjà vendus · Stock limité',
 				'en_US' => '38% already claimed · Limited stock',
 			),
-			'Selection'                                   => array(
+			'Selection'                                    => array(
 				'fr_FR' => 'Sélection',
 				'en_US' => 'Selection',
 			),
-			'Favorites'                                   => array(
+			'Favorites'                                    => array(
 				'fr_FR' => 'Coups de cœur',
 				'en_US' => 'Favorites',
 			),
-			'View all →'                                  => array(
+			'View all →'                                   => array(
 				'fr_FR' => 'Voir tout →',
 				'en_US' => 'View all →',
 			),
-			'On Sale'                                     => array(
+			'On Sale'                                      => array(
 				'fr_FR' => 'Promo',
 				'en_US' => 'On Sale',
 			),
-			'View the full collection'                    => array(
+			'View the full collection'                     => array(
 				'fr_FR' => 'Voir toute la collection',
 				'en_US' => 'View the full collection',
 			),
-			'Explore our worlds'                          => array(
+			'Explore our worlds'                           => array(
 				'fr_FR' => 'Explorer nos univers',
 				'en_US' => 'Explore our worlds',
 			),
-			'Discover'                                    => array(
+			'Discover'                                     => array(
 				'fr_FR' => 'Découvrir',
 				'en_US' => 'Discover',
 			),
-			'Our story'                                   => array(
+			'Our story'                                    => array(
 				'fr_FR' => 'Notre histoire',
 				'en_US' => 'Our story',
 			),
@@ -302,51 +302,51 @@ final class DefaultStrings {
 				'fr_FR' => "Chaque article est choisi avec soin, en accordant une attention particulière aux matériaux, à la fabrication et à l'impact environnemental.",
 				'en_US' => 'Every item is chosen with care, paying close attention to materials, manufacturing and environmental impact.',
 			),
-			'10+'                                         => array(
+			'10+'                                          => array(
 				'fr_FR' => '10+',
 				'en_US' => '10+',
 			),
-			'years of expertise'                          => array(
+			'years of expertise'                           => array(
 				'fr_FR' => "ans d'expertise",
 				'en_US' => 'years of expertise',
 			),
-			'50K+'                                        => array(
+			'50K+'                                         => array(
 				'fr_FR' => '50K+',
 				'en_US' => '50K+',
 			),
-			'Happy customers'                             => array(
+			'Happy customers'                              => array(
 				'fr_FR' => 'Clients satisfaits',
 				'en_US' => 'Happy customers',
 			),
-			'200+'                                        => array(
+			'200+'                                         => array(
 				'fr_FR' => '200+',
 				'en_US' => '200+',
 			),
-			'Products available'                          => array(
+			'Products available'                           => array(
 				'fr_FR' => 'Produits disponibles',
 				'en_US' => 'Products available',
 			),
-			'4.9★'                                        => array(
+			'4.9★'                                         => array(
 				'fr_FR' => '4,9★',
 				'en_US' => '4.9★',
 			),
-			'Average rating'                              => array(
+			'Average rating'                               => array(
 				'fr_FR' => 'Note moyenne',
 				'en_US' => 'Average rating',
 			),
-			'Learn more'                                  => array(
+			'Learn more'                                   => array(
 				'fr_FR' => 'En savoir plus',
 				'en_US' => 'Learn more',
 			),
-			'Testimonials'                                => array(
+			'Testimonials'                                 => array(
 				'fr_FR' => 'Témoignages',
 				'en_US' => 'Testimonials',
 			),
-			'What our customers say'                      => array(
+			'What our customers say'                       => array(
 				'fr_FR' => 'Ce que disent nos clients',
 				'en_US' => 'What our customers say',
 			),
-			'%d out of 5 stars'                           => array(
+			'%d out of 5 stars'                            => array(
 				'fr_FR' => '%d étoiles sur 5',
 				'en_US' => '%d out of 5 stars',
 			),
@@ -354,11 +354,11 @@ final class DefaultStrings {
 				'fr_FR' => 'Livraison ultra rapide et produit exactement conforme à mes attentes. Le service client est remarquable. Je recommande vivement !',
 				'en_US' => 'Ultra-fast delivery and the product exactly matched my expectations. Customer service is outstanding. Highly recommend!',
 			),
-			'Marie L.'                                    => array(
+			'Marie L.'                                     => array(
 				'fr_FR' => 'Marie L.',
 				'en_US' => 'Marie L.',
 			),
-			'Customer since 2023'                         => array(
+			'Customer since 2023'                          => array(
 				'fr_FR' => 'Cliente depuis 2023',
 				'en_US' => 'Customer since 2023',
 			),
@@ -366,11 +366,11 @@ final class DefaultStrings {
 				'fr_FR' => "Qualité exceptionnelle pour un prix très raisonnable. Client fidèle depuis 2 ans et je n'ai jamais été déçu. Des produits qui durent.",
 				'en_US' => 'Exceptional quality for a very reasonable price. A loyal customer for 2 years and never disappointed. Products that last.',
 			),
-			'Thomas R.'                                   => array(
+			'Thomas R.'                                    => array(
 				'fr_FR' => 'Thomas R.',
 				'en_US' => 'Thomas R.',
 			),
-			'Customer since 2022'                         => array(
+			'Customer since 2022'                          => array(
 				'fr_FR' => 'Client depuis 2022',
 				'en_US' => 'Customer since 2022',
 			),
@@ -378,31 +378,31 @@ final class DefaultStrings {
 				'fr_FR' => "Service client réactif et produits d'une qualité irréprochable. Mon achat a largement dépassé mes espérances. Très satisfaite !",
 				'en_US' => 'Responsive customer service and impeccable product quality. My purchase far exceeded my expectations. Very satisfied!',
 			),
-			'Sophie M.'                                   => array(
+			'Sophie M.'                                    => array(
 				'fr_FR' => 'Sophie M.',
 				'en_US' => 'Sophie M.',
 			),
-			'Customer since 2024'                         => array(
+			'Customer since 2024'                          => array(
 				'fr_FR' => 'Cliente depuis 2024',
 				'en_US' => 'Customer since 2024',
 			),
-			'News'                                        => array(
+			'News'                                         => array(
 				'fr_FR' => 'Actualités',
 				'en_US' => 'News',
 			),
-			'Inspiration & tips'                          => array(
+			'Inspiration & tips'                           => array(
 				'fr_FR' => 'Inspirations & conseils',
 				'en_US' => 'Inspiration & tips',
 			),
-			'View all articles →'                         => array(
+			'View all articles →'                          => array(
 				'fr_FR' => 'Voir tous les articles →',
 				'en_US' => 'View all articles →',
 			),
-			'%1$s · %2$d min read'                        => array(
+			'%1$s · %2$d min read'                         => array(
 				'fr_FR' => '%1$s · %2$d min de lecture',
 				'en_US' => '%1$s · %2$d min read',
 			),
-			'Stay in the loop'                            => array(
+			'Stay in the loop'                             => array(
 				'fr_FR' => 'Restez dans la boucle',
 				'en_US' => 'Stay in the loop',
 			),
@@ -410,39 +410,39 @@ final class DefaultStrings {
 				'fr_FR' => 'Recevez nos nouveautés, offres exclusives et inspirations directement dans votre boîte mail.',
 				'en_US' => 'Get our new arrivals, exclusive offers and inspiration straight to your inbox.',
 			),
-			'your@email.com'                              => array(
+			'your@email.com'                               => array(
 				'fr_FR' => 'votre@email.com',
 				'en_US' => 'your@email.com',
 			),
-			'Unsubscribe at any time. No spam, ever.'     => array(
+			'Unsubscribe at any time. No spam, ever.'      => array(
 				'fr_FR' => 'Désinscription à tout moment. Aucun spam, promis.',
 				'en_US' => 'Unsubscribe at any time. No spam, ever.',
 			),
-			'Thank you for subscribing!'                  => array(
+			'Thank you for subscribing!'                   => array(
 				'fr_FR' => 'Merci pour votre inscription !',
 				'en_US' => 'Thank you for subscribing!',
 			),
-			'This email address is already subscribed.'   => array(
+			'This email address is already subscribed.'    => array(
 				'fr_FR' => 'Cette adresse e-mail est déjà inscrite.',
 				'en_US' => 'This email address is already subscribed.',
 			),
-			'Please enter a valid email address.'         => array(
+			'Please enter a valid email address.'          => array(
 				'fr_FR' => 'Merci de saisir une adresse e-mail valide.',
 				'en_US' => 'Please enter a valid email address.',
 			),
-			'Something went wrong. Please try again.'     => array(
+			'Something went wrong. Please try again.'      => array(
 				'fr_FR' => "Une erreur s'est produite. Merci de réessayer.",
 				'en_US' => 'Something went wrong. Please try again.',
 			),
-			'Breadcrumb'                                  => array(
+			'Breadcrumb'                                   => array(
 				'fr_FR' => "Fil d'Ariane",
 				'en_US' => 'Breadcrumb',
 			),
-			'No products currently match this selection.' => array(
+			'No products currently match this selection.'  => array(
 				'fr_FR' => 'Aucun produit ne correspond actuellement à cette sélection.',
 				'en_US' => 'No products currently match this selection.',
 			),
-			'%d product available'                        => array(
+			'%d product available'                         => array(
 				'fr_FR'  => '%d produit disponible',
 				'en_US'  => '%d product available',
 				'plural' => array(
@@ -450,39 +450,39 @@ final class DefaultStrings {
 					'en_US' => '%d products available',
 				),
 			),
-			'Category'                                    => array(
+			'Category'                                     => array(
 				'fr_FR' => 'Catégorie',
 				'en_US' => 'Category',
 			),
-			'Price'                                       => array(
+			'Price'                                        => array(
 				'fr_FR' => 'Prix',
 				'en_US' => 'Price',
 			),
-			'Color'                                       => array(
+			'Color'                                        => array(
 				'fr_FR' => 'Couleur',
 				'en_US' => 'Color',
 			),
-			'Size'                                        => array(
+			'Size'                                         => array(
 				'fr_FR' => 'Taille',
 				'en_US' => 'Size',
 			),
-			'Rating'                                      => array(
+			'Rating'                                       => array(
 				'fr_FR' => 'Note',
 				'en_US' => 'Rating',
 			),
-			'%1$s (%2$d)'                                 => array(
+			'%1$s (%2$d)'                                  => array(
 				'fr_FR' => '%1$s (%2$d)',
 				'en_US' => '%1$s (%2$d)',
 			),
-			'Min'                                         => array(
+			'Min'                                          => array(
 				'fr_FR' => 'Min',
 				'en_US' => 'Min',
 			),
-			'Max'                                         => array(
+			'Max'                                          => array(
 				'fr_FR' => 'Max',
 				'en_US' => 'Max',
 			),
-			'%d star'                                     => array(
+			'%d star'                                      => array(
 				'fr_FR'  => '%d étoile',
 				'en_US'  => '%d star',
 				'plural' => array(
@@ -490,87 +490,87 @@ final class DefaultStrings {
 					'en_US' => '%d stars',
 				),
 			),
-			'Active filters:'                             => array(
+			'Active filters:'                              => array(
 				'fr_FR' => 'Filtres actifs :',
 				'en_US' => 'Active filters:',
 			),
-			'Remove filter: %s'                           => array(
+			'Remove filter: %s'                            => array(
 				'fr_FR' => 'Retirer le filtre : %s',
 				'en_US' => 'Remove filter: %s',
 			),
-			'Clear all'                                   => array(
+			'Clear all'                                    => array(
 				'fr_FR' => 'Effacer tout',
 				'en_US' => 'Clear all',
 			),
-			'%1$s – %2$s'                                 => array(
+			'%1$s – %2$s'                                  => array(
 				'fr_FR' => '%1$s – %2$s',
 				'en_US' => '%1$s – %2$s',
 			),
-			'From %s'                                     => array(
+			'From %s'                                      => array(
 				'fr_FR' => 'À partir de %s',
 				'en_US' => 'From %s',
 			),
-			'Up to %s'                                    => array(
+			'Up to %s'                                     => array(
 				'fr_FR' => "Jusqu'à %s",
 				'en_US' => 'Up to %s',
 			),
-			'Sort by'                                     => array(
+			'Sort by'                                      => array(
 				'fr_FR' => 'Trier par',
 				'en_US' => 'Sort by',
 			),
-			'Relevance'                                   => array(
+			'Relevance'                                    => array(
 				'fr_FR' => 'Pertinence',
 				'en_US' => 'Relevance',
 			),
-			'Price: low to high'                          => array(
+			'Price: low to high'                           => array(
 				'fr_FR' => 'Prix croissant',
 				'en_US' => 'Price: low to high',
 			),
-			'Price: high to low'                          => array(
+			'Price: high to low'                           => array(
 				'fr_FR' => 'Prix décroissant',
 				'en_US' => 'Price: high to low',
 			),
-			'Newest'                                      => array(
+			'Newest'                                       => array(
 				'fr_FR' => 'Nouveautés',
 				'en_US' => 'Newest',
 			),
-			'Best sellers'                                => array(
+			'Best sellers'                                 => array(
 				'fr_FR' => 'Meilleures ventes',
 				'en_US' => 'Best sellers',
 			),
-			'Showing %1$d of %2$d products'               => array(
+			'Showing %1$d of %2$d products'                => array(
 				'fr_FR' => 'Affichage de %1$d sur %2$d produits',
 				'en_US' => 'Showing %1$d of %2$d products',
 			),
-			'Load more products'                          => array(
+			'Load more products'                           => array(
 				'fr_FR' => 'Charger plus de produits',
 				'en_US' => 'Load more products',
 			),
-			'View image %1$d of %2$d'                     => array(
+			'View image %1$d of %2$d'                      => array(
 				'fr_FR' => "Voir l'image %1\$d sur %2\$d",
 				'en_US' => 'View image %1$d of %2$d',
 			),
-			'New'                                         => array(
+			'New'                                          => array(
 				'fr_FR' => 'Nouveau',
 				'en_US' => 'New',
 			),
-			'Solar Premium'                               => array(
+			'Solar Premium'                                => array(
 				'fr_FR' => 'Solar Premium',
 				'en_US' => 'Solar Premium',
 			),
-			'In stock'                                    => array(
+			'In stock'                                     => array(
 				'fr_FR' => 'En stock',
 				'en_US' => 'In stock',
 			),
-			'Out of stock'                                => array(
+			'Out of stock'                                 => array(
 				'fr_FR' => 'Rupture de stock',
 				'en_US' => 'Out of stock',
 			),
-			'Available on backorder'                      => array(
+			'Available on backorder'                       => array(
 				'fr_FR' => 'Disponible sur commande',
 				'en_US' => 'Available on backorder',
 			),
-			'%d review →'                                 => array(
+			'%d review →'                                  => array(
 				'fr_FR'  => '%d avis →',
 				'en_US'  => '%d review →',
 				'plural' => array(
@@ -578,27 +578,27 @@ final class DefaultStrings {
 					'en_US' => '%d reviews →',
 				),
 			),
-			'Free shipping'                               => array(
+			'Free shipping'                                => array(
 				'fr_FR' => 'Livraison offerte',
 				'en_US' => 'Free shipping',
 			),
-			'From €60'                                    => array(
+			'From €60'                                     => array(
 				'fr_FR' => 'Dès 60€',
 				'en_US' => 'From €60',
 			),
-			'Free returns'                                => array(
+			'Free returns'                                 => array(
 				'fr_FR' => 'Retour gratuit',
 				'en_US' => 'Free returns',
 			),
-			'Within 30 days'                              => array(
+			'Within 30 days'                               => array(
 				'fr_FR' => 'Sous 30 jours',
 				'en_US' => 'Within 30 days',
 			),
-			'SSL encrypted'                               => array(
+			'SSL encrypted'                                => array(
 				'fr_FR' => 'Chiffrement SSL',
 				'en_US' => 'SSL encrypted',
 			),
-			'Shipping & Returns'                          => array(
+			'Shipping & Returns'                           => array(
 				'fr_FR' => 'Livraison & Retours',
 				'en_US' => 'Shipping & Returns',
 			),
@@ -606,7 +606,7 @@ final class DefaultStrings {
 				'fr_FR' => "Livraison standard en 3 à 5 jours ouvrés (offerte dès 60€). Livraison express disponible. Retours acceptés sous 30 jours dans leur emballage d'origine.",
 				'en_US' => 'Standard delivery in 3–5 business days (free from €60). Express delivery available. Returns accepted within 30 days in their original packaging.',
 			),
-			'Size guide'                                  => array(
+			'Size guide'                                   => array(
 				'fr_FR' => 'Guide des tailles',
 				'en_US' => 'Size guide',
 			),
@@ -614,7 +614,7 @@ final class DefaultStrings {
 				'fr_FR' => 'En cas de doute entre deux tailles, nous recommandons de choisir la taille supérieure. Consultez les caractéristiques du produit ci-dessus pour connaître les tailles actuellement disponibles.',
 				'en_US' => 'If in doubt between two sizes, we recommend choosing the larger one. See the product\'s own attributes above for the sizes currently available.',
 			),
-			'Care instructions'                           => array(
+			'Care instructions'                            => array(
 				'fr_FR' => 'Entretien',
 				'en_US' => 'Care instructions',
 			),
@@ -622,31 +622,31 @@ final class DefaultStrings {
 				'fr_FR' => 'Lavage à la main recommandé. Ne pas sécher en machine. Repasser à basse température si nécessaire.',
 				'en_US' => 'Hand washing recommended. Do not tumble dry. Iron on a low heat setting if needed.',
 			),
-			'Color: %s'                                   => array(
+			'Color: %s'                                    => array(
 				'fr_FR' => 'Couleur : %s',
 				'en_US' => 'Color: %s',
 			),
-			'Decrease quantity'                           => array(
+			'Decrease quantity'                            => array(
 				'fr_FR' => 'Diminuer la quantité',
 				'en_US' => 'Decrease quantity',
 			),
-			'Quantity'                                    => array(
+			'Quantity'                                     => array(
 				'fr_FR' => 'Quantité',
 				'en_US' => 'Quantity',
 			),
-			'Increase quantity'                           => array(
+			'Increase quantity'                            => array(
 				'fr_FR' => 'Augmenter la quantité',
 				'en_US' => 'Increase quantity',
 			),
-			'This combination is currently unavailable.'  => array(
+			'This combination is currently unavailable.'   => array(
 				'fr_FR' => "Cette combinaison n'est actuellement pas disponible.",
 				'en_US' => 'This combination is currently unavailable.',
 			),
-			'This combination is currently out of stock.' => array(
+			'This combination is currently out of stock.'  => array(
 				'fr_FR' => 'Cette combinaison est actuellement en rupture de stock.',
 				'en_US' => 'This combination is currently out of stock.',
 			),
-			'Custom engraving'                            => array(
+			'Custom engraving'                             => array(
 				'fr_FR' => 'Gravure personnalisée',
 				'en_US' => 'Custom engraving',
 			),
@@ -654,35 +654,35 @@ final class DefaultStrings {
 				'fr_FR' => 'Permet aux clients d\'ajouter un texte de gravure personnalisé à ce produit, moyennant un supplément.',
 				'en_US' => 'Let customers add custom engraving text to this product, for an extra price.',
 			),
-			'Engraving price (%s)'                        => array(
+			'Engraving price (%s)'                         => array(
 				'fr_FR' => 'Prix de la gravure (%s)',
 				'en_US' => 'Engraving price (%s)',
 			),
-			'Max. engraving length (characters)'          => array(
+			'Max. engraving length (characters)'           => array(
 				'fr_FR' => 'Longueur maximale de la gravure (caractères)',
 				'en_US' => 'Max. engraving length (characters)',
 			),
-			'Add your text · +%s'                         => array(
+			'Add your text · +%s'                          => array(
 				'fr_FR' => 'Ajoutez votre texte · +%s',
 				'en_US' => 'Add your text · +%s',
 			),
-			'Enable custom engraving'                     => array(
+			'Enable custom engraving'                      => array(
 				'fr_FR' => 'Activer la gravure personnalisée',
 				'en_US' => 'Enable custom engraving',
 			),
-			'Your engraving text (max. %d characters)'    => array(
+			'Your engraving text (max. %d characters)'     => array(
 				'fr_FR' => 'Votre texte de gravure (max. %d caractères)',
 				'en_US' => 'Your engraving text (max. %d characters)',
 			),
-			'Engraving'                                   => array(
+			'Engraving'                                    => array(
 				'fr_FR' => 'Gravure',
 				'en_US' => 'Engraving',
 			),
-			'Description'                                 => array(
+			'Description'                                  => array(
 				'fr_FR' => 'Description',
 				'en_US' => 'Description',
 			),
-			'Review (%d)'                                 => array(
+			'Review (%d)'                                  => array(
 				'fr_FR'  => 'Avis (%d)',
 				'en_US'  => 'Review (%d)',
 				'plural' => array(
@@ -690,23 +690,23 @@ final class DefaultStrings {
 					'en_US' => 'Reviews (%d)',
 				),
 			),
-			'Specifications'                              => array(
+			'Specifications'                               => array(
 				'fr_FR' => 'Caractéristiques',
 				'en_US' => 'Specifications',
 			),
-			'Weight'                                      => array(
+			'Weight'                                       => array(
 				'fr_FR' => 'Poids',
 				'en_US' => 'Weight',
 			),
-			'Dimensions'                                  => array(
+			'Dimensions'                                   => array(
 				'fr_FR' => 'Dimensions',
 				'en_US' => 'Dimensions',
 			),
-			'Product information'                         => array(
+			'Product information'                          => array(
 				'fr_FR' => 'Informations produit',
 				'en_US' => 'Product information',
 			),
-			'Based on %d verified review'                 => array(
+			'Based on %d verified review'                  => array(
 				'fr_FR'  => 'Basé sur %d avis vérifié',
 				'en_US'  => 'Based on %d verified review',
 				'plural' => array(
@@ -714,31 +714,31 @@ final class DefaultStrings {
 					'en_US' => 'Based on %d verified reviews',
 				),
 			),
-			'%d★'                                         => array(
+			'%d★'                                          => array(
 				'fr_FR' => '%d★',
 				'en_US' => '%d★',
 			),
-			'Verified purchase'                           => array(
+			'Verified purchase'                            => array(
 				'fr_FR' => 'Achat vérifié',
 				'en_US' => 'Verified purchase',
 			),
-			'There are no reviews yet.'                   => array(
+			'There are no reviews yet.'                    => array(
 				'fr_FR' => "Il n'y a pas encore d'avis.",
 				'en_US' => 'There are no reviews yet.',
 			),
-			'Leave a review'                              => array(
+			'Leave a review'                               => array(
 				'fr_FR' => 'Laisser un avis',
 				'en_US' => 'Leave a review',
 			),
-			'Add a review'                                => array(
+			'Add a review'                                 => array(
 				'fr_FR' => 'Ajouter un avis',
 				'en_US' => 'Add a review',
 			),
-			'Be the first to review "%s"'                 => array(
+			'Be the first to review "%s"'                  => array(
 				'fr_FR' => 'Soyez le premier à donner votre avis sur « %s »',
 				'en_US' => 'Be the first to review "%s"',
 			),
-			'Submit review'                               => array(
+			'Submit review'                                => array(
 				'fr_FR' => "Publier l'avis",
 				'en_US' => 'Submit review',
 			),
@@ -746,79 +746,79 @@ final class DefaultStrings {
 				'fr_FR' => 'Vous devez être %1$sconnecté%2$s pour publier un avis.',
 				'en_US' => 'You must be %1$slogged in%2$s to post a review.',
 			),
-			'Your rating'                                 => array(
+			'Your rating'                                  => array(
 				'fr_FR' => 'Votre note',
 				'en_US' => 'Your rating',
 			),
-			'Rate…'                                       => array(
+			'Rate…'                                        => array(
 				'fr_FR' => 'Noter…',
 				'en_US' => 'Rate…',
 			),
-			'Perfect'                                     => array(
+			'Perfect'                                      => array(
 				'fr_FR' => 'Parfait',
 				'en_US' => 'Perfect',
 			),
-			'Good'                                        => array(
+			'Good'                                         => array(
 				'fr_FR' => 'Bien',
 				'en_US' => 'Good',
 			),
-			'Average'                                     => array(
+			'Average'                                      => array(
 				'fr_FR' => 'Moyen',
 				'en_US' => 'Average',
 			),
-			'Not that bad'                                => array(
+			'Not that bad'                                 => array(
 				'fr_FR' => 'Pas si mal',
 				'en_US' => 'Not that bad',
 			),
-			'Very poor'                                   => array(
+			'Very poor'                                    => array(
 				'fr_FR' => 'Très mauvais',
 				'en_US' => 'Very poor',
 			),
-			'Your review'                                 => array(
+			'Your review'                                  => array(
 				'fr_FR' => 'Votre avis',
 				'en_US' => 'Your review',
 			),
-			'Suggestions'                                 => array(
+			'Suggestions'                                  => array(
 				'fr_FR' => 'Suggestions',
 				'en_US' => 'Suggestions',
 			),
-			'Related products'                            => array(
+			'Related products'                             => array(
 				'fr_FR' => 'Produits similaires',
 				'en_US' => 'Related products',
 			),
-			'Login'                                       => array(
+			'Login'                                        => array(
 				'fr_FR' => 'Connexion',
 				'en_US' => 'Login',
 			),
-			'Shipping'                                    => array(
+			'Shipping'                                     => array(
 				'fr_FR' => 'Livraison',
 				'en_US' => 'Shipping',
 			),
-			'Payment'                                     => array(
+			'Payment'                                      => array(
 				'fr_FR' => 'Paiement',
 				'en_US' => 'Payment',
 			),
-			'Confirmation'                                => array(
+			'Confirmation'                                 => array(
 				'fr_FR' => 'Confirmation',
 				'en_US' => 'Confirmation',
 			),
-			'Checkout progress'                           => array(
+			'Checkout progress'                            => array(
 				'fr_FR' => 'Progression de la commande',
 				'en_US' => 'Checkout progress',
 			),
-			'100% secure payment'                         => array(
+			'100% secure payment'                          => array(
 				'fr_FR' => 'Paiement 100% sécurisé',
 				'en_US' => '100% secure payment',
 			),
-			'Secure SSL payment'                          => array(
+			'Secure SSL payment'                           => array(
 				'fr_FR' => 'Paiement sécurisé SSL',
 				'en_US' => 'Secure SSL payment',
 			),
-			'My cart'                                     => array(
+			'My cart'                                      => array(
 				'fr_FR' => 'Mon panier',
 				'en_US' => 'My cart',
 			),
-			'%d item'                                     => array(
+			'%d item'                                      => array(
 				'fr_FR'  => '%d article',
 				'en_US'  => '%d item',
 				'plural' => array(
@@ -826,31 +826,31 @@ final class DefaultStrings {
 					'en_US' => '%d items',
 				),
 			),
-			'Remove'                                      => array(
+			'Remove'                                       => array(
 				'fr_FR' => 'Retirer',
 				'en_US' => 'Remove',
 			),
-			'%1$d × %2$s'                                 => array(
+			'%1$d × %2$s'                                  => array(
 				'fr_FR' => '%1$d × %2$s',
 				'en_US' => '%1$d × %2$s',
 			),
-			'Promo code'                                  => array(
+			'Promo code'                                   => array(
 				'fr_FR' => 'Code promotionnel',
 				'en_US' => 'Promo code',
 			),
-			'Apply'                                       => array(
+			'Apply'                                        => array(
 				'fr_FR' => 'Appliquer',
 				'en_US' => 'Apply',
 			),
-			'Continue shopping'                           => array(
+			'Continue shopping'                            => array(
 				'fr_FR' => 'Continuer mes achats',
 				'en_US' => 'Continue shopping',
 			),
-			'Order summary'                               => array(
+			'Order summary'                                => array(
 				'fr_FR' => 'Récapitulatif',
 				'en_US' => 'Order summary',
 			),
-			'Subtotal (%d item)'                          => array(
+			'Subtotal (%d item)'                           => array(
 				'fr_FR'  => 'Sous-total (%d article)',
 				'en_US'  => 'Subtotal (%d item)',
 				'plural' => array(
@@ -858,93 +858,141 @@ final class DefaultStrings {
 					'en_US' => 'Subtotal (%d items)',
 				),
 			),
-			'Total incl. tax'                             => array(
+			'Total incl. tax'                              => array(
 				'fr_FR' => 'Total TTC',
 				'en_US' => 'Total incl. tax',
 			),
-			'SSL 256-bit secure payment'                  => array(
+			'SSL 256-bit secure payment'                   => array(
 				'fr_FR' => 'Paiement sécurisé SSL 256-bit',
 				'en_US' => 'SSL 256-bit secure payment',
 			),
-			'Proceed to shipping'                         => array(
+			'Proceed to shipping'                          => array(
 				'fr_FR' => 'Procéder à la livraison',
 				'en_US' => 'Proceed to shipping',
 			),
-			'Proceed to login'                            => array(
+			'Proceed to login'                             => array(
 				'fr_FR' => 'Procéder à la connexion',
 				'en_US' => 'Proceed to login',
 			),
-			'Return to shop'                              => array(
+			'Return to shop'                               => array(
 				'fr_FR' => 'Retourner à la boutique',
 				'en_US' => 'Return to shop',
 			),
-			'Coupon:'                                     => array(
+			'Coupon:'                                      => array(
 				'fr_FR' => 'Code promo :',
 				'en_US' => 'Coupon:',
 			),
-			'Coupon code'                                 => array(
+			'Coupon code'                                  => array(
 				'fr_FR' => 'Code promo',
 				'en_US' => 'Coupon code',
 			),
-			'Apply coupon'                                => array(
+			'Apply coupon'                                 => array(
 				'fr_FR' => 'Appliquer le code promo',
 				'en_US' => 'Apply coupon',
 			),
-			'Update cart'                                 => array(
+			'Update cart'                                  => array(
 				'fr_FR' => 'Mettre à jour le panier',
 				'en_US' => 'Update cart',
 			),
-			'You must be logged in to checkout.'          => array(
+			'You must be logged in to checkout.'           => array(
 				'fr_FR' => 'Vous devez être connecté pour passer commande.',
 				'en_US' => 'You must be logged in to checkout.',
 			),
-			'Checkout'                                    => array(
+			'Checkout'                                     => array(
 				'fr_FR' => 'Paiement',
 				'en_US' => 'Checkout',
 			),
-			'Log in to speed up your order'               => array(
+			'Log in to speed up your order'                => array(
 				'fr_FR' => 'Connectez-vous pour accélérer votre commande',
 				'en_US' => 'Log in to speed up your order',
 			),
-			'Password'                                    => array(
+			'Password'                                     => array(
 				'fr_FR' => 'Mot de passe',
 				'en_US' => 'Password',
 			),
-			'Remember me'                                 => array(
+			'Remember me'                                  => array(
 				'fr_FR' => 'Se souvenir de moi',
 				'en_US' => 'Remember me',
 			),
-			'Forgot your password?'                       => array(
+			'Forgot your password?'                        => array(
 				'fr_FR' => 'Mot de passe oublié ?',
 				'en_US' => 'Forgot your password?',
 			),
-			'or continue with'                            => array(
+			'or continue with'                             => array(
 				'fr_FR' => 'ou continuer avec',
 				'en_US' => 'or continue with',
 			),
-			'Not available yet'                           => array(
+			'Not available yet'                            => array(
 				'fr_FR' => 'Bientôt disponible',
 				'en_US' => 'Not available yet',
 			),
-			"Don't have an account?"                      => array(
+			"Don't have an account?"                       => array(
 				'fr_FR' => 'Pas de compte ?',
 				'en_US' => "Don't have an account?",
 			),
-			'Create an account'                           => array(
+			'Create an account'                            => array(
 				'fr_FR' => 'Créer un compte',
 				'en_US' => 'Create an account',
 			),
-			'Continue as guest'                           => array(
+			'Continue as guest'                            => array(
 				'fr_FR' => 'Continuer sans compte',
 				'en_US' => 'Continue as guest',
 			),
-			'Back to cart'                                => array(
+			'Back to cart'                                 => array(
 				'fr_FR' => 'Retour au panier',
 				'en_US' => 'Back to cart',
 			),
-			'Your order'                                  => array(
+			'Your order'                                   => array(
 				'fr_FR' => 'Votre commande',
 				'en_US' => 'Your order',
+			),
+			'Shipping address'                             => array(
+				'fr_FR' => 'Adresse de livraison',
+				'en_US' => 'Shipping address',
+			),
+			'Create an account?'                           => array(
+				'fr_FR' => 'Créer un compte ?',
+				'en_US' => 'Create an account?',
+			),
+			'Ship to a different address?'                 => array(
+				'fr_FR' => 'Livrer à une adresse différente ?',
+				'en_US' => 'Ship to a different address?',
+			),
+			'Shipping to %s.'                              => array(
+				'fr_FR' => 'Livraison vers %s.',
+				'en_US' => 'Shipping to %s.',
+			),
+			'Change address'                               => array(
+				'fr_FR' => "Changer d'adresse",
+				'en_US' => 'Change address',
+			),
+			'Shipping options will be updated during checkout.' => array(
+				'fr_FR' => 'Les options de livraison seront mises à jour lors du paiement.',
+				'en_US' => 'Shipping options will be updated during checkout.',
+			),
+			'Shipping costs are calculated during checkout.' => array(
+				'fr_FR' => 'Les frais de livraison sont calculés lors du paiement.',
+				'en_US' => 'Shipping costs are calculated during checkout.',
+			),
+			'Enter your address to view shipping options.' => array(
+				'fr_FR' => 'Saisissez votre adresse pour voir les options de livraison.',
+				'en_US' => 'Enter your address to view shipping options.',
+			),
+			'There are no shipping options available. Please ensure that your address has been entered correctly, or contact us if you need any help.' => array(
+				'fr_FR' => "Aucune option de livraison n'est disponible. Merci de vérifier que votre adresse est correcte, ou de nous contacter si vous avez besoin d'aide.",
+				'en_US' => 'There are no shipping options available. Please ensure that your address has been entered correctly, or contact us if you need any help.',
+			),
+			'No shipping options were found for %s.'       => array(
+				'fr_FR' => "Aucune option de livraison n'a été trouvée pour %s.",
+				'en_US' => 'No shipping options were found for %s.',
+			),
+			'Enter a different address'                    => array(
+				'fr_FR' => 'Saisir une adresse différente',
+				'en_US' => 'Enter a different address',
+			),
+			'Subtotal'                                     => array(
+				'fr_FR' => 'Sous-total',
+				'en_US' => 'Subtotal',
 			),
 		);
 	}

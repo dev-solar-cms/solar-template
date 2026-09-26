@@ -168,6 +168,56 @@
 			checkout page and makes the login panel disappear entirely, the customer going straight to
 			the "Shipping" panel with the "Login" step marked done. No PHP warning or error raised.
 		</p>
+
+		<h2 id="shipping">Shipping</h2>
+		<p>
+			The "Shipping" panel now shows a real two-column layout: real WooCommerce address fields on
+			the left (<code>woocommerce/checkout/form-billing.php</code>/<code>form-shipping.php</code>)
+			in the design handoff's 2-column grid (first/last name, address, address line 2, postcode/
+			city, country/phone), a sticky order summary on the right reusing the exact same component
+			as the cart page's own sidebar.
+		</p>
+		<p>
+			<code>Solar_Template\Checkout\CheckoutFieldsLayout::rows()</code> groups known field pairs
+			(first/last name, postcode/city, country/phone) by their bare name — independent of the
+			<code>billing_</code>/<code>shipping_</code> prefix each field set carries, since both share
+			this same layout logic. A field whose usual partner is missing (a store with no phone field,
+			say) or an unrecognized field added by a third-party plugin still renders alone, full width,
+			rather than being hidden or breaking the layout.
+		</p>
+		<p>
+			Technical decision: WooCommerce's own default field order puts the country selector right
+			after the name (needed early for tax/shipping calculation), which would pair it with phone
+			ahead of the address fields entirely.
+			<code>CheckoutFieldsLayout::reorder_address_fields()</code> (hooked on the
+			<code>woocommerce_checkout_fields</code> filter) fixes this by only reassigning the display
+			priority of fields it already knows about, leaving any other field a third-party plugin adds
+			untouched.
+		</p>
+		<p>
+			A store's actually configured shipping methods (Standard/Express, say) render as radio
+			cards (<code>woocommerce/cart/cart-shipping.php</code>, shared with the cart page's own
+			sidebar). This file had stayed WooCommerce's default <code>&lt;tr&gt;</code> markup since the
+			cart step — invalid once nested inside its own summary's <code>&lt;div&gt;</code> — fixed
+			into a proper <code>&lt;div&gt;</code> along the way.
+		</p>
+		<p>
+			Bug found and fixed during real Docker verification: the order summary
+			(<code>woocommerce/checkout/review-order.php</code>) had lost its
+			<code>woocommerce-checkout-review-order-table</code> CSS class along with its table
+			structure — but that exact class is what WooCommerce's own <code>checkout.js</code> targets
+			to replace this block on every AJAX totals refresh (a shipping method change, an address
+			field change...). Without it, the replacement found no matching element and silently failed:
+			the displayed total never updated. Fixed by keeping that class on the new summary's root
+			element.
+		</p>
+		<p>
+			Verified end to end in the real Docker environment with WooCommerce active: two test
+			shipping methods (free and €5.99, deleted after verification), simulating WooCommerce's own
+			<code>update_order_review</code> AJAX request directly — the total, the radio cards' selected
+			state and the returned fragment all correctly reflect the method change. No PHP warning or
+			error raised.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

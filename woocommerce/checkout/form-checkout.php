@@ -6,7 +6,8 @@
  * Purpose: Organize the login/customer-details/order-review sections WooCommerce already renders
  *          into two step panels toggled by assets/js/checkout.js (initCheckoutSteps()) — "login"
  *          (skipped entirely for an already logged-in customer) and "shipping" (the address form
- *          and, further down, the order review/payment section — still shown together at this
+ *          in a two-column layout next to a sticky order summary sidebar — the order review and
+ *          payment method selection are still shown together in that same sidebar/column at this
  *          stage; a future step splits payment into its own panel once it has its own styling).
  *          Every native hook/action/field from WooCommerce's own form-checkout.php stays in place,
  *          only the surrounding structure changes, so the real checkout AJAX submission
@@ -71,35 +72,33 @@ $solar_show_login_step = ! is_user_logged_in();
 <form name="checkout" method="post" class="checkout woocommerce-checkout" action="<?php echo esc_url( wc_get_checkout_url() ); ?>" enctype="multipart/form-data" aria-label="<?php echo esc_attr__( 'Checkout', 'solar-template' ); ?>">
 
 	<div class="checkout-step" data-step-panel="shipping" <?php echo $solar_show_login_step ? 'hidden' : ''; ?>>
-		<?php if ( $checkout->get_checkout_fields() ) : ?>
+		<div class="checkout-page__layout">
+			<div class="checkout-page__main">
+				<?php if ( $checkout->get_checkout_fields() ) : ?>
 
-			<?php do_action( 'woocommerce_checkout_before_customer_details' ); ?>
+					<?php do_action( 'woocommerce_checkout_before_customer_details' ); ?>
 
-			<div class="col2-set" id="customer_details">
-				<div class="col-1">
-					<?php do_action( 'woocommerce_checkout_billing' ); ?>
-				</div>
+					<div id="customer_details" class="checkout-customer-details">
+						<?php do_action( 'woocommerce_checkout_billing' ); ?>
+						<?php do_action( 'woocommerce_checkout_shipping' ); ?>
+					</div>
 
-				<div class="col-2">
-					<?php do_action( 'woocommerce_checkout_shipping' ); ?>
-				</div>
+					<?php do_action( 'woocommerce_checkout_after_customer_details' ); ?>
+
+				<?php endif; ?>
 			</div>
 
-			<?php do_action( 'woocommerce_checkout_after_customer_details' ); ?>
+			<div class="checkout-page__sidebar">
+				<?php do_action( 'woocommerce_checkout_before_order_review_heading' ); ?>
+				<?php do_action( 'woocommerce_checkout_before_order_review' ); ?>
 
-		<?php endif; ?>
+				<div id="order_review" class="woocommerce-checkout-review-order">
+					<?php do_action( 'woocommerce_checkout_order_review' ); ?>
+				</div>
 
-		<?php do_action( 'woocommerce_checkout_before_order_review_heading' ); ?>
-
-		<h3 id="order_review_heading"><?php esc_html_e( 'Your order', 'solar-template' ); ?></h3>
-
-		<?php do_action( 'woocommerce_checkout_before_order_review' ); ?>
-
-		<div id="order_review" class="woocommerce-checkout-review-order">
-			<?php do_action( 'woocommerce_checkout_order_review' ); ?>
+				<?php do_action( 'woocommerce_checkout_after_order_review' ); ?>
+			</div>
 		</div>
-
-		<?php do_action( 'woocommerce_checkout_after_order_review' ); ?>
 	</div>
 
 </form>

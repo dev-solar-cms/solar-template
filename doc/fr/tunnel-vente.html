@@ -178,6 +178,59 @@
 			client passant directement au panneau « Livraison » avec l'étape « Connexion » marquée
 			complétée. Aucun avertissement ni erreur PHP relevé.
 		</p>
+
+		<h2 id="livraison">Livraison</h2>
+		<p>
+			Le panneau « Livraison » affiche désormais une vraie disposition à deux colonnes : à gauche
+			les champs d'adresse réels de WooCommerce
+			(<code>woocommerce/checkout/form-billing.php</code>/<code>form-shipping.php</code>) en
+			grille 2 colonnes suivant la maquette (Prénom/Nom, Adresse, Complément, Code postal/Ville,
+			Pays/Téléphone), à droite un récapitulatif sticky réutilisant le même composant que la barre
+			latérale du panier.
+		</p>
+		<p>
+			<code>Solar_Template\Checkout\CheckoutFieldsLayout::rows()</code> associe les champs
+			connus par paire (Prénom/Nom, Code postal/Ville, Pays/Téléphone) en les identifiant par leur
+			nom « nu » — indépendant du préfixe <code>billing_</code>/<code>shipping_</code> propre à
+			chaque jeu de champs, puisque les deux jeux partagent cette même logique de disposition. Un
+			champ dont le partenaire habituel est absent (boutique sans champ téléphone, par exemple) ou
+			un champ inconnu ajouté par une extension tierce reste affiché seul, en pleine largeur,
+			plutôt que d'être masqué ou de casser la mise en page.
+		</p>
+		<p>
+			Décision technique : l'ordre par défaut des champs de WooCommerce place le sélecteur de pays
+			juste après le nom (nécessaire tôt pour le calcul des taxes/de la livraison), ce qui
+			l'associerait au téléphone avant même les champs d'adresse.
+			<code>CheckoutFieldsLayout::reorder_address_fields()</code> (filtre
+			<code>woocommerce_checkout_fields</code>) corrige cela en réassignant uniquement la priorité
+			d'affichage des champs déjà connus, sans toucher aux autres champs d'un éventuel plugin
+			tiers.
+		</p>
+		<p>
+			Les méthodes de livraison réellement configurées par la boutique (Standard/Express, par
+			exemple) s'affichent en cartes radio
+			(<code>woocommerce/cart/cart-shipping.php</code>, partagé avec la barre latérale du panier).
+			Ce fichier était resté au format <code>&lt;tr&gt;</code> par défaut de WooCommerce depuis
+			l'étape du panier — invalide une fois inséré dans le <code>&lt;div&gt;</code> de son propre
+			récapitulatif — corrigé au passage en un <code>&lt;div&gt;</code>.
+		</p>
+		<p>
+			Bug détecté et corrigé pendant la vérification en Docker réel : le récapitulatif de commande
+			(<code>woocommerce/checkout/review-order.php</code>) avait perdu la classe CSS
+			<code>woocommerce-checkout-review-order-table</code> en perdant sa structure de tableau — or
+			c'est exactement cette classe que le propre script <code>checkout.js</code> de WooCommerce
+			cible pour remplacer ce bloc à chaque rafraîchissement AJAX des totaux (changement de méthode
+			de livraison, de champ d'adresse...). Sans elle, le remplacement ne trouvait aucun élément et
+			échouait silencieusement : le total affiché ne se mettait jamais à jour. Corrigé en conservant
+			cette classe sur l'élément racine du nouveau récapitulatif.
+		</p>
+		<p>
+			Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif : deux
+			méthodes de livraison de test (gratuite et à 5,99&nbsp;€, supprimées après vérification) en
+			simulant directement la requête AJAX <code>update_order_review</code> de WooCommerce —
+			le total, l'état sélectionné des cartes radio et le fragment renvoyé reflètent bien le
+			changement de méthode. Aucun avertissement ni erreur PHP relevé.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

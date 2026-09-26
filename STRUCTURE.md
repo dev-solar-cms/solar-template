@@ -38,7 +38,7 @@ solar-template/
 │   ├── Newsletter/      # Stockage des inscrits à la newsletter (SubscriberRepository)
 │   ├── Catalog/         # Options/filtres/pagination/contrôleurs du catalogue produits
 │   ├── Product/         # Logique de la fiche produit (galerie, panneau, variations, onglets, produits similaires)
-│   └── Checkout/        # Tunnel de vente : routage (template_include), état de l'indicateur d'étapes, vue du panier
+│   └── Checkout/        # Tunnel de vente : routage, indicateur d'étapes, vue du panier, disposition des champs d'adresse
 ├── template-parts/      # Fragments de gabarit réutilisables (`get_template_part()`)
 │   ├── product-card.php # Carte produit (image, badge, wishlist, overlay panier, prix, swatches)
 │   ├── blog-card.php    # Carte article de blog (image 16:10, badge catégorie, meta, titre, extrait, auteur)
@@ -70,11 +70,15 @@ solar-template/
 │   │   ├── cart-totals.php # Récapitulatif sticky (sous-total, remise, livraison, total, bouton de paiement)
 │   │   ├── cart-item-data.php # Métadonnées d'un article (variante/gravure) sur une seule ligne, plutôt que la liste de définitions par défaut
 │   │   ├── cart-empty.php # État panier vide, stylé
-│   │   └── proceed-to-checkout-button.php # Bouton nommant explicitement la prochaine étape (connexion ou livraison)
+│   │   ├── proceed-to-checkout-button.php # Bouton nommant explicitement la prochaine étape (connexion ou livraison)
+│   │   └── cart-shipping.php # Sélecteur de méthode de livraison réel (cartes radio Standard/Express), partagé avec le paiement
 │   ├── global/
 │   │   └── form-login.php # Formulaire de connexion réutilisable, restylé (repris par la page paiement)
 │   └── checkout/
-│       └── form-checkout.php # Structure de la page paiement : panneaux "login"/"shipping" basculés par assets/js/checkout.js
+│       ├── form-checkout.php # Structure de la page paiement : panneaux "login"/"shipping" basculés par assets/js/checkout.js
+│       ├── form-billing.php # Champs d'adresse réels en grille 2 colonnes (Solar_Template\Checkout\CheckoutFieldsLayout)
+│       ├── form-shipping.php # Bascule « Livrer à une adresse différente » + note de commande
+│       └── review-order.php # Récapitulatif compact (mêmes styles que la barre latérale du panier), à l'intérieur de #order_review
 ├── languages/           # Fichiers `.mo` compilés (générés, ignorés par git sauf `.gitkeep`)
 ├── vite.config.js       # Configuration du pipeline de build des assets
 ├── .prettierrc.json     # Norme de formatage JS/SCSS, utilisée par `npm run format`
@@ -97,7 +101,7 @@ solar-template/
 │   ├── scss/_home-newsletter.scss # Section newsletter de la page d'accueil
 │   ├── scss/_catalog.scss # Catalogue produits (fil d'Ariane, titre/compteur, grille masonry, pagination)
 │   ├── scss/_product-page.scss # Fiche produit complète (fil d'Ariane, galerie, panneau, onglets, produits similaires)
-│   ├── scss/_checkout.scss # Tunnel de vente : en-tête/pied de page minimaux, indicateur d'étapes, page panier, récapitulatif
+│   ├── scss/_checkout.scss # Tunnel de vente : en-tête/pied de page minimaux, indicateur d'étapes, panier, adresse, méthodes de livraison, récapitulatif
 │   ├── js/main.js        # Point d'entrée JS (importe le SCSS, initialise les modules de comportement)
 │   ├── js/header.js      # Comportement de l'en-tête (mega menu, bascule de recherche)
 │   ├── js/newsletter.js  # Soumission AJAX des formulaires newsletter (`.js-newsletter-form`)
@@ -386,6 +390,38 @@ solar-template/
   automatisés, `initCheckoutSteps()` est couvert par des scénarios simulant le clic sur « Continuer
   sans compte », sur « Créer un compte » (coche la case native) et sur un cercle d'étape future
   désactivé. Aucun avertissement ni erreur PHP relevé.
+- Le panneau « Livraison » affiche désormais une vraie disposition à deux colonnes
+  (`checkout-page__layout`) : à gauche les champs d'adresse réels de WooCommerce
+  (`woocommerce/checkout/form-billing.php`/`form-shipping.php`) en grille 2 colonnes suivant la
+  maquette (Prénom/Nom, Adresse, Complément, Code postal/Ville, Pays/Téléphone), à droite un
+  récapitulatif sticky (même composant `.checkout-summary` que la barre latérale du panier). Un
+  champ dont le partenaire habituel est absent (ex. boutique sans champ téléphone) ou un champ
+  inconnu (ajouté par une extension) reste affiché seul, en pleine largeur, plutôt que d'être
+  masqué ou de casser la mise en page —
+  `Solar_Template\Checkout\CheckoutFieldsLayout::rows()` associe les champs par leur nom « nu »
+  (indépendant du préfixe `billing_`/`shipping_` propre à chaque jeu de champs).
+- Décision technique : l'ordre par défaut des champs de WooCommerce place le sélecteur de pays juste
+  après le nom (nécessaire tôt pour le calcul des taxes/de la livraison), ce qui l'associerait au
+  téléphone avant même les champs d'adresse — corrigé par
+  `CheckoutFieldsLayout::reorder_address_fields()` (filtre `woocommerce_checkout_fields`), qui
+  réassigne uniquement la priorité d'affichage des champs déjà connus, sans toucher aux autres champs
+  d'un éventuel plugin tiers.
+- Les méthodes de livraison réellement configurées par la boutique (ex. Standard/Express) s'affichent
+  en cartes radio (`woocommerce/cart/cart-shipping.php`, partagé avec la barre latérale du panier) —
+  ce fichier était resté au format `<tr>` par défaut de WooCommerce depuis l'étape du panier, invalide
+  une fois inséré dans le `<div>` de son propre récapitulatif ; corrigé au passage en un `<div>`.
+- **Bug détecté et corrigé pendant la vérification en Docker réel** : le récapitulatif de commande
+  (`woocommerce/checkout/review-order.php`) avait perdu la classe CSS
+  `woocommerce-checkout-review-order-table` en perdant sa structure de `<table>` — or c'est
+  exactement cette classe que le propre script `checkout.js` de WooCommerce cible pour remplacer ce
+  bloc à chaque rafraîchissement AJAX des totaux (changement de méthode de livraison, de champ
+  d'adresse...). Sans elle, le remplacement ne trouvait aucun élément et échouait silencieusement :
+  le total affiché ne se mettait jamais à jour. Corrigé en conservant cette classe sur l'élément
+  racine du nouveau récapitulatif (un simple `<div>` désormais, la classe ne présuppose plus un
+  `<table>`) — vérifié en simulant directement la requête AJAX `update_order_review` de WooCommerce
+  avec deux méthodes de livraison de test (gratuite et à 5,99€, supprimées après vérification) :
+  le total, l'état sélectionné des cartes radio et le fragment renvoyé reflètent bien le changement.
+  Aucun avertissement ni erreur PHP relevé sur l'ensemble de la vérification.
 
 ### Pied de page du thème (`footer.php`, `assets/scss/_footer.scss`)
 

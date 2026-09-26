@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.5.2`.
+Version actuelle : `0.5.3`.
 
 ## Avant une release
 
@@ -30,6 +30,27 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.5.3 — adresse de livraison et méthodes d'expédition réelles
+
+- Le panneau « Livraison » de la page de paiement affiche désormais une disposition à deux colonnes :
+  les champs d'adresse réels de WooCommerce en grille 2 colonnes (Prénom/Nom, Adresse, Complément,
+  Code postal/Ville, Pays/Téléphone) à gauche, un récapitulatif de commande sticky à droite (même
+  composant que la barre latérale du panier).
+- Un champ dont le partenaire habituel est absent, ou un champ ajouté par une extension tierce, reste
+  affiché seul en pleine largeur plutôt que d'être masqué ou de casser la mise en page — la
+  disposition s'adapte aux champs réellement configurés par la boutique.
+- Les méthodes de livraison réellement configurées (Standard/Express, par exemple) s'affichent en
+  cartes radio, partagées entre le panier et la page de paiement.
+- **Bug détecté et corrigé** : le récapitulatif de commande avait perdu, en abandonnant son ancienne
+  structure de tableau, la classe CSS que le propre script de WooCommerce utilise pour rafraîchir les
+  totaux en AJAX (changement de méthode de livraison, de champ d'adresse) — sans elle, ce
+  rafraîchissement échouait silencieusement. Corrigé en conservant cette classe sur le nouvel élément
+  racine.
+- Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif, y compris une
+  simulation directe de la requête AJAX de mise à jour des totaux avec deux méthodes de livraison de
+  test (supprimées après vérification) : total, sélection et affichage se mettent bien à jour. Aucun
+  avertissement ni erreur PHP relevé.
 
 ### 0.5.2 — étape de connexion sur la page de paiement
 
