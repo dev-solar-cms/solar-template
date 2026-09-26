@@ -178,6 +178,22 @@
 			card; the shipping form renders its own correctly-prefixed fields. Test data removed after
 			verification. No PHP warning or error observed.
 		</p>
+
+		<h2 id="downloads">Downloads</h2>
+		<p>
+			<code>woocommerce/myaccount/downloads.php</code> shows the customer's real downloadable
+			products (icon by extension, order reference, remaining download count or "Unlimited",
+			download button) from <code>WC()->customer->get_downloadable_products()</code>, via
+			<code>Solar_Template\Account\DownloadsView</code> — no fake data, and no file size shown
+			(WooCommerce doesn't natively expose it for a remote file without risking a costly disk call
+			on every page render).
+		</p>
+		<p>
+			Verified end to end in the real Docker environment with WooCommerce active: a test
+			downloadable product purchased through a real order shows the right icon, order reference and
+			remaining download count, and the download button genuinely serves the real file. Test
+			product and order removed after verification. No PHP warning or error observed.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

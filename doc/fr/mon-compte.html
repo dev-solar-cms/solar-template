@@ -188,6 +188,24 @@
 			affiche ses propres champs correctement préfixés. Données de test supprimées après
 			vérification. Aucun avertissement ni erreur PHP relevé.
 		</p>
+
+		<h2 id="telechargements">Téléchargements</h2>
+		<p>
+			<code>woocommerce/myaccount/downloads.php</code> affiche les vrais produits téléchargeables du
+			client (icône selon l'extension, référence de commande, nombre de téléchargements restants ou
+			« Illimité », bouton de téléchargement) à partir de
+			<code>WC()->customer->get_downloadable_products()</code>, via
+			<code>Solar_Template\Account\DownloadsView</code> — aucune donnée factice, aucune information
+			de taille de fichier affichée (WooCommerce ne l'expose pas nativement pour un fichier distant
+			sans risquer un appel disque coûteux à chaque affichage).
+		</p>
+		<p>
+			Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif : un produit
+			téléchargeable de test acheté via une commande réelle apparaît avec la bonne icône, la bonne
+			référence de commande et le bon compte de téléchargements restants, et le bouton de
+			téléchargement sert bien le fichier réel. Produit et commande de test supprimés après
+			vérification. Aucun avertissement ni erreur PHP relevé.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

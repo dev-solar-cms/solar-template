@@ -1302,6 +1302,30 @@ final class DefaultStrings {
 				'fr_FR' => "Enregistrer l'adresse",
 				'en_US' => 'Save address',
 			),
+			'%d download remaining'                        => array(
+				'fr_FR'  => '%d téléchargement restant',
+				'en_US'  => '%d download remaining',
+				'plural' => array(
+					'fr_FR' => '%d téléchargements restants',
+					'en_US' => '%d downloads remaining',
+				),
+			),
+			'Unlimited'                                    => array(
+				'fr_FR' => 'Illimité',
+				'en_US' => 'Unlimited',
+			),
+			'Download'                                     => array(
+				'fr_FR' => 'Télécharger',
+				'en_US' => 'Download',
+			),
+			'No downloads available yet.'                  => array(
+				'fr_FR' => 'Aucun téléchargement disponible pour le moment.',
+				'en_US' => 'No downloads available yet.',
+			),
+			'Browse products'                              => array(
+				'fr_FR' => 'Parcourir les produits',
+				'en_US' => 'Browse products',
+			),
 		);
 	}
 

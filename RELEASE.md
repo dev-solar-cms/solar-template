@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.6.3`.
+Version actuelle : `0.6.4`.
 
 ## Avant une release
 
@@ -30,6 +30,16 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.6.4 — page des téléchargements restylée
+
+- La page « Téléchargements » affiche désormais les vrais fichiers téléchargeables du client sous
+  forme de lignes stylées (icône selon le type de fichier, référence de commande, nombre de
+  téléchargements restants ou « Illimité », bouton de téléchargement) plutôt que la simple liste à
+  puces par défaut de WooCommerce.
+- Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif : un produit
+  téléchargeable de test acheté via une commande réelle apparaît correctement et le téléchargement
+  du fichier fonctionne.
 
 ### 0.6.3 — gestion des adresses de facturation et de livraison
 
