@@ -276,6 +276,44 @@
 			le bon moyen de paiement et le bon total (commande de test supprimée après vérification). Aucun
 			avertissement ni erreur PHP relevé.
 		</p>
+
+		<h2 id="confirmation">Confirmation</h2>
+		<p>
+			La page de confirmation (<code>woocommerce/checkout/thankyou.php</code>) affiche désormais un
+			récapitulatif centré (coche dorée, numéro de commande, livraison estimée, total payé, adresse
+			de livraison, articles commandés, boutons « Suivre ma commande »/« Continuer mes achats ») à
+			partir des vraies données de la commande qui vient d'être passée
+			(<code>Solar_Template\Checkout\OrderConfirmation::view_model()</code>, même convention que
+			<code>CartView</code> pour la page panier) plutôt que le récapitulatif par défaut de
+			WooCommerce.
+		</p>
+		<p>
+			La livraison estimée est une fourchette de dates calculée depuis la vraie date de création de
+			la commande, avec un délai filtrable
+			(<code>solar_template_order_confirmation_delivery_lead_days</code>), en prévision d'un futur
+			écran d'administration.
+		</p>
+		<p>
+			Décision technique :
+			<code>Checkout\CheckoutController::detach_default_checkout_hooks()</code> détache désormais
+			aussi le tableau de détails de commande que WooCommerce ajoute par défaut en bas de la page de
+			confirmation, redondant avec le récapitulatif propre du thème qui affiche déjà les mêmes
+			données réelles dans son propre style. Les hooks spécifiques à chaque passerelle de paiement
+			restent en place (par exemple les instructions de virement bancaire d'une commande par virement),
+			puisqu'il s'agit d'un contenu réel nécessaire au client plutôt que d'une redondance.
+		</p>
+		<p>
+			Une commande en échec affiche le message d'erreur natif de WooCommerce restylé plutôt que le
+			récapitulatif de succès, avec un bouton vers la page de paiement de cette commande.
+		</p>
+		<p>
+			Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif : une commande
+			réelle passée par le formulaire de paiement affiche la confirmation avec les bonnes données
+			(numéro, livraison estimée, total, adresse, articles, email) et le bon état de l'indicateur
+			d'étapes ; une commande de test en statut d'échec affiche bien la branche restylée
+			correspondante (commandes de test supprimées après vérification). Aucun avertissement ni erreur
+			PHP relevé.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

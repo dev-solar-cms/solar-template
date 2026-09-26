@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.5.4`.
+Version actuelle : `0.5.5`.
 
 ## Avant une release
 
@@ -30,6 +30,26 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.5.5 — page de confirmation de commande
+
+- La page de confirmation affiche désormais un récapitulatif centré (coche dorée, numéro de
+  commande, livraison estimée, total payé, adresse de livraison, articles commandés) à partir des
+  vraies données de la commande qui vient d'être passée, avec deux boutons « Suivre ma commande » et
+  « Continuer mes achats », plutôt que le récapitulatif par défaut de WooCommerce.
+- La livraison estimée est une fourchette de dates calculée depuis la date de création réelle de la
+  commande.
+- Le tableau de détails de commande que WooCommerce ajoute par défaut en bas de cette page a été
+  retiré : il faisait doublon avec le récapitulatif du thème, qui affiche déjà les mêmes données
+  réelles dans son propre style. Le contenu propre à chaque moyen de paiement (par exemple les
+  coordonnées bancaires d'un virement) reste affiché, puisqu'il s'agit d'une information réelle
+  nécessaire au client.
+- Une commande en échec affiche un message d'erreur restylé plutôt que le récapitulatif de succès.
+- Le tunnel de vente (panier, connexion, livraison, paiement, confirmation) est désormais complet de
+  bout en bout.
+- Vérifié de bout en bout dans l'environnement Docker réel : une commande réelle placée par le
+  formulaire de paiement affiche la bonne confirmation ; une commande de test en statut d'échec
+  affiche la bonne branche restylée (commandes de test supprimées après vérification).
 
 ### 0.5.4 — étape de paiement dédiée, passerelles réelles
 

@@ -261,6 +261,41 @@
 			payment method and total (test order deleted after verification). No PHP warning or error
 			raised.
 		</p>
+
+		<h2 id="confirmation">Confirmation</h2>
+		<p>
+			The confirmation page (<code>woocommerce/checkout/thankyou.php</code>) now shows a centered
+			recap (gold checkmark, order number, estimated delivery, total paid, shipping address, items
+			ordered, "Track my order"/"Continue shopping" buttons) built from the real, just-placed
+			order's own data (<code>Solar_Template\Checkout\OrderConfirmation::view_model()</code>, the
+			same convention as <code>CartView</code> for the cart page) rather than WooCommerce's default
+			recap.
+		</p>
+		<p>
+			The estimated delivery is a date range computed from the order's real creation date, with a
+			filterable lead time
+			(<code>solar_template_order_confirmation_delivery_lead_days</code>), ahead of a future admin
+			screen.
+		</p>
+		<p>
+			Technical decision:
+			<code>Checkout\CheckoutController::detach_default_checkout_hooks()</code> now also detaches
+			the order details table WooCommerce adds by default at the bottom of the confirmation page,
+			redundant with the theme's own recap already showing the same real data in its own style.
+			Each payment gateway's own hook stays in place (e.g. a bank-transfer order's account details),
+			since that is real content the customer actually needs, not a redundancy.
+		</p>
+		<p>
+			A failed order shows WooCommerce's own restyled error message instead of the success recap,
+			with a button back to that order's payment page.
+		</p>
+		<p>
+			Verified end to end in the real Docker environment with WooCommerce active: a real order placed
+			through the payment form shows the confirmation with the right data (number, estimated
+			delivery, total, address, items, email) and the right step indicator state; a test order set to
+			the failed status correctly shows the matching restyled branch (test orders deleted after
+			verification). No PHP warning or error raised.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

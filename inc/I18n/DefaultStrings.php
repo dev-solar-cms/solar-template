@@ -1038,6 +1038,54 @@ final class DefaultStrings {
 				'fr_FR' => 'En passant commande, vous acceptez nos %1$sC.G.V.%2$s et notre %3$spolitique de confidentialité%4$s.',
 				'en_US' => 'By placing your order, you accept our %1$sT&Cs%2$s and our %3$sprivacy policy%4$s.',
 			),
+			'Unfortunately your order cannot be processed as the originating bank/merchant has declined your transaction. Please attempt your purchase again.' => array(
+				'fr_FR' => "Malheureusement, votre commande ne peut pas être traitée : la banque ou le commerçant d'origine a refusé la transaction. Merci de réessayer votre achat.",
+				'en_US' => 'Unfortunately your order cannot be processed as the originating bank/merchant has declined your transaction. Please attempt your purchase again.',
+			),
+			'Pay'                                          => array(
+				'fr_FR' => 'Payer',
+				'en_US' => 'Pay',
+			),
+			'Order confirmed!'                             => array(
+				'fr_FR' => 'Commande confirmée !',
+				'en_US' => 'Order confirmed!',
+			),
+			'Thank you for your purchase, %s! Your order has been placed and is being prepared.' => array(
+				'fr_FR' => 'Merci pour votre achat, %s ! Votre commande a bien été enregistrée et est en cours de préparation.',
+				'en_US' => 'Thank you for your purchase, %s! Your order has been placed and is being prepared.',
+			),
+			'valued customer'                              => array(
+				'fr_FR' => 'cher client',
+				'en_US' => 'valued customer',
+			),
+			'Order number'                                 => array(
+				'fr_FR' => 'Numéro de commande',
+				'en_US' => 'Order number',
+			),
+			'Estimated delivery'                           => array(
+				'fr_FR' => 'Livraison estimée',
+				'en_US' => 'Estimated delivery',
+			),
+			'Total paid'                                   => array(
+				'fr_FR' => 'Total payé',
+				'en_US' => 'Total paid',
+			),
+			'Items ordered'                                => array(
+				'fr_FR' => 'Articles commandés',
+				'en_US' => 'Items ordered',
+			),
+			'A confirmation email has been sent to %s'     => array(
+				'fr_FR' => 'Un email de confirmation a été envoyé à %s',
+				'en_US' => 'A confirmation email has been sent to %s',
+			),
+			'Track my order'                               => array(
+				'fr_FR' => 'Suivre ma commande',
+				'en_US' => 'Track my order',
+			),
+			'We could not find this order.'                => array(
+				'fr_FR' => "Nous n'avons pas trouvé cette commande.",
+				'en_US' => 'We could not find this order.',
+			),
 		);
 	}
 

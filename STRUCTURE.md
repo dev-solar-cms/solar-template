@@ -38,7 +38,7 @@ solar-template/
 │   ├── Newsletter/      # Stockage des inscrits à la newsletter (SubscriberRepository)
 │   ├── Catalog/         # Options/filtres/pagination/contrôleurs du catalogue produits
 │   ├── Product/         # Logique de la fiche produit (galerie, panneau, variations, onglets, produits similaires)
-│   └── Checkout/        # Tunnel de vente : routage, indicateur d'étapes, vue du panier, disposition des champs d'adresse, icônes/texte du paiement
+│   └── Checkout/        # Tunnel de vente : routage, indicateur d'étapes, vue du panier, disposition des champs d'adresse, icônes/texte du paiement, vue de la confirmation de commande
 ├── template-parts/      # Fragments de gabarit réutilisables (`get_template_part()`)
 │   ├── product-card.php # Carte produit (image, badge, wishlist, overlay panier, prix, swatches)
 │   ├── blog-card.php    # Carte article de blog (image 16:10, badge catégorie, meta, titre, extrait, auteur)
@@ -80,7 +80,8 @@ solar-template/
 │       ├── form-shipping.php # Bascule « Livrer à une adresse différente » + note de commande
 │       ├── review-order.php # Récapitulatif compact (mêmes styles que la barre latérale du panier), à l'intérieur de #order_review, partagé par les panneaux "shipping"/"payment"
 │       ├── payment.php   # Panneau paiement : moyens de paiement réels en cartes radio, note sécurité, bouton de validation
-│       └── payment-method.php # Une carte radio de moyen de paiement (icône via Solar_Template\Checkout\PaymentGatewayIcons)
+│       ├── payment-method.php # Une carte radio de moyen de paiement (icône via Solar_Template\Checkout\PaymentGatewayIcons)
+│       └── thankyou.php  # Page de confirmation : numéro de commande, livraison estimée, total, adresse, articles, CTAs (Solar_Template\Checkout\OrderConfirmation)
 ├── languages/           # Fichiers `.mo` compilés (générés, ignorés par git sauf `.gitkeep`)
 ├── vite.config.js       # Configuration du pipeline de build des assets
 ├── .prettierrc.json     # Norme de formatage JS/SCSS, utilisée par `npm run format`
@@ -446,6 +447,31 @@ solar-template/
   (virement bancaire, chèque, paiement à la livraison), une commande complète simulée avec la requête
   réelle que le formulaire de paiement soumettrait (`?wc-ajax=checkout`) confirmée créée avec le bon
   moyen de paiement et le bon total (commande de test supprimée après vérification). Aucun
+  avertissement ni erreur PHP relevé.
+- La page de confirmation (`woocommerce/checkout/thankyou.php`) affiche désormais un récapitulatif
+  centré (coche dorée, numéro de commande, livraison estimée, total payé, adresse de livraison,
+  articles commandés, deux boutons « Suivre ma commande »/« Continuer mes achats ») à partir des
+  vraies données de la commande qui vient d'être passée
+  (`Solar_Template\Checkout\OrderConfirmation::view_model()`, même convention que `CartView` pour la
+  page panier) — plutôt que le récapitulatif par défaut de WooCommerce. La livraison estimée est une
+  fourchette de dates calculée depuis la vraie date de création de la commande, avec un délai
+  filtrable (`solar_template_order_confirmation_delivery_lead_days`, extension point prévu pour le
+  futur écran d'administration du Groupe 10).
+- Décision technique : `Checkout\CheckoutController::detach_default_checkout_hooks()` détache
+  désormais aussi le tableau de détails de commande que WooCommerce ajoute par défaut en bas de la
+  page de confirmation (`woocommerce_thankyou` → `woocommerce_order_details_table()`), redondant
+  avec le récapitulatif propre du thème qui affiche déjà les mêmes données réelles dans son propre
+  style. Les hooks spécifiques à chaque passerelle de paiement restent en place (ex. les instructions
+  de virement bancaire d'une commande BACS), puisqu'il s'agit d'un contenu réel nécessaire au client
+  plutôt que d'une redondance.
+- Une commande en échec (`WC_Order::has_status('failed')`) affiche le message d'erreur natif de
+  WooCommerce restylé plutôt que le récapitulatif de succès, avec un bouton vers la page de paiement
+  de cette commande.
+- **Vérifié de bout en bout dans l'environnement Docker réel** : une commande réelle passée par le
+  formulaire de paiement affiche la confirmation avec les bonnes données (numéro, livraison estimée,
+  total, adresse, articles, email) et le bon état de l'indicateur d'étapes (les 4 premières étapes
+  complétées, « Confirmation » active) ; une commande de test placée directement en statut `failed`
+  affiche bien la branche d'échec restylée (commandes de test supprimées après vérification). Aucun
   avertissement ni erreur PHP relevé.
 
 ### Pied de page du thème (`footer.php`, `assets/scss/_footer.scss`)

@@ -8,14 +8,16 @@
  *          and resolve which of the tunnel's 5 steps is the current one server-side, so the step
  *          indicator renders in the right initial state on every request (assets/js/checkout.js
  *          then moves between the login/shipping/payment sub-steps client-side, since those three
- *          live on the single real checkout page). Also detaches two of WooCommerce's own default
- *          hooks so the theme's own templates can place that same content in their own step panel
- *          instead: the login form/coupon box normally rendered above the whole checkout page
+ *          live on the single real checkout page). Also detaches three of WooCommerce's own
+ *          default hooks so the theme's own templates can place that same content in their own
+ *          step instead: the login form/coupon box normally rendered above the whole checkout page
  *          (woocommerce/checkout/form-checkout.php places the login form itself, inside its own
- *          step panel, and the coupon box is already offered on the cart step), and the payment
+ *          step panel, and the coupon box is already offered on the cart step), the payment
  *          method list/place-order button normally appended straight after the order review table
  *          (woocommerce/checkout/form-checkout.php now renders it in its own "payment" step panel
- *          instead, via a direct call to `woocommerce_checkout_payment()`).
+ *          instead, via a direct call to `woocommerce_checkout_payment()`), and the default order
+ *          details table normally appended below the confirmation page (redundant with
+ *          woocommerce/checkout/thankyou.php's own styled recap of the same real order data).
  *
  * @package Solar_Template
  */
@@ -34,8 +36,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 final class CheckoutController {
 
 	/**
-	 * Detaches WooCommerce's default login form/coupon box from the top of the checkout page, and
-	 * its default payment method list/place-order button from the end of the order review table.
+	 * Detaches WooCommerce's default login form/coupon box from the top of the checkout page, its
+	 * default payment method list/place-order button from the end of the order review table, and its
+	 * default order details table from the end of the confirmation page.
 	 *
 	 * @return void
 	 */
@@ -43,6 +46,7 @@ final class CheckoutController {
 		remove_action( 'woocommerce_before_checkout_form', 'woocommerce_checkout_login_form', 10 );
 		remove_action( 'woocommerce_before_checkout_form', 'woocommerce_checkout_coupon_form', 10 );
 		remove_action( 'woocommerce_checkout_order_review', 'woocommerce_checkout_payment', 20 );
+		remove_action( 'woocommerce_thankyou', 'woocommerce_order_details_table', 10 );
 	}
 
 	/**

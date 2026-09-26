@@ -875,3 +875,123 @@
 .checkout-payment__place-order {
 	width: 100%;
 }
+
+// -----------------------------------------------------------------------------------------------
+// Order confirmation (woocommerce/checkout/thankyou.php)
+// -----------------------------------------------------------------------------------------------
+
+.order-confirmation {
+	max-width: 580px;
+	margin: 0 auto;
+	text-align: center;
+}
+
+.order-confirmation__icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 80px;
+	height: 80px;
+	margin: 0 auto 28px;
+	border-radius: 50%;
+	background: $color-gold;
+	color: $color-surface;
+}
+
+.order-confirmation__title {
+	margin-bottom: 10px;
+	@include type-h1;
+}
+
+.order-confirmation__subtitle {
+	margin-bottom: 32px;
+	color: $color-muted;
+	font-size: 16px;
+	line-height: 1.6;
+}
+
+.order-confirmation__card {
+	margin-bottom: 28px;
+	padding: 28px;
+	border: 1.5px solid $color-border;
+	border-radius: $radius-modal;
+	background: $color-surface;
+	text-align: left;
+}
+
+.order-confirmation__grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 20px;
+	margin-bottom: 24px;
+}
+
+.order-confirmation__label {
+	margin-bottom: 5px;
+	color: $color-muted;
+	font-size: 11px;
+	font-weight: $font-weight-bold;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+}
+
+.order-confirmation__value {
+	color: $color-dark;
+	font-size: 16px;
+	font-weight: $font-weight-extrabold;
+}
+
+.order-confirmation__items {
+	padding-top: 20px;
+	border-top: 1px solid $color-border;
+}
+
+.order-confirmation__items-label {
+	margin-bottom: 14px;
+	color: $color-muted;
+	font-size: 11px;
+	font-weight: $font-weight-bold;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+}
+
+.order-confirmation__items-list {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.order-confirmation__item {
+	display: flex;
+	justify-content: space-between;
+	gap: 12px;
+	color: $color-muted;
+	font-size: 13.5px;
+}
+
+.order-confirmation__item-meta {
+	color: $color-muted-light;
+}
+
+.order-confirmation__item-total {
+	flex-shrink: 0;
+	color: $color-dark;
+	font-weight: $font-weight-semibold;
+	white-space: nowrap;
+}
+
+.order-confirmation__email-note {
+	margin-bottom: 28px;
+	color: $color-muted;
+	font-size: 13.5px;
+
+	strong {
+		color: $color-dark;
+	}
+}
+
+.order-confirmation__actions {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 12px;
+}
