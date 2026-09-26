@@ -80,6 +80,52 @@
 			product to the cart, the checkout page shows "Cart" done and "Login" active for a
 			not-logged-in visitor. No PHP warning or error raised.
 		</p>
+
+		<h2 id="cart">Cart</h2>
+		<p>
+			<code>woocommerce/cart/cart.php</code> renders the cart's real line items —
+			<code>Solar_Template\Checkout\CartView::items()</code> computes each one's image, name,
+			variation/engraving metadata, quantity field and price — a coupon code form, and a sticky
+			order summary (<code>woocommerce/cart/cart-totals.php</code>: subtotal, discounts, shipping,
+			total, a button toward the next step).
+		</p>
+		<p>
+			<code>woocommerce/cart/cart-item-data.php</code> renders an item's metadata (color/size,
+			engraving) as a single inline line ("Color: Black · Size: M") instead of WooCommerce's
+			default definition list, reusing the exact same data
+			(<code>wc_get_formatted_cart_item_data()</code>) — the content stays real, only the
+			presentation changes.
+		</p>
+		<p>
+			Every cart field and action keeps WooCommerce's own native name, action and nonce
+			(<code>cart[{key}][qty]</code>, <code>wc_get_cart_remove_url()</code>,
+			<code>coupon_code</code>/<code>apply_coupon</code>, <code>woocommerce-cart-nonce</code>):
+			changing a quantity, removing an item and applying a coupon all work through a plain form
+			submission, no JavaScript required. The "−"/"+" quantity stepper
+			(<code>assets/js/checkout.js</code>, <code>initCartQuantitySteppers()</code>) only adjusts
+			that same native field's value before submission — same convention as the quantity stepper
+			already in place on the product page.
+		</p>
+		<p>
+			Technical decision: the "Proceed to..." button explicitly names the next step the customer
+			will actually see ("Proceed to login" for a guest, "Proceed to shipping" for an already
+			logged-in customer) rather than WooCommerce's generic wording, consistent with the step
+			indicator.
+		</p>
+		<p>
+			Bug found and fixed during real Docker verification: this WooCommerce installation's cart
+			and checkout pages defaulted to the native Gutenberg blocks rather than the classic
+			shortcodes — a classic/non-FSE theme like this one cannot override the PHP templates those
+			blocks bypass entirely (their real content is only hydrated client-side, invisible to any
+			server-side check). Fixed by reassigning both pages' content to the classic shortcodes
+			(<code>[woocommerce_cart]</code>/<code>[woocommerce_checkout]</code>).
+		</p>
+		<p>
+			Verified end to end in the real Docker environment with WooCommerce active: adding several
+			products to the cart, changing a quantity, removing an item and applying a test coupon
+			(created then deleted after verification) all confirmed working. No PHP warning or error
+			raised.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

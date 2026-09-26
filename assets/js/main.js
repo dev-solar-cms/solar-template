@@ -13,6 +13,7 @@ import { initMegaMenu, initSearchOverlay } from './header.js';
 import { initNewsletterForms } from './newsletter.js';
 import { initCatalogFilters } from './catalog.js';
 import { initProductGallery, initProductVariations, initProductTabs } from './product.js';
+import { initCartQuantitySteppers } from './checkout.js';
 
 document.addEventListener('DOMContentLoaded', () => {
 	document.documentElement.classList.add('solar-template-ready');
@@ -23,4 +24,5 @@ document.addEventListener('DOMContentLoaded', () => {
 	initProductGallery();
 	initProductVariations();
 	initProductTabs();
+	initCartQuantitySteppers();
 });

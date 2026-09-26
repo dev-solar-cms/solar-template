@@ -84,6 +84,53 @@
 			après ajout d'un produit au panier, la page de commande affiche « Panier » complétée et
 			« Connexion » active pour un visiteur non connecté. Aucun avertissement ni erreur PHP relevé.
 		</p>
+
+		<h2 id="panier">Panier</h2>
+		<p>
+			<code>woocommerce/cart/cart.php</code> affiche les vrais articles du panier —
+			<code>Solar_Template\Checkout\CartView::items()</code> calcule, pour chacun, son image, son
+			nom, ses métadonnées de variante/gravure, le champ de quantité et son prix — un formulaire de
+			code promo, et un récapitulatif sticky (<code>woocommerce/cart/cart-totals.php</code> :
+			sous-total, remises, livraison, total, bouton vers l'étape suivante).
+		</p>
+		<p>
+			<code>woocommerce/cart/cart-item-data.php</code> réimplémente l'affichage des métadonnées
+			d'un article (couleur/taille, gravure) en une seule ligne (« Couleur : Noir · Taille : M »)
+			plutôt que la liste de définitions par défaut de WooCommerce, en reprenant exactement les
+			mêmes données (<code>wc_get_formatted_cart_item_data()</code>) — le contenu reste donc réel,
+			seule la présentation change.
+		</p>
+		<p>
+			Chaque champ et action du panier garde le nom, l'action et le nonce natifs de WooCommerce
+			(<code>cart[{clé}][qty]</code>, <code>wc_get_cart_remove_url()</code>,
+			<code>coupon_code</code>/<code>apply_coupon</code>, <code>woocommerce-cart-nonce</code>) :
+			modifier une quantité, retirer un article et appliquer un code promo fonctionnent par une
+			soumission de formulaire classique, sans JavaScript requis. Le stepper de quantité «−»/«+»
+			(<code>assets/js/checkout.js</code>, <code>initCartQuantitySteppers()</code>) ne fait
+			qu'ajuster la valeur de ce même champ natif avant la soumission — même convention que le
+			stepper de quantité déjà en place sur la fiche produit.
+		</p>
+		<p>
+			Décision technique : le bouton « Procéder à... » nomme explicitement la prochaine étape que
+			le client verra réellement (« Procéder à la connexion » pour un invité, « Procéder à la
+			livraison » pour un client déjà connecté) plutôt que le texte générique de WooCommerce,
+			cohérent avec l'indicateur d'étapes.
+		</p>
+		<p>
+			Bug détecté et corrigé pendant la vérification en Docker réel : les pages Panier et Paiement
+			de cette installation WooCommerce utilisaient par défaut les blocs Gutenberg natifs plutôt
+			que les shortcodes classiques — un thème classique/non-FSE comme celui-ci ne peut pas
+			surcharger les gabarits PHP que ces blocs ignorent complètement (leur contenu réel n'est
+			hydraté que côté client, invisible à toute vérification serveur). Corrigé en réassignant le
+			contenu de ces deux pages sur les shortcodes classiques
+			(<code>[woocommerce_cart]</code>/<code>[woocommerce_checkout]</code>).
+		</p>
+		<p>
+			Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif : ajout de
+			plusieurs produits au panier, modification de quantité, retrait d'un article et application
+			d'un code promo de test (créé puis supprimé après vérification) tous confirmés fonctionnels.
+			Aucun avertissement ni erreur PHP relevé.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

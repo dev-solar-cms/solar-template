@@ -38,7 +38,7 @@ solar-template/
 │   ├── Newsletter/      # Stockage des inscrits à la newsletter (SubscriberRepository)
 │   ├── Catalog/         # Options/filtres/pagination/contrôleurs du catalogue produits
 │   ├── Product/         # Logique de la fiche produit (galerie, panneau, variations, onglets, produits similaires)
-│   └── Checkout/        # Tunnel de vente : routage (template_include), état de l'indicateur d'étapes
+│   └── Checkout/        # Tunnel de vente : routage (template_include), état de l'indicateur d'étapes, vue du panier
 ├── template-parts/      # Fragments de gabarit réutilisables (`get_template_part()`)
 │   ├── product-card.php # Carte produit (image, badge, wishlist, overlay panier, prix, swatches)
 │   ├── blog-card.php    # Carte article de blog (image 16:10, badge catégorie, meta, titre, extrait, auteur)
@@ -64,6 +64,13 @@ solar-template/
 │       ├── testimonials.php # Grille de 3 témoignages, carte du milieu en style inversé
 │       ├── blog-preview.php # Grille des 3 derniers articles de blog réels
 │       └── newsletter.php # Formulaire d'inscription newsletter (traité en AJAX)
+├── woocommerce/         # Surcharges de gabarits natifs WooCommerce (voir « Tunnel de vente » ci-dessous)
+│   └── cart/            # Page panier : articles, code promo, récapitulatif
+│       ├── cart.php     # Liste des articles réels du panier + formulaire de code promo
+│       ├── cart-totals.php # Récapitulatif sticky (sous-total, remise, livraison, total, bouton de paiement)
+│       ├── cart-item-data.php # Métadonnées d'un article (variante/gravure) sur une seule ligne, plutôt que la liste de définitions par défaut
+│       ├── cart-empty.php # État panier vide, stylé
+│       └── proceed-to-checkout-button.php # Bouton nommant explicitement la prochaine étape (connexion ou livraison)
 ├── languages/           # Fichiers `.mo` compilés (générés, ignorés par git sauf `.gitkeep`)
 ├── vite.config.js       # Configuration du pipeline de build des assets
 ├── .prettierrc.json     # Norme de formatage JS/SCSS, utilisée par `npm run format`
@@ -86,12 +93,13 @@ solar-template/
 │   ├── scss/_home-newsletter.scss # Section newsletter de la page d'accueil
 │   ├── scss/_catalog.scss # Catalogue produits (fil d'Ariane, titre/compteur, grille masonry, pagination)
 │   ├── scss/_product-page.scss # Fiche produit complète (fil d'Ariane, galerie, panneau, onglets, produits similaires)
-│   ├── scss/_checkout.scss # Tunnel de vente : en-tête/pied de page minimaux, indicateur d'étapes, gabarit des pages
+│   ├── scss/_checkout.scss # Tunnel de vente : en-tête/pied de page minimaux, indicateur d'étapes, page panier, récapitulatif
 │   ├── js/main.js        # Point d'entrée JS (importe le SCSS, initialise les modules de comportement)
 │   ├── js/header.js      # Comportement de l'en-tête (mega menu, bascule de recherche)
 │   ├── js/newsletter.js  # Soumission AJAX des formulaires newsletter (`.js-newsletter-form`)
 │   ├── js/catalog.js     # Barre de filtres du catalogue : panneaux, état actif, soumission AJAX
 │   ├── js/product.js     # Fiche produit : changement d'image de la galerie au clic sur une miniature
+	├── js/checkout.js    # Panier : stepper de quantité "−"/"+" à côté du champ natif WooCommerce
 │   └── dist/             # Sortie compilée (générée par `npm run build`/`dev`, ignorée par git)
 ├── phpunit.xml.dist     # Configuration PHPUnit, utilisée par `composer test`
 ├── tests/php/           # Tests unitaires PHP (bootstrap minimal, pas une installation WordPress complète)
@@ -320,8 +328,35 @@ solar-template/
   (`/checkout/`, formulaire natif unique) : `Checkout\CheckoutController::current_step()` ne
   détermine que la sous-étape visible au premier chargement (Connexion pour un invité, Livraison
   directement pour un client déjà connecté) — se déplacer entre ces trois sous-étapes ensuite se
-  fait côté client (assets/js/checkout.js, étapes suivantes de ce même groupe de travail), sans
+  fait côté client (assets/js/checkout.js, étapes suivantes de ce même chantier), sans
   jamais soumettre le formulaire avant le clic final sur « Payer ».
+- La page panier (`/cart/`) affiche les vrais articles du panier
+  (`Checkout\CartView::items()` : image, nom, métadonnées de variante/gravure sur une seule
+  ligne — `woocommerce/cart/cart-item-data.php` réimplémente la sortie par défaut de WooCommerce en
+  ligne unique plutôt qu'une liste de définitions, même contenu réel puisque toujours alimentée par
+  `wc_get_formatted_cart_item_data()` — stepper de quantité, prix, lien de retrait), un formulaire de
+  code promo, et un récapitulatif sticky (sous-total, remises, livraison, total, bouton vers l'étape
+  suivante). Chaque champ/action garde le nom, l'action et le nonce natifs de WooCommerce
+  (`cart[{clé}][qty]`, `wc_get_cart_remove_url()`, `coupon_code`/`apply_coupon`,
+  `woocommerce-cart-nonce`) : modifier une quantité, retirer un article et appliquer un code promo
+  fonctionnent par une soumission de formulaire classique, sans JavaScript requis — le stepper
+  « −»/« + » (`assets/js/checkout.js`, `initCartQuantitySteppers()`) ne fait qu'ajuster la valeur du
+  même champ natif avant cette soumission, même convention que le stepper de quantité de la fiche
+  produit.
+- Décision technique : le bouton « Procéder à... » (`woocommerce/cart/proceed-to-checkout-button.php`)
+  nomme explicitement la prochaine étape que le client verra réellement sur la page de paiement
+  (« Procéder à la connexion » pour un invité, « Procéder à la livraison » pour un client déjà
+  connecté) plutôt que le texte générique de WooCommerce, cohérent avec l'indicateur d'étapes.
+- **Bug détecté et corrigé pendant la vérification en Docker réel** : les pages Panier et Paiement de
+  l'installation WooCommerce utilisaient par défaut les blocs Gutenberg natifs (`<!-- wp:woocommerce/
+  cart -->`/`<!-- wp:woocommerce/checkout -->`), qui ne passent jamais par les gabarits PHP classiques
+  que ce thème surcharge (`woocommerce/cart/cart.php`...) — leur contenu réel n'est hydraté que côté
+  client par l'API Store, invisible à toute vérification serveur. Un thème classique/non-FSE comme
+  celui-ci doit surcharger les gabarits classiques, donc corrigé en réassignant le contenu de ces deux
+  pages sur les shortcodes classiques (`[woocommerce_cart]`/`[woocommerce_checkout]`) — vérifié de
+  bout en bout ensuite : ajout au panier, modification de quantité, retrait d'article et application
+  d'un code promo de test (créé puis supprimé après vérification) confirmés fonctionnels dans
+  l'environnement Docker réel, sans avertissement ni erreur PHP.
 
 ### Pied de page du thème (`footer.php`, `assets/scss/_footer.scss`)
 

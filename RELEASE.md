@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.5.0`.
+Version actuelle : `0.5.1`.
 
 ## Avant une release
 
@@ -30,6 +30,27 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.5.1 — page panier réelle
+
+- Le panier (`/cart/`) affiche désormais les vrais articles (image, nom, variante/gravure, prix), un
+  formulaire de code promo et un récapitulatif sticky (sous-total, remises, livraison, total, bouton
+  vers l'étape suivante), plutôt que le rendu générique de WooCommerce.
+- Modifier une quantité, retirer un article et appliquer un code promo fonctionnent tous par une
+  soumission de formulaire classique (les noms de champs/actions/nonces natifs de WooCommerce sont
+  conservés à l'identique) ; un stepper de quantité « −»/« + » ajuste le champ natif avant l'envoi,
+  même convention que celui déjà en place sur la fiche produit.
+- Le bouton vers l'étape suivante nomme explicitement celle-ci (« Procéder à la connexion » ou
+  « Procéder à la livraison » selon que le client est déjà connecté), plutôt qu'un texte générique.
+- **Bug détecté et corrigé** : les pages Panier et Paiement de l'installation utilisaient par défaut
+  les blocs Gutenberg natifs de WooCommerce, qui ne passent jamais par les gabarits PHP classiques
+  qu'un thème non-FSE comme celui-ci surcharge — leur contenu réel n'est hydraté que côté client,
+  invisible à toute vérification serveur. Corrigé en réassignant le contenu de ces deux pages sur les
+  shortcodes classiques (`[woocommerce_cart]`/`[woocommerce_checkout]`).
+- Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif : ajout de
+  plusieurs produits, modification de quantité, retrait d'article et application d'un code promo de
+  test (créé puis supprimé après vérification) tous confirmés fonctionnels. Aucun avertissement ni
+  erreur PHP relevé.
 
 ### 0.5.0 — début du tunnel de vente : routage et indicateur d'étapes
 

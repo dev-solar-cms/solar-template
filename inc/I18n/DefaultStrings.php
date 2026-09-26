@@ -814,6 +814,86 @@ final class DefaultStrings {
 				'fr_FR' => 'Paiement sécurisé SSL',
 				'en_US' => 'Secure SSL payment',
 			),
+			'My cart'                                     => array(
+				'fr_FR' => 'Mon panier',
+				'en_US' => 'My cart',
+			),
+			'%d item'                                     => array(
+				'fr_FR'  => '%d article',
+				'en_US'  => '%d item',
+				'plural' => array(
+					'fr_FR' => '%d articles',
+					'en_US' => '%d items',
+				),
+			),
+			'Remove'                                      => array(
+				'fr_FR' => 'Retirer',
+				'en_US' => 'Remove',
+			),
+			'%1$d × %2$s'                                 => array(
+				'fr_FR' => '%1$d × %2$s',
+				'en_US' => '%1$d × %2$s',
+			),
+			'Promo code'                                  => array(
+				'fr_FR' => 'Code promotionnel',
+				'en_US' => 'Promo code',
+			),
+			'Apply'                                       => array(
+				'fr_FR' => 'Appliquer',
+				'en_US' => 'Apply',
+			),
+			'Continue shopping'                           => array(
+				'fr_FR' => 'Continuer mes achats',
+				'en_US' => 'Continue shopping',
+			),
+			'Order summary'                               => array(
+				'fr_FR' => 'Récapitulatif',
+				'en_US' => 'Order summary',
+			),
+			'Subtotal (%d item)'                          => array(
+				'fr_FR'  => 'Sous-total (%d article)',
+				'en_US'  => 'Subtotal (%d item)',
+				'plural' => array(
+					'fr_FR' => 'Sous-total (%d articles)',
+					'en_US' => 'Subtotal (%d items)',
+				),
+			),
+			'Total incl. tax'                             => array(
+				'fr_FR' => 'Total TTC',
+				'en_US' => 'Total incl. tax',
+			),
+			'SSL 256-bit secure payment'                  => array(
+				'fr_FR' => 'Paiement sécurisé SSL 256-bit',
+				'en_US' => 'SSL 256-bit secure payment',
+			),
+			'Proceed to shipping'                         => array(
+				'fr_FR' => 'Procéder à la livraison',
+				'en_US' => 'Proceed to shipping',
+			),
+			'Proceed to login'                            => array(
+				'fr_FR' => 'Procéder à la connexion',
+				'en_US' => 'Proceed to login',
+			),
+			'Return to shop'                              => array(
+				'fr_FR' => 'Retourner à la boutique',
+				'en_US' => 'Return to shop',
+			),
+			'Coupon:'                                     => array(
+				'fr_FR' => 'Code promo :',
+				'en_US' => 'Coupon:',
+			),
+			'Coupon code'                                 => array(
+				'fr_FR' => 'Code promo',
+				'en_US' => 'Coupon code',
+			),
+			'Apply coupon'                                => array(
+				'fr_FR' => 'Appliquer le code promo',
+				'en_US' => 'Apply coupon',
+			),
+			'Update cart'                                 => array(
+				'fr_FR' => 'Mettre à jour le panier',
+				'en_US' => 'Update cart',
+			),
 		);
 	}
 
