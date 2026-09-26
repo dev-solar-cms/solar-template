@@ -146,6 +146,38 @@
 			removing it makes it disappear from that page (test product removed after verification). No
 			PHP warning or error observed.
 		</p>
+
+		<h2 id="addresses">Addresses</h2>
+		<p>
+			<code>woocommerce/myaccount/form-edit-address.php</code> renders two summary cards (billing/
+			shipping, <code>Solar_Template\Account\AddressesView</code>) above the real edit form, whose
+			fields are grouped into a 2-column grid by directly reusing the component already built for
+			the sales tunnel (<code>Solar_Template\Checkout\CheckoutFieldsLayout::rows()</code>, purely
+			structural — it only inspects field keys/order, never a checkout-specific shape).
+		</p>
+		<p>
+			Technical decision: this WooCommerce version no longer offers a separate address listing
+			page — the "edit-address" endpoint always renders an edit form directly (billing by default),
+			never an overview of both addresses side by side. The design's own "grid of cards, each
+			linking to its own edit page" concept is adapted to this real behavior: both summary cards
+			stay visible at all times, and the form below switches between billing/shipping depending on
+			which card was clicked, rather than navigating to a listing page that no longer exists.
+		</p>
+		<p>
+			Bug found and fixed during Docker verification: the bare <code>/my-account/edit-address/</code>
+			URL (no billing/shipping segment) reaches this template with an empty address type on
+			WooCommerce's own side (its own <code>'billing'</code> default parameter never applies here,
+			since the endpoint's URL always passes an explicit value, even an empty one) — the form's own
+			fields then lost their <code>billing_</code>/<code>shipping_</code> prefix. Fixed with an
+			immediate redirect to the billing sub-page in that specific case, rather than attempting to
+			render incorrectly-prefixed fields.
+		</p>
+		<p>
+			Verified end to end in the real Docker environment with WooCommerce active: a real billing
+			form submission (test address) updates the account and immediately shows in its own summary
+			card; the shipping form renders its own correctly-prefixed fields. Test data removed after
+			verification. No PHP warning or error observed.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

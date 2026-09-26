@@ -152,6 +152,42 @@
 			bord, page « Liste de souhaits »), et le retirer le fait disparaître de cette page (produit de
 			test retiré après vérification). Aucun avertissement ni erreur PHP relevé.
 		</p>
+
+		<h2 id="mes-adresses">Mes adresses</h2>
+		<p>
+			<code>woocommerce/myaccount/form-edit-address.php</code> affiche deux cartes de résumé
+			(facturation/livraison, <code>Solar_Template\Account\AddressesView</code>) au-dessus du
+			formulaire d'édition réel, dont les champs sont regroupés en grille 2 colonnes en réutilisant
+			directement le composant déjà construit pour le tunnel de vente
+			(<code>Solar_Template\Checkout\CheckoutFieldsLayout::rows()</code>, purement structurel — il
+			n'inspecte que les clés/l'ordre des champs, jamais un format propre au paiement).
+		</p>
+		<p>
+			Décision technique : cette version de WooCommerce ne propose plus de page de listing séparée
+			pour les adresses — l'endpoint « edit-address » affiche toujours directement un formulaire
+			d'édition (facturation par défaut), jamais un aperçu des deux adresses côte à côte. La maquette
+			(« grille de cartes, chacune menant à sa propre page d'édition ») est donc adaptée à ce
+			fonctionnement réel : les deux cartes de résumé restent toujours visibles, et le formulaire en
+			dessous bascule entre facturation et livraison selon la carte cliquée, plutôt que de naviguer
+			vers une page de listing qui n'existe plus.
+		</p>
+		<p>
+			Bug détecté et corrigé pendant la vérification en Docker réel : l'URL nue
+			<code>/mon-compte/modifier-adresse/</code> (sans indiquer facturation/livraison) atteint ce
+			gabarit avec un type d'adresse vide côté WooCommerce (son propre paramètre par défaut
+			<code>'billing'</code> ne s'applique jamais dans ce cas, l'URL de l'endpoint passant toujours
+			une valeur explicite, même vide) — les champs du formulaire perdaient alors leur préfixe
+			<code>billing_</code>/<code>shipping_</code>. Corrigé par une redirection immédiate vers la
+			sous-page facturation dans ce cas précis, plutôt que de tenter d'afficher des champs mal
+			préfixés.
+		</p>
+		<p>
+			Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif : la
+			soumission réelle du formulaire de facturation (adresse de test) met bien à jour le compte et
+			s'affiche immédiatement dans la carte de résumé correspondante ; le formulaire de livraison
+			affiche ses propres champs correctement préfixés. Données de test supprimées après
+			vérification. Aucun avertissement ni erreur PHP relevé.
+		</p>
 	</main>
 	<script src="../assets/doc.js"></script>
 </body>

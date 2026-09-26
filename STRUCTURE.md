@@ -39,7 +39,7 @@ solar-template/
 │   ├── Catalog/         # Options/filtres/pagination/contrôleurs du catalogue produits
 │   ├── Product/         # Logique de la fiche produit (galerie, panneau, variations, onglets, produits similaires)
 │   ├── Checkout/        # Tunnel de vente : routage, indicateur d'étapes, vue du panier, disposition des champs d'adresse, icônes/texte du paiement, vue de la confirmation de commande
-│   └── Account/         # Espace client : endpoints/menu, sidebar, tableau de bord, statut de commande, action « Recommander », liste/détail de commandes, liste de souhaits
+│   └── Account/         # Espace client : endpoints/menu, sidebar, tableau de bord, statut de commande, action « Recommander », liste/détail de commandes, liste de souhaits, adresses
 ├── template-parts/      # Fragments de gabarit réutilisables (`get_template_part()`)
 │   ├── product-card.php # Carte produit (image, badge, wishlist, overlay panier, prix, swatches)
 │   ├── blog-card.php    # Carte article de blog (image 16:10, badge catégorie, meta, titre, extrait, auteur)
@@ -94,7 +94,8 @@ solar-template/
 │   ├── navigation.php   # Délègue à template-parts/account/sidebar.php
 │   ├── dashboard.php    # Délègue à template-parts/account/dashboard.php
 │   ├── orders.php       # Tabs de statut (filtrage par lien simple) + délègue à orders-list.php
-│   └── view-order.php   # En-tête restylé (numéro, date, statut) + tableau natif WooCommerce conservé
+│   ├── view-order.php   # En-tête restylé (numéro, date, statut) + tableau natif WooCommerce conservé
+│   └── form-edit-address.php # Cartes de résumé facturation/livraison + formulaire d'édition en grille 2 colonnes
 ├── languages/           # Fichiers `.mo` compilés (générés, ignorés par git sauf `.gitkeep`)
 ├── vite.config.js       # Configuration du pipeline de build des assets
 ├── .prettierrc.json     # Norme de formatage JS/SCSS, utilisée par `npm run format`

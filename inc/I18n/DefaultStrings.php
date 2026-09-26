@@ -1278,6 +1278,30 @@ final class DefaultStrings {
 				'fr_FR' => "Vous n'avez encore sauvegardé aucun produit.",
 				'en_US' => 'You have not saved any product yet.',
 			),
+			'My addresses'                                 => array(
+				'fr_FR' => 'Mes adresses',
+				'en_US' => 'My addresses',
+			),
+			'Billing address'                              => array(
+				'fr_FR' => 'Adresse de facturation',
+				'en_US' => 'Billing address',
+			),
+			'Editing'                                      => array(
+				'fr_FR' => 'En cours de modification',
+				'en_US' => 'Editing',
+			),
+			'No address saved yet.'                        => array(
+				'fr_FR' => "Aucune adresse enregistrée pour l'instant.",
+				'en_US' => 'No address saved yet.',
+			),
+			'Edit'                                         => array(
+				'fr_FR' => 'Modifier',
+				'en_US' => 'Edit',
+			),
+			'Save address'                                 => array(
+				'fr_FR' => "Enregistrer l'adresse",
+				'en_US' => 'Save address',
+			),
 		);
 	}
 

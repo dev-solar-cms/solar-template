@@ -10,7 +10,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
 
-Version actuelle : `0.6.2`.
+Version actuelle : `0.6.3`.
 
 ## Avant une release
 
@@ -30,6 +30,18 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.6.3 — gestion des adresses de facturation et de livraison
+
+- La page « Mes adresses » affiche désormais deux cartes de résumé (facturation/livraison) au-dessus
+  d'un formulaire d'édition restylé en grille 2 colonnes, réutilisant le composant déjà construit
+  pour le tunnel de vente.
+- Bug corrigé : visiter l'URL « Mes adresses » sans préciser facturation ou livraison provoquait la
+  perte du préfixe des champs du formulaire — corrigé par une redirection immédiate vers l'adresse
+  de facturation dans ce cas.
+- Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif : la modification
+  réelle d'une adresse de facturation et d'une adresse de livraison se met à jour correctement et
+  s'affiche immédiatement dans son propre résumé.
 
 ### 0.6.2 — liste de souhaits native
 
