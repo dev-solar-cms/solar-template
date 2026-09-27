@@ -1,0 +1,32 @@
+<!--
+	Created: 2026-09-27 09:40 CEST
+	Role: Root entry point of the Solar Template project documentation site (doc/).
+	Author: David ROMERA <d.romera.11@gmail.com>
+	Purpose: Redirects a visitor to the French or English documentation home page based on their
+	         browser language, with a manual choice always visible — this is the page GitHub Pages
+	         serves at the site's own root URL, since doc/fr/ and doc/en/ are both subdirectories.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Solar Template — Documentation</title>
+	<link rel="stylesheet" href="assets/doc.css" />
+</head>
+<body class="doc-landing-body">
+	<main class="doc-landing">
+		<p class="doc-landing-brand">Solar Template</p>
+		<h1>Choose a language / Choisissez une langue</h1>
+		<p class="doc-landing-hint">
+			Redirecting automatically based on your browser language…
+			Redirection automatique selon la langue de votre navigateur…
+		</p>
+		<div class="doc-landing-choices">
+			<a href="fr/index.html">Français</a>
+			<a href="en/index.html">English</a>
+		</div>
+	</main>
+	<script src="assets/doc-landing.js"></script>
+</body>
+</html>

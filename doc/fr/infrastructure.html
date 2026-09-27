@@ -209,7 +209,7 @@ npm run format    # formate assets/**/*.{js,scss} avec Prettier</code></pre>
 			insensible à la casse, fusionnait de telles paires sous la clé unique de cette table, en
 			perdant silencieusement l'une des deux à chaque activation.
 			<code>Installer::create_i18n_tables()</code> corrige aussi la collation d'une table déjà
-			créée à chaque (ré)activation, `dbDelta()` n'altérant pas la collation d'une colonne de
+			créée à chaque (ré)activation, <code>dbDelta()</code> n'altérant pas la collation d'une colonne de
 			façon fiable à lui seul.
 		</p>
 		<p>
@@ -220,11 +220,11 @@ npm run format    # formate assets/**/*.{js,scss} avec Prettier</code></pre>
 			filtre natif <code>determine_locale</code>, uniquement côté visiteur — jamais dans
 			<code>wp-admin</code>, où la langue du profil de l'administrateur reste inchangée) :
 			l'en-tête <code>Accept-Language</code> du visiteur est d'abord comparé aux langues
-			actives du thème (correspondance exacte, ex. `fr-FR` → `fr_FR`, puis même sous-étiquette
-			principale, ex. `fr` → la première langue active `fr_*`) quand la détection automatique
+			actives du thème (correspondance exacte, ex. <code>fr-FR</code> → <code>fr_FR</code>, puis même sous-étiquette
+			principale, ex. <code>fr</code> → la première langue active <code>fr_*</code>) quand la détection automatique
 			est activée dans l'onglet Traductions, puis la langue par défaut configurée dans cet
 			onglet, puis la langue du site WordPress lui-même — une chaîne de repli propre, sans
-			erreur à aucune étape : une langue sans fichier `.mo` correspondant (ou pas encore
+			erreur à aucune étape : une langue sans fichier <code>.mo</code> correspondant (ou pas encore
 			compilé) revient simplement au texte source anglais d'origine, exactement comme le ferait
 			WordPress pour n'importe quel thème.
 		</p>
@@ -249,7 +249,7 @@ npm run format    # formate assets/**/*.{js,scss} avec Prettier</code></pre>
 			recherchable et paginée, modifiable par langue avec chaque espace réservé de type
 			<code>%s</code>/<code>%d</code> mis en évidence explicitement, et la forme plurielle
 			modifiée séparément quand une chaîne utilise <code>_n()</code>) ; enregistrer recompile
-			immédiatement le fichier `.mo` de cette langue.
+			immédiatement le fichier <code>.mo</code> de cette langue.
 		</p>
 
 		<h2 id="tests">Tests automatisés</h2>
@@ -273,6 +273,26 @@ npm run test    # tests unitaires JS (Vitest, jsdom)</code></pre>
 			courante de <code>composer.json</code> (taguée <code>vX.Y.Z</code>), avec pour
 			description la section correspondante des notes de version du projet — sauf si cette
 			version a déjà été publiée.
+		</p>
+
+		<h2 id="documentation">Documentation du projet</h2>
+		<p>
+			Ce site (<code>doc/</code>) est un site statique HTML/JS, sans dépendance ni étape de
+			build : un menu de navigation latéral commun, une bascule de langue FR/EN sur chaque
+			page, et une page racine (<code>doc/index.html</code>) qui redirige automatiquement
+			vers <code>fr/</code> ou <code>en/</code> selon la langue du navigateur (avec un choix
+			manuel toujours visible, y compris sans JavaScript actif). Chaque page des deux langues
+			partage exactement la même structure de sections.
+		</p>
+		<p>
+			Il est publié sur GitHub Pages par un job dédié de la CI
+			(<code>.github/workflows/ci.yml</code>, job <code>pages</code>), déclenché uniquement
+			après un push réussi sur <code>main</code> dont les tests sont passés : le contenu de
+			<code>doc/</code> est envoyé tel quel comme artefact Pages
+			(<code>actions/upload-pages-artifact</code>), puis déployé
+			(<code>actions/deploy-pages</code>) — aucune étape de build n'intervient sur cette
+			documentation elle-même. Elle est publiquement accessible à
+			<a href="https://dev-solar-cms.github.io/solar-template/">dev-solar-cms.github.io/solar-template</a>.
 		</p>
 
 		<h2 id="base-de-donnees">Tables de base de données et activation</h2>

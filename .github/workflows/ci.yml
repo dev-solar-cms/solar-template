@@ -4,13 +4,17 @@
 # Purpose: On every push/pull request, run the PHP and JS test suites (and the PHP coding
 #          standard, and a production asset build) across the two PHP versions the theme claims
 #          to support. On a successful push to `main`, automatically create a GitHub release for
-#          the current `composer.json` version, unless that version was already released.
+#          the current `composer.json` version (unless that version was already released), and
+#          publish `doc/` (the project's own bilingual documentation site) to GitHub Pages.
 
 name: CI
 
 on:
   push:
   pull_request:
+
+permissions:
+  contents: read
 
 jobs:
   test:
@@ -96,3 +100,30 @@ jobs:
           tag_name: v${{ steps.version.outputs.version }}
           name: v${{ steps.version.outputs.version }}
           body_path: release_notes.md
+
+  pages:
+    name: Publish documentation to GitHub Pages
+    needs: test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload documentation artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: doc
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

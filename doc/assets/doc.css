@@ -166,6 +166,58 @@ body {
 	background: var(--st-surface);
 }
 
+.doc-landing-body {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	padding: 24px;
+}
+
+.doc-landing {
+	max-width: 480px;
+}
+
+.doc-landing-brand {
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	color: var(--st-gold);
+	text-transform: uppercase;
+	font-size: 0.85rem;
+	margin: 0 0 24px;
+}
+
+.doc-landing h1 {
+	margin: 0 0 12px;
+	font-size: 1.4rem;
+}
+
+.doc-landing-hint {
+	color: var(--st-text-muted);
+	font-size: 0.9rem;
+}
+
+.doc-landing-choices {
+	display: flex;
+	gap: 12px;
+	justify-content: center;
+	margin-top: 24px;
+}
+
+.doc-landing-choices a {
+	padding: 10px 24px;
+	border: 1px solid var(--st-border);
+	border-radius: var(--st-radius);
+	color: var(--st-text);
+	text-decoration: none;
+}
+
+.doc-landing-choices a:hover {
+	background: var(--st-gold-soft);
+	color: var(--st-gold);
+	border-color: var(--st-gold);
+}
+
 @media (max-width: 780px) {
 	body {
 		flex-direction: column;

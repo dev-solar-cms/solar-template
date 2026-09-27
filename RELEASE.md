@@ -11,7 +11,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `package.json` — champ `version`
 - `.env`/`.env.example` — `SOLAR_TEMPLATE_VERSION` (jamais la source de vérité à elle seule, mais exposée pour l'écran de réglages)
 
-Version actuelle : `0.7.6`.
+Version actuelle : `0.7.7`.
 
 ## Avant une release
 
@@ -31,6 +31,31 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.7.7 — documentation du projet
+
+- Ajout d'une page racine (`doc/index.html`) au site de documentation statique : elle redirige
+  automatiquement vers la version française ou anglaise selon la langue du navigateur, tout en
+  affichant un choix manuel toujours visible (y compris sans JavaScript actif) — nécessaire
+  puisque les pages `doc/fr/` et `doc/en/` existantes vivent chacune dans leur propre
+  sous-dossier, sans page d'accueil neutre à la racine.
+- Mise en place effective de la publication du site de documentation sur GitHub Pages : un
+  nouveau job dédié de la CI (`.github/workflows/ci.yml`) envoie le contenu de `doc/` tel quel
+  comme artefact Pages puis le déploie, uniquement après un push réussi vers `main` dont les
+  tests sont passés. Site accessible publiquement à
+  [dev-solar-cms.github.io/solar-template](https://dev-solar-cms.github.io/solar-template/).
+- Audit croisé complet du contenu déjà documenté entre le français et l'anglais (menu de
+  navigation, bascule de langue, structure des sections, identifiants de code cités) : aucune
+  section manquante d'une langue à l'autre. Trois écarts réels trouvés et corrigés — une poignée
+  de phrases, en anglais uniquement, faisaient référence au numéro interne d'une étape de la
+  feuille de route là où leur équivalent français restait générique ; reformulées pour rester
+  cohérentes avec le texte français correspondant.
+- **Bug rencontré et corrigé** : plusieurs pages de documentation (les onglets d'administration
+  ajoutés récemment, et une partie de la page Infrastructure) citaient des identifiants de code
+  entre apostrophes inverses façon Markdown au lieu de la balise `<code>` HTML attendue partout
+  ailleurs sur ce site — un simple caractère `` ` `` n'a aucune signification particulière en
+  HTML, ces identifiants s'affichaient donc littéralement avec leurs apostrophes inverses au lieu
+  d'apparaître en style code. Corrigé dans les deux langues.
 
 ### 0.7.6 — optimisation des images de la médiathèque
 

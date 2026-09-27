@@ -28,7 +28,9 @@ dépôt parent, via `wp-cli`/Composer récupérés à la demande (voir la docume
 [doc/en/infrastructure.html](./doc/en/infrastructure.html)).
 
 Suite de tests : `composer test` (PHP) et `npm run test` (JS). Une CI GitHub Actions exécute cette
-suite à chaque push et crée automatiquement une release à partir de `main` si elle passe.
+suite à chaque push et crée automatiquement une release à partir de `main` si elle passe ; elle
+publie aussi la documentation du projet sur GitHub Pages :
+[dev-solar-cms.github.io/solar-template](https://dev-solar-cms.github.io/solar-template/).
 
 Voir [STRUCTURE.md](./STRUCTURE.md) pour l'organisation des fichiers et [RELEASE.md](./RELEASE.md) pour la procédure de versionnage/publication.
 

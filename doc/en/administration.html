@@ -83,10 +83,10 @@
 			one-line change per token that every one of its usages across the whole compiled stylesheet
 			automatically inherits, since Sass just substitutes the token's string value everywhere it's
 			referenced. <code>Solar_Template\Admin\AppearanceSettings::print_style_overrides()</code>
-			then prints the real, saved values as `:root` custom properties in `wp_head`, after the
+			then prints the real, saved values as <code>:root</code> custom properties in <code>wp_head</code>, after the
 			compiled stylesheet, and <code>enqueue_google_fonts()</code> loads the chosen font families.
 			A couple of hardcoded Sass color functions (<code>color.adjust()</code>, which needs a real
-			compile-time color and can't operate on a `var()` expression) were converted to the
+			compile-time color and can't operate on a <code>var()</code> expression) were converted to the
 			equivalent plain CSS <code>color-mix()</code> calls, for the same reason. Derived gold hover/
 			light shades stay static — following a fully custom accent color's own tint would need
 			runtime color math, out of scope for this pass.
@@ -96,13 +96,13 @@
 		<p>
 			Layout (3 real CSS variants — the default centered one unchanged, "left logo, centered nav"
 			and "left logo, right nav" reorder the same header markup via modifier classes and the
-			`order` CSS property, no markup change), mega menu toggle (hooked onto the
-			`solar_template_header_mega_menu_enabled` filter Group 02 already left for this), a promo
-			bar, 4 social network URLs (hooked onto the existing `solar_template_social_links` filter —
+			<code>order</code> CSS property, no markup change), mega menu toggle (hooked onto the
+			<code>solar_template_header_mega_menu_enabled</code> filter Group 02 already left for this), a promo
+			bar, 4 social network URLs (hooked onto the existing <code>solar_template_social_links</code> filter —
 			Pinterest is now a 4th default network alongside Instagram/Facebook/X), and a
 			transparent-on-home option. The transparent header overlaps the hero instead of pushing it
 			down, until <code>assets/js/header.js</code>'s <code>initTransparentHeader()</code> adds a
-			`--scrolled` class past a small scroll threshold, restoring the normal sticky/opaque header —
+			<code>--scrolled</code> class past a small scroll threshold, restoring the normal sticky/opaque header —
 			without it, text would become illegible once the visitor scrolls past the dark hero.
 		</p>
 
@@ -112,8 +112,8 @@
 			one slot, the rest go to Shop/Information/Legal in that order — a pure, unit-tested
 			<code>FooterSettings::resolve_visible_columns()</code> trims the list), the newsletter
 			column toggle, payment method badges (Visa/Mastercard/PayPal/Stripe/Apple Pay/Google Pay),
-			and the copyright text (`{year}` support already existed from Group 02). All four hook onto
-			the filters (`solar_template_footer_config`/`..._payment_icons`/`..._copyright`) already
+			and the copyright text (<code>{year}</code> support already existed from Group 02). All four hook onto
+			the filters (<code>solar_template_footer_config</code>/<code>..._payment_icons</code>/<code>..._copyright</code>) already
 			left there for this purpose.
 		</p>
 
@@ -142,11 +142,11 @@
 			duplication. An independent sidebar of widgets can also be enabled, regardless of that
 			position setting: <code>Solar_Template\Catalog\CatalogSidebar</code> and
 			<code>template-parts/catalog-sidebar-widgets.php</code> offer Category/Price/Color/Brand/
-			Rating as plain links (not a second `&lt;form&gt;`, so it never clobbers whatever filters
+			Rating as plain links (not a second <code>&lt;form&gt;</code>, so it never clobbers whatever filters
 			the page's other form already has active), reusing the exact same query mechanism as the
 			bar (<code>CatalogFilters::url()</code>/<code>remove_url()</code>). "Brand" is a genuinely
 			new filter dimension — a filterable attribute taxonomy, same as Color/Size
-			(<code>CatalogOptions::brand_attribute_slug()</code>, `pa_brand` by default), not a
+			(<code>CatalogOptions::brand_attribute_slug()</code>, <code>pa_brand</code> by default), not a
 			decorative label. Related products: enable/disable and how many to show, hooked onto
 			<code>Solar_Template\Product\ProductRelated::products()</code>. Custom engraving: a
 			site-wide toggle, section label, field type (single vs. multiple lines), and default
@@ -178,11 +178,11 @@
 			<code>Solar_Template\Admin\TranslationsSettings::resolve_locale()</code> and
 			<code>match_accept_language()</code> are pure, unit-tested functions matching the browser's
 			own <code>Accept-Language</code> header against the theme's active languages
-			(<code>Solar_Template\I18n\Translator</code>) — an exact match first (`fr-FR` → `fr_FR`),
-			then a same-primary-subtag one (`fr` → the first active `fr_*` language), before falling
+			(<code>Solar_Template\I18n\Translator</code>) — an exact match first (<code>fr-FR</code> → <code>fr_FR</code>),
+			then a same-primary-subtag one (<code>fr</code> → the first active <code>fr_*</code> language), before falling
 			back to the configured default language and then the site's own language. This tab also
-			lists every active language with a download link for its already-compiled `.mo`, and a
-			drag &amp; drop zone to import a `.po`/`.mo` file (the `gettext/gettext` library, already a
+			lists every active language with a download link for its already-compiled <code>.mo</code>, and a
+			drag &amp; drop zone to import a <code>.po</code>/<code>.mo</code> file (the <code>gettext/gettext</code> library, already a
 			dependency) into the same catalog the two screens below edit directly.
 		</p>
 		<p>
@@ -199,10 +199,10 @@
 			unit-tested function), editable per language with every <code>%s</code>/<code>%d</code>/
 			<code>%1$s</code>-style placeholder highlighted and called out explicitly, and the plural
 			form edited as its own field whenever a string uses <code>_n()</code>. Saving writes
-			straight to the catalog and recompiles that language's `.mo`, so the change is live on the
+			straight to the catalog and recompiles that language's <code>.mo</code>, so the change is live on the
 			front end immediately — see
 			<a href="infrastructure.html#translations">Infrastructure → Translation system</a> for how
-			the underlying catalog/locale-detection/`.mo` mechanism works, and for the note on this
+			the underlying catalog/locale-detection/<code>.mo</code> mechanism works, and for the note on this
 			theme's WPML/Polylang compatibility.
 		</p>
 
@@ -248,7 +248,7 @@
 			<code>Contracts\CacheInterface</code> — see
 			<a href="infrastructure.html#performance">Infrastructure → Performance &amp; caching</a> for
 			what it actually stores), WordPress' object cache and PHP's opcode cache when available,
-			then reruns `npm run build` when Node tooling is actually present server-side (which also
+			then reruns <code>npm run build</code> when Node tooling is actually present server-side (which also
 			regenerates the inlined critical stylesheet — same page) — this Docker container ships PHP
 			only, so that last step reports itself skipped there instead of silently failing. Each
 			step's result renders under the button with no page reload.

@@ -88,11 +88,11 @@
 			de style compilée hérite automatiquement, puisque Sass ne fait que substituer la valeur du
 			token partout où il est référencé.
 			<code>Solar_Template\Admin\AppearanceSettings::print_style_overrides()</code> imprime
-			ensuite les vraies valeurs enregistrées comme propriétés personnalisées `:root` dans
-			`wp_head`, après la feuille de style compilée, et <code>enqueue_google_fonts()</code>
+			ensuite les vraies valeurs enregistrées comme propriétés personnalisées <code>:root</code> dans
+			<code>wp_head</code>, après la feuille de style compilée, et <code>enqueue_google_fonts()</code>
 			charge les familles de polices choisies. Quelques fonctions couleur Sass codées en dur
 			(<code>color.adjust()</code>, qui a besoin d'une vraie couleur au moment de la compilation
-			et ne peut pas opérer sur une expression `var()`) ont été converties vers l'équivalent en
+			et ne peut pas opérer sur une expression <code>var()</code>) ont été converties vers l'équivalent en
 			<code>color-mix()</code> CSS natif, pour la même raison. Les nuances dorées dérivées
 			(survol/clair) restent statiques : suivre la teinte d'une couleur d'accent totalement
 			personnalisée demanderait du calcul de couleur au moment de l'exécution, hors périmètre de
@@ -103,15 +103,15 @@
 		<p>
 			Disposition (3 vraies variantes CSS — la disposition centrée par défaut inchangée, « logo
 			gauche, navigation centrée » et « logo gauche, navigation droite » réorganisent le même
-			balisage d'en-tête via des classes modificatrices et la propriété CSS `order`, sans
+			balisage d'en-tête via des classes modificatrices et la propriété CSS <code>order</code>, sans
 			changement de balisage), bascule du mega menu (branchée sur le filtre
-			`solar_template_header_mega_menu_enabled` déjà laissé pour cela par le Groupe 02), une barre
+			<code>solar_template_header_mega_menu_enabled</code> déjà laissé pour cela par le Groupe 02), une barre
 			de promotion, 4 URLs de réseaux sociaux (branchées sur le filtre existant
-			`solar_template_social_links` — Pinterest devient un 4e réseau par défaut aux côtés
+			<code>solar_template_social_links</code> — Pinterest devient un 4e réseau par défaut aux côtés
 			d'Instagram/Facebook/X), et une option d'en-tête transparent sur l'accueil. L'en-tête
 			transparent chevauche le hero au lieu de le repousser, jusqu'à ce que
 			<code>initTransparentHeader()</code> d'<code>assets/js/header.js</code> ajoute une classe
-			`--scrolled` passé un petit seuil de défilement, rétablissant l'en-tête sticky/opaque normal
+			<code>--scrolled</code> passé un petit seuil de défilement, rétablissant l'en-tête sticky/opaque normal
 			— sans quoi le texte deviendrait illisible une fois le hero sombre dépassé au défilement.
 		</p>
 
@@ -122,9 +122,9 @@
 			cet ordre — une fonction pure et testée unitairement,
 			<code>FooterSettings::resolve_visible_columns()</code>, réduit la liste), la bascule de la
 			colonne newsletter, les badges de moyens de paiement (Visa/Mastercard/PayPal/Stripe/Apple
-			Pay/Google Pay), et le texte de copyright (le support de `{year}` existait déjà depuis le
+			Pay/Google Pay), et le texte de copyright (le support de <code>{year}</code> existait déjà depuis le
 			Groupe 02). Les quatre se branchent sur les filtres
-			(`solar_template_footer_config`/`..._payment_icons`/`..._copyright`) déjà laissés à cet
+			(<code>solar_template_footer_config</code>/<code>..._payment_icons</code>/<code>..._copyright</code>) déjà laissés à cet
 			effet.
 		</p>
 
@@ -158,7 +158,7 @@
 			déjà actifs d'un autre formulaire de la page), réutilisant exactement la même mécanique de
 			requête que la barre (<code>CatalogFilters::url()</code>/<code>remove_url()</code>). La
 			« Marque » est un nouvel axe de filtre à part entière — une taxonomie d'attribut filtrable,
-			comme Couleur/Taille (<code>CatalogOptions::brand_attribute_slug()</code>, `pa_brand` par
+			comme Couleur/Taille (<code>CatalogOptions::brand_attribute_slug()</code>, <code>pa_brand</code> par
 			défaut), pas une simple étiquette décorative. Produits similaires : activer/désactiver et
 			nombre affiché, branchés sur <code>Solar_Template\Product\ProductRelated::products()</code>.
 			Gravure personnalisée : bascule globale, libellé de section, type de champ (une ligne ou
@@ -193,11 +193,11 @@
 			<code>match_accept_language()</code> sont des fonctions pures, testées unitairement, qui
 			comparent l'en-tête <code>Accept-Language</code> du navigateur aux langues actives du
 			catalogue du thème (<code>Solar_Template\I18n\Translator</code>) — correspondance exacte
-			d'abord (`fr-FR` → `fr_FR`), puis même sous-étiquette principale (`fr` → la première langue
-			`fr_*` active), avant de retomber sur la langue par défaut configurée puis sur la langue du
+			d'abord (<code>fr-FR</code> → <code>fr_FR</code>), puis même sous-étiquette principale (<code>fr</code> → la première langue
+			<code>fr_*</code> active), avant de retomber sur la langue par défaut configurée puis sur la langue du
 			site elle-même. Cet onglet liste aussi chaque langue active avec un lien de téléchargement
-			de son `.mo` déjà compilé, et une zone de glisser-déposer pour importer un fichier `.po` ou
-			`.mo` (bibliothèque `gettext/gettext`, déjà une dépendance du thème) dans le même catalogue
+			de son <code>.mo</code> déjà compilé, et une zone de glisser-déposer pour importer un fichier <code>.po</code> ou
+			<code>.mo</code> (bibliothèque <code>gettext/gettext</code>, déjà une dépendance du thème) dans le même catalogue
 			que les deux écrans ci-dessous modifient directement.
 		</p>
 		<p>
@@ -216,10 +216,10 @@
 			testée unitairement), modifiable par langue avec chaque espace réservé de type
 			<code>%s</code>/<code>%d</code>/<code>%1$s</code> mis en évidence explicitement, et la
 			forme plurielle éditée dans son propre champ dès qu'une chaîne utilise <code>_n()</code>.
-			Enregistrer écrit directement dans le catalogue et recompile le `.mo` de cette langue, si
+			Enregistrer écrit directement dans le catalogue et recompile le <code>.mo</code> de cette langue, si
 			bien que le changement est immédiatement visible sur le site — voir
 			<a href="infrastructure.html#traductions">Infrastructure → Système de traduction</a> pour
-			le fonctionnement du catalogue/de la détection de langue/des fichiers `.mo`, et pour la
+			le fonctionnement du catalogue/de la détection de langue/des fichiers <code>.mo</code>, et pour la
 			note sur la compatibilité WPML/Polylang de ce thème.
 		</p>
 
@@ -265,7 +265,7 @@
 			<code>Contracts\CacheInterface</code> — voir
 			<a href="infrastructure.html#performance">Infrastructure → Performance et cache</a> pour ce
 			qui y est réellement stocké), le cache d'objets WordPress et le cache opcode PHP quand il
-			est disponible, puis relance `npm run build` si l'outillage Node est réellement présent côté
+			est disponible, puis relance <code>npm run build</code> si l'outillage Node est réellement présent côté
 			serveur (ce qui régénère aussi le CSS critique inliné, même page) — ce conteneur Docker
 			n'embarque que PHP, cette dernière étape s'y signale donc « ignorée » plutôt que d'échouer
 			silencieusement. Le résultat détaillé de chaque étape s'affiche sous le bouton

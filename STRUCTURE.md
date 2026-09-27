@@ -168,10 +168,11 @@ solar-template/
 ├── phpunit.xml.dist     # Configuration PHPUnit, utilisée par `composer test`
 ├── tests/php/           # Tests unitaires PHP (bootstrap minimal, pas une installation WordPress complète)
 ├── tests/js/            # Tests unitaires JS (Vitest, environnement jsdom), utilisés par `npm run test`
-├── .github/workflows/ci.yml  # CI : lint + tests PHP/JS à chaque push, release GitHub automatique sur `main`
+├── .github/workflows/ci.yml  # CI : lint + tests PHP/JS à chaque push, release GitHub + publication GitHub Pages de `doc/` sur `main`
 ├── doc/                # Documentation du projet (site statique HTML/JS, FR + EN)
+│   ├── index.html       # Racine du site : redirige vers en/ ou fr/ selon la langue du navigateur
 │   ├── en/, fr/         # Pages par langue (index.html, infrastructure.html, ...)
-│   └── assets/          # CSS/JS partagés par la documentation
+│   └── assets/          # CSS/JS partagés par la documentation (doc.css, doc.js, doc-landing.js)
 ├── LICENSE             # GPL-2.0-or-later
 ├── README.md
 ├── RELEASE.md
@@ -766,6 +767,22 @@ solar-template/
   `solar_template_env()`) est indépendant du `.env` du dépôt Docker parent : aucun nom de variable
   en commun, et ce thème ne possède ni ne lit jamais les identifiants de connexion à la base de
   données (gérés exclusivement par le `.env` parent).
+- Sur ce même push réussi vers `main` : publication du contenu de `doc/` (site de documentation
+  statique, voir ci-dessus) sur GitHub Pages, via `actions/upload-pages-artifact` +
+  `actions/deploy-pages` — aucune étape de build sur cette documentation elle-même. Accessible
+  publiquement à [dev-solar-cms.github.io/solar-template](https://dev-solar-cms.github.io/solar-template/).
+
+### Documentation du projet (`doc/`)
+
+- Site statique HTML/JS (aucune dépendance, aucune étape de build), disponible en français et en
+  anglais, avec un menu de navigation latéral gauche identique sur chaque page
+  (`doc/assets/doc.css`/`doc.js`) et une bascule de langue qui pointe toujours vers l'équivalent
+  exact de la page courante dans l'autre langue.
+- `doc/index.html` (+ `doc/assets/doc-landing.js`) est la racine du site : elle redirige
+  automatiquement vers `fr/` ou `en/` selon la langue du navigateur, avec un choix manuel toujours
+  visible (y compris sans JavaScript actif) — nécessaire car `doc/fr/` et `doc/en/` n'ont sinon pas
+  de page d'accueil neutre commune.
+- Publiée sur GitHub Pages ; voir « Intégration continue » ci-dessous pour le mécanisme.
 
 ## Conventions de code
 

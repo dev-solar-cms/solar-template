@@ -185,7 +185,7 @@ npm run format    # auto-format assets/**/*.{js,scss} with Prettier</code></pre>
 			</tbody>
 		</table>
 		<p>
-			<strong>Note:</strong> a theme's own <code>languages/</code> directory expects `.mo`
+			<strong>Note:</strong> a theme's own <code>languages/</code> directory expects <code>.mo</code>
 			files named <code>{locale}.mo</code> (e.g. <code>fr_FR.mo</code>) — not
 			<code>{textdomain}-{locale}.mo</code>, which is only required for the shared
 			<code>wp-content/languages/themes/</code> directory. This is what
@@ -200,7 +200,7 @@ npm run format    # auto-format assets/**/*.{js,scss} with Prettier</code></pre>
 			reference) as two distinct strings — but a default, case-insensitive MySQL collation
 			collapsed such pairs under this table's unique key, silently discarding one of them
 			on every activation. <code>Installer::create_i18n_tables()</code> corrects an
-			already-created table's collation on every (re-)activation too, since `dbDelta()`
+			already-created table's collation on every (re-)activation too, since <code>dbDelta()</code>
 			does not reliably alter a column's collation on its own.
 		</p>
 		<p>
@@ -211,11 +211,11 @@ npm run format    # auto-format assets/**/*.{js,scss} with Prettier</code></pre>
 			the core <code>determine_locale</code> filter, front-end only — an administrator's
 			own profile language in <code>wp-admin</code> is never overridden): the visitor's
 			<code>Accept-Language</code> header is matched against the theme's active languages
-			first (exact match, e.g. `fr-FR` → `fr_FR`, then same-primary-subtag, e.g. `fr` → the
-			first active `fr_*` language) when automatic detection is enabled in the Translations
+			first (exact match, e.g. <code>fr-FR</code> → <code>fr_FR</code>, then same-primary-subtag, e.g. <code>fr</code> → the
+			first active <code>fr_*</code> language) when automatic detection is enabled in the Translations
 			tab, then the tab's own configured default language, then WordPress' own site
 			language — a clean fallback chain with no error at any step: a locale with no
-			matching (or not yet compiled) `.mo` file simply falls back to the original English
+			matching (or not yet compiled) <code>.mo</code> file simply falls back to the original English
 			source text, exactly like core WordPress does for any theme.
 		</p>
 		<p>
@@ -238,7 +238,7 @@ npm run format    # auto-format assets/**/*.{js,scss} with Prettier</code></pre>
 			<strong>Translation Editor</strong> (every registered string, searchable and
 			paginated, editable per language with placeholders like <code>%s</code>/<code>%d</code>
 			shown explicitly and the plural form edited separately when a string uses
-			<code>_n()</code>); saving recompiles that language's `.mo` immediately.
+			<code>_n()</code>); saving recompiles that language's <code>.mo</code> immediately.
 		</p>
 
 		<h2 id="tests">Automated tests</h2>
@@ -262,6 +262,26 @@ npm run test    # JS unit tests (Vitest, jsdom)</code></pre>
 			<code>composer.json</code> version (tagged <code>vX.Y.Z</code>), with that version's
 			section of the project's release notes as its description — unless that version was
 			already released.
+		</p>
+
+		<h2 id="documentation">Project documentation</h2>
+		<p>
+			This site (<code>doc/</code>) is a static HTML/JS site with no dependency and no build
+			step: a shared left sidebar navigation menu, an FR/EN language switch on every page, and
+			a root page (<code>doc/index.html</code>) that automatically redirects to
+			<code>fr/</code> or <code>en/</code> based on the browser's language (with a manual
+			choice always visible, including with JavaScript disabled). Every page in both languages
+			shares the exact same section structure.
+		</p>
+		<p>
+			It is published to GitHub Pages by a dedicated CI job
+			(<code>.github/workflows/ci.yml</code>, job <code>pages</code>), triggered only after a
+			successful push to <code>main</code> whose tests passed: the contents of
+			<code>doc/</code> are uploaded as-is as a Pages artifact
+			(<code>actions/upload-pages-artifact</code>), then deployed
+			(<code>actions/deploy-pages</code>) — no build step runs on this documentation itself.
+			It is publicly available at
+			<a href="https://dev-solar-cms.github.io/solar-template/">dev-solar-cms.github.io/solar-template</a>.
 		</p>
 
 		<h2 id="database">Database tables and activation</h2>
