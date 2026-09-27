@@ -11,7 +11,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `package.json` — champ `version`
 - `.env`/`.env.example` — `SOLAR_TEMPLATE_VERSION` (jamais la source de vérité à elle seule, mais exposée pour l'écran de réglages)
 
-Version actuelle : `0.7.5`.
+Version actuelle : `0.7.6`.
 
 ## Avant une release
 
@@ -31,6 +31,33 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.7.6 — optimisation des images de la médiathèque
+
+- Ajout d'un nouvel écran d'administration, **Optimisation des images**, séparé de l'écran de
+  réglages existant : il affiche le nombre réel d'images de la médiathèque pas encore optimisées,
+  et propose deux actions (« Analyser la médiathèque » et « Optimiser les images »), chacune avec sa
+  propre barre de progression. Les deux se déroulent entièrement en requêtes `fetch()` séquentielles
+  envoyées par le navigateur, une image à la fois, jamais en une seule requête PHP longue qui
+  risquerait de bloquer ou d'expirer sur une grosse médiathèque.
+- Une image optimisée est repérée par une **signature** (taille de fichier + date de modification)
+  plutôt qu'un simple indicateur : un indicateur seul ne permettrait pas de distinguer une image
+  jamais traitée d'une image dont le fichier a été remplacé depuis (par exemple un ré-import manuel
+  sur le même identifiant). Le scan recalcule cette signature contre le fichier réel et la
+  réinitialise dès qu'elle ne correspond plus, pour qu'un futur passage d'optimisation reprenne
+  cette image — comportement vérifié directement en remplaçant le fichier d'une image déjà
+  optimisée et en confirmant qu'un nouveau scan la redétecte correctement.
+- La compression elle-même passe par une nouvelle interface PHP remplaçable, sur le même principe
+  que l'interface de cache déjà existante. L'implémentation fournie par défaut s'appuie sur
+  l'extension GD de PHP (déjà présente, aucune dépendance tierce) : réencodage JPEG/WebP à qualité
+  réduite, PNG à compression maximale — sans jamais remplacer le fichier d'origine si le résultat
+  n'est pas réellement plus léger. Un format que cette implémentation ne sait pas traiter (par
+  exemple un GIF animé) est laissé complètement intact et signalé comme déjà optimal, plutôt que de
+  risquer de casser une animation.
+- Vérifié de bout en bout dans l'environnement Docker réel avec trois images de test réellement
+  importées dans la médiathèque : le poids de chacune a été réduit d'environ deux tiers par
+  l'optimisation, sans aucune erreur ni avertissement PHP. Données de test supprimées après
+  vérification.
 
 ### 0.7.5 — cache applicatif, chargement différé des images, CSS critique et JS différé
 

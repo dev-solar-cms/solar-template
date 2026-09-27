@@ -223,6 +223,40 @@
 			note sur la compatibilité WPML/Polylang de ce thème.
 		</p>
 
+		<h2 id="media-optimization">Optimisation des images</h2>
+		<p>
+			Un nouvel écran admin séparé, <strong>Optimisation des images</strong>
+			(<code>Solar_Template\Admin\MediaOptimizationController</code>, sous-menu de la page
+			« Solar Template »), affiche le nombre réel d'images de la médiathèque pas encore
+			optimisées et propose deux actions, chacune avec sa propre barre de progression. Les
+			deux se déroulent entièrement en requêtes <code>fetch()</code> séquentielles envoyées
+			par le navigateur — une image à la fois — jamais en une seule requête PHP longue qui
+			risquerait de bloquer ou d'expirer sur une grosse médiathèque.
+		</p>
+		<p>
+			« Analyser la médiathèque » revérifie chaque image, une par une, par rapport à son
+			dernier état connu. Une image optimisée porte une signature
+			(<code>_solar_template_optimized_signature</code>, taille de fichier + date de
+			modification) plutôt qu'un simple indicateur booléen : un booléen seul ne permettrait
+			pas de distinguer une image jamais traitée d'une image dont le fichier a été remplacé
+			depuis (par exemple un ré-import manuel sur le même identifiant). Le scan
+			(<code>Solar_Template\Media\MediaLibraryScanner::scan_attachment()</code>) recalcule
+			cette signature depuis le fichier réel et la réinitialise dès qu'elle ne correspond
+			plus, pour qu'un futur passage « Optimiser les images » reprenne cette image.
+		</p>
+		<p>
+			« Optimiser les images » compresse ensuite chaque image restante, une par une, via
+			<code>Solar_Template\Contracts\ImageOptimizerInterface</code> — une interface
+			remplaçable, même convention que <code>CacheInterface</code>/
+			<code>TranslatorInterface</code>. L'unique implémentation fournie,
+			<code>Solar_Template\Media\GdImageOptimizer</code>, s'appuie sur l'extension GD de PHP
+			(déjà présente, aucune dépendance tierce) : réencodage JPEG/WebP à qualité réduite, PNG
+			à compression maximale — sans jamais remplacer le fichier d'origine si le résultat
+			n'est pas réellement plus léger. Un format que GD ne sait pas traiter ici (par exemple
+			un GIF animé) est laissé complètement intact et signalé comme déjà optimal, plutôt que
+			de risquer de casser une animation.
+		</p>
+
 		<h2 id="cache">Régénération cache &amp; assets</h2>
 		<p>
 			Un bouton en bas de l'onglet Général (<code>Solar_Template\Admin\CacheRegenerator</code>,
@@ -247,7 +281,12 @@
 			catalogue, gravure personnalisée, pagination/à la une/colonnes/partage/connexes du blog,
 			langue par défaut et détection automatique du front), et le mode maintenance renvoie une
 			vraie 503 à un visiteur non connecté tout en laissant un administrateur naviguer
-			normalement. Aucun avertissement ni erreur PHP relevé.
+			normalement. L'écran Optimisation des images a été vérifié séparément avec trois images
+			de test réellement importées dans la médiathèque : analyse, optimisation (poids réduit
+			d'environ deux tiers pour chacune), nouveau scan confirmant les trois comme optimisées,
+			et un test de falsification (remplacement du fichier d'une image déjà optimisée)
+			confirmant que le scan la redétecte correctement comme non optimisée — données de test
+			supprimées après vérification. Aucun avertissement ni erreur PHP relevé.
 		</p>
 	</main>
 	<script src="../assets/doc.js"></script>

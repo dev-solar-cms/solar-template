@@ -2366,6 +2366,50 @@ final class DefaultStrings {
 				'fr_FR' => 'défaut',
 				'en_US' => 'default',
 			),
+			'Image Optimization'                           => array(
+				'fr_FR' => 'Optimisation des images',
+				'en_US' => 'Image Optimization',
+			),
+			'Scan the media library to verify which images are already optimized, then compress every remaining one — both run image by image in the background, without reloading this page.' => array(
+				'fr_FR' => 'Analysez la médiathèque pour vérifier quelles images sont déjà optimisées, puis compressez chacune des images restantes — les deux opérations se déroulent image par image en arrière-plan, sans recharger cette page.',
+				'en_US' => 'Scan the media library to verify which images are already optimized, then compress every remaining one — both run image by image in the background, without reloading this page.',
+			),
+			'%1$d of %2$d images are not optimized yet.'   => array(
+				'fr_FR' => '%1$d image(s) sur %2$d ne sont pas encore optimisées.',
+				'en_US' => '%1$d of %2$d images are not optimized yet.',
+			),
+			'Scan library'                                 => array(
+				'fr_FR' => 'Analyser la médiathèque',
+				'en_US' => 'Scan library',
+			),
+			'Re-checks every image against its own last known state, so an image replaced outside this screen is detected again.' => array(
+				'fr_FR' => 'Revérifie chaque image par rapport à son dernier état connu, afin de détecter une image remplacée en dehors de cet écran.',
+				'en_US' => 'Re-checks every image against its own last known state, so an image replaced outside this screen is detected again.',
+			),
+			'Optimize images'                              => array(
+				'fr_FR' => 'Optimiser les images',
+				'en_US' => 'Optimize images',
+			),
+			'Compresses every not-yet-optimized image, one at a time, without a noticeable loss of visual quality.' => array(
+				'fr_FR' => 'Compresse chaque image pas encore optimisée, une par une, sans perte de qualité visuelle notable.',
+				'en_US' => 'Compresses every not-yet-optimized image, one at a time, without a noticeable loss of visual quality.',
+			),
+			'File not found.'                              => array(
+				'fr_FR' => 'Fichier introuvable.',
+				'en_US' => 'File not found.',
+			),
+			'Unsupported image format — left unchanged.'   => array(
+				'fr_FR' => "Format d'image non pris en charge — laissé inchangé.",
+				'en_US' => 'Unsupported image format — left unchanged.',
+			),
+			'Compression failed.'                          => array(
+				'fr_FR' => 'Échec de la compression.',
+				'en_US' => 'Compression failed.',
+			),
+			'Already optimal — left unchanged.'            => array(
+				'fr_FR' => 'Déjà optimale — laissée inchangée.',
+				'en_US' => 'Already optimal — left unchanged.',
+			),
 		);
 	}
 

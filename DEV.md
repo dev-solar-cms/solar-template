@@ -93,6 +93,15 @@ principale de la galerie produit, logo) charge en différé (`loading="lazy"`). 
 premier rendu (tokens, base, en-tête) est inliné dans `<head>`, le reste du CSS compilé se charge
 sans bloquer l'affichage, et le script principal charge en différé.
 
+### Optimisation des images
+
+En place : une page admin **Optimisation des images** affiche le nombre réel d'images de la
+médiathèque pas encore optimisées, un bouton « Analyser la médiathèque » revérifie chaque image une
+par une (requêtes `fetch` séquentielles, barre de progression) — y compris une image déjà marquée
+optimisée dont le fichier a été remplacé depuis —, et un bouton « Optimiser les images » compresse
+ensuite chaque image restante de la même façon, via une interface PHP remplaçable (implémentation
+par défaut : GD, sans dépendance tierce).
+
 Voir [STRUCTURE.md](./STRUCTURE.md) pour le détail des fichiers et [RELEASE.md](./RELEASE.md) pour
 l'historique version par version.
 

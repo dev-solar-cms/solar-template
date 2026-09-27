@@ -206,6 +206,40 @@
 			theme's WPML/Polylang compatibility.
 		</p>
 
+		<h2 id="media-optimization">Image Optimization</h2>
+		<p>
+			A separate new admin screen, <strong>Image Optimization</strong>
+			(<code>Solar_Template\Admin\MediaOptimizationController</code>, a submenu of the
+			"Solar Template" page), shows the real count of media library images not yet optimized
+			and offers two actions, each with its own progress bar. Both run entirely as
+			sequential <code>fetch()</code> requests from the browser — one image at a time —
+			never as a single long-running PHP request that could block or time out on a large
+			library.
+		</p>
+		<p>
+			"Scan library" re-verifies every image, one at a time, against its own last known
+			state. An optimized image carries a signature
+			(<code>_solar_template_optimized_signature</code>, file size + modification time)
+			rather than a plain boolean flag: a boolean alone could not tell an image that was
+			never processed apart from one whose file was replaced since (e.g. a manual re-upload
+			to the same attachment ID). The scan
+			(<code>Solar_Template\Media\MediaLibraryScanner::scan_attachment()</code>) recomputes
+			that signature from the real file and resets it whenever it no longer matches, so a
+			later "Optimize images" run picks that image back up.
+		</p>
+		<p>
+			"Optimize images" then compresses every remaining image, one at a time, through
+			<code>Solar_Template\Contracts\ImageOptimizerInterface</code> — a replaceable
+			interface, the same convention as <code>CacheInterface</code>/
+			<code>TranslatorInterface</code>. The only implementation shipped,
+			<code>Solar_Template\Media\GdImageOptimizer</code>, relies on PHP's own GD extension
+			(already present, no third-party dependency): JPEG/WebP re-encoded at a reduced
+			quality, PNG at maximum compression — never replacing the original file when the
+			result isn't actually smaller. A format GD cannot handle here (e.g. an animated GIF)
+			is left completely untouched and reported as already optimal, rather than risking a
+			broken animation.
+		</p>
+
 		<h2 id="cache">Cache &amp; asset regeneration</h2>
 		<p>
 			A button at the bottom of the General tab (<code>Solar_Template\Admin\CacheRegenerator</code>,
@@ -227,7 +261,12 @@
 			copyright, WooCommerce's own displayed currency, home page section order/visibility, catalog
 			layout and sidebar widgets, custom engraving, blog pagination/featured/columns/share/related),
 			and maintenance mode returns a real 503 to a logged-out visitor while an administrator keeps
-			browsing normally. No PHP warning or error observed.
+			browsing normally. The Image Optimization screen was verified separately with three real
+			test images imported into the media library: scan, optimize (weight reduced by roughly
+			two thirds each), a fresh scan confirming all three as optimized, and a tampering test
+			(replacing an already-optimized image's file) confirming the scan correctly flags it as
+			not optimized again — test data removed after verification. No PHP warning or error
+			observed.
 		</p>
 	</main>
 	<script src="../assets/doc.js"></script>

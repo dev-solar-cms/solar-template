@@ -50,7 +50,8 @@ solar-template/
 │   ├── Blog/            # Blog : mapping carte article (normal + à la une), temps de lecture, hero, filtre catégories, article à la une, pagination, fil d'Ariane/auteur/articles connexes de l'article
 │   ├── Pages/           # Pages statiques : template/onglets/sommaire de la page légale, coordonnées + FAQ + traitement du formulaire de contact
 │   ├── Cache/           # Politique d'invalidation du cache lecture-seule du thème (CacheInvalidator)
-│   └── Admin/           # Réglages du thème : framework d'onglets (Settings API), tous les onglets (dont Traductions), pages Langues/Éditeur de traduction, mode maintenance
+│   ├── Media/           # Optimisation des images : scan/statut de la médiathèque, compression GD par défaut
+│   └── Admin/           # Réglages du thème : framework d'onglets (Settings API), tous les onglets (dont Traductions), pages Langues/Éditeur de traduction/Optimisation des images, mode maintenance
 ├── template-parts/      # Fragments de gabarit réutilisables (`get_template_part()`)
 │   ├── product-card.php # Carte produit (image, badge, wishlist, overlay panier, prix, swatches)
 │   ├── blog-card.php    # Carte article de blog (image 16:10, badge catégorie, meta, titre, extrait, auteur)
@@ -192,6 +193,8 @@ solar-template/
   que de fataliser en son absence.
 - `MoCompilerInterface` — compilation d'un catalogue en fichier `.mo` (implémentation par défaut :
   `I18n\GettextMoCompiler`, basée sur `gettext/gettext`).
+- `ImageOptimizerInterface` — compression d'un fichier image en place (implémentation par défaut :
+  `Media\GdImageOptimizer`, basée sur l'extension GD de PHP, aucune dépendance externe).
 
 ### Système de traduction (`inc/I18n/`)
 
@@ -647,6 +650,37 @@ solar-template/
   avertissement PHP observé. Bug trouvé et corrigé pendant cette vérification : désactiver le bloc
   « à la une » du blog sans neutraliser `ignore_sticky_posts` laissait WordPress réinsérer quand
   même l'article épinglé en tête de la requête, au-delà du nombre configuré par page.
+
+### Optimisation des images (`inc/Media/`)
+
+- Nouvel écran admin **Optimisation des images**
+  (`Solar_Template\Admin\MediaOptimizationController`, sous-menu de la page « Solar Template »)
+  affichant le nombre réel d'images de la médiathèque pas encore optimisées, un bouton « Analyser
+  la médiathèque » et un bouton « Optimiser les images » — les deux se déroulent entièrement en
+  requêtes `fetch()` séquentielles (une image à la fois), jamais une seule requête PHP longue qui
+  bloquerait ou expirerait sur une grosse médiathèque, avec une barre de progression pour chacun.
+- `Solar_Template\Media\MediaLibraryScanner` est la seule classe qui interroge WordPress
+  (`WP_Query`/meta d'attachment/système de fichiers) ; la décision pure « cette image est-elle
+  toujours optimisée ? » vit dans `Solar_Template\Media\ImageOptimizationStatus`, testée
+  unitairement, indépendante de WordPress. Une image optimisée porte une signature
+  (`_solar_template_optimized_signature`, taille de fichier + date de modification) plutôt qu'un
+  simple booléen : un booléen seul ne permettrait pas de distinguer une image jamais traitée d'une
+  image dont le fichier a été remplacé depuis (ex. un ré-import manuel sur le même ID) — le scan
+  revérifie cette signature contre le fichier réel et la réinitialise si elle ne correspond plus,
+  pour qu'un futur passage « Optimiser les images » la reprenne.
+- La compression elle-même passe par `Solar_Template\Contracts\ImageOptimizerInterface`, une
+  interface remplaçable (même convention que `CacheInterface`/`TranslatorInterface`) — l'unique
+  implémentation fournie, `Solar_Template\Media\GdImageOptimizer`, utilise l'extension GD de PHP
+  (déjà présente, aucune dépendance tierce) : réencodage JPEG/WebP à qualité réduite, PNG à
+  compression maximale, en ne remplaçant jamais le fichier d'origine si le résultat n'est pas
+  réellement plus léger. Un format non pris en charge (ex. GIF animé) est laissé intact et signalé
+  comme déjà optimal, plutôt que de risquer de casser une animation.
+- Vérifié de bout en bout dans l'environnement Docker réel : trois images de test (JPEG bruités,
+  qualité 100) importées dans la médiathèque, scannées puis optimisées via les mêmes méthodes que
+  les actions AJAX réelles — poids réduit d'environ deux tiers pour chacune, compteur repassé à 0,
+  un nouveau scan confirme bien les trois comme optimisées. Un test de falsification (remplacement
+  du contenu et de la date de modification du fichier d'une image déjà optimisée) confirme que le
+  scan la redétecte correctement comme non optimisée. Données de test supprimées après vérification.
 
 ### À noter
 - `template-claude-code.html` (s'il est présent à la racine) est une maquette HTML exportée, ignorée par git — à utiliser comme référence visuelle/structurelle pour construire les vrais gabarits, jamais comme code à exécuter ou copier tel quel.

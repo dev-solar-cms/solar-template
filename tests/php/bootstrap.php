@@ -54,6 +54,20 @@ if ( ! function_exists( 'wp_mkdir_p' ) ) {
 	}
 }
 
+if ( ! function_exists( 'wp_delete_file' ) ) {
+	/**
+	 * Minimal stand-in for WordPress' own file deletion wrapper, used by GdImageOptimizerTest.
+	 *
+	 * @param string $file Absolute path to delete.
+	 * @return void
+	 */
+	function wp_delete_file( string $file ): void {
+		if ( file_exists( $file ) ) {
+			unlink( $file ); // phpcs:ignore WordPress.WP.AlternativeFunctions.unlink_unlink -- test-only stand-in for the real WordPress function.
+		}
+	}
+}
+
 if ( ! function_exists( 'get_transient' ) ) {
 	global $solar_template_test_transients;
 	global $solar_template_test_transient_ttls;

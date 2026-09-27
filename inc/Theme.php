@@ -27,6 +27,7 @@ use Solar_Template\Admin\GeneralSettings;
 use Solar_Template\Admin\HeaderSettings;
 use Solar_Template\Admin\LanguagesController;
 use Solar_Template\Admin\MaintenanceMode;
+use Solar_Template\Admin\MediaOptimizationController;
 use Solar_Template\Admin\Notices;
 use Solar_Template\Admin\ProductsSettings;
 use Solar_Template\Admin\SettingsPage;
@@ -177,6 +178,10 @@ final class Theme {
 		add_action( 'admin_post_' . TranslationsEditorController::SAVE_ACTION, array( TranslationsEditorController::class, 'handle_save' ) );
 
 		add_action( 'wp_ajax_solar_template_regenerate_cache', array( CacheRegenerator::class, 'handle_ajax_request' ) );
+
+		add_action( 'admin_menu', array( MediaOptimizationController::class, 'register_menu' ) );
+		add_action( 'wp_ajax_' . MediaOptimizationController::SCAN_ACTION, array( MediaOptimizationController::class, 'handle_scan_step' ) );
+		add_action( 'wp_ajax_' . MediaOptimizationController::OPTIMIZE_ACTION, array( MediaOptimizationController::class, 'handle_optimize_step' ) );
 	}
 
 	/**
