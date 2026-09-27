@@ -50,6 +50,20 @@ final class InstallerSqlTest extends TestCase {
 	}
 
 	/**
+	 * `string_key`/`context` are forced to a binary (case-sensitive) collation, so two msgids
+	 * differing only by case (e.g. "Orders" vs "orders") don't collapse into a single row under a
+	 * database's own default case-insensitive collation.
+	 *
+	 * @return void
+	 */
+	public function test_translations_table_sql_forces_a_case_sensitive_collation_on_the_key_columns(): void {
+		$sql = Installer::translations_table_sql( 'wptests_', 'DEFAULT CHARACTER SET utf8mb4' );
+
+		$this->assertStringContainsString( 'string_key varchar(191) COLLATE utf8mb4_bin NOT NULL', $sql );
+		$this->assertStringContainsString( 'context varchar(191) COLLATE utf8mb4_bin NOT NULL', $sql );
+	}
+
+	/**
 	 * The settings table SQL declares a unique key on `setting_key` so `replace()` upserts correctly.
 	 *
 	 * @return void

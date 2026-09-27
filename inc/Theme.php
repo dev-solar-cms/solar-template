@@ -25,10 +25,12 @@ use Solar_Template\Admin\CacheRegenerator;
 use Solar_Template\Admin\FooterSettings;
 use Solar_Template\Admin\GeneralSettings;
 use Solar_Template\Admin\HeaderSettings;
+use Solar_Template\Admin\LanguagesController;
 use Solar_Template\Admin\MaintenanceMode;
 use Solar_Template\Admin\Notices;
 use Solar_Template\Admin\ProductsSettings;
 use Solar_Template\Admin\SettingsPage;
+use Solar_Template\Admin\TranslationsEditorController;
 use Solar_Template\Admin\TranslationsSettings;
 use Solar_Template\Blog\BlogController;
 use Solar_Template\Catalog\CatalogController;
@@ -157,6 +159,13 @@ final class Theme {
 		add_action( 'admin_menu', array( TranslationsSettings::class, 'register_languages_menu' ) );
 		add_filter( 'determine_locale', array( TranslationsSettings::class, 'filter_locale' ) );
 		add_action( 'admin_post_solar_template_import_translations', array( TranslationsSettings::class, 'handle_import' ) );
+
+		add_action( 'admin_post_' . LanguagesController::ADD_ACTION, array( LanguagesController::class, 'handle_add' ) );
+		add_action( 'admin_post_' . LanguagesController::SET_DEFAULT_ACTION, array( LanguagesController::class, 'handle_set_default' ) );
+		add_action( 'admin_post_' . LanguagesController::REMOVE_ACTION, array( LanguagesController::class, 'handle_remove' ) );
+
+		add_action( 'admin_menu', array( TranslationsEditorController::class, 'register_menu' ) );
+		add_action( 'admin_post_' . TranslationsEditorController::SAVE_ACTION, array( TranslationsEditorController::class, 'handle_save' ) );
 
 		add_action( 'wp_ajax_solar_template_regenerate_cache', array( CacheRegenerator::class, 'handle_ajax_request' ) );
 	}

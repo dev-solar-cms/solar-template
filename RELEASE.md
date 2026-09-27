@@ -4,13 +4,14 @@ Procédure de versionnage et de publication du thème.
 
 ## Versionnage
 
-Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`). Le numéro de version doit être identique et mis à jour simultanément à trois endroits :
+Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`). Le numéro de version doit être identique et mis à jour simultanément à ces endroits :
 
 - `style.css` — champ `Version:` de l'en-tête du thème (c'est la valeur que WordPress affiche et utilise pour le cache des assets)
 - `composer.json` — champ `version`
 - `package.json` — champ `version`
+- `.env`/`.env.example` — `SOLAR_TEMPLATE_VERSION` (jamais la source de vérité à elle seule, mais exposée pour l'écran de réglages)
 
-Version actuelle : `0.7.3`.
+Version actuelle : `0.7.4`.
 
 ## Avant une release
 
@@ -30,6 +31,54 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.7.4 — système multilingue complet (langues, éditeur de traduction)
+
+- Ajout d'une page **Langues**, dans l'administration du thème : liste recherchable des langues
+  standards proposables à l'ajout (chacune avec son code de langue classique et son drapeau, aucune
+  langue codée en dur), action d'ajout créant réellement l'entrée en base, liste des langues déjà
+  ajoutées avec une action « Définir par défaut » et une action « Supprimer » (supprimer la langue
+  par défaut actuelle est refusé — il faut d'abord en choisir une nouvelle).
+- Ajout d'un **Éditeur de traduction** : la liste complète des chaînes que le thème enregistre,
+  recherchable et paginée, modifiable directement par langue depuis l'administration — pas
+  seulement via l'import d'un fichier `.po`/`.mo`. Les espaces réservés (`%s`/`%d`/`%1$s`...) sont
+  mis en évidence explicitement dans la chaîne d'origine, et la forme plurielle d'une chaîne qui
+  utilise `_n()` s'édite dans son propre champ, séparément du singulier. Enregistrer écrit
+  directement dans le catalogue et recompile le fichier `.mo` de la langue concernée, donc le
+  changement est immédiatement visible sur le site.
+- Chargement du textdomain et compatibilité de toutes les chaînes déjà écrites vérifiés
+  intégralement : `load_theme_textdomain()` charge bien les traductions et changer la langue
+  effective change réellement le rendu, y compris pour tout le contenu déjà construit dans les
+  étapes précédentes.
+- Documentation de la compatibilité avec WPML et Polylang : le thème n'appelant que les fonctions
+  de traduction natives de WordPress (`__()`/`_e()`/`_n()`, text-domain `solar-template`) et les
+  mécanismes standards de chargement/détection de langue (`load_theme_textdomain()`/
+  `determine_locale`), il fonctionne sans modification aux côtés de l'un ou l'autre plugin — sans
+  en faire une dépendance.
+- **Bug rencontré et corrigé (perte silencieuse de traductions)** : `string_key`/`context` de la
+  table de traductions utilisaient la collation par défaut, insensible à la casse, de la base de
+  données — deux chaînes légitimement distinctes ne différant que par la casse (ex. « Orders », le
+  titre d'une page, et « orders », une référence en ligne) étaient alors fusionnées sous la clé
+  unique de cette table, l'une écrasant silencieusement l'autre à chaque activation. Corrigé en
+  déclarant explicitement une collation binaire (`utf8mb4_bin`) sur ces deux colonnes ; une table
+  déjà créée avec l'ancienne collation est également corrigée automatiquement à la (ré)activation,
+  `dbDelta()` n'appliquant pas ce genre de changement de collation seul de façon fiable.
+- **Bug rencontré et corrigé (chaîne trop longue pour le catalogue)** : une réponse de la FAQ de la
+  page de contact dépassait la longueur maximale de la colonne dédiée à la clé d'une chaîne dans le
+  catalogue de traduction, l'empêchant silencieusement d'être enregistrée (elle s'affichait donc
+  toujours dans sa langue d'origine, quelle que soit la langue du site) — corrigée en raccourcissant
+  le texte source, plutôt qu'en élargissant la colonne (même choix que pour un cas similaire déjà
+  rencontré lors d'une étape précédente).
+- **Bug rencontré et corrigé (traductions écrasées à chaque activation)** : le mécanisme qui
+  alimente le catalogue avec les traductions par défaut du thème écrasait, à chaque (ré)activation,
+  toute traduction déjà personnalisée depuis l'administration — désormais, il ne comble que les
+  chaînes réellement absentes du catalogue, sans jamais toucher à une traduction déjà enregistrée.
+- Vérifié de bout en bout dans l'environnement Docker réel : recherche puis ajout d'une langue,
+  définition d'une langue par défaut, suppression d'une langue non par défaut (et refus explicite
+  de supprimer la langue par défaut), recherche/pagination/modification d'une chaîne (singulier et
+  pluriel) dans l'éditeur avec relecture immédiate sur le site réel dans les deux langues
+  installées, et régénération complète du catalogue confirmant qu'aucune chaîne du périmètre déjà
+  construit ne manque plus dans l'une ou l'autre langue. Aucune erreur ni avertissement PHP observé.
 
 ### 0.7.3 — réglages du thème (Page d'accueil, Produits, Blog, Traductions, cache/assets)
 

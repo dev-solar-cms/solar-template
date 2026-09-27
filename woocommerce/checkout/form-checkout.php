@@ -45,8 +45,8 @@ $solar_show_login_step = ! is_user_logged_in();
 				<span><?php esc_html_e( 'or continue with', 'solar-template' ); ?></span>
 			</div>
 			<div class="checkout-login-panel__social">
-				<button type="button" class="checkout-login-panel__social-button" disabled aria-disabled="true" title="<?php echo esc_attr__( 'Not available yet', 'solar-template' ); ?>">Google</button>
-				<button type="button" class="checkout-login-panel__social-button" disabled aria-disabled="true" title="<?php echo esc_attr__( 'Not available yet', 'solar-template' ); ?>">Facebook</button>
+				<button type="button" class="checkout-login-panel__social-button" disabled aria-disabled="true" title="<?php echo esc_attr__( 'Not available yet', 'solar-template' ); ?>"><?php esc_html_e( 'Google', 'solar-template' ); ?></button>
+				<button type="button" class="checkout-login-panel__social-button" disabled aria-disabled="true" title="<?php echo esc_attr__( 'Not available yet', 'solar-template' ); ?>"><?php esc_html_e( 'Facebook', 'solar-template' ); ?></button>
 			</div>
 
 			<?php if ( $checkout->is_registration_enabled() ) : ?>

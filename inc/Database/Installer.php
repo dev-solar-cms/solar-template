@@ -76,6 +76,38 @@ final class Installer {
 
 		dbDelta( self::languages_table_sql( $wpdb->prefix, $charset_collate ) );
 		dbDelta( self::translations_table_sql( $wpdb->prefix, $charset_collate ) );
+
+		self::force_binary_collation_on_translation_keys();
+	}
+
+	/**
+	 * `dbDelta()` does not reliably alter an existing column's collation on its own (its diff only
+	 * looks at type/length) — an install that created `wp_solar_template_translations` before this
+	 * column was forced to `utf8mb4_bin` (see self::translations_table_sql()) would otherwise keep
+	 * its original, case-insensitive collation forever. Explicitly checked and fixed here on every
+	 * (re-)activation instead.
+	 *
+	 * @return void
+	 */
+	private static function force_binary_collation_on_translation_keys(): void {
+		global $wpdb;
+
+		$table = $wpdb->prefix . 'solar_template_translations';
+
+		$current_collation = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT COLLATION_NAME FROM information_schema.COLUMNS
+				WHERE TABLE_SCHEMA = %s AND TABLE_NAME = %s AND COLUMN_NAME = 'string_key'",
+				DB_NAME,
+				$table
+			)
+		);
+
+		if ( 'utf8mb4_bin' === $current_collation ) {
+			return;
+		}
+
+		$wpdb->query( "ALTER TABLE {$table} MODIFY string_key VARCHAR(191) COLLATE utf8mb4_bin NOT NULL, MODIFY context VARCHAR(191) COLLATE utf8mb4_bin NOT NULL DEFAULT ''" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $table is built from $wpdb->prefix, not user input.
 	}
 
 	/**
@@ -137,6 +169,13 @@ final class Installer {
 	/**
 	 * Builds the `CREATE TABLE` statement for `wp_solar_template_translations`.
 	 *
+	 * `string_key`/`context` are explicitly forced to a binary (case-sensitive) collation,
+	 * regardless of the database's own default collation: gettext `msgid`s are case-sensitive by
+	 * nature (e.g. a page title "Orders" and an inline reference "orders" are two distinct, both
+	 * legitimately registered strings — see DefaultStrings), but a default case-insensitive MySQL
+	 * collation on this column collapsed such pairs under the `UNIQUE KEY` below, silently losing
+	 * one of them on every seed.
+	 *
 	 * @param string $prefix          WordPress table prefix (`$wpdb->prefix`).
 	 * @param string $charset_collate Charset/collation clause (`$wpdb->get_charset_collate()`).
 	 * @return string SQL statement, formatted for `dbDelta()`.
@@ -147,8 +186,8 @@ final class Installer {
 		return "CREATE TABLE {$table} (
 			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
 			language_code varchar(10) NOT NULL,
-			string_key varchar(191) NOT NULL,
-			context varchar(191) NOT NULL DEFAULT '',
+			string_key varchar(191) COLLATE utf8mb4_bin NOT NULL,
+			context varchar(191) COLLATE utf8mb4_bin NOT NULL DEFAULT '',
 			singular text NOT NULL,
 			plural text NULL,
 			updated_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,

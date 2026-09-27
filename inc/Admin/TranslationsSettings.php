@@ -4,11 +4,12 @@
  * Role: "Translations" settings tab (Solar_Template\Admin).
  * Author: David ROMERA <d.romera.11@gmail.com>
  * Purpose: Default language + automatic detection (real, applied on `determine_locale` for
- *          front-end visitors), an entry point to the future "Languages" menu (its own add-a-
- *          language screen/translation editor is Group 11's own, later, job — DECISIONS.md §9), and
- *          a .po/.mo fallback: downloading each active language's already-compiled `.mo`, and
- *          importing a `.po`/`.mo` file into the theme's own translation catalog
- *          (Solar_Template\I18n\Translator) as a stopgap before that editor exists.
+ *          front-end visitors), entry points to the "Languages" menu (add-a-language screen and
+ *          installed-languages listing — Solar_Template\Admin\LanguagesController) and the
+ *          "Translation Editor" (Solar_Template\Admin\TranslationsEditorController), and a .po/.mo
+ *          fallback: downloading each active language's already-compiled `.mo`, and importing a
+ *          `.po`/`.mo` file into the theme's own translation catalog (Solar_Template\I18n\Translator)
+ *          alongside that editor.
  *
  * @package Solar_Template
  */
@@ -122,6 +123,7 @@ final class TranslationsSettings implements SettingsTabInterface {
 			<td>
 				<p>
 					<a class="button" href="<?php echo esc_url( $languages_url ); ?>"><?php esc_html_e( 'Manage languages →', 'solar-template' ); ?></a>
+					<a class="button" href="<?php echo esc_url( admin_url( 'admin.php?page=' . TranslationsEditorController::MENU_SLUG ) ); ?>"><?php esc_html_e( 'Translate strings →', 'solar-template' ); ?></a>
 				</p>
 				<table class="solar-template-settings__lang-table">
 					<thead>
@@ -185,9 +187,9 @@ final class TranslationsSettings implements SettingsTabInterface {
 	}
 
 	/**
-	 * Registers the "Languages" stub submenu page — a real, working entry point for the "Manage
-	 * languages" link above, ahead of its own add-a-language screen/translation editor (Group 11's own
-	 * job, out of scope here — DECISIONS.md §9).
+	 * Registers the "Languages" submenu page: the real add-a-language screen and installed-languages
+	 * listing now live in Solar_Template\Admin\LanguagesController (see DECISIONS.md §9); this tab's
+	 * own "Manage languages →" link above points here.
 	 *
 	 * @return void
 	 */
@@ -198,30 +200,8 @@ final class TranslationsSettings implements SettingsTabInterface {
 			__( 'Languages', 'solar-template' ),
 			'manage_options',
 			self::LANGUAGES_MENU_SLUG,
-			array( self::class, 'render_languages_page' )
+			array( LanguagesController::class, 'render_page' )
 		);
-	}
-
-	/**
-	 * Renders the "Languages" stub page.
-	 *
-	 * @return void
-	 */
-	public static function render_languages_page(): void {
-		if ( ! current_user_can( 'manage_options' ) ) {
-			return;
-		}
-		?>
-		<div class="wrap">
-			<h1><?php esc_html_e( 'Languages', 'solar-template' ); ?></h1>
-			<p><?php esc_html_e( 'Adding a language and the full translation editor are coming in a future update. In the meantime, the "Translations" tab lets you pick a default language, enable automatic detection, and import a .po/.mo file for one of the languages already installed.', 'solar-template' ); ?></p>
-			<ul>
-				<?php foreach ( self::active_languages() as $language ) : ?>
-					<li><?php echo esc_html( $language['flag'] . ' ' . $language['label'] . ( $language['is_default'] ? ' — ' . __( 'default', 'solar-template' ) : '' ) ); ?></li>
-				<?php endforeach; ?>
-			</ul>
-		</div>
-		<?php
 	}
 
 	/**

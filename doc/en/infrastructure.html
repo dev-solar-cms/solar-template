@@ -151,6 +151,55 @@ npm run format    # auto-format assets/**/*.{js,scss} with Prettier</code></pre>
 			<code>wp-content/languages/themes/</code> directory. This is what
 			<code>DatabaseTranslator::compile()</code> writes.
 		</p>
+		<p>
+			<strong>Note:</strong> <code>string_key</code>/<code>context</code>
+			(<code>wp_solar_template_translations</code>) are explicitly declared with a binary,
+			case-sensitive collation (<code>utf8mb4_bin</code>) rather than the database's own
+			default. A gettext <code>msgid</code> is case-sensitive by nature — the theme
+			legitimately registers both "Orders" (a page title) and "orders" (an inline
+			reference) as two distinct strings — but a default, case-insensitive MySQL collation
+			collapsed such pairs under this table's unique key, silently discarding one of them
+			on every activation. <code>Installer::create_i18n_tables()</code> corrects an
+			already-created table's collation on every (re-)activation too, since `dbDelta()`
+			does not reliably alter a column's collation on its own.
+		</p>
+		<p>
+			<code>Solar_Template\Theme::setup()</code> calls
+			<code>load_theme_textdomain()</code> on <code>after_setup_theme</code>. Which locale
+			WordPress actually loads for a given request is resolved by
+			<code>Solar_Template\Admin\TranslationsSettings::filter_locale()</code> (hooked on
+			the core <code>determine_locale</code> filter, front-end only — an administrator's
+			own profile language in <code>wp-admin</code> is never overridden): the visitor's
+			<code>Accept-Language</code> header is matched against the theme's active languages
+			first (exact match, e.g. `fr-FR` → `fr_FR`, then same-primary-subtag, e.g. `fr` → the
+			first active `fr_*` language) when automatic detection is enabled in the Translations
+			tab, then the tab's own configured default language, then WordPress' own site
+			language — a clean fallback chain with no error at any step: a locale with no
+			matching (or not yet compiled) `.mo` file simply falls back to the original English
+			source text, exactly like core WordPress does for any theme.
+		</p>
+		<p>
+			<strong>Compatibility with WPML/Polylang:</strong> since the theme only ever calls
+			WordPress' own standard translation functions (<code>__()</code>/<code>_e()</code>/
+			<code>_n()</code>, text domain <code>solar-template</code>) and the core
+			<code>load_theme_textdomain()</code>/<code>determine_locale</code> mechanisms, it
+			works unmodified alongside WPML or Polylang: either plugin can filter
+			<code>determine_locale</code> or swap in its own compiled translations the same way
+			this theme's own <code>TranslationsSettings::filter_locale()</code> does, with no
+			dependency on either plugin and no special-casing anywhere in the theme's code.
+		</p>
+		<p>
+			Two dedicated admin screens (see
+			<a href="administration.html#translations">Administration → Translations tab</a>)
+			manage languages and translations without ever leaving wp-admin: a
+			<strong>Languages</strong> page (search and add any of the theme's known standard
+			languages — each with its classic locale code and flag — list the ones already
+			added, set the default one, remove a non-default one) and a
+			<strong>Translation Editor</strong> (every registered string, searchable and
+			paginated, editable per language with placeholders like <code>%s</code>/<code>%d</code>
+			shown explicitly and the plural form edited separately when a string uses
+			<code>_n()</code>); saving recompiles that language's `.mo` immediately.
+		</p>
 
 		<h2 id="tests">Automated tests</h2>
 		<pre><code>composer test   # PHP unit tests (PHPUnit)

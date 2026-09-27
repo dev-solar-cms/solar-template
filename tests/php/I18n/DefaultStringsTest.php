@@ -76,6 +76,24 @@ final class DefaultStringsTest extends TestCase {
 	}
 
 	/**
+	 * seed() never overwrites a translation already registered for a key (e.g. edited from the
+	 * admin's own translation editor) — it only fills in keys still missing from the catalog.
+	 *
+	 * @return void
+	 */
+	public function test_seed_does_not_overwrite_an_existing_translation(): void {
+		$translator = new DatabaseTranslator( new FakeWpdb(), new GettextMoCompiler(), $this->languages_dir );
+		$keys       = array_keys( DefaultStrings::all() );
+		$first_key  = $keys[0];
+
+		$translator->set_string( 'fr_FR', $first_key, 'Traduction personnalisée' );
+
+		DefaultStrings::seed( $translator );
+
+		$this->assertSame( 'Traduction personnalisée', $translator->get_strings( 'fr_FR' )[ $first_key ]['singular'] );
+	}
+
+	/**
 	 * Every printf-style placeholder in an English source key also appears in its French
 	 * translation (order may differ, e.g. `%1$s`/`%2$s`, but the set of placeholders must match).
 	 *
@@ -93,6 +111,23 @@ final class DefaultStringsTest extends TestCase {
 				$expected_placeholders[0],
 				$found_placeholders[0],
 				"Placeholder mismatch between the source key and its fr_FR translation for \"{$key}\"."
+			);
+		}
+	}
+
+	/**
+	 * Every key fits in the catalog's `string_key` column (`varchar(191)` — see
+	 * Solar_Template\Database\Installer::translations_table_sql()), so it can actually be stored
+	 * instead of silently failing to insert.
+	 *
+	 * @return void
+	 */
+	public function test_every_key_fits_the_string_key_column_length(): void {
+		foreach ( array_keys( DefaultStrings::all() ) as $key ) {
+			$this->assertLessThanOrEqual(
+				191,
+				mb_strlen( $key ),
+				"Key too long for the string_key column (max 191 characters): \"{$key}\"."
 			);
 		}
 	}

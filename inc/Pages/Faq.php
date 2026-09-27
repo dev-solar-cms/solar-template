@@ -54,7 +54,7 @@ final class Faq {
 			),
 			array(
 				'question' => __( 'How do I return or exchange an item?', 'solar-template' ),
-				'answer'   => __( 'You have 30 days from receiving your order to return an item in its original condition (unworn, tags attached, original packaging). Log in to your account and follow the return procedure. Refunds are processed within 5 to 7 business days.', 'solar-template' ),
+				'answer'   => __( 'You have 30 days from receiving your order to return an item in its original condition (unworn, tags attached). Log in to your account to start the return. Refunds take 5 to 7 business days.', 'solar-template' ),
 			),
 			array(
 				'question' => __( 'Do you ship internationally?', 'solar-template' ),

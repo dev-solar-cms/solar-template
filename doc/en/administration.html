@@ -180,14 +180,30 @@
 			own <code>Accept-Language</code> header against the theme's active languages
 			(<code>Solar_Template\I18n\Translator</code>) — an exact match first (`fr-FR` → `fr_FR`),
 			then a same-primary-subtag one (`fr` → the first active `fr_*` language), before falling
-			back to the configured default language and then the site's own language. A "Manage
-			languages" link points to a real, working placeholder page: the add-a-language menu and the
-			full translation editor remain the project roadmap's next group (DECISIONS.md §9),
-			deliberately out of scope here. Until that editor exists, this tab lists every active
-			language with a download link for its already-compiled `.mo`, and a drag & drop zone to
-			import a `.po`/`.mo` file (the `gettext/gettext` library, already a dependency): the entries
-			it contains are written into the very same catalog that future editor will use, then the
-			chosen language is recompiled immediately.
+			back to the configured default language and then the site's own language. This tab also
+			lists every active language with a download link for its already-compiled `.mo`, and a
+			drag &amp; drop zone to import a `.po`/`.mo` file (the `gettext/gettext` library, already a
+			dependency) into the same catalog the two screens below edit directly.
+		</p>
+		<p>
+			A "Manage languages →" button opens the <strong>Languages</strong> page
+			(<code>Solar_Template\Admin\LanguagesController</code>): a searchable list of the theme's
+			known standard languages (<code>Solar_Template\I18n\LanguageCatalog</code> — each with its
+			classic locale code and flag, no language ever hardcoded in a template), an "Add" action
+			per language, the list of languages already added with a "Set as default"/"Remove" action
+			for each (removing the current default is refused — a new one must be chosen first). A
+			"Translate strings →" button opens the <strong>Translation Editor</strong>
+			(<code>Solar_Template\Admin\TranslationsEditorController</code>): every string the theme's
+			code currently registers (<code>Solar_Template\I18n\DefaultStrings</code>), searchable and
+			paginated (<code>Solar_Template\Admin\TranslationCatalog::build_rows()</code>, a pure,
+			unit-tested function), editable per language with every <code>%s</code>/<code>%d</code>/
+			<code>%1$s</code>-style placeholder highlighted and called out explicitly, and the plural
+			form edited as its own field whenever a string uses <code>_n()</code>. Saving writes
+			straight to the catalog and recompiles that language's `.mo`, so the change is live on the
+			front end immediately — see
+			<a href="infrastructure.html#translations">Infrastructure → Translation system</a> for how
+			the underlying catalog/locale-detection/`.mo` mechanism works, and for the note on this
+			theme's WPML/Polylang compatibility.
 		</p>
 
 		<h2 id="cache">Cache &amp; asset regeneration</h2>

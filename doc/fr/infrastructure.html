@@ -158,6 +158,58 @@ npm run format    # formate assets/**/*.{js,scss} avec Prettier</code></pre>
 			uniquement pour le dossier partagé <code>wp-content/languages/themes/</code>. C'est ce
 			que produit <code>DatabaseTranslator::compile()</code>.
 		</p>
+		<p>
+			<strong>À noter :</strong> <code>string_key</code>/<code>context</code>
+			(<code>wp_solar_template_translations</code>) déclarent explicitement une collation
+			binaire et sensible à la casse (<code>utf8mb4_bin</code>) plutôt que celle par défaut de
+			la base. Un <code>msgid</code> gettext est sensible à la casse par nature — le thème
+			enregistre légitimement à la fois « Orders » (un titre de page) et « orders » (une
+			référence en ligne) comme deux chaînes distinctes — mais une collation MySQL par défaut,
+			insensible à la casse, fusionnait de telles paires sous la clé unique de cette table, en
+			perdant silencieusement l'une des deux à chaque activation.
+			<code>Installer::create_i18n_tables()</code> corrige aussi la collation d'une table déjà
+			créée à chaque (ré)activation, `dbDelta()` n'altérant pas la collation d'une colonne de
+			façon fiable à lui seul.
+		</p>
+		<p>
+			<code>Solar_Template\Theme::setup()</code> appelle
+			<code>load_theme_textdomain()</code> sur <code>after_setup_theme</code>. La langue
+			effectivement chargée par WordPress pour une requête donnée est résolue par
+			<code>Solar_Template\Admin\TranslationsSettings::filter_locale()</code> (accroché au
+			filtre natif <code>determine_locale</code>, uniquement côté visiteur — jamais dans
+			<code>wp-admin</code>, où la langue du profil de l'administrateur reste inchangée) :
+			l'en-tête <code>Accept-Language</code> du visiteur est d'abord comparé aux langues
+			actives du thème (correspondance exacte, ex. `fr-FR` → `fr_FR`, puis même sous-étiquette
+			principale, ex. `fr` → la première langue active `fr_*`) quand la détection automatique
+			est activée dans l'onglet Traductions, puis la langue par défaut configurée dans cet
+			onglet, puis la langue du site WordPress lui-même — une chaîne de repli propre, sans
+			erreur à aucune étape : une langue sans fichier `.mo` correspondant (ou pas encore
+			compilé) revient simplement au texte source anglais d'origine, exactement comme le ferait
+			WordPress pour n'importe quel thème.
+		</p>
+		<p>
+			<strong>Compatibilité avec WPML/Polylang :</strong> le thème n'appelant que les
+			fonctions de traduction standards de WordPress (<code>__()</code>/<code>_e()</code>/
+			<code>_n()</code>, text-domain <code>solar-template</code>) et les mécanismes natifs
+			<code>load_theme_textdomain()</code>/<code>determine_locale</code>, il fonctionne sans
+			modification aux côtés de WPML ou Polylang : l'un ou l'autre plugin peut filtrer
+			<code>determine_locale</code> ou substituer ses propres traductions compilées exactement
+			comme le fait déjà <code>TranslationsSettings::filter_locale()</code> du thème, sans
+			dépendance à l'un ou l'autre et sans aucun cas particulier dans le code du thème.
+		</p>
+		<p>
+			Deux écrans d'administration dédiés (voir
+			<a href="administration.html#translations">Administration → Onglet Traductions</a>)
+			gèrent les langues et les traductions sans jamais quitter l'administration : une page
+			<strong>Langues</strong> (rechercher et ajouter n'importe laquelle des langues standards
+			connues du thème — chacune avec son code de langue classique et son drapeau — lister
+			celles déjà ajoutées, définir celle par défaut, supprimer une langue non par défaut) et
+			un <strong>Éditeur de traduction</strong> (chaque chaîne enregistrée par le thème,
+			recherchable et paginée, modifiable par langue avec chaque espace réservé de type
+			<code>%s</code>/<code>%d</code> mis en évidence explicitement, et la forme plurielle
+			modifiée séparément quand une chaîne utilise <code>_n()</code>) ; enregistrer recompile
+			immédiatement le fichier `.mo` de cette langue.
+		</p>
 
 		<h2 id="tests">Tests automatisés</h2>
 		<pre><code>composer test   # tests unitaires PHP (PHPUnit)

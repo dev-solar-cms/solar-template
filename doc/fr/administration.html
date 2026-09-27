@@ -195,14 +195,32 @@
 			catalogue du thème (<code>Solar_Template\I18n\Translator</code>) — correspondance exacte
 			d'abord (`fr-FR` → `fr_FR`), puis même sous-étiquette principale (`fr` → la première langue
 			`fr_*` active), avant de retomber sur la langue par défaut configurée puis sur la langue du
-			site elle-même. Un lien « Gérer les langues » pointe vers une page d'attente réelle et
-			fonctionnelle : le menu d'ajout de langue et l'éditeur de traduction complet restent le
-			prochain groupe de la feuille de route (DECISIONS.md §9), volontairement hors périmètre
-			ici. En attendant cet éditeur, cet onglet liste chaque langue active avec un lien de
-			téléchargement de son `.mo` déjà compilé, et une zone de glisser-déposer pour importer un
-			fichier `.po` ou `.mo` (bibliothèque `gettext/gettext`, déjà une dépendance du thème) : les
-			entrées qu'il contient sont écrites dans le même catalogue que l'éditeur futur, puis la
-			langue choisie est recompilée immédiatement.
+			site elle-même. Cet onglet liste aussi chaque langue active avec un lien de téléchargement
+			de son `.mo` déjà compilé, et une zone de glisser-déposer pour importer un fichier `.po` ou
+			`.mo` (bibliothèque `gettext/gettext`, déjà une dépendance du thème) dans le même catalogue
+			que les deux écrans ci-dessous modifient directement.
+		</p>
+		<p>
+			Un bouton « Gérer les langues → » ouvre la page <strong>Langues</strong>
+			(<code>Solar_Template\Admin\LanguagesController</code>) : une liste recherchable des
+			langues standards connues du thème (<code>Solar_Template\I18n\LanguageCatalog</code> —
+			chacune avec son code de langue classique et son drapeau, aucune langue codée en dur dans
+			un gabarit), une action « Ajouter » par langue, la liste des langues déjà ajoutées avec
+			une action « Définir par défaut »/« Supprimer » pour chacune (supprimer la langue par
+			défaut actuelle est refusé — il faut d'abord en choisir une nouvelle). Un bouton
+			« Traduire les chaînes → » ouvre l'<strong>Éditeur de traduction</strong>
+			(<code>Solar_Template\Admin\TranslationsEditorController</code>) : chaque chaîne
+			actuellement enregistrée par le code du thème
+			(<code>Solar_Template\I18n\DefaultStrings</code>), recherchable et paginée
+			(<code>Solar_Template\Admin\TranslationCatalog::build_rows()</code>, une fonction pure
+			testée unitairement), modifiable par langue avec chaque espace réservé de type
+			<code>%s</code>/<code>%d</code>/<code>%1$s</code> mis en évidence explicitement, et la
+			forme plurielle éditée dans son propre champ dès qu'une chaîne utilise <code>_n()</code>.
+			Enregistrer écrit directement dans le catalogue et recompile le `.mo` de cette langue, si
+			bien que le changement est immédiatement visible sur le site — voir
+			<a href="infrastructure.html#traductions">Infrastructure → Système de traduction</a> pour
+			le fonctionnement du catalogue/de la détection de langue/des fichiers `.mo`, et pour la
+			note sur la compatibilité WPML/Polylang de ce thème.
 		</p>
 
 		<h2 id="cache">Régénération cache &amp; assets</h2>

@@ -1750,9 +1750,9 @@ final class DefaultStrings {
 				'fr_FR' => 'Comment effectuer un retour ou un échange ?',
 				'en_US' => 'How do I return or exchange an item?',
 			),
-			'You have 30 days from receiving your order to return an item in its original condition (unworn, tags attached, original packaging). Log in to your account and follow the return procedure. Refunds are processed within 5 to 7 business days.' => array(
-				'fr_FR' => 'Vous disposez de 30 jours à compter de la réception de votre commande pour retourner un article dans son état d\'origine (non porté, étiquettes attachées, emballage d\'origine). Connectez-vous à votre espace client et suivez la procédure de retour. Le remboursement est effectué sous 5 à 7 jours ouvrés.',
-				'en_US' => 'You have 30 days from receiving your order to return an item in its original condition (unworn, tags attached, original packaging). Log in to your account and follow the return procedure. Refunds are processed within 5 to 7 business days.',
+			'You have 30 days from receiving your order to return an item in its original condition (unworn, tags attached). Log in to your account to start the return. Refunds take 5 to 7 business days.' => array(
+				'fr_FR' => "Vous disposez de 30 jours à compter de la réception de votre commande pour retourner un article dans son état d'origine (non porté, étiquettes attachées). Connectez-vous à votre espace client pour démarrer le retour. Le remboursement prend 5 à 7 jours ouvrés.",
+				'en_US' => 'You have 30 days from receiving your order to return an item in its original condition (unworn, tags attached). Log in to your account to start the return. Refunds take 5 to 7 business days.',
 			),
 			'Do you ship internationally?'                 => array(
 				'fr_FR' => 'Proposez-vous des livraisons internationales ?',
@@ -2034,10 +2034,6 @@ final class DefaultStrings {
 				'fr_FR' => 'Une colonne latérale apparaît aussi dès que la position de la barre de filtres ci-dessus est réglée sur une position latérale, même si ceci est désactivé.',
 				'en_US' => 'A sidebar column also appears whenever the filter bar position above is set to a sidebar, even with this disabled.',
 			),
-			'Adding a language and the full translation editor are coming in a future update. In the meantime, the "Translations" tab lets you pick a default language, enable automatic detection, and import a .po/.mo file for one of the languages already installed.' => array(
-				'fr_FR' => "L'ajout de langue et l'éditeur de traduction complet arriveront dans une future mise à jour. En attendant, l'onglet « Traductions » permet de choisir une langue par défaut, d'activer la détection automatique et d'importer un fichier .po/.mo pour l'une des langues déjà installées.",
-				'en_US' => 'Adding a language and the full translation editor are coming in a future update. In the meantime, the "Translations" tab lets you pick a default language, enable automatic detection, and import a .po/.mo file for one of the languages already installed.',
-			),
 			'Applies to any product with no surcharge of its own set.' => array(
 				'fr_FR' => "S'applique à tout produit sans supplément qui lui est propre.",
 				'en_US' => 'Applies to any product with no surcharge of its own set.',
@@ -2150,6 +2146,110 @@ final class DefaultStrings {
 				'fr_FR' => 'Langues',
 				'en_US' => 'Languages',
 			),
+			'Actions'                                      => array(
+				'fr_FR' => 'Actions',
+				'en_US' => 'Actions',
+			),
+			'Add'                                          => array(
+				'fr_FR' => 'Ajouter',
+				'en_US' => 'Add',
+			),
+			'Add a language'                               => array(
+				'fr_FR' => 'Ajouter une langue',
+				'en_US' => 'Add a language',
+			),
+			'Back to Translations settings'                => array(
+				'fr_FR' => 'Retour aux réglages de traduction',
+				'en_US' => 'Back to Translations settings',
+			),
+			'Cannot remove the default language.'          => array(
+				'fr_FR' => 'Impossible de supprimer la langue par défaut.',
+				'en_US' => 'Cannot remove the default language.',
+			),
+			'Code'                                         => array(
+				'fr_FR' => 'Code',
+				'en_US' => 'Code',
+			),
+			'Default'                                      => array(
+				'fr_FR' => 'Défaut',
+				'en_US' => 'Default',
+			),
+			'Default language updated.'                    => array(
+				'fr_FR' => 'Langue par défaut mise à jour.',
+				'en_US' => 'Default language updated.',
+			),
+			'Every standard language is already added.'    => array(
+				'fr_FR' => 'Toutes les langues standards sont déjà ajoutées.',
+				'en_US' => 'Every standard language is already added.',
+			),
+			'Installed languages'                          => array(
+				'fr_FR' => 'Langues installées',
+				'en_US' => 'Installed languages',
+			),
+			'Language added.'                              => array(
+				'fr_FR' => 'Langue ajoutée.',
+				'en_US' => 'Language added.',
+			),
+			'Language removed.'                            => array(
+				'fr_FR' => 'Langue supprimée.',
+				'en_US' => 'Language removed.',
+			),
+			'Search a language…'                           => array(
+				'fr_FR' => 'Rechercher une langue…',
+				'en_US' => 'Search a language…',
+			),
+			'Translation Editor'                           => array(
+				'fr_FR' => 'Éditeur de traduction',
+				'en_US' => 'Translation Editor',
+			),
+			'Translate strings →'                          => array(
+				'fr_FR' => 'Traduire les chaînes →',
+				'en_US' => 'Translate strings →',
+			),
+			'Add a language first, from the Languages page, to start translating.' => array(
+				'fr_FR' => "Ajoutez d'abord une langue depuis la page Langues pour commencer à traduire.",
+				'en_US' => 'Add a language first, from the Languages page, to start translating.',
+			),
+			'Search a string…'                             => array(
+				'fr_FR' => 'Rechercher une chaîne…',
+				'en_US' => 'Search a string…',
+			),
+			'Filter'                                       => array(
+				'fr_FR' => 'Filtrer',
+				'en_US' => 'Filter',
+			),
+			'Original string'                              => array(
+				'fr_FR' => 'Chaîne originale',
+				'en_US' => 'Original string',
+			),
+			'Translation'                                  => array(
+				'fr_FR' => 'Traduction',
+				'en_US' => 'Translation',
+			),
+			'Placeholders: %s'                             => array(
+				'fr_FR' => 'Espaces réservés : %s',
+				'en_US' => 'Placeholders: %s',
+			),
+			'Singular'                                     => array(
+				'fr_FR' => 'Singulier',
+				'en_US' => 'Singular',
+			),
+			'Plural'                                       => array(
+				'fr_FR' => 'Pluriel',
+				'en_US' => 'Plural',
+			),
+			'Plural form'                                  => array(
+				'fr_FR' => 'Forme plurielle',
+				'en_US' => 'Plural form',
+			),
+			'Save translations'                            => array(
+				'fr_FR' => 'Enregistrer les traductions',
+				'en_US' => 'Save translations',
+			),
+			'Translations saved.'                          => array(
+				'fr_FR' => 'Traductions enregistrées.',
+				'en_US' => 'Translations saved.',
+			),
 			'Manage languages →'                           => array(
 				'fr_FR' => 'Gérer les langues →',
 				'en_US' => 'Manage languages →',
@@ -2230,6 +2330,10 @@ final class DefaultStrings {
 				'fr_FR' => 'Barre latérale droite',
 				'en_US' => 'Sidebar right',
 			),
+			'Google'                                       => array(
+				'fr_FR' => 'Google',
+				'en_US' => 'Google',
+			),
 			'Single line'                                  => array(
 				'fr_FR' => 'Une seule ligne',
 				'en_US' => 'Single line',
@@ -2266,17 +2370,20 @@ final class DefaultStrings {
 	}
 
 	/**
-	 * Registers every entry from self::all() for `fr_FR` and `en_US`, overwriting any existing
-	 * row for the same key (this is the seed data, always the source of truth for these strings
-	 * until edited from the future translation editor screen).
+	 * Registers every entry from self::all() for `fr_FR` and `en_US` that isn't already present in
+	 * the catalog — this is only the *seed* data, filling in gaps (a brand-new string a later step
+	 * introduces) without ever overwriting a translation the admin's own translation editor
+	 * (Solar_Template\Admin\TranslationsEditorController) has since edited.
 	 *
 	 * @param TranslatorInterface $translator Translator to write the catalog through.
 	 * @return void
 	 */
 	public static function seed( TranslatorInterface $translator ): void {
-		foreach ( self::all() as $key => $translations ) {
-			foreach ( array( 'fr_FR', 'en_US' ) as $locale ) {
-				if ( ! isset( $translations[ $locale ] ) ) {
+		foreach ( array( 'fr_FR', 'en_US' ) as $locale ) {
+			$existing_keys = array_keys( $translator->get_strings( $locale ) );
+
+			foreach ( self::all() as $key => $translations ) {
+				if ( in_array( $key, $existing_keys, true ) || ! isset( $translations[ $locale ] ) ) {
 					continue;
 				}
 

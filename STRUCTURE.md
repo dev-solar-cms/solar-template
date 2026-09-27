@@ -49,7 +49,7 @@ solar-template/
 │   ├── Account/         # Espace client : endpoints/menu, sidebar, tableau de bord, statut de commande, action « Recommander », liste/détail de commandes, liste de souhaits, adresses, téléchargements, demande S.A.V., champs de paramètres (téléphone/naissance), suppression de compte
 │   ├── Blog/            # Blog : mapping carte article (normal + à la une), temps de lecture, hero, filtre catégories, article à la une, pagination, fil d'Ariane/auteur/articles connexes de l'article
 │   ├── Pages/           # Pages statiques : template/onglets/sommaire de la page légale, coordonnées + FAQ + traitement du formulaire de contact
-│   └── Admin/           # Réglages du thème : framework d'onglets (Settings API), onglets Général/Apparence/En-tête/Pied de page, mode maintenance
+│   └── Admin/           # Réglages du thème : framework d'onglets (Settings API), tous les onglets (dont Traductions), pages Langues/Éditeur de traduction, mode maintenance
 ├── template-parts/      # Fragments de gabarit réutilisables (`get_template_part()`)
 │   ├── product-card.php # Carte produit (image, badge, wishlist, overlay panier, prix, swatches)
 │   ├── blog-card.php    # Carte article de blog (image 16:10, badge catégorie, meta, titre, extrait, auteur)
@@ -505,8 +505,8 @@ solar-template/
   (`Solar_Template\Checkout\OrderConfirmation::view_model()`, même convention que `CartView` pour la
   page panier) — plutôt que le récapitulatif par défaut de WooCommerce. La livraison estimée est une
   fourchette de dates calculée depuis la vraie date de création de la commande, avec un délai
-  filtrable (`solar_template_order_confirmation_delivery_lead_days`, extension point prévu pour le
-  futur écran d'administration du Groupe 10).
+  filtrable (`solar_template_order_confirmation_delivery_lead_days`, extension point prévu pour un
+  futur écran d'administration).
 - Décision technique : `Checkout\CheckoutController::detach_default_checkout_hooks()` détache
   désormais aussi le tableau de détails de commande que WooCommerce ajoute par défaut en bas de la
   page de confirmation (`woocommerce_thankyou` → `woocommerce_order_details_table()`), redondant
@@ -549,8 +549,8 @@ solar-template/
   (nonce WordPress, `register_setting()`/`add_settings_section()`/`add_settings_field()` pour
   suivre la même convention Settings API que tout autre écran d'options WordPress). La
   persistance passe par `Solar_Template\Admin\SettingsRepository`, une clé/valeur simple sur la
-  table `wp_solar_template_settings` déjà créée par le Groupe 00 (clés `{onglet}.{champ}`) plutôt
-  que par `wp_options`.
+  table `wp_solar_template_settings` déjà créée lors de la mise en place initiale des tables du
+  thème (clés `{onglet}.{champ}`) plutôt que par `wp_options`.
 - Chaque onglet (`GeneralSettings`, `AppearanceSettings`, `HeaderSettings`, `FooterSettings`,
   `HomeSettings`, `ProductsSettings`, `BlogSettings`, `TranslationsSettings`) implémente
   `Solar_Template\Admin\SettingsTabInterface` et expose aussi les accesseurs de lecture utilisés
@@ -595,7 +595,7 @@ solar-template/
     `Solar_Template\Product\ProductRelated::products()`). Gravure personnalisée : bascule globale,
     libellé, type de champ (une ligne / plusieurs lignes) et prix par défaut, tous ajoutés comme
     filtres sur `Solar_Template\Product\ProductEngraving` (`solar_template_engraving_*`) —
-    l'activation par produit (Groupe 05) reste nécessaire en plus de cette bascule globale.
+    l'activation par produit reste nécessaire en plus de cette bascule globale.
   - **Blog** : articles par page (appliqué à la requête principale de l'index/des archives via
     `pre_get_posts`), bascule du bloc « à la une » (`solar_template_blog_featured_enabled`, lu par
     `Solar_Template\Blog\FeaturedPost::current()` — désactivé, l'article épinglé redevient un
@@ -609,12 +609,23 @@ solar-template/
     du front via le filtre `determine_locale` (jamais en `wp-admin`) —
     `TranslationsSettings::resolve_locale()`/`match_accept_language()` sont des fonctions pures
     (testées unitairement) qui comparent l'en-tête `Accept-Language` du navigateur aux langues
-    actives de `Solar_Template\I18n\Translator`. Un lien « Gérer les langues » pointe vers une page
-    d'attente (`TranslationsSettings::LANGUAGES_MENU_SLUG`) : le menu d'ajout de langue et
-    l'éditeur de traduction eux-mêmes restent le Groupe suivant de la feuille de route
-    (DECISIONS.md §9). Téléchargement des `.mo` déjà compilés, et import d'un fichier `.po`/`.mo`
-    (gettext/gettext, déjà une dépendance) comme filet de secours, écrivant dans le même catalogue
-    que l'éditeur futur.
+    actives de `Solar_Template\I18n\Translator`. Téléchargement des `.mo` déjà compilés, et import
+    d'un fichier `.po`/`.mo` (gettext/gettext, déjà une dépendance), écrivant dans le même catalogue
+    que les deux écrans dédiés ci-dessous. Un bouton « Gérer les langues → » ouvre la page
+    **Langues** (`Solar_Template\Admin\LanguagesController`) : liste recherchable des langues
+    standards connues du thème (`Solar_Template\I18n\LanguageCatalog` — code de langue classique +
+    drapeau, aucune langue codée en dur), action d'ajout, liste des langues déjà ajoutées avec
+    « Définir par défaut »/« Supprimer » (la langue par défaut ne peut pas être supprimée
+    directement). Un bouton « Traduire les chaînes → » ouvre l'**Éditeur de traduction**
+    (`Solar_Template\Admin\TranslationsEditorController`) : chaque chaîne enregistrée par le thème
+    (`Solar_Template\I18n\DefaultStrings`), recherchable et paginée
+    (`Solar_Template\Admin\TranslationCatalog::build_rows()`, fonction pure testée unitairement),
+    modifiable par langue avec les espaces réservés (`%s`/`%d`/`%1$s`...) mis en évidence et le
+    pluriel dans son propre champ quand une chaîne utilise `_n()` ; enregistrer recompile
+    immédiatement le `.mo` de la langue concernée. `string_key`/`context` de
+    `wp_solar_template_translations` utilisent une collation binaire (`utf8mb4_bin`) plutôt que
+    celle par défaut de la base, pour distinguer deux `msgid` qui ne diffèrent que par la casse
+    (ex. « Orders »/« orders ») au lieu de les fusionner sous la clé unique de cette table.
 - Bouton « Régénérer le cache & les assets » (bas de l'onglet Général,
   `Solar_Template\Admin\CacheRegenerator`, action AJAX `solar_template_regenerate_cache`) : vide le
   cache du thème (`Solar_Template\Support\TransientCache`, derrière `Contracts\CacheInterface` —
