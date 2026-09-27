@@ -50,6 +50,14 @@ final class DefaultStrings {
 				'fr_FR' => 'Ajouter à la liste de souhaits',
 				'en_US' => 'Add to wishlist',
 			),
+			'Save'                                         => array(
+				'fr_FR' => 'Sauvegarder',
+				'en_US' => 'Save',
+			),
+			'Saved'                                        => array(
+				'fr_FR' => 'Sauvegardé',
+				'en_US' => 'Saved',
+			),
 			'Add to cart'                                  => array(
 				'fr_FR' => 'Ajouter au panier',
 				'en_US' => 'Add to cart',
@@ -1809,6 +1817,10 @@ final class DefaultStrings {
 			'WooCommerce theme · Full configuration'       => array(
 				'fr_FR' => 'Thème WooCommerce · Configuration complète',
 				'en_US' => 'WooCommerce theme · Full configuration',
+			),
+			'· v%s'                                        => array(
+				'fr_FR' => '· v%s',
+				'en_US' => '· v%s',
 			),
 			'View site'                                    => array(
 				'fr_FR' => 'Voir le site',

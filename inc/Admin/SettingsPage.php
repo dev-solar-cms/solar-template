@@ -3,14 +3,17 @@
  * Created: 2026-09-26 09:10 CEST
  * Role: Theme settings admin page (Solar_Template\Admin).
  * Author: David ROMERA <d.romera.11@gmail.com>
- * Purpose: Register the "Solar Template" top-level admin menu page and render its chrome — header,
- *          save feedback notice, and a vertical tab layout (180px nav + content) — delegating each
- *          tab's own fields/sanitization to its Solar_Template\Admin\SettingsTabInterface
- *          implementation. Handles the shared save request (nonce, capability, dispatch to the
- *          submitted tab's own sanitize()) for every tab, so no tab class duplicates that plumbing.
- *          Built directly in the theme via the WordPress Settings API primitives
- *          (`register_setting()`/`add_settings_section()`/`add_settings_field()` — see
- *          self::register_settings_api_metadata()), not a separate plugin (DECISIONS.md §1).
+ * Purpose: Register the "Solar Template" top-level admin menu page and render its chrome — header
+ *          (including the theme's own version number, read from `wp_get_theme()` so it always
+ *          matches `style.css`'s own header — see DESIGN_INTEGRATION.md's version-sync
+ *          requirement), save feedback notice, and a vertical tab layout (180px nav + content) —
+ *          delegating each tab's own fields/sanitization to its
+ *          Solar_Template\Admin\SettingsTabInterface implementation. Handles the shared save
+ *          request (nonce, capability, dispatch to the submitted tab's own sanitize()) for every
+ *          tab, so no tab class duplicates that plumbing. Built directly in the theme via the
+ *          WordPress Settings API primitives (`register_setting()`/`add_settings_section()`/
+ *          `add_settings_field()` — see self::register_settings_api_metadata()), not a separate
+ *          plugin (DECISIONS.md §1).
  *
  * @package Solar_Template
  */
@@ -168,7 +171,18 @@ final class SettingsPage {
 					<span class="solar-template-settings__logo"><?php echo esc_html__( 'ST', 'solar-template' ); ?></span>
 					<div>
 						<h1><?php esc_html_e( 'Solar Template', 'solar-template' ); ?></h1>
-						<p><?php esc_html_e( 'WooCommerce theme · Full configuration', 'solar-template' ); ?></p>
+						<p>
+							<?php esc_html_e( 'WooCommerce theme · Full configuration', 'solar-template' ); ?>
+							<span class="solar-template-settings__version">
+								<?php
+								printf(
+									/* translators: %s: theme version number, e.g. 0.7.8. */
+									esc_html__( '· v%s', 'solar-template' ),
+									esc_html( wp_get_theme( get_template() )->get( 'Version' ) )
+								);
+								?>
+							</span>
+						</p>
 					</div>
 				</div>
 				<a class="button" href="<?php echo esc_url( home_url( '/' ) ); ?>" target="_blank" rel="noopener">
@@ -284,6 +298,7 @@ final class SettingsPage {
 			.solar-template-settings__logo { width: 40px; height: 40px; background: #0d0d0d; color: #c9a96e; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; letter-spacing: 0.05em; flex-shrink: 0; }
 			.solar-template-settings__brand h1 { font-size: 22px; margin: 0 0 2px; }
 			.solar-template-settings__brand p { font-size: 12px; color: #646970; margin: 0; }
+			.solar-template-settings__version { color: #a7aaad; }
 			.solar-template-settings__layout { display: grid; grid-template-columns: 180px 1fr; gap: 0; box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04); background: #fff; }
 			.solar-template-settings__nav { background: #f6f7f7; border: 1px solid #c3c4c7; border-right: none; display: flex; flex-direction: column; padding: 8px 0; }
 			.solar-template-settings__nav-item { display: flex; align-items: center; gap: 8px; padding: 9px 14px; font-size: 12.5px; color: #50575e; text-decoration: none; border-left: 3px solid transparent; }

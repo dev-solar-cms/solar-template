@@ -109,6 +109,18 @@
 			futur onglet d'administration « Produits » sans construire cet onglet maintenant.
 		</p>
 		<p>
+			Sous le formulaire « Ajouter au panier », une rangée de boutons « Sauvegarder »/« Partager »
+			réutilise deux comportements déjà construits ailleurs dans le thème plutôt que d'introduire
+			du nouveau JavaScript : le bouton « Sauvegarder » est exactement le même bouton wishlist que
+			le cœur de la carte produit (<code>.product-card__wishlist</code>,
+			<code>assets/js/account.js</code>, <code>initWishlistToggle()</code>, déjà branché sur tout
+			le site), et le bouton « Partager » est exactement le même bouton que celui de l'article de
+			blog (<code>.article-share-button</code>, <code>assets/js/blog.js</code>,
+			<code>initArticleShare()</code> — API Web Share native, repli sur la copie du lien dans le
+			presse-papiers). Seuls le balisage et le style propre à cette rangée sont nouveaux
+			(<code>Solar_Template\Product\ProductPanel::wishlist_share()</code>).
+		</p>
+		<p>
 			Vérifié de bout en bout dans l'environnement Docker réel avec WooCommerce actif, dans les
 			deux langues installées : un produit de test fraîchement créé et marqué « En vedette »
 			confirme l'affichage des deux badges, sa description courte, son statut de stock (rupture)

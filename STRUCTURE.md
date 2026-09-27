@@ -64,7 +64,7 @@ solar-template/
 │   ├── catalog-active-filters.php # Rangée de chips des filtres actifs (retrait individuel + « Effacer tout »)
 │   ├── single-product/  # Fragments de la fiche produit, un par section
 │   │   ├── gallery.php  # Image principale 4:5 + bande de miniatures (changement au clic, sans rechargement)
-│   │   ├── panel.php    # Colonne droite sticky : badges, titre, notation, statut de stock, description courte, réassurance, accordéon
+│   │   ├── panel.php    # Colonne droite sticky : badges, titre, notation, statut de stock, description courte, rangée Wishlist/Partage, réassurance, accordéon
 │   │   ├── tabs.php     # Onglets Description/Avis/Caractéristiques (motif ARIA tabs, avis WooCommerce natifs)
 │   │   └── related-products.php # Grille masonry des produits similaires WooCommerce réels (même carte produit)
 │   ├── checkout/        # Fragments du tunnel de vente
@@ -253,7 +253,7 @@ solar-template/
   fragments AJAX natif de WooCommerce : `solar_template_cart_fragments()` (filtre
   `woocommerce_add_to_cart_fragments`) renvoie le même balisage que
   `template-parts/cart-badge.php`, ciblé par le sélecteur `span.site-header__cart-count` déjà
-  présent dans le DOM depuis l'en-tête (voir 02.01). Aucun JS propre au thème n'est nécessaire
+  présent dans le DOM depuis l'en-tête (voir la structure commune du thème). Aucun JS propre au thème n'est nécessaire
   pour le rafraîchissement lui-même : le script `wc-cart-fragments` de WooCommerce le fait déjà —
   mais ce script n'est auto-chargé par WooCommerce que par son propre widget « Panier », que le
   thème n'utilise pas ; il est donc mis en file explicitement
@@ -308,7 +308,13 @@ solar-template/
   le catalogue propre au thème), la description courte du produit, un bloc de réassurance et un
   accordéon (livraison/guide des tailles/entretien) — ces deux derniers en contenu éditorial
   filtrable (`Product\ProductPanel::trust_badges()`/`accordion_sections()`), même convention que
-  les aides de la page d'accueil, prêt pour le futur onglet d'administration « Produits ».
+  les aides de la page d'accueil, prêt pour le futur onglet d'administration « Produits ». Une
+  rangée « Wishlist + Partage » (`Product\ProductPanel::wishlist_share()`) réutilise directement le
+  bouton wishlist de la carte produit (`.product-card__wishlist`,
+  `assets/js/account.js`/`initWishlistToggle()`, déjà branché sur tout le site) et le bouton de
+  partage de l'article de blog (`.article-share-button`, `assets/js/blog.js`/`initArticleShare()`)
+  — aucun nouveau JavaScript, seul le balisage du panneau et son style propre
+  (`assets/scss/_product-page.scss`) sont ajoutés.
 - Pour un produit variable, le panneau affiche des sélecteurs Couleur/Taille
   (`Product\ProductVariations::attribute_groups()`, réutilisant les mêmes slugs d'attribut
   filtrables que la barre de filtres du catalogue — `Catalog\CatalogOptions::color_attribute_slug()`/

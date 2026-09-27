@@ -28,7 +28,8 @@ chargement progressif.
 ### Fiche produit
 
 `single-product.php` complète : galerie d'images avec bande de miniatures, panneau produit
-(badges, titre, notation, statut de stock, description, réassurance, accordéon) ; pour les
+(badges, titre, notation, statut de stock, description, rangée wishlist/partage, réassurance,
+accordéon) ; pour les
 produits variables, des sélecteurs couleur/taille branchés sur les vraies variations WooCommerce
 avec recalcul du prix affiché en JS ; une option de personnalisation (gravure) native configurable
 depuis l'admin produit ; des onglets Description/Avis/Caractéristiques sous le panneau produit

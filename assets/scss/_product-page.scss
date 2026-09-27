@@ -489,6 +489,55 @@
 	cursor: not-allowed;
 }
 
+// -------------------------------------------------------------------------------------------
+// Wishlist/Share action row — reuses the product card's own wishlist button and the blog
+// article's own share button (behaviour comes from their shared classes; only this row's own
+// layout/border styling is added here).
+// -------------------------------------------------------------------------------------------
+
+.product-panel__actions {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 10px;
+	margin: 16px 0;
+}
+
+.product-panel__wishlist-button,
+.product-panel__share-button {
+	position: static;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 7px;
+	width: auto;
+	height: auto;
+	padding: 12px;
+	border: 1.5px solid $color-border;
+	border-radius: $radius-button;
+	background: $color-surface;
+	color: $color-dark;
+	font-size: 13px;
+	font-weight: $font-weight-bold;
+	cursor: pointer;
+	transition: border-color 0.2s ease;
+}
+
+.product-panel__wishlist-button svg,
+.product-panel__share-button svg {
+	width: 14px;
+	height: 14px;
+}
+
+.product-panel__wishlist-button:hover,
+.product-panel__share-button:hover {
+	border-color: $color-dark;
+}
+
+.product-panel__wishlist-button.is-active {
+	color: $color-sale;
+	border-color: $color-sale;
+}
+
 .product-panel__trust {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
@@ -924,7 +973,7 @@
 }
 
 // Masonry-style offsets, same convention as .featured-products__grid — the shared product card
-// component already carries the Group 04 fixed-height alignment fix, so these are purely
+// component already carries the fixed-height alignment fix, so these are purely
 // positional.
 .related-products__item:nth-child(2) {
 	margin-top: 40px;

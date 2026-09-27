@@ -6,7 +6,7 @@
  * Purpose: Column count, newsletter column toggle, payment method badges, and copyright text —
  *          wired onto Solar_Template\Footer\Footer's existing filters
  *          (`solar_template_footer_config`/`solar_template_footer_payment_icons`/
- *          `solar_template_footer_copyright`), left by Group 02 for this purpose, plus a real column
+ *          `solar_template_footer_copyright`), left there for this purpose, plus a real column
  *          count class applied in footer.php.
  *
  * @package Solar_Template

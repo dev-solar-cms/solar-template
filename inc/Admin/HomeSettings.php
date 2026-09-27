@@ -4,7 +4,7 @@
  * Role: "Home page" settings tab (Solar_Template\Admin).
  * Author: David ROMERA <d.romera.11@gmail.com>
  * Purpose: A reorderable (drag & drop), toggleable list of the home page's own sections, wired for
- *          real onto front-page.php (Group 03) — reordering or disabling a section here changes
+ *          real onto front-page.php — reordering or disabling a section here changes
  *          which sections front-page.php actually renders, and in which order. Order/visibility are
  *          stored as two parallel comma-separated slug lists (`sections_order`/`sections_enabled`),
  *          same simple scalar-value convention as every other settings tab.

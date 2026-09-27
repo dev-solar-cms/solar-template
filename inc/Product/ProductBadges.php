@@ -67,7 +67,7 @@ final class ProductBadges {
 
 	/**
 	 * Returns the number of days after publication a product is still considered "New". Filterable
-	 * for a future "Products" administration tab (Group 10 of the project roadmap).
+	 * for a future "Products" administration tab.
 	 *
 	 * @return int
 	 */

@@ -4,17 +4,22 @@
  * Role: Product panel template-part (template-parts/single-product/panel.php).
  * Author: David ROMERA <d.romera.11@gmail.com>
  * Purpose: Render the product page's right-hand, sticky panel: badges, title, rating/stock status,
- *          price, Color/Size selectors + custom engraving + "Add to cart" form, short description,
- *          trust badges and the shipping/size/care accordion — everything fed as plain,
- *          already-computed data (single-product.php calls Solar_Template\Product\ProductBadges/
- *          ProductStock/ProductPanel/ProductCartForm/ProductEngraving), same convention as
- *          template-parts/single-product/gallery.php. The price display and the "Add to cart"
- *          button stay separate elements (rather than the mockup's single "Add · {price}" button
- *          text) so assets/js/product.js only ever recomputes one canonical price location.
- *          Selecting a Color/Size resolves the matching real WooCommerce variation
- *          (initProductVariations()), updating the price, the hidden `variation_id`, and the "Add
- *          to cart" button's disabled state accordingly; toggling engraving on adds its surcharge
- *          to that same price.
+ *          price, Color/Size selectors + custom engraving + "Add to cart" form, a Wishlist/Share
+ *          action row, short description, trust badges and the shipping/size/care accordion —
+ *          everything fed as plain, already-computed data (single-product.php calls
+ *          Solar_Template\Product\ProductBadges/ProductStock/ProductPanel/ProductCartForm/
+ *          ProductEngraving), same convention as template-parts/single-product/gallery.php. The
+ *          price display and the "Add to cart" button stay separate elements (rather than the
+ *          mockup's single "Add · {price}" button text) so assets/js/product.js only ever
+ *          recomputes one canonical price location. Selecting a Color/Size resolves the matching
+ *          real WooCommerce variation (initProductVariations()), updating the price, the hidden
+ *          `variation_id`, and the "Add to cart" button's disabled state accordingly; toggling
+ *          engraving on adds its surcharge to that same price. The Wishlist button reuses the
+ *          product card component's own toggle button/behaviour (`.product-card__wishlist`,
+ *          assets/js/account.js's `initWishlistToggle()`, already wired site-wide); the Share
+ *          button reuses the blog article page's own share button/behaviour
+ *          (`.article-share-button`, assets/js/blog.js's `initArticleShare()`, also already wired
+ *          site-wide) — no new JavaScript needed for either.
  *
  * @package Solar_Template
  * @var array $args {
@@ -27,6 +32,7 @@
  *     @type array|null $engraving         See Solar_Template\Product\ProductEngraving::config_for_product().
  *     @type array      $trust_badges      See Solar_Template\Product\ProductPanel::trust_badges().
  *     @type array      $accordion_sections See Solar_Template\Product\ProductPanel::accordion_sections().
+ *     @type array      $wishlist_share    See Solar_Template\Product\ProductPanel::wishlist_share().
  * }
  */
 
@@ -61,6 +67,12 @@ $panel = wp_parse_args(
 		'engraving'          => null,
 		'trust_badges'       => array(),
 		'accordion_sections' => array(),
+		'wishlist_share'     => array(
+			'product_id'  => 0,
+			'in_wishlist' => false,
+			'share_url'   => '',
+			'share_title' => '',
+		),
 	)
 );
 ?>
@@ -229,6 +241,35 @@ $panel = wp_parse_args(
 				<?php esc_html_e( 'Add to cart', 'solar-template' ); ?>
 			</button>
 		</form>
+	<?php endif; ?>
+
+	<?php if ( $panel['wishlist_share']['product_id'] ) : ?>
+		<div class="product-panel__actions">
+			<button
+				type="button"
+				class="product-panel__wishlist-button product-card__wishlist<?php echo $panel['wishlist_share']['in_wishlist'] ? ' is-active' : ''; ?>"
+				aria-pressed="<?php echo $panel['wishlist_share']['in_wishlist'] ? 'true' : 'false'; ?>"
+				data-product-id="<?php echo esc_attr( (string) $panel['wishlist_share']['product_id'] ); ?>"
+			>
+				<svg viewBox="0 0 24 24" fill="<?php echo $panel['wishlist_share']['in_wishlist'] ? 'currentColor' : 'none'; ?>" stroke="currentColor" stroke-width="2" aria-hidden="true">
+					<path d="M12 21s-7.5-4.6-10-9.2C0.3 8.4 1.9 4.8 5.3 4.1c2-.4 3.9.5 5 2.1 1.1-1.6 3-2.5 5-2.1 3.4.7 5 4.3 3.3 7.7C19.5 16.4 12 21 12 21z" stroke-linecap="round" stroke-linejoin="round"/>
+				</svg>
+				<?php echo $panel['wishlist_share']['in_wishlist'] ? esc_html__( 'Saved', 'solar-template' ) : esc_html__( 'Save', 'solar-template' ); ?>
+			</button>
+			<button
+				type="button"
+				class="product-panel__share-button article-share-button"
+				data-share-title="<?php echo esc_attr( $panel['wishlist_share']['share_title'] ); ?>"
+				data-share-url="<?php echo esc_url( $panel['wishlist_share']['share_url'] ); ?>"
+				data-copied-label="<?php echo esc_attr__( 'Link copied!', 'solar-template' ); ?>"
+			>
+				<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+					<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+					<line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+				</svg>
+				<?php esc_html_e( 'Share', 'solar-template' ); ?>
+			</button>
+		</div>
 	<?php endif; ?>
 
 	<?php if ( ! empty( $panel['trust_badges'] ) ) : ?>

@@ -24,7 +24,7 @@ final class SocialLinks {
 	 *
 	 * Defaults to a placeholder `#` URL for each network so the icons match the design handoff
 	 * out of the box; a future "Header" administration tab is expected to hook into this filter
-	 * with the site owner's actual URLs (see Group 10 of the project roadmap).
+	 * with the site owner's actual URLs.
 	 *
 	 * @return array<string, array{url: string, label: string, icon: string}>
 	 */

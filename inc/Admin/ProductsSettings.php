@@ -5,8 +5,8 @@
  * Author: David ROMERA <d.romera.11@gmail.com>
  * Purpose: Catalog grid columns/per-page count, filter bar position, optional sidebar widgets,
  *          related products, and the custom engraving section's site-wide defaults — every field
- *          wired for real onto Group 04 (catalog, via Solar_Template\Catalog\CatalogOptions'
- *          existing filters) and Group 05 (product page, via Solar_Template\Product\ProductRelated/
+ *          wired for real onto the catalog (via Solar_Template\Catalog\CatalogOptions'
+ *          existing filters) and the product page (via Solar_Template\Product\ProductRelated/
  *          Solar_Template\Product\ProductEngraving).
  *
  * @package Solar_Template

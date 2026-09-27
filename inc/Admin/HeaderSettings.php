@@ -6,7 +6,7 @@
  * Purpose: Header layout, mega menu, promo bar, social links, and transparent-on-home — every field
  *          wired for real onto header.php/assets/scss/_header.scss, not just stored. The mega
  *          menu/social links fields hook into the exact filters
- *          (`solar_template_header_mega_menu_enabled`/`solar_template_social_links`) Group 02 left
+ *          (`solar_template_header_mega_menu_enabled`/`solar_template_social_links`) already left
  *          for this purpose.
  *
  * @package Solar_Template

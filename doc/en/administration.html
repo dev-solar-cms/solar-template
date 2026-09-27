@@ -97,7 +97,7 @@
 			Layout (3 real CSS variants — the default centered one unchanged, "left logo, centered nav"
 			and "left logo, right nav" reorder the same header markup via modifier classes and the
 			<code>order</code> CSS property, no markup change), mega menu toggle (hooked onto the
-			<code>solar_template_header_mega_menu_enabled</code> filter Group 02 already left for this), a promo
+			<code>solar_template_header_mega_menu_enabled</code> filter already left for this), a promo
 			bar, 4 social network URLs (hooked onto the existing <code>solar_template_social_links</code> filter —
 			Pinterest is now a 4th default network alongside Instagram/Facebook/X), and a
 			transparent-on-home option. The transparent header overlaps the hero instead of pushing it
@@ -112,7 +112,7 @@
 			one slot, the rest go to Shop/Information/Legal in that order — a pure, unit-tested
 			<code>FooterSettings::resolve_visible_columns()</code> trims the list), the newsletter
 			column toggle, payment method badges (Visa/Mastercard/PayPal/Stripe/Apple Pay/Google Pay),
-			and the copyright text (<code>{year}</code> support already existed from Group 02). All four hook onto
+			and the copyright text (<code>{year}</code> support already existed). All four hook onto
 			the filters (<code>solar_template_footer_config</code>/<code>..._payment_icons</code>/<code>..._copyright</code>) already
 			left there for this purpose.
 		</p>
@@ -151,7 +151,7 @@
 			<code>Solar_Template\Product\ProductRelated::products()</code>. Custom engraving: a
 			site-wide toggle, section label, field type (single vs. multiple lines), and default
 			surcharge — all new filters on <code>Solar_Template\Product\ProductEngraving</code>
-			(<code>solar_template_engraving_*</code>); a product's own toggle (Group 05) is still
+			(<code>solar_template_engraving_*</code>); a product's own toggle is still
 			required on top of this site-wide one for that product to actually offer it.
 		</p>
 

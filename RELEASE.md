@@ -11,7 +11,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `package.json` — champ `version`
 - `.env`/`.env.example` — `SOLAR_TEMPLATE_VERSION` (jamais la source de vérité à elle seule, mais exposée pour l'écran de réglages)
 
-Version actuelle : `0.7.7`.
+Version actuelle : `0.7.8`.
 
 ## Avant une release
 
@@ -31,6 +31,28 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.7.8 — revue de cohérence globale et synchronisation des versions
+
+- Revue de cohérence croisée de l'ensemble du thème par rapport au design fourni et au cahier des
+  charges : un seul écart réel trouvé — le panneau de la fiche produit n'affichait aucun bouton
+  « Sauvegarder »/« Partager » attendu par la maquette sous le formulaire d'ajout au panier. Corrigé
+  en réutilisant deux comportements déjà construits ailleurs dans le thème plutôt qu'en introduisant
+  du nouveau JavaScript : le bouton « Sauvegarder » est le même bouton de liste de souhaits que celui
+  de la carte produit (déjà branché sur tout le site), le bouton « Partager » est le même bouton que
+  celui de l'article de blog (API Web Share native, repli sur la copie du lien). Vérifié de bout en
+  bout dans l'environnement Docker réel (rendu, bascule de la liste de souhaits, traduction complète
+  en français et en anglais).
+- Audit complet des règles de confidentialité internes du projet sur l'ensemble des fichiers publics
+  du dépôt (documentation, commentaires de code, journal des versions) : plusieurs formulations
+  faisaient encore indirectement référence au découpage interne du travail en étapes numérotées —
+  reformulées en langage neutre sans changer le sens technique de chaque phrase.
+- Synchronisation finale du numéro de version entre `style.css`, `composer.json`, `package.json`,
+  `.env`/`.env.example` et ce fichier, et ajout de son affichage directement sur la page de
+  configuration du thème (en-tête, à côté du nom du thème) — jusqu'ici visible uniquement dans ces
+  fichiers, jamais depuis l'administration.
+- Suite de tests complète (PHP et JS) exécutée intégralement sur l'ensemble du projet et confirmée
+  au vert avant publication.
 
 ### 0.7.7 — documentation du projet
 
@@ -185,8 +207,8 @@ avant de pousser.
   en simples liens réutilisant la mécanique de requête existante — « Marque » est un nouvel axe de
   filtre à part entière, une taxonomie d'attribut filtrable comme Couleur/Taille), produits
   similaires (activer/désactiver + nombre), et la gravure personnalisée (bascule globale, libellé,
-  type de champ une/plusieurs lignes, prix par défaut — s'ajoute à l'activation par produit du
-  Groupe 05, qui reste nécessaire).
+  type de champ une/plusieurs lignes, prix par défaut — s'ajoute à l'activation par produit
+  existante, qui reste nécessaire).
 - **Onglet Blog** : articles par page, bascule de l'article à la une, colonnes, boutons de partage
   (Facebook/X/Pinterest en vrais liens + « Copier le lien » réutilisant le bouton natif existant),
   et nombre d'articles connexes (0 masque la section). Bug trouvé et corrigé pendant la
@@ -197,7 +219,7 @@ avant de pousser.
   visiteur du front (jamais en `wp-admin`) via le filtre natif `determine_locale` de WordPress
   (fonctions pures testées unitairement comparant l'en-tête `Accept-Language` aux langues actives
   du thème). Un lien « Gérer les langues » pointe vers une page d'attente réelle et fonctionnelle
-  (le menu d'ajout de langue et l'éditeur de traduction complet restent le Groupe 11). En
+  (le menu d'ajout de langue et l'éditeur de traduction complet restent une étape future). En
   attendant, téléchargement des `.mo` déjà compilés et import d'un fichier `.po`/`.mo` comme filet
   de secours (bibliothèque `gettext/gettext`, déjà une dépendance), écrivant dans le même
   catalogue que l'éditeur futur.

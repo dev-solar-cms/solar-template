@@ -6,13 +6,18 @@
  * Purpose: Compute the product panel's rating summary from a real WC_Product, and expose its
  *          static, editorial blocks (trust badges, shipping/size/care accordion) as filterable
  *          config — same convention as Solar_Template\FrontPage\Hero's trust badges — ready for a
- *          future "Products" administration tab (Group 10 of the project roadmap) without one
- *          being built now.
+ *          future "Products" administration tab without one
+ *          being built now. Also computes the Wishlist/Share action row's own real data (the
+ *          signed-in visitor's current wishlist state, reusing Solar_Template\Account\
+ *          WishlistRepository the same way Solar_Template\Catalog\ProductCardMapper does; the
+ *          product's own permalink/title for the share button).
  *
  * @package Solar_Template
  */
 
 namespace Solar_Template\Product;
+
+use Solar_Template\Account\WishlistRepository;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -98,5 +103,24 @@ final class ProductPanel {
 		 * @param array $defaults See this method's return type.
 		 */
 		return apply_filters( 'solar_template_product_accordion_sections', $defaults );
+	}
+
+	/**
+	 * Builds the panel's Wishlist/Share action row data: the current visitor's real wishlist state
+	 * for this product (false for a logged-out visitor, same convention as ProductCardMapper::map())
+	 * and the product's own permalink/title for the share button.
+	 *
+	 * @param \WC_Product $product Product to build the action row for.
+	 * @return array{product_id: int, in_wishlist: bool, share_url: string, share_title: string}
+	 */
+	public static function wishlist_share( \WC_Product $product ): array {
+		return array(
+			'product_id'  => $product->get_id(),
+			'in_wishlist' => is_user_logged_in()
+				? ( new WishlistRepository( $GLOBALS['wpdb'] ) )->is_wishlisted( get_current_user_id(), $product->get_id() )
+				: false,
+			'share_url'   => get_permalink( $product->get_id() ),
+			'share_title' => $product->get_name(),
+		);
 	}
 }

@@ -4,7 +4,7 @@
  * Role: Translator factory (Solar_Template\I18n).
  * Author: David ROMERA <d.romera.11@gmail.com>
  * Purpose: Build the theme's translator, wired to the real WordPress database and `.mo` compiler.
- *          Not yet called from anywhere in the theme — prepared ahead of the future Group 11 i18n
+ *          Not yet called from anywhere in the theme — prepared ahead of the future i18n
  *          administration screen (see DECISIONS.md's i18n plan), which will use it to manage
  *          languages/translations from wp-admin.
  *

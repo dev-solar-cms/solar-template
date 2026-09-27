@@ -4,8 +4,8 @@
  * Role: "Blog" settings tab (Solar_Template\Admin).
  * Author: David ROMERA <d.romera.11@gmail.com>
  * Purpose: Posts per page, the featured-article block toggle, grid columns, share buttons, and the
- *          number of related articles — every field wired for real onto Group 08 (blog index/
- *          archives/article page).
+ *          number of related articles — every field wired for real onto the blog index/
+ *          archives/article page.
  *
  * @package Solar_Template
  */

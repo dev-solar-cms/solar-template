@@ -103,6 +103,17 @@
 			that tab now.
 		</p>
 		<p>
+			Below the "Add to cart" form, a "Save"/"Share" button row reuses two behaviours already built
+			elsewhere in the theme rather than introducing new JavaScript: the "Save" button is the exact
+			same wishlist toggle as the product card's own heart icon
+			(<code>.product-card__wishlist</code>, <code>assets/js/account.js</code>'s
+			<code>initWishlistToggle()</code>, already wired site-wide), and the "Share" button is the
+			exact same button as the blog article page's own share action
+			(<code>.article-share-button</code>, <code>assets/js/blog.js</code>'s
+			<code>initArticleShare()</code> — native Web Share API, clipboard-copy fallback). Only the
+			row's own markup/border styling is new (<code>Solar_Template\Product\ProductPanel::wishlist_share()</code>).
+		</p>
+		<p>
 			Verified end to end in the real Docker environment with WooCommerce active, in both installed
 			languages: a freshly created test product marked "Featured" confirms both badges render, its
 			short description, its (out of) stock status, and the panel's full translation — test product

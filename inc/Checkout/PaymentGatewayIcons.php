@@ -9,7 +9,7 @@
  *          "Direct bank transfer"/"Cheque payment"/"Cash on delivery" — DECISIONS.md §2 rules out
  *          any third-party payment plugin) while still degrading gracefully to a generic card icon
  *          for any other gateway a store owner installs later. The gateway id -> icon key mapping
- *          is filterable (a future Group 10 admin screen's extension point, same convention as
+ *          is filterable (a future admin screen's extension point, same convention as
  *          Product\ColorSwatch's own name/slug map); the actual SVG markup per key stays a fixed,
  *          trusted set defined here, never built from filtered/user-controlled HTML.
  *

@@ -8,7 +8,7 @@
  *          products (see Solar_Template\Product\ProductRelated::products()) and the reusable
  *          product card template-part — same convention as
  *          template-parts/front-page/featured-products.php. The shared product card component
- *          already carries the Group 04 card-height alignment fix, so this grid only needs its own
+ *          already carries the card-height alignment fix, so this grid only needs its own
  *          masonry offsets (same convention as .featured-products__grid) to stay visually aligned
  *          with real, variable-length product content. Renders nothing when the product has no
  *          related product at all.

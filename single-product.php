@@ -6,10 +6,11 @@
  * Author: David ROMERA <d.romera.11@gmail.com>
  * Purpose: Render the product page: breadcrumb, then a two-column layout with the image gallery
  *          (template-parts/single-product/gallery.php) on the left and the sticky product panel
- *          (template-parts/single-product/panel.php) on the right, followed by the Description/
- *          Reviews/Specifications tabs (template-parts/single-product/tabs.php) and a "Related
- *          products" section (template-parts/single-product/related-products.php). Grows section
- *          by section, same convention as front-page.php/archive-product.php.
+ *          (template-parts/single-product/panel.php, including its Wishlist/Share action row) on
+ *          the right, followed by the Description/Reviews/Specifications tabs
+ *          (template-parts/single-product/tabs.php) and a "Related products" section
+ *          (template-parts/single-product/related-products.php). Grows section by section, same
+ *          convention as front-page.php/archive-product.php.
  *
  * @package Solar_Template
  */
@@ -63,6 +64,7 @@ while ( have_posts() ) :
 		'engraving'          => ProductEngraving::config_for_product( $solar_product ),
 		'trust_badges'       => ProductPanel::trust_badges(),
 		'accordion_sections' => ProductPanel::accordion_sections(),
+		'wishlist_share'     => ProductPanel::wishlist_share( $solar_product ),
 	);
 
 	$solar_product_tabs_args = array(

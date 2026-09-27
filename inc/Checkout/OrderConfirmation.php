@@ -89,7 +89,7 @@ final class OrderConfirmation {
 
 	/**
 	 * Returns a formatted estimated delivery date range, computed from the order's real creation
-	 * date plus a filterable lead time (in days) — a future Group 10 admin screen's extension point,
+	 * date plus a filterable lead time (in days) — a future admin screen's extension point,
 	 * same convention as Product\ProductBadges' own filterable lead time.
 	 *
 	 * @param WC_Order $order Order to compute the estimate from.

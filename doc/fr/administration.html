@@ -105,7 +105,7 @@
 			gauche, navigation centrée » et « logo gauche, navigation droite » réorganisent le même
 			balisage d'en-tête via des classes modificatrices et la propriété CSS <code>order</code>, sans
 			changement de balisage), bascule du mega menu (branchée sur le filtre
-			<code>solar_template_header_mega_menu_enabled</code> déjà laissé pour cela par le Groupe 02), une barre
+			<code>solar_template_header_mega_menu_enabled</code> déjà laissé pour cela), une barre
 			de promotion, 4 URLs de réseaux sociaux (branchées sur le filtre existant
 			<code>solar_template_social_links</code> — Pinterest devient un 4e réseau par défaut aux côtés
 			d'Instagram/Facebook/X), et une option d'en-tête transparent sur l'accueil. L'en-tête
@@ -122,8 +122,8 @@
 			cet ordre — une fonction pure et testée unitairement,
 			<code>FooterSettings::resolve_visible_columns()</code>, réduit la liste), la bascule de la
 			colonne newsletter, les badges de moyens de paiement (Visa/Mastercard/PayPal/Stripe/Apple
-			Pay/Google Pay), et le texte de copyright (le support de <code>{year}</code> existait déjà depuis le
-			Groupe 02). Les quatre se branchent sur les filtres
+			Pay/Google Pay), et le texte de copyright (le support de <code>{year}</code> existait déjà).
+			Les quatre se branchent sur les filtres
 			(<code>solar_template_footer_config</code>/<code>..._payment_icons</code>/<code>..._copyright</code>) déjà laissés à cet
 			effet.
 		</p>
@@ -164,7 +164,7 @@
 			Gravure personnalisée : bascule globale, libellé de section, type de champ (une ligne ou
 			plusieurs lignes) et prix par défaut — tous de nouveaux filtres sur
 			<code>Solar_Template\Product\ProductEngraving</code>
-			(<code>solar_template_engraving_*</code>) ; l'activation propre à chaque produit (Groupe 05)
+			(<code>solar_template_engraving_*</code>) ; l'activation propre à chaque produit
 			reste nécessaire en plus de cette bascule globale pour qu'un produit donné la propose
 			réellement.
 		</p>

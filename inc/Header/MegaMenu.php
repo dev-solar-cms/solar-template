@@ -25,7 +25,7 @@ final class MegaMenu {
 	 * Returns the columns shown in the header's "Collections" mega menu.
 	 *
 	 * Defaults to generic placeholder columns rather than real WooCommerce product categories: a
-	 * future step, or the Group 10 administration screen, is expected to hook into this filter with
+	 * future step, or the administration screen, is expected to hook into this filter with
 	 * real taxonomy data.
 	 *
 	 * @return array<int, array{heading: string, links: array<int, array{label: string, url: string}>}>
@@ -74,7 +74,7 @@ final class MegaMenu {
 	/**
 	 * Reports whether the "Collections" mega menu should be rendered at all.
 	 *
-	 * Defaults to enabled; a future "Header" administration tab (Group 10 of the project roadmap) is
+	 * Defaults to enabled; a future "Header" administration tab is
 	 * expected to hook into this filter with the site owner's actual preference.
 	 *
 	 * @return bool

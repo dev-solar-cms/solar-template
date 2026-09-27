@@ -6,8 +6,8 @@
  * Purpose: Render the product panel template-part with plain, already-computed data (no real
  *          WordPress/WooCommerce install available here) and assert on the resulting markup:
  *          badges, rating stars/average/review link, stock status, price, Color/Size selectors,
- *          "Add to cart" form, short description, trust badges, accordion, and that every optional
- *          block is skipped when empty.
+ *          "Add to cart" form, short description, the Wishlist/Share action row, trust badges,
+ *          accordion, and that every optional block is skipped when empty.
  *
  * @package Solar_Template
  */
@@ -75,9 +75,23 @@ final class SingleProductPanelTest extends TestCase {
 						'body'  => 'Standard delivery in 3-5 days.',
 					),
 				),
+				'wishlist_share'     => array(
+					'product_id'  => 41,
+					'in_wishlist' => true,
+					'share_url'   => 'https://example.test/product/solar-watch/',
+					'share_title' => 'Solar Watch',
+				),
 			)
 		);
 
+		$this->assertStringContainsString( 'product-panel__actions', $html );
+		$this->assertStringContainsString( 'product-card__wishlist is-active', $html );
+		$this->assertStringContainsString( 'data-product-id="41"', $html );
+		$this->assertStringContainsString( 'aria-pressed="true"', $html );
+		$this->assertStringContainsString( 'Saved', $html );
+		$this->assertStringContainsString( 'article-share-button', $html );
+		$this->assertStringContainsString( 'data-share-url="https://example.test/product/solar-watch/"', $html );
+		$this->assertStringContainsString( 'Share', $html );
 		$this->assertStringContainsString( 'Solar Watch &lt;Gold&gt;', $html );
 		$this->assertStringNotContainsString( 'Solar Watch <Gold>', $html );
 		$this->assertStringContainsString( 'product-panel__badge--new', $html );
@@ -125,6 +139,7 @@ final class SingleProductPanelTest extends TestCase {
 		$this->assertStringNotContainsString( 'product-panel__accordion', $html );
 		$this->assertStringNotContainsString( 'product-panel__cart-form', $html );
 		$this->assertStringNotContainsString( 'product-panel__variations', $html );
+		$this->assertStringNotContainsString( 'product-panel__actions', $html );
 		$this->assertStringContainsString( 'product-panel__stock--out-of-stock', $html );
 	}
 

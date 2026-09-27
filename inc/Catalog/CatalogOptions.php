@@ -31,7 +31,7 @@ final class CatalogOptions {
 	 *
 	 * Defaults to 4, matching the design handoff, clamped to the 2–6 range it documents as valid
 	 * regardless of what a filter returns. Filterable so a future "Products" administration tab
-	 * (Group 10 of the project roadmap) can expose it as a site owner setting without touching this
+	 * can expose it as a site owner setting without touching this
 	 * method.
 	 *
 	 * @return int Column count, between 2 and 6 inclusive.
@@ -83,8 +83,8 @@ final class CatalogOptions {
 	 * filter.
 	 *
 	 * Not hardcoded to `pa_color`: a site owner can name (or already have named) this attribute
-	 * differently (e.g. `pa_couleur`); a future "Products" administration tab (Group 10 of the
-	 * project roadmap) is expected to expose this filter as a setting.
+	 * differently (e.g. `pa_couleur`); a future "Products" administration tab is expected to
+	 * expose this filter as a setting.
 	 *
 	 * @return string Taxonomy slug.
 	 */
