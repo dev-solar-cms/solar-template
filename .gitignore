@@ -8,5 +8,6 @@ node_modules/
 /.claude
 CLAUDE.md
 TODO.md
+DEV.md
 /languages/*.mo
 /languages/*.po
