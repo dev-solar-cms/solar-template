@@ -11,6 +11,8 @@
 
 namespace Solar_Template\FrontPage;
 
+use Solar_Template\Contracts\CacheInterface;
+use Solar_Template\Support\TransientCache;
 use Solar_Template\Support\WooCommerceStatus;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -59,18 +61,17 @@ final class Categories {
 			return array();
 		}
 
-		$terms = get_terms(
-			array(
-				'taxonomy'   => 'product_cat',
-				'hide_empty' => true,
-				'orderby'    => 'count',
-				'order'      => 'DESC',
-				'number'     => $limit,
-				'exclude'    => array( (int) get_option( 'default_product_cat', 0 ) ),
-			)
-		);
+		$terms = array();
 
-		if ( is_wp_error( $terms ) || empty( $terms ) ) {
+		foreach ( self::term_ids( $limit ) as $term_id ) {
+			$term = get_term( $term_id, 'product_cat' );
+
+			if ( $term instanceof \WP_Term ) {
+				$terms[] = $term;
+			}
+		}
+
+		if ( empty( $terms ) ) {
 			return array();
 		}
 
@@ -87,5 +88,51 @@ final class Categories {
 			},
 			$terms
 		);
+	}
+
+	/**
+	 * Returns the IDs of the top-level product categories shown on this section, through the theme's
+	 * own cache.
+	 *
+	 * Only the query's term IDs are cached, not the mapped {name, url, image_url, image_alt} data
+	 * self::categories() returns — the `get_terms()` count-ordered lookup is the actual expensive
+	 * part. See Solar_Template\Cache\CacheInvalidator for when this cache is purged.
+	 *
+	 * @param int $limit Maximum number of terms to return.
+	 * @return array<int, int> Term IDs.
+	 */
+	private static function term_ids( int $limit ): array {
+		$cache = self::cache();
+		$key   = "home_category_ids_{$limit}";
+		$ids   = $cache->get( $key );
+
+		if ( is_array( $ids ) ) {
+			return $ids;
+		}
+
+		$terms = get_terms(
+			array(
+				'taxonomy'   => 'product_cat',
+				'hide_empty' => true,
+				'orderby'    => 'count',
+				'order'      => 'DESC',
+				'number'     => $limit,
+				'exclude'    => array( (int) get_option( 'default_product_cat', 0 ) ),
+				'fields'     => 'ids',
+			)
+		);
+
+		$ids = ( is_wp_error( $terms ) || empty( $terms ) ) ? array() : array_map( 'intval', $terms );
+
+		$cache->set( $key, $ids );
+
+		return $ids;
+	}
+
+	/**
+	 * @return CacheInterface
+	 */
+	private static function cache(): CacheInterface {
+		return new TransientCache();
 	}
 }

@@ -32,7 +32,7 @@ if ( '' === $author['bio'] ) {
 ?>
 <div class="article-author-card">
 	<?php if ( $author['avatar_url'] ) : ?>
-		<img class="article-author-card__avatar" src="<?php echo esc_url( $author['avatar_url'] ); ?>" alt="" />
+		<img class="article-author-card__avatar" src="<?php echo esc_url( $author['avatar_url'] ); ?>" alt="" loading="lazy" />
 	<?php else : ?>
 		<span class="article-author-card__avatar article-author-card__avatar--initial"><?php echo esc_html( $author['initial'] ); ?></span>
 	<?php endif; ?>

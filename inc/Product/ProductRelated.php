@@ -14,6 +14,8 @@
 namespace Solar_Template\Product;
 
 use Solar_Template\Catalog\ProductCardMapper;
+use Solar_Template\Contracts\CacheInterface;
+use Solar_Template\Support\TransientCache;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -59,9 +61,43 @@ final class ProductRelated {
 			return array();
 		}
 
-		$related_ids = wc_get_related_products( $product->get_id(), $limit );
+		$related_ids = self::related_ids( $product->get_id(), $limit );
 		$products    = array_filter( array_map( 'wc_get_product', $related_ids ) );
 
 		return array_map( array( ProductCardMapper::class, 'map' ), $products );
+	}
+
+	/**
+	 * Returns the given product's related product IDs, through the theme's own cache.
+	 *
+	 * `wc_get_related_products()` runs its own category/tag matching query every call; caching its
+	 * result (keyed by product and limit) avoids repeating it on every view of the same product page.
+	 * See Solar_Template\Cache\CacheInvalidator for when this cache is purged.
+	 *
+	 * @param int $product_id Product to find related products for.
+	 * @param int $limit      Maximum number of related products to return.
+	 * @return array<int, int> Related product IDs.
+	 */
+	private static function related_ids( int $product_id, int $limit ): array {
+		$cache = self::cache();
+		$key   = "related_product_ids_{$product_id}_{$limit}";
+		$ids   = $cache->get( $key );
+
+		if ( is_array( $ids ) ) {
+			return $ids;
+		}
+
+		$ids = wc_get_related_products( $product_id, $limit );
+
+		$cache->set( $key, $ids );
+
+		return $ids;
+	}
+
+	/**
+	 * @return CacheInterface
+	 */
+	private static function cache(): CacheInterface {
+		return new TransientCache();
 	}
 }

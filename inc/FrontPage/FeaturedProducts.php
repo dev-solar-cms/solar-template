@@ -13,7 +13,9 @@
 namespace Solar_Template\FrontPage;
 
 use Solar_Template\Catalog\ProductCardMapper;
+use Solar_Template\Contracts\CacheInterface;
 use Solar_Template\Support\StoreLinks;
+use Solar_Template\Support\TransientCache;
 use Solar_Template\Support\WooCommerceStatus;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -66,16 +68,51 @@ final class FeaturedProducts {
 			return array();
 		}
 
-		$products = wc_get_products(
+		$products = array_filter( array_map( 'wc_get_product', self::product_ids( $limit ) ) );
+
+		return array_map( array( ProductCardMapper::class, 'map' ), $products );
+	}
+
+	/**
+	 * Returns the IDs of the products marked "Featured", through the theme's own cache.
+	 *
+	 * Only the query's product IDs are cached (not the mapped, translated card data self::products()
+	 * returns) — the underlying `wc_get_products()` lookup is the actual expensive part, and caching
+	 * IDs rather than rendered/translated content avoids serving a visitor a stale locale's copy
+	 * once cached. See Solar_Template\Cache\CacheInvalidator for when this cache is purged.
+	 *
+	 * @param int $limit Maximum number of products to return.
+	 * @return array<int, int> Product IDs.
+	 */
+	private static function product_ids( int $limit ): array {
+		$cache = self::cache();
+		$key   = "featured_product_ids_{$limit}";
+		$ids   = $cache->get( $key );
+
+		if ( is_array( $ids ) ) {
+			return $ids;
+		}
+
+		$ids = wc_get_products(
 			array(
 				'featured' => true,
 				'status'   => 'publish',
 				'limit'    => $limit,
 				'orderby'  => 'date',
 				'order'    => 'DESC',
+				'return'   => 'ids',
 			)
 		);
 
-		return array_map( array( ProductCardMapper::class, 'map' ), $products );
+		$cache->set( $key, $ids );
+
+		return $ids;
+	}
+
+	/**
+	 * @return CacheInterface
+	 */
+	private static function cache(): CacheInterface {
+		return new TransientCache();
 	}
 }

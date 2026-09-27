@@ -27,6 +27,21 @@ if ( ! defined( 'ARRAY_A' ) ) {
 	define( 'ARRAY_A', 'ARRAY_A' );
 }
 
+if ( ! function_exists( 'get_template_directory' ) ) {
+	/**
+	 * Minimal stand-in for WordPress' theme directory lookup: the theme root ABSPATH already points
+	 * to. Used by Solar_Template\Support\Env (e.g. TransientCacheTest, which reads a real
+	 * TransientCache::default_ttl() call path) — safe even without a real `.env` file present (as on
+	 * CI), since Solar_Template\Support\DotenvEnvironmentLoader::load() never fails when one is
+	 * missing.
+	 *
+	 * @return string
+	 */
+	function get_template_directory(): string {
+		return rtrim( ABSPATH, '/' );
+	}
+}
+
 if ( ! function_exists( 'wp_mkdir_p' ) ) {
 	/**
 	 * Minimal stand-in for WordPress' recursive directory creation helper.
@@ -41,7 +56,9 @@ if ( ! function_exists( 'wp_mkdir_p' ) ) {
 
 if ( ! function_exists( 'get_transient' ) ) {
 	global $solar_template_test_transients;
-	$solar_template_test_transients = array();
+	global $solar_template_test_transient_ttls;
+	$solar_template_test_transients     = array();
+	$solar_template_test_transient_ttls = array();
 
 	/**
 	 * In-memory stand-in for WordPress' transients API, used only by TransientCacheTest.
@@ -58,13 +75,15 @@ if ( ! function_exists( 'get_transient' ) ) {
 	/**
 	 * @param string $key   Transient name.
 	 * @param mixed  $value Value to store.
-	 * @param int    $ttl   Ignored in this in-memory stand-in.
+	 * @param int    $ttl   Recorded in $solar_template_test_transient_ttls so a test can assert
+	 *                      which TTL Solar_Template\Support\TransientCache actually resolved to.
 	 * @return bool Always true.
 	 */
-	function set_transient( string $key, mixed $value, int $ttl = 0 ): bool { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- $ttl mirrors WordPress' own signature.
-		global $solar_template_test_transients;
+	function set_transient( string $key, mixed $value, int $ttl = 0 ): bool {
+		global $solar_template_test_transients, $solar_template_test_transient_ttls;
 
-		$solar_template_test_transients[ $key ] = $value;
+		$solar_template_test_transients[ $key ]     = $value;
+		$solar_template_test_transient_ttls[ $key ] = $ttl;
 
 		return true;
 	}

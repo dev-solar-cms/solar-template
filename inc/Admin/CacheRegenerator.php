@@ -6,11 +6,12 @@
  * Purpose: The "Regenerate cache & assets" button's AJAX handler (rendered at the end of the
  *          General tab, Solar_Template\Admin\GeneralSettings::render()): purges the theme's own
  *          cache (Solar_Template\Support\TransientCache, behind Solar_Template\Contracts\
- *          CacheInterface — the interface Group 12's own cache implementation will later sit
- *          behind too), WordPress' object cache, and PHP's opcode cache when available, then
- *          recompiles the SCSS/JS build (`npm run build`) when Node tooling is actually present on
- *          the server — this Docker image ships PHP only, so that step reports itself skipped
- *          there rather than failing.
+ *          CacheInterface — the same cache the theme's cached product/category read methods use,
+ *          see Solar_Template\Cache\CacheInvalidator), WordPress' object cache, and PHP's opcode
+ *          cache when available, then recompiles the SCSS/JS build (`npm run build`, which also
+ *          regenerates the inlined critical stylesheet — see Solar_Template\Theme::
+ *          print_critical_css()) when Node tooling is actually present on the server — this Docker
+ *          image ships PHP only, so that step reports itself skipped there rather than failing.
  *
  * @package Solar_Template
  */

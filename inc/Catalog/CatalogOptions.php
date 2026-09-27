@@ -13,6 +13,8 @@
 
 namespace Solar_Template\Catalog;
 
+use Solar_Template\Contracts\CacheInterface;
+use Solar_Template\Support\TransientCache;
 use Solar_Template\Support\WooCommerceStatus;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -141,6 +143,14 @@ final class CatalogOptions {
 			return array();
 		}
 
+		$cache  = self::cache();
+		$key    = 'catalog_category_options';
+		$cached = $cache->get( $key );
+
+		if ( is_array( $cached ) ) {
+			return $cached;
+		}
+
 		$terms = get_terms(
 			array(
 				'taxonomy'   => 'product_cat',
@@ -151,11 +161,7 @@ final class CatalogOptions {
 			)
 		);
 
-		if ( is_wp_error( $terms ) ) {
-			return array();
-		}
-
-		return array_map(
+		$options = is_wp_error( $terms ) ? array() : array_map(
 			static function ( \WP_Term $term ): array {
 				return array(
 					'slug'  => $term->slug,
@@ -165,6 +171,10 @@ final class CatalogOptions {
 			},
 			$terms
 		);
+
+		$cache->set( $key, $options );
+
+		return $options;
 	}
 
 	/**
@@ -182,6 +192,14 @@ final class CatalogOptions {
 			return array();
 		}
 
+		$cache  = self::cache();
+		$key    = "catalog_attribute_options_{$taxonomy}";
+		$cached = $cache->get( $key );
+
+		if ( is_array( $cached ) ) {
+			return $cached;
+		}
+
 		$terms = get_terms(
 			array(
 				'taxonomy'   => $taxonomy,
@@ -191,11 +209,7 @@ final class CatalogOptions {
 			)
 		);
 
-		if ( is_wp_error( $terms ) || empty( $terms ) ) {
-			return array();
-		}
-
-		return array_map(
+		$options = ( is_wp_error( $terms ) || empty( $terms ) ) ? array() : array_map(
 			static function ( \WP_Term $term ): array {
 				return array(
 					'slug' => $term->slug,
@@ -204,6 +218,10 @@ final class CatalogOptions {
 			},
 			$terms
 		);
+
+		$cache->set( $key, $options );
+
+		return $options;
 	}
 
 	/**
@@ -363,5 +381,12 @@ final class CatalogOptions {
 				'label' => __( 'Best sellers', 'solar-template' ),
 			),
 		);
+	}
+
+	/**
+	 * @return CacheInterface
+	 */
+	private static function cache(): CacheInterface {
+		return new TransientCache();
 	}
 }

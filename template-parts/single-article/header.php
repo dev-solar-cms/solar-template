@@ -55,7 +55,7 @@ $header = wp_parse_args( $args ?? array(), $defaults );
 <div class="article-author-bar">
 	<div class="article-author-bar__profile">
 		<?php if ( $header['author']['avatar_url'] ) : ?>
-			<img class="article-author-bar__avatar" src="<?php echo esc_url( $header['author']['avatar_url'] ); ?>" alt="" />
+			<img class="article-author-bar__avatar" src="<?php echo esc_url( $header['author']['avatar_url'] ); ?>" alt="" loading="lazy" />
 		<?php endif; ?>
 		<?php if ( '' !== $header['author']['name'] ) : ?>
 			<span class="article-author-bar__name"><?php echo esc_html( $header['author']['name'] ); ?></span>

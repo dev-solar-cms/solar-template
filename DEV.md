@@ -82,6 +82,17 @@ définir la langue par défaut ou en supprimer une, et un **Éditeur de traducti
 directement, langue par langue, chaque chaîne du thème (espaces réservés et pluriel gérés
 explicitement) — la sauvegarde recompile immédiatement le `.mo` de la langue concernée.
 
+### Performance et cache
+
+En place : un cache lecture-seule pour les requêtes WooCommerce répétées à chaque affichage d'une
+page type (produits vedettes et catégories de l'accueil, produits similaires d'une fiche produit,
+options de la barre de filtres du catalogue), invalidé automatiquement dès qu'un produit ou une
+catégorie/attribut concerné change ; le bouton de régénération de l'onglet Général le vide
+réellement. Chaque image du thème hors des candidats probables au premier affichage (hero, image
+principale de la galerie produit, logo) charge en différé (`loading="lazy"`). Le CSS nécessaire au
+premier rendu (tokens, base, en-tête) est inliné dans `<head>`, le reste du CSS compilé se charge
+sans bloquer l'affichage, et le script principal charge en différé.
+
 Voir [STRUCTURE.md](./STRUCTURE.md) pour le détail des fichiers et [RELEASE.md](./RELEASE.md) pour
 l'historique version par version.
 

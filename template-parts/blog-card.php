@@ -84,6 +84,7 @@ $card = wp_parse_args( $args ?? array(), $defaults );
 						class="blog-card__author-avatar"
 						src="<?php echo esc_url( $card['author_avatar_url'] ); ?>"
 						alt=""
+						loading="lazy"
 					/>
 				<?php endif; ?>
 				<?php echo esc_html( $card['author_name'] ); ?>

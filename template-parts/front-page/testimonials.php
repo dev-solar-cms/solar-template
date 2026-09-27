@@ -56,6 +56,7 @@ $section_heading = Testimonials::heading();
 								class="testimonials__author-avatar"
 								src="<?php echo esc_url( $testimonial['avatar_url'] ); ?>"
 								alt=""
+								loading="lazy"
 							/>
 						<?php else : ?>
 							<span class="testimonials__author-avatar testimonials__author-avatar--placeholder" aria-hidden="true"></span>

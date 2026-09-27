@@ -49,6 +49,7 @@ solar-template/
 │   ├── Account/         # Espace client : endpoints/menu, sidebar, tableau de bord, statut de commande, action « Recommander », liste/détail de commandes, liste de souhaits, adresses, téléchargements, demande S.A.V., champs de paramètres (téléphone/naissance), suppression de compte
 │   ├── Blog/            # Blog : mapping carte article (normal + à la une), temps de lecture, hero, filtre catégories, article à la une, pagination, fil d'Ariane/auteur/articles connexes de l'article
 │   ├── Pages/           # Pages statiques : template/onglets/sommaire de la page légale, coordonnées + FAQ + traitement du formulaire de contact
+│   ├── Cache/           # Politique d'invalidation du cache lecture-seule du thème (CacheInvalidator)
 │   └── Admin/           # Réglages du thème : framework d'onglets (Settings API), tous les onglets (dont Traductions), pages Langues/Éditeur de traduction, mode maintenance
 ├── template-parts/      # Fragments de gabarit réutilisables (`get_template_part()`)
 │   ├── product-card.php # Carte produit (image, badge, wishlist, overlay panier, prix, swatches)
@@ -133,6 +134,7 @@ solar-template/
 ├── .prettierrc.json     # Norme de formatage JS/SCSS, utilisée par `npm run format`
 ├── assets/
 │   ├── scss/main.scss    # Point d'entrée SCSS (sources non compilées)
+│   ├── scss/critical.scss # Point d'entrée du CSS critique inliné (tokens + base document + en-tête), compilé séparément en `assets/dist/critical.css`
 │   ├── scss/_tokens.scss # Design tokens (couleurs, typographie, espacements, géométrie) + mixins d'échelle typo
 │   ├── scss/_buttons.scss # Composant boutons (.btn + variantes primaire/dark/outline)
 │   ├── scss/_badges.scss  # Composant badges (.badge + variantes new/exclusive/sale/outline/discount)
@@ -180,7 +182,8 @@ solar-template/
 - `EnvironmentLoaderInterface` — lecture de la configuration `.env` du thème (implémentation par
   défaut : `Support\DotenvEnvironmentLoader`, basée sur `vlucas/phpdotenv`).
 - `CacheInterface` — cache court terme (implémentation par défaut : `Support\TransientCache`,
-  basée sur l'API des transients WordPress, aucune dépendance externe).
+  basée sur l'API des transients WordPress, aucune dépendance externe ; TTL par défaut lu depuis
+  `SOLAR_TEMPLATE_CACHE_TTL` du `.env` du thème, voir « Performance et cache » ci-dessous).
 - `TranslatorInterface` — gestion des langues et du catalogue de traductions (implémentation par
   défaut : `I18n\DatabaseTranslator`, basée sur les tables `wp_solar_template_languages`/
   `wp_solar_template_translations`).
@@ -629,11 +632,11 @@ solar-template/
 - Bouton « Régénérer le cache & les assets » (bas de l'onglet Général,
   `Solar_Template\Admin\CacheRegenerator`, action AJAX `solar_template_regenerate_cache`) : vide le
   cache du thème (`Solar_Template\Support\TransientCache`, derrière `Contracts\CacheInterface` —
-  l'interface qu'une future implémentation de cache réutilisera), le cache d'objets WordPress et le
-  cache opcode PHP si disponible, puis relance `npm run build` si l'outillage Node est présent
-  côté serveur — ce conteneur Docker n'embarque que PHP, donc cette étape s'y signale ignorée
-  plutôt que d'échouer. Retour JSON détaillé par étape, affiché sous le bouton sans recharger la
-  page.
+  voir « Performance et cache » ci-dessous pour ce qui y est réellement stocké), le cache d'objets
+  WordPress et le cache opcode PHP si disponible, puis relance `npm run build` si l'outillage Node
+  est présent côté serveur (ce qui régénère aussi le CSS critique inliné, voir plus bas) — ce
+  conteneur Docker n'embarque que PHP, donc cette étape s'y signale ignorée plutôt que d'échouer.
+  Retour JSON détaillé par étape, affiché sous le bouton sans recharger la page.
 - Vérifié de bout en bout dans l'environnement Docker réel : chaque champ sauvegardé se relit
   correctement, chaque réglage modifie effectivement le rendu front (couleur/police/arrondi,
   disposition/promo/réseaux/transparence du header, colonnes/newsletter/paiement/copyright du
@@ -660,6 +663,31 @@ solar-template/
 - Le thème charge `assets/dist/main.css`/`main.js` s'ils existent (anti-cache basé sur la date de
   modification du fichier) ; sinon, une notice d'administration invite à lancer `npm run build`,
   sans bloquer le reste du site.
+- Le même build compile aussi `assets/scss/critical.scss` en `assets/dist/critical.css`, un second
+  fichier de sortie indépendant (voir « Performance et cache » ci-dessous).
+
+### Performance et cache
+
+- **Cache lecture-seule** (`Solar_Template\Cache\CacheInvalidator`, derrière
+  `Contracts\CacheInterface`/`Support\TransientCache`) : les requêtes WooCommerce répétées à chaque
+  affichage d'une page type (produits vedettes de l'accueil, catégories de l'accueil, produits
+  similaires d'une fiche produit, options Catégorie/Couleur/Taille/Marque de la barre de filtres du
+  catalogue) passent par ce cache — seuls les identifiants (jamais le contenu traduit/rendu) sont
+  mis en cache, pour ne jamais servir la mauvaise langue à un visiteur une fois en cache.
+  `CacheInvalidator` vide entièrement ce cache dès qu'un produit est enregistré/supprimé ou qu'un
+  terme des taxonomies pertinentes (catégories produit, attributs Couleur/Taille/Marque configurés)
+  change — une politique volontairement simple (vidage complet) plutôt qu'une invalidation fine par
+  clé.
+- **Lazy loading** : chaque `<img>` du thème en dehors d'un candidat probable au LCP (hero de
+  l'accueil/de l'article, image principale de la galerie produit, logo) porte `loading="lazy"`. Le
+  contenu d'article passant par `the_content()` bénéficie déjà du lazy loading natif de WordPress
+  (`wp_filter_content_tags()`), sans intervention du thème.
+- **CSS critique et JS différé** (`Solar_Template\Theme`) : `assets/scss/critical.scss` (tokens +
+  base document + en-tête — le seul contenu garanti au-dessus de la ligne de flottaison sur toute
+  page) est inliné dans `<head>` (`Theme::print_critical_css()`) ; le `<link>` du CSS compilé
+  complet est réécrit en `preload`/`onload` non bloquant avec repli `<noscript>`
+  (`Theme::defer_main_stylesheet()`, filtre `style_loader_tag`), et le script principal charge avec
+  la stratégie `defer` (`wp_enqueue_script(..., array('strategy' => 'defer', ...))`).
 
 ### Design system (`assets/scss/_tokens.scss`)
 

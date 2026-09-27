@@ -5,7 +5,10 @@
  * Author: David ROMERA <d.romera.11@gmail.com>
  * Purpose: Store cached values as WordPress transients, without any dependency beyond WordPress
  *          core. All keys are namespaced to avoid colliding with transients from other themes
- *          or plugins.
+ *          or plugins. The default TTL (used whenever set() is called without one of its own) is
+ *          read from the theme's own `.env` (`SOLAR_TEMPLATE_CACHE_TTL`, see .env.example — set
+ *          up back at the theme's `.env` step, but never actually consumed anywhere until now),
+ *          via Solar_Template\Support\Env, falling back to one hour when unset.
  *
  * @package Solar_Template
  */
@@ -31,11 +34,12 @@ final class TransientCache implements CacheInterface {
 	private const PREFIX = 'solar_template_';
 
 	/**
-	 * Default time to live, in seconds, used when set() is called with $ttl = 0.
+	 * Default time to live, in seconds, used when set() is called with $ttl = 0 and the theme's
+	 * `.env` does not configure `SOLAR_TEMPLATE_CACHE_TTL`.
 	 *
 	 * @var int
 	 */
-	private const DEFAULT_TTL = HOUR_IN_SECONDS;
+	private const FALLBACK_DEFAULT_TTL = HOUR_IN_SECONDS;
 
 	/**
 	 * Reads a cached value.
@@ -55,11 +59,11 @@ final class TransientCache implements CacheInterface {
 	 *
 	 * @param string $key   Cache key.
 	 * @param mixed  $value Value to store.
-	 * @param int    $ttl   Time to live in seconds. 0 falls back to DEFAULT_TTL.
+	 * @param int    $ttl   Time to live in seconds. 0 falls back to self::default_ttl().
 	 * @return bool True on success.
 	 */
 	public function set( string $key, mixed $value, int $ttl = 0 ): bool {
-		return set_transient( $this->prefixed_key( $key ), $value, $ttl > 0 ? $ttl : self::DEFAULT_TTL );
+		return set_transient( $this->prefixed_key( $key ), $value, $ttl > 0 ? $ttl : self::default_ttl() );
 	}
 
 	/**
@@ -102,5 +106,17 @@ final class TransientCache implements CacheInterface {
 	 */
 	private function prefixed_key( string $key ): string {
 		return self::PREFIX . $key;
+	}
+
+	/**
+	 * Resolves the default TTL from the theme's `.env` (`SOLAR_TEMPLATE_CACHE_TTL`), falling back
+	 * to self::FALLBACK_DEFAULT_TTL when unset or not a positive number.
+	 *
+	 * @return int
+	 */
+	private static function default_ttl(): int {
+		$configured_ttl = (int) Env::get( 'SOLAR_TEMPLATE_CACHE_TTL', self::FALLBACK_DEFAULT_TTL );
+
+		return $configured_ttl > 0 ? $configured_ttl : self::FALLBACK_DEFAULT_TTL;
 	}
 }

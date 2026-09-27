@@ -3,9 +3,12 @@
  * Role: Build configuration for the theme's front-end assets (Solar Template).
  * Author: David ROMERA <d.romera.11@gmail.com>
  * Purpose: Compile `assets/js/main.js` (which itself imports `assets/scss/main.scss`) into a
- *          single predictable pair of output files, `assets/dist/main.js` / `assets/dist/main.css`,
- *          enqueued by functions.php with a filemtime-based cache-busting version. Also configures
- *          Vitest (`npm run test`), which reads its settings from this same file's `test` key.
+ *          predictable pair of output files, `assets/dist/main.js` / `assets/dist/main.css`, plus a
+ *          second, independent CSS-only entry point, `assets/scss/critical.scss`, into
+ *          `assets/dist/critical.css` (the theme's inlined critical stylesheet — see
+ *          Solar_Template\Theme::print_critical_css()). Both are enqueued/read by inc/Theme.php
+ *          with a filemtime-based cache-busting version. Also configures Vitest (`npm run test`),
+ *          which reads its settings from this same file's `test` key.
  */
 
 import { defineConfig } from 'vite';
@@ -21,10 +24,13 @@ export default defineConfig(({ mode }) => ({
 		emptyOutDir: true,
 		sourcemap: mode !== 'production',
 		rollupOptions: {
-			input: resolve(themeRoot, 'assets/js/main.js'),
+			input: {
+				main: resolve(themeRoot, 'assets/js/main.js'),
+				critical: resolve(themeRoot, 'assets/scss/critical.scss'),
+			},
 			output: {
-				entryFileNames: 'main.js',
-				assetFileNames: 'main[extname]',
+				entryFileNames: '[name].js',
+				assetFileNames: '[name][extname]',
 			},
 		},
 	},

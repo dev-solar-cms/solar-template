@@ -1,0 +1,32 @@
+// Created: 2026-09-27 10:00 CEST
+// Role: Entry point of the theme's inlined critical stylesheet (assets/dist/critical.css).
+// Author: David ROMERA <d.romera.11@gmail.com>
+// Purpose: A small, self-contained subset of main.scss — design tokens, the same document base
+//          reset, and the header component — covering the only content guaranteed to render above
+//          the fold on every page of the theme. Compiled separately so
+//          Solar_Template\Theme::print_critical_css() can inline it in <head>, letting the rest of
+//          the compiled stylesheet (main.css) load without blocking the first paint (see
+//          Solar_Template\Theme::defer_main_stylesheet()). Kept in sync with main.scss's own base
+//          reset by design: duplicating a handful of rules here is simpler, and just as correct,
+//          as trying to `@forward` a shared partial between two independent build outputs.
+
+@use 'tokens' as *;
+@use 'header';
+
+html {
+	box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: inherit;
+}
+
+body {
+	margin: 0;
+	background: $color-bg;
+	color: $color-dark;
+	font-family: $font-family-base;
+	@include type-body;
+}

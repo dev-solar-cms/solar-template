@@ -211,11 +211,13 @@
 			A button at the bottom of the General tab (<code>Solar_Template\Admin\CacheRegenerator</code>,
 			AJAX action <code>solar_template_regenerate_cache</code>) purges the theme's own cache
 			(<code>Solar_Template\Support\TransientCache</code>, behind the
-			<code>Contracts\CacheInterface</code> a future cache implementation will reuse), WordPress'
-			object cache and PHP's opcode cache when available, then reruns `npm run build` when Node
-			tooling is actually present server-side — this Docker container ships PHP only, so that last
-			step reports itself skipped there instead of silently failing. Each step's result renders
-			under the button with no page reload.
+			<code>Contracts\CacheInterface</code> — see
+			<a href="infrastructure.html#performance">Infrastructure → Performance &amp; caching</a> for
+			what it actually stores), WordPress' object cache and PHP's opcode cache when available,
+			then reruns `npm run build` when Node tooling is actually present server-side (which also
+			regenerates the inlined critical stylesheet — same page) — this Docker container ships PHP
+			only, so that last step reports itself skipped there instead of silently failing. Each
+			step's result renders under the button with no page reload.
 		</p>
 
 		<p>

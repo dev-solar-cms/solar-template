@@ -33,6 +33,7 @@ use Solar_Template\Admin\SettingsPage;
 use Solar_Template\Admin\TranslationsEditorController;
 use Solar_Template\Admin\TranslationsSettings;
 use Solar_Template\Blog\BlogController;
+use Solar_Template\Cache\CacheInvalidator;
 use Solar_Template\Catalog\CatalogController;
 use Solar_Template\Checkout\CheckoutController;
 use Solar_Template\Checkout\CheckoutFieldsLayout;
@@ -68,6 +69,8 @@ final class Theme {
 		add_action( 'admin_notices', array( Notices::class, 'woocommerce_missing' ) );
 
 		add_action( 'wp_enqueue_scripts', array( self::class, 'enqueue_assets' ) );
+		add_action( 'wp_head', array( self::class, 'print_critical_css' ), 1 );
+		add_filter( 'style_loader_tag', array( self::class, 'defer_main_stylesheet' ), 10, 2 );
 		add_action( 'wp_enqueue_scripts', array( Cart::class, 'enqueue_cart_fragments' ), 20 );
 		add_action( 'wp_enqueue_scripts', array( NewsletterController::class, 'enqueue_script' ), 20 );
 		add_action( 'wp_enqueue_scripts', array( CatalogController::class, 'enqueue_script' ), 20 );
@@ -80,6 +83,12 @@ final class Theme {
 
 		add_action( 'pre_get_posts', array( CatalogController::class, 'apply_filters_to_main_query' ) );
 		add_action( 'pre_get_posts', array( BlogController::class, 'exclude_featured_post' ) );
+
+		add_action( 'save_post_product', array( CacheInvalidator::class, 'flush' ) );
+		add_action( 'deleted_post', array( CacheInvalidator::class, 'flush_if_deleted_product' ) );
+		add_action( 'woocommerce_update_product', array( CacheInvalidator::class, 'flush' ) );
+		add_action( 'saved_term', array( CacheInvalidator::class, 'flush_if_relevant_term' ), 10, 3 );
+		add_action( 'delete_term', array( CacheInvalidator::class, 'flush_if_relevant_term' ), 10, 3 );
 
 		add_filter( 'template_include', array( CheckoutController::class, 'template_include' ) );
 		add_action( 'wp', array( CheckoutController::class, 'detach_default_checkout_hooks' ) );
@@ -205,7 +214,12 @@ final class Theme {
 	 * (built by `npm run build` before shipping, not a step a site owner runs themselves), so they
 	 * are enqueued unconditionally. The query-string version on those two is the file's own
 	 * modification time, so browsers pick up a rebuilt asset immediately without any manual
-	 * cache-busting.
+	 * cache-busting. The main script loads with the `defer` strategy (native support since WP 6.3):
+	 * it never blocks HTML parsing, and still runs, in order, before `DOMContentLoaded` — exactly
+	 * when its own `init*()` functions expect to run. The main stylesheet's own `<link>` tag is
+	 * rewritten into a non-render-blocking `preload` by self::defer_main_stylesheet() — safe only
+	 * because self::print_critical_css() has already inlined everything needed to paint the page's
+	 * above-the-fold content by the time that happens.
 	 *
 	 * @return void
 	 */
@@ -221,6 +235,84 @@ final class Theme {
 		$dist_dir = get_template_directory() . '/assets/dist';
 
 		wp_enqueue_style( 'solar-template', "{$dist_url}/main.css", array(), filemtime( "{$dist_dir}/main.css" ) );
-		wp_enqueue_script( 'solar-template', "{$dist_url}/main.js", array(), filemtime( "{$dist_dir}/main.js" ), true );
+		wp_enqueue_script(
+			'solar-template',
+			"{$dist_url}/main.js",
+			array(),
+			filemtime( "{$dist_dir}/main.js" ),
+			array(
+				'strategy'  => 'defer',
+				'in_footer' => true,
+			)
+		);
+	}
+
+	/**
+	 * Prints the theme's critical CSS inline in `<head>`, ahead of every other stylesheet: the
+	 * design tokens, document base reset and header styles — the only content guaranteed to render
+	 * above the fold on every page — compiled by the same Vite pipeline into its own small
+	 * `assets/dist/critical.css` (see `assets/scss/critical.scss`). Silently does nothing when that
+	 * file does not exist yet (e.g. before this pipeline's first `npm run build`), leaving the page
+	 * to render from the normal stylesheet only, exactly as before this feature existed.
+	 *
+	 * @return void
+	 */
+	public static function print_critical_css(): void {
+		$critical_css_path = get_template_directory() . '/assets/dist/critical.css';
+
+		if ( ! file_exists( $critical_css_path ) ) {
+			return;
+		}
+
+		$critical_css = file_get_contents( $critical_css_path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- a small, trusted, theme-authored build artifact read on every request; not user input, so WP_Filesystem's remote-transport abstraction buys nothing here.
+
+		if ( false === $critical_css ) {
+			return;
+		}
+
+		echo '<style id="solar-template-critical-css">' . $critical_css . '</style>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- trusted, theme-authored CSS compiled at build time, not user input.
+	}
+
+	/**
+	 * Filters the main compiled stylesheet's `<link>` tag (`style_loader_tag`) into a
+	 * non-render-blocking `preload`, swapped to a real stylesheet once it finishes loading, with a
+	 * `<noscript>` fallback for visitors without JavaScript. Only applies to the theme's own
+	 * `solar-template` handle, and only once self::print_critical_css()'s own file exists — without
+	 * it, the page would have no styling at all until that deferred request completes.
+	 *
+	 * @param string $html   The `<link>` tag WordPress generated for this stylesheet.
+	 * @param string $handle Registered style handle the tag belongs to.
+	 * @return string
+	 */
+	public static function defer_main_stylesheet( string $html, string $handle ): string {
+		if ( 'solar-template' !== $handle || ! file_exists( get_template_directory() . '/assets/dist/critical.css' ) ) {
+			return $html;
+		}
+
+		return self::rewrite_stylesheet_tag_to_preload( $html );
+	}
+
+	/**
+	 * Pure string transform turning a normal `<link rel='stylesheet' ...>` tag into a preload-then-
+	 * swap one, appending a `<noscript>` fallback carrying the original tag. Kept as a pure function,
+	 * separate from self::defer_main_stylesheet()'s own WordPress-specific guard clauses, so it can
+	 * be unit tested without WordPress' filter system.
+	 *
+	 * @param string $html Original `<link rel='stylesheet' ...>` tag markup.
+	 * @return string
+	 */
+	public static function rewrite_stylesheet_tag_to_preload( string $html ): string {
+		$preload = preg_replace(
+			"/rel=(['\"])stylesheet\\1/",
+			'rel=\'preload\' as=\'style\' onload="this.onload=null;this.rel=' . "'stylesheet'" . '"',
+			$html,
+			1
+		);
+
+		if ( null === $preload || $preload === $html ) {
+			return $html;
+		}
+
+		return $preload . '<noscript>' . $html . '</noscript>';
 	}
 }

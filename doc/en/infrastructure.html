@@ -110,6 +110,46 @@ npm run format    # auto-format assets/**/*.{js,scss} with Prettier</code></pre>
 			own modification time — no build yet simply means no custom CSS/JS is loaded (plus an
 			administration notice), never a fatal error.
 		</p>
+		<p>
+			The same build also compiles a second, independent entry point,
+			<code>assets/scss/critical.scss</code>, into <code>assets/dist/critical.css</code> — see
+			<a href="#performance">Performance &amp; caching</a> below.
+		</p>
+
+		<h2 id="performance">Performance &amp; caching</h2>
+		<p>
+			<strong>Read-through cache</strong> (<code>Solar_Template\Cache\CacheInvalidator</code>,
+			behind <code>Contracts\CacheInterface</code>/<code>Support\TransientCache</code>): the
+			WooCommerce queries repeated on every view of a given page type — the home page's featured
+			products and categories, a product page's related products, and the catalog filter bar's
+			Category/Color/Size/Brand option lists — go through this cache. Only IDs (never
+			translated/rendered content) are cached, so a cached entry never serves the wrong locale to
+			a visitor. <code>CacheInvalidator</code> purges the whole cache whenever a product is
+			saved/deleted, or a term of a relevant taxonomy (product categories, or the catalog's
+			configured Color/Size/Brand attribute taxonomies) changes — a deliberately simple full
+			flush rather than fine-grained per-key invalidation. The default TTL for an entry with no
+			TTL of its own is read from the theme's own <code>.env</code>
+			(<code>SOLAR_TEMPLATE_CACHE_TTL</code>, set up early on but never actually consumed until
+			now), falling back to one hour.
+		</p>
+		<p>
+			<strong>Lazy loading</strong>: every <code>&lt;img&gt;</code> the theme renders outside a
+			likely LCP candidate (the home/article hero, the product gallery's main image, the site
+			logo) carries <code>loading="lazy"</code>. Article body content rendered through
+			<code>the_content()</code> already gets WordPress' own native lazy loading
+			(<code>wp_filter_content_tags()</code>) for free, with no theme code needed.
+		</p>
+		<p>
+			<strong>Critical CSS and deferred JS</strong> (<code>Solar_Template\Theme</code>):
+			<code>assets/scss/critical.scss</code> (design tokens, the document base reset, and the
+			header — the only content guaranteed to render above the fold on every page) is inlined in
+			<code>&lt;head&gt;</code> (<code>Theme::print_critical_css()</code>); the full compiled
+			stylesheet's own <code>&lt;link&gt;</code> is rewritten into a non-render-blocking
+			<code>preload</code>/<code>onload</code>-swap tag with a <code>&lt;noscript&gt;</code>
+			fallback (<code>Theme::defer_main_stylesheet()</code>, filtering
+			<code>style_loader_tag</code>), and the main script is enqueued with the
+			<code>defer</code> strategy.
+		</p>
 
 		<h2 id="translations">Translation system</h2>
 		<p>

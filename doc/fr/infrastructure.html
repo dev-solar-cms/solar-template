@@ -115,6 +115,47 @@ npm run format    # formate assets/**/*.{js,scss} avec Prettier</code></pre>
 			l'absence de CSS/JS personnalisé (plus une notice d'administration), jamais une erreur
 			fatale.
 		</p>
+		<p>
+			Le même build compile aussi un second point d'entrée indépendant,
+			<code>assets/scss/critical.scss</code>, vers <code>assets/dist/critical.css</code> — voir
+			<a href="#performance">Performance et cache</a> ci-dessous.
+		</p>
+
+		<h2 id="performance">Performance et cache</h2>
+		<p>
+			<strong>Cache lecture-seule</strong> (<code>Solar_Template\Cache\CacheInvalidator</code>,
+			derrière <code>Contracts\CacheInterface</code>/<code>Support\TransientCache</code>) : les
+			requêtes WooCommerce répétées à chaque affichage d'une page type — produits vedettes et
+			catégories de l'accueil, produits similaires d'une fiche produit, et les listes d'options
+			Catégorie/Couleur/Taille/Marque de la barre de filtres du catalogue — passent par ce cache.
+			Seuls les identifiants (jamais le contenu traduit/rendu) sont mis en cache, pour ne jamais
+			servir la mauvaise langue à un visiteur une fois en cache. <code>CacheInvalidator</code>
+			vide entièrement le cache dès qu'un produit est enregistré/supprimé, ou qu'un terme d'une
+			taxonomie pertinente (catégories produit, ou les attributs Couleur/Taille/Marque configurés
+			pour le catalogue) change — un vidage complet volontairement simple plutôt qu'une
+			invalidation fine par clé. Le TTL par défaut d'une entrée qui n'en précise pas est lu depuis
+			le <code>.env</code> du thème (<code>SOLAR_TEMPLATE_CACHE_TTL</code>, mis en place tôt mais
+			jamais réellement consommé jusqu'ici), avec un repli à une heure.
+		</p>
+		<p>
+			<strong>Chargement différé des images</strong> : chaque <code>&lt;img&gt;</code> du thème
+			en dehors d'un candidat probable au premier affichage (hero de l'accueil/de l'article,
+			image principale de la galerie produit, logo du site) porte <code>loading="lazy"</code>. Le
+			contenu d'article passant par <code>the_content()</code> bénéficie déjà gratuitement du
+			chargement différé natif de WordPress (<code>wp_filter_content_tags()</code>), sans code
+			propre au thème.
+		</p>
+		<p>
+			<strong>CSS critique et JS différé</strong> (<code>Solar_Template\Theme</code>) :
+			<code>assets/scss/critical.scss</code> (tokens de design, base document, en-tête — le seul
+			contenu garanti au-dessus de la ligne de flottaison sur toute page) est inliné dans
+			<code>&lt;head&gt;</code> (<code>Theme::print_critical_css()</code>) ; le
+			<code>&lt;link&gt;</code> du CSS compilé complet est réécrit en balise
+			<code>preload</code>/<code>onload</code> non bloquante avec repli
+			<code>&lt;noscript&gt;</code> (<code>Theme::defer_main_stylesheet()</code>, filtre
+			<code>style_loader_tag</code>), et le script principal est chargé avec la stratégie
+			<code>defer</code>.
+		</p>
 
 		<h2 id="traductions">Système de traduction</h2>
 		<p>

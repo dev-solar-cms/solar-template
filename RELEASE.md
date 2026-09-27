@@ -11,7 +11,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `package.json` — champ `version`
 - `.env`/`.env.example` — `SOLAR_TEMPLATE_VERSION` (jamais la source de vérité à elle seule, mais exposée pour l'écran de réglages)
 
-Version actuelle : `0.7.4`.
+Version actuelle : `0.7.5`.
 
 ## Avant une release
 
@@ -31,6 +31,45 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.7.5 — cache applicatif, chargement différé des images, CSS critique et JS différé
+
+- Ajout d'un **cache lecture-seule** pour les requêtes WooCommerce répétées à chaque affichage
+  d'une page type : produits vedettes et catégories de la page d'accueil, produits similaires
+  d'une fiche produit, et les listes d'options Catégorie/Couleur/Taille/Marque de la barre de
+  filtres du catalogue. Seuls les identifiants sont mis en cache (jamais le contenu déjà traduit/
+  rendu), pour ne jamais servir la mauvaise langue à un visiteur une fois une valeur en cache — un
+  point d'attention direct pour ce thème multilingue. Mesuré en conditions réelles (page d'accueil
+  + barre de filtres) : 25 requêtes SQL à froid contre 1 seule à chaud sur les mêmes appels.
+- **Politique d'invalidation** : le cache est entièrement vidé dès qu'un produit est enregistré ou
+  supprimé, ou qu'un terme d'une taxonomie pertinente change (catégories produit, ou les attributs
+  Couleur/Taille/Marque configurés pour le catalogue) — un vidage complet plutôt qu'une
+  invalidation fine par clé, plus simple et sans risque d'oubli vu le peu de valeurs mises en
+  cache. Le bouton « Régénérer le cache & les assets » de l'administration (déjà en place depuis
+  une étape précédente, mais qui ne vidait jusqu'ici qu'un cache resté vide en pratique) purge
+  donc désormais réellement des données utiles.
+- **TTL configurable** : le TTL par défaut d'une valeur mise en cache est désormais lu depuis le
+  `.env` du thème (`SOLAR_TEMPLATE_CACHE_TTL`) plutôt que codé en dur — ce réglage existait déjà
+  dans `.env.example` depuis la mise en place de la configuration du thème, documenté comme
+  destiné à `TransientCache`, mais jamais réellement câblé jusqu'à cette version.
+- Ajout de `loading="lazy"` sur chaque image du thème rendue en dehors d'un candidat probable au
+  premier affichage (hero de l'accueil/de l'article, image principale de la galerie produit, logo
+  du site) — le contenu d'article passant par `the_content()` bénéficiait déjà du chargement
+  différé natif de WordPress, sans changement nécessaire.
+- Ajout d'un **CSS critique inliné** : les tokens de design, la base document et l'en-tête (le
+  seul contenu garanti au-dessus de la ligne de flottaison sur toute page) sont désormais compilés
+  séparément (`assets/scss/critical.scss` → `assets/dist/critical.css`, ~6 Ko contre ~96 Ko pour
+  la feuille de style complète) et inlinés directement dans `<head>`. La feuille de style complète
+  se charge ensuite en `preload` non bloquant (bascule en feuille de style réelle une fois chargée,
+  avec repli `<noscript>` pour les visiteurs sans JavaScript), et le script principal du thème
+  charge désormais avec la stratégie native `defer` de WordPress plutôt qu'en footer bloquant.
+- Vérifié de bout en bout dans l'environnement Docker réel : chaque page type (accueil, boutique,
+  fiche produit, panier, blog, contact) s'affiche sans erreur ni avertissement PHP ; les valeurs de
+  cache attendues apparaissent bien en base après visite puis disparaissent après modification d'un
+  produit/terme concerné (revert immédiat des données de test réelles utilisées pour cette
+  vérification) ; le TTL réellement appliqué correspond à la valeur configurée dans `.env` (testé
+  avec une valeur volontairement différente du réglage par défaut) ; le CSS critique et le `<link>`
+  différé apparaissent bien dans le HTML rendu, et le script principal porte l'attribut `defer`.
 
 ### 0.7.4 — système multilingue complet (langues, éditeur de traduction)
 

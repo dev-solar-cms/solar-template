@@ -26,6 +26,7 @@ $brand_story = BrandStory::config();
 						class="brand-story__image-tag"
 						src="<?php echo esc_url( $brand_story['image_url'] ); ?>"
 						alt="<?php echo esc_attr( $brand_story['image_alt'] ); ?>"
+						loading="lazy"
 					/>
 				<?php endif; ?>
 			</div>

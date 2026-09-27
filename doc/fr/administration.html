@@ -228,11 +228,13 @@
 			Un bouton en bas de l'onglet Général (<code>Solar_Template\Admin\CacheRegenerator</code>,
 			action AJAX <code>solar_template_regenerate_cache</code>) vide le cache propre du thème
 			(<code>Solar_Template\Support\TransientCache</code>, derrière l'interface
-			<code>Contracts\CacheInterface</code> qu'une future implémentation de cache réutilisera), le
-			cache d'objets WordPress et le cache opcode PHP quand il est disponible, puis relance
-			`npm run build` si l'outillage Node est réellement présent côté serveur — ce conteneur
-			Docker n'embarque que PHP, cette dernière étape s'y signale donc « ignorée » plutôt que
-			d'échouer silencieusement. Le résultat détaillé de chaque étape s'affiche sous le bouton
+			<code>Contracts\CacheInterface</code> — voir
+			<a href="infrastructure.html#performance">Infrastructure → Performance et cache</a> pour ce
+			qui y est réellement stocké), le cache d'objets WordPress et le cache opcode PHP quand il
+			est disponible, puis relance `npm run build` si l'outillage Node est réellement présent côté
+			serveur (ce qui régénère aussi le CSS critique inliné, même page) — ce conteneur Docker
+			n'embarque que PHP, cette dernière étape s'y signale donc « ignorée » plutôt que d'échouer
+			silencieusement. Le résultat détaillé de chaque étape s'affiche sous le bouton
 			sans recharger la page.
 		</p>
 
