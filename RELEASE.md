@@ -11,7 +11,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `package.json` — champ `version`
 - `.env`/`.env.example` — `SOLAR_TEMPLATE_VERSION` (jamais la source de vérité à elle seule, mais exposée pour l'écran de réglages)
 
-Version actuelle : `0.7.12`.
+Version actuelle : `0.7.13`.
 
 ## Avant une release
 
@@ -31,6 +31,25 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.7.13 — contraste des couleurs et accessibilité clavier
+
+- Plusieurs couleurs de texte (états mutés, succès, erreur, promotion) ont été légèrement
+  assombries pour atteindre le contraste minimal recommandé (WCAG AA, 4,5:1) sur tous les arrière-
+  plans réels où elles apparaissent dans le thème — aucun changement perceptible à l'œil, chaque
+  nouvelle valeur restant très proche de l'originale.
+- Cinq champs de texte (formulaire de contact, newsletters du pied de page et de l'accueil, overlay
+  de recherche, champ de gravure personnalisée sur la fiche produit) supprimaient le contour de
+  focus par défaut du navigateur sans jamais le remplacer, rendant leur focus invisible au clavier —
+  chacun affiche désormais un contour de focus visible dédié.
+- Le champ de texte de gravure personnalisée dispose désormais d'un intitulé accessible explicite,
+  auparavant porté uniquement par une instruction visuelle à proximité.
+- Nouvelle passe de vérification fonctionnelle de bout en bout (panier, connexion, gravure, mise en
+  cache, liste de souhaits, détection de langue, formulaire de contact, chargement progressif du
+  catalogue, recommande de commande, suppression de compte) sur l'environnement Docker réel, sans
+  régression trouvée.
+- Suite de tests complète (PHP et JS) exécutée intégralement sur l'ensemble du projet et confirmée
+  au vert avant publication.
 
 ### 0.7.12 — réduction de la duplication de code et badges produit unifiés
 
