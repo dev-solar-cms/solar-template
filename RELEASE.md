@@ -11,7 +11,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `package.json` — champ `version`
 - `.env`/`.env.example` — `SOLAR_TEMPLATE_VERSION` (jamais la source de vérité à elle seule, mais exposée pour l'écran de réglages)
 
-Version actuelle : `0.7.11`.
+Version actuelle : `0.7.12`.
 
 ## Avant une release
 
@@ -31,6 +31,20 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.7.12 — réduction de la duplication de code et badges produit unifiés
+
+- Un même produit affiche désormais exactement les mêmes badges (« Nouveau », « Solar Premium »,
+  « En promo »), dans le même ordre, qu'il soit vu sous forme de carte (catalogue, accueil, produits
+  similaires) ou sur sa propre fiche produit — les deux lisaient jusqu'ici deux logiques indépendantes
+  et pouvaient afficher des badges différents pour le même produit. Un produit qui correspond à
+  plusieurs badges à la fois les affiche désormais tous ensemble plutôt qu'un seul masquant les autres.
+- Plusieurs réductions internes de duplication de code, sans changement de comportement observable :
+  un helper partagé pour la sanitisation des cases à cocher des réglages admin, une base commune pour
+  les classes d'accès aux données (`$wpdb`) du thème, et un point d'accès unique pour la requête « les
+  commandes de ce client », auparavant reconstruite indépendamment à 5 endroits.
+- Suite de tests complète (PHP et JS) exécutée intégralement sur l'ensemble du projet et confirmée
+  au vert avant publication.
 
 ### 0.7.11 — robustesse des écouteurs d'événements JavaScript
 

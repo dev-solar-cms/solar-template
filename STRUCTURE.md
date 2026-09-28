@@ -53,7 +53,7 @@ solar-template/
 │   ├── Media/           # Optimisation des images : scan/statut de la médiathèque, compression GD par défaut
 │   └── Admin/           # Réglages du thème : framework d'onglets (Settings API), tous les onglets (dont Traductions), pages Langues/Éditeur de traduction/Optimisation des images, mode maintenance
 ├── template-parts/      # Fragments de gabarit réutilisables (`get_template_part()`)
-│   ├── product-card.php # Carte produit (image, badge, wishlist, overlay panier, prix, swatches)
+│   ├── product-card.php # Carte produit (image, badges, wishlist, overlay panier, prix, swatches)
 │   ├── blog-card.php    # Carte article de blog (image 16:10, badge catégorie, meta, titre, extrait, auteur)
 │   ├── cart-badge.php   # Badge du nombre d'articles au panier, utilisé par l'en-tête
 │   ├── mega-menu.php    # Panneau du mega menu « Collections », contenu factice pour l'instant
@@ -138,9 +138,9 @@ solar-template/
 │   ├── scss/critical.scss # Point d'entrée du CSS critique inliné (tokens + base document + en-tête), compilé séparément en `assets/dist/critical.css`
 │   ├── scss/_tokens.scss # Design tokens (couleurs, typographie, espacements, géométrie) + mixins d'échelle typo
 │   ├── scss/_buttons.scss # Composant boutons (.btn + variantes primaire/dark/outline)
-│   ├── scss/_badges.scss  # Composant badges (.badge + variantes new/exclusive/sale/outline/discount)
+│   ├── scss/_badges.scss  # Composant badges (.badge + variantes new/premium/sale/exclusive/outline/discount)
 │   ├── scss/_pills.scss   # Composant pills/chips de filtre (.pill + état actif, bouton de suppression)
-│   ├── scss/_product-card.scss # Composant carte produit (media, badge, wishlist, overlay panier, prix, swatches), hauteurs de texte fixes pour garder les cartes alignées entre elles quelle que soit la longueur du nom du produit
+│   ├── scss/_product-card.scss # Composant carte produit (media, badges, wishlist, overlay panier, prix, swatches), hauteurs de texte fixes pour garder les cartes alignées entre elles quelle que soit la longueur du nom du produit
 │   ├── scss/_blog-card.scss # Composant carte article de blog (media 16:10, badge, meta, titre, extrait, auteur)
 │   ├── scss/_header.scss # En-tête sticky (barre supérieure, actions, navigation, mega menu)
 │   ├── scss/_footer.scss # Pied de page (colonnes, newsletter, copyright, icônes de paiement)
@@ -302,7 +302,10 @@ solar-template/
 - Le panneau produit (colonne droite, sticky `top:120px`) affiche des badges calculés depuis de
   vraies données WooCommerce (`Product\ProductBadges::for_product()` : « Nouveau » si le produit a
   été publié il y a moins de `solar_template_product_new_badge_days` jours — 14 par défaut,
-  filtrable —, « Solar Premium » si `WC_Product::is_featured()`), le titre, la notation (étoiles +
+  filtrable —, « Solar Premium » si `WC_Product::is_featured()`, « En promo » si
+  `WC_Product::is_on_sale()` — les trois cumulables, aucun ne masquant les autres ; même méthode
+  partagée que `Catalog\ProductCardMapper` pour les cartes catalogue/accueil/produits similaires, si
+  bien qu'un même produit affiche toujours exactement les mêmes badges), le titre, la notation (étoiles +
   moyenne + lien vers les avis, `Product\ProductPanel::rating_summary()`), le statut de stock
   (`Product\ProductStock::for_product()`, indépendant des chaînes du cœur WooCommerce — traduit via
   le catalogue propre au thème), la description courte du produit, un bloc de réassurance et un
@@ -784,6 +787,33 @@ solar-template/
   fait plus s'accumuler de doublon. `assets/js/newsletter.js` (`initNewsletterForms`) applique le même
   principe pour ses écouteurs `submit`, portés par plusieurs éléments de formulaire plutôt que par
   `document`/`window` — suivis via une `WeakMap` plutôt qu'une simple variable de niveau module.
+
+### Réduction de la duplication de code
+
+- **Sanitisation des cases à cocher des réglages admin** (`Admin\SettingsRepository::sanitize_checkbox()`) :
+  un seul helper partagé remplace l'idiome `! empty( $raw['x'] ) ? '1' : '0'` auparavant dupliqué 10
+  fois dans 6 classes de réglages (`BlogSettings`, `FooterSettings`, `GeneralSettings`,
+  `HeaderSettings`, `ProductsSettings`, `TranslationsSettings`).
+- **Base commune pour les repositories `$wpdb`** (`Solar_Template\Support\WpdbTableTrait`) : un trait
+  partagé (plutôt qu'une classe de base abstraite, pour rester utilisable aussi bien par les 4 classes
+  à instance — `Account\WishlistRepository`, `Account\SupportRequestRepository`,
+  `Newsletter\SubscriberRepository`, `I18n\DatabaseTranslator` — que par `Admin\SettingsRepository`,
+  entièrement statique) porte la résolution du nom de table préfixé et le motif `prepare()` +
+  `get_var()` de comptage, chacun ré-écrit indépendamment auparavant.
+- **Requête « commandes de ce client » mutualisée** (`Account\CustomerOrders::for_user()`) : point
+  d'accès unique pour `wc_get_orders(['customer' => $user_id, ...])`, auparavant reconstruite
+  indépendamment à 5 endroits (`Account\Dashboard` ×2, `Account\SupportRequestController`,
+  `Account\OrdersView`, `Account\AccountDeletion`) — chaque appelant continue de passer ses propres
+  arguments spécifiques (limite/tri/valeur de retour), seul le point d'appel lui-même n'est plus
+  dupliqué. `Account\OrdersView` garde sa propre mémoïsation locale par-dessus (seul appelant lisant
+  deux fois les commandes d'un même client sur un même rendu de page).
+- **Badges produit unifiés** (`Product\ProductBadges::for_product()`) : source unique pour les badges
+  « Nouveau »/« Solar Premium »/« En promo », utilisée à la fois par le panneau de la fiche produit et
+  par `Catalog\ProductCardMapper` (cartes catalogue/accueil/produits similaires) — auparavant deux
+  systèmes indépendants (le panneau ne connaissait que Nouveau/Premium, les cartes que la promo),
+  pouvant badger un même produit différemment selon le composant qui l'affichait. Les badges qui
+  s'appliquent à la fois sont désormais tous affichés ensemble, dans l'ordre Nouveau → Premium →
+  Promo, aucun n'en masquant un autre (décision produit explicite de David).
 
 ### Design system (`assets/scss/_tokens.scss`)
 

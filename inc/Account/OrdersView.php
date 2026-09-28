@@ -4,7 +4,9 @@
  * Role: My Account orders list view-model (Solar_Template\Account).
  * Author: David ROMERA <d.romera.11@gmail.com>
  * Purpose: Build the orders list page's status tabs (with real counts) and order cards (with
- *          thumbnails and status-appropriate actions) from the logged-in customer's real orders.
+ *          thumbnails and status-appropriate actions) from the logged-in customer's real orders,
+ *          read through Solar_Template\Account\CustomerOrders (the shared "this customer's orders"
+ *          query every class needing it goes through).
  *
  * @package Solar_Template
  */
@@ -157,12 +159,12 @@ final class OrdersView {
 		// woocommerce/myaccount/orders.php) — memoized per user ID so that render only ever issues
 		// this unbounded `wc_get_orders()` call once, not twice.
 		if ( ! array_key_exists( $user_id, $cache ) ) {
-			$cache[ $user_id ] = wc_get_orders(
+			$cache[ $user_id ] = CustomerOrders::for_user(
+				$user_id,
 				array(
-					'customer' => $user_id,
-					'limit'    => -1,
-					'orderby'  => 'date',
-					'order'    => 'DESC',
+					'limit'   => -1,
+					'orderby' => 'date',
+					'order'   => 'DESC',
 				)
 			);
 		}

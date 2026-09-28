@@ -3,8 +3,13 @@
  * Created: 2026-09-25 16:32 CEST
  * Role: Product page corner badges (Solar_Template\Product).
  * Author: David ROMERA <d.romera.11@gmail.com>
- * Purpose: Compute the product page panel's badges ("New"/"Solar Premium") from real WooCommerce
- *          product data, rather than the design handoff's always-on placeholder badges.
+ * Purpose: Compute a product's real badges ("New"/"Solar Premium"/"On Sale") from real WooCommerce
+ *          product data, rather than the design handoff's always-on placeholder badges. Single
+ *          source of truth for both the product page panel and Catalog\ProductCardMapper (catalog/
+ *          home/related-products cards) — a product previously could show different badges
+ *          depending on which of the two independently computed them; both now read the same list,
+ *          in the same order, and a product that matches more than one badge shows all of them
+ *          together rather than picking a single "winner" (David's explicit product decision).
  *
  * @package Solar_Template
  */
@@ -21,10 +26,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 final class ProductBadges {
 
 	/**
-	 * Returns the product panel's badges: "New" when the product was published within the last
-	 * self::new_badge_days() days, "Solar Premium" when it is marked "Featured" from the product
-	 * edit screen — neither shown unconditionally, unlike the design handoff's always-on mockup
-	 * badges.
+	 * Returns a product's real badges, in display priority order: "New" (published within the last
+	 * self::new_badge_days() days), "Solar Premium" (marked "Featured" from the product edit
+	 * screen), then "On Sale" (a real active sale price) — none shown unconditionally, unlike the
+	 * design handoff's always-on mockup badges, and every one that applies is returned together
+	 * (David's explicit product decision: badges coexist rather than one suppressing another).
 	 *
 	 * @param \WC_Product $product Product to compute badges for.
 	 * @return array<int, array{type: string, label: string}>
@@ -43,6 +49,13 @@ final class ProductBadges {
 			$badges[] = array(
 				'type'  => 'premium',
 				'label' => __( 'Solar Premium', 'solar-template' ),
+			);
+		}
+
+		if ( $product->is_on_sale() ) {
+			$badges[] = array(
+				'type'  => 'sale',
+				'label' => __( 'On Sale', 'solar-template' ),
 			);
 		}
 

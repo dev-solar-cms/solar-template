@@ -66,6 +66,16 @@ class WC_Product {
 	protected bool $visible = true;
 
 	/**
+	 * @var bool
+	 */
+	protected bool $featured = false;
+
+	/**
+	 * @var \DateTime|null
+	 */
+	protected ?\DateTime $date_created = null;
+
+	/**
 	 * @param int $id Product ID.
 	 */
 	public function __construct( int $id = 0 ) {
@@ -167,6 +177,20 @@ class WC_Product {
 	}
 
 	/**
+	 * @return bool
+	 */
+	public function is_featured(): bool {
+		return $this->featured;
+	}
+
+	/**
+	 * @return \DateTime|null
+	 */
+	public function get_date_created(): ?\DateTime {
+		return $this->date_created;
+	}
+
+	/**
 	 * Test-only helper — not part of the real WC_Product API.
 	 *
 	 * @param float|string $price Price to set directly (bypasses set_price(), used in fixture setup).
@@ -245,5 +269,26 @@ class WC_Product {
 	 */
 	public function solar_template_test_set_meta( string $key, $value ): void {
 		$this->meta[ $key ] = $value;
+	}
+
+	/**
+	 * Test-only helper — not part of the real WC_Product API.
+	 *
+	 * @param bool $featured Whether the product is marked "Featured".
+	 * @return void
+	 */
+	public function solar_template_test_set_featured( bool $featured ): void {
+		$this->featured = $featured;
+	}
+
+	/**
+	 * Test-only helper — not part of the real WC_Product API.
+	 *
+	 * @param \DateTime|null $date_created Publication date, or null to simulate an unpublished
+	 *                                     product (WooCommerce's own "no date" case).
+	 * @return void
+	 */
+	public function solar_template_test_set_date_created( ?\DateTime $date_created ): void {
+		$this->date_created = $date_created;
 	}
 }

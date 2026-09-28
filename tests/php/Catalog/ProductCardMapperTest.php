@@ -58,7 +58,7 @@ final class ProductCardMapperTest extends TestCase {
 	/**
 	 * @return void
 	 */
-	public function test_map_computes_the_discount_percent_and_badge_when_on_sale(): void {
+	public function test_map_computes_the_discount_percent_and_sale_badge_when_on_sale(): void {
 		$product = $this->product( 1 );
 		$product->solar_template_test_set_regular_price( 100.0 );
 		$product->solar_template_test_set_price( 75.0 );
@@ -67,7 +67,7 @@ final class ProductCardMapperTest extends TestCase {
 		$args = ProductCardMapper::map( $product, false );
 
 		$this->assertSame( 25, $args['discount_percent'] );
-		$this->assertSame( 'sale', $args['badge']['type'] );
+		$this->assertSame( array( 'sale' ), array_column( $args['badges'], 'type' ) );
 	}
 
 	/**
@@ -76,8 +76,26 @@ final class ProductCardMapperTest extends TestCase {
 	public function test_map_has_no_badge_when_not_on_sale(): void {
 		$args = ProductCardMapper::map( $this->product( 1 ), false );
 
-		$this->assertNull( $args['badge'] );
+		$this->assertSame( array(), $args['badges'] );
 		$this->assertNull( $args['discount_percent'] );
+	}
+
+	/**
+	 * badges (type/order) are resolved through Product\ProductBadges::for_product() — the same
+	 * source the product page panel uses — not recomputed independently here; this test just
+	 * confirms map() actually wires that call through for a product matching more than one badge.
+	 *
+	 * @return void
+	 */
+	public function test_map_includes_every_applicable_badge_together(): void {
+		$product = $this->product( 1 );
+		$product->solar_template_test_set_date_created( new \DateTime( '-1 day' ) );
+		$product->solar_template_test_set_featured( true );
+		$product->solar_template_test_set_on_sale( true );
+
+		$args = ProductCardMapper::map( $product, false );
+
+		$this->assertSame( array( 'new', 'premium', 'sale' ), array_column( $args['badges'], 'type' ) );
 	}
 
 	/**

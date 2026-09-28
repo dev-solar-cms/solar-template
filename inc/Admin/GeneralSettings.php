@@ -78,7 +78,7 @@ final class GeneralSettings implements SettingsTabInterface {
 			'favicon_id'        => isset( $raw['favicon_id'] ) ? (string) absint( $raw['favicon_id'] ) : '0',
 			'currency'          => array_key_exists( $currency, self::CURRENCIES ) ? $currency : '',
 			'currency_position' => in_array( $position, array( 'before', 'after' ), true ) ? $position : '',
-			'maintenance_mode'  => ! empty( $raw['maintenance_mode'] ) ? '1' : '0',
+			'maintenance_mode'  => SettingsRepository::sanitize_checkbox( $raw, 'maintenance_mode' ),
 		);
 	}
 

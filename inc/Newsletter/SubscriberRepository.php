@@ -7,12 +7,15 @@
  *          (see Solar_Template\Database\Installer::create_newsletter_table()). Direct `$wpdb`
  *          usage rather than a Contracts interface, same convention as
  *          Solar_Template\Database\Installer: this wraps no third-party library, only WordPress'
- *          own database API.
+ *          own database API. Shares its table-name/count-query helpers with 4 other `$wpdb`-backed
+ *          classes via Solar_Template\Support\WpdbTableTrait.
  *
  * @package Solar_Template
  */
 
 namespace Solar_Template\Newsletter;
+
+use Solar_Template\Support\WpdbTableTrait;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -22,6 +25,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Stores and looks up newsletter subscribers.
  */
 final class SubscriberRepository {
+
+	use WpdbTableTrait;
 
 	/**
 	 * @param object $wpdb WordPress' `$wpdb` global (untyped: no `wpdb` class exists outside a
@@ -61,16 +66,13 @@ final class SubscriberRepository {
 	 * @return bool
 	 */
 	public function is_subscribed( string $email ): bool {
-		$table = $this->table_name();
-		$sql   = $this->wpdb->prepare( "SELECT COUNT(*) FROM {$table} WHERE email = %s", $email ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-
-		return (bool) $this->wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		return (bool) self::count_where( $this->wpdb, $this->table_name(), 'email = %s', $email );
 	}
 
 	/**
 	 * @return string The subscribers table name, with the site's table prefix.
 	 */
 	private function table_name(): string {
-		return $this->wpdb->prefix . 'solar_template_newsletter_subscribers';
+		return self::prefixed_table( $this->wpdb, 'solar_template_newsletter_subscribers' );
 	}
 }

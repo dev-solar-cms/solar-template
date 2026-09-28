@@ -44,12 +44,12 @@ final class Dashboard {
 	 * @return array<int, array{number: string, date: string, item_count: int, status: array, total: string, view_url: string, reorder_url: string|null}>
 	 */
 	public static function recent_orders( int $user_id, int $limit = 3 ): array {
-		$orders = wc_get_orders(
+		$orders = CustomerOrders::for_user(
+			$user_id,
 			array(
-				'customer' => $user_id,
-				'limit'    => $limit,
-				'orderby'  => 'date',
-				'order'    => 'DESC',
+				'limit'   => $limit,
+				'orderby' => 'date',
+				'order'   => 'DESC',
 			)
 		);
 
@@ -80,11 +80,11 @@ final class Dashboard {
 	 *                   has ever placed.
 	 */
 	private static function customer_order_statuses( int $user_id ): array {
-		$orders = wc_get_orders(
+		$orders = CustomerOrders::for_user(
+			$user_id,
 			array(
-				'customer' => $user_id,
-				'limit'    => -1,
-				'return'   => 'objects',
+				'limit'  => -1,
+				'return' => 'objects',
 			)
 		);
 

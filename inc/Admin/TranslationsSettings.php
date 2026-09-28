@@ -78,7 +78,7 @@ final class TranslationsSettings implements SettingsTabInterface {
 
 		return array(
 			'default_language' => in_array( $default, $active_codes, true ) ? $default : '',
-			'auto_detect'      => ! empty( $raw['auto_detect'] ) ? '1' : '0',
+			'auto_detect'      => SettingsRepository::sanitize_checkbox( $raw, 'auto_detect' ),
 		);
 	}
 

@@ -76,7 +76,7 @@ final class BlogSettings implements SettingsTabInterface {
 
 		return array(
 			'posts_per_page'   => (string) max( 1, $posts_per_page ),
-			'featured_enabled' => ! empty( $raw['featured_enabled'] ) ? '1' : '0',
+			'featured_enabled' => SettingsRepository::sanitize_checkbox( $raw, 'featured_enabled' ),
 			'columns'          => (string) max( 2, min( 4, $columns ) ),
 			'share_networks'   => implode( ',', $networks ),
 			'related_count'    => (string) max( 0, min( 6, $related_count ) ),

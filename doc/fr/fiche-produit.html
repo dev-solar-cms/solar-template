@@ -93,7 +93,13 @@
 			s'afficher du tout : « Nouveau » tant que le produit a été publié il y a moins de
 			<code>solar_template_product_new_badge_days</code> jours (14 par défaut, filtrable), « Solar
 			Premium » uniquement si le produit est marqué « En vedette » depuis l'écran d'édition
-			(<code>WC_Product::is_featured()</code>).
+			(<code>WC_Product::is_featured()</code>), et « En promo » uniquement si le produit a
+			réellement un prix promotionnel actif (<code>WC_Product::is_on_sale()</code>). Les trois
+			s'affichent ensemble quand ils s'appliquent tous — aucun ne masque les autres — et
+			proviennent de la même méthode partagée (<code>ProductBadges::for_product()</code>) que
+			les cartes produit du catalogue/de l'accueil/des produits similaires, pour qu'un même
+			produit affiche toujours exactement les mêmes badges quel que soit le composant qui le
+			montre.
 		</p>
 		<p>
 			Le statut de stock (« En stock »/« Rupture de stock »/« Disponible sur commande ») est

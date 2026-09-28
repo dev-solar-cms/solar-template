@@ -91,7 +91,7 @@
 			<thead><tr><th>Composant</th><th>Classes</th><th>Usage</th></tr></thead>
 			<tbody>
 				<tr><td>Boutons</td><td><code>.btn</code>, <code>.btn--primary</code>, <code>.btn--dark</code>, <code>.btn--outline</code>, <code>.btn--outline-on-dark</code>, <code>.btn--lg</code>, <code>.btn--block</code></td><td>CTA principal doré, CTA sombre pleine largeur, contour sur fond clair ou sombre, modificateurs grand/pleine largeur</td></tr>
-				<tr><td>Badges</td><td><code>.badge--new</code>, <code>.badge--exclusive</code>, <code>.badge--sale</code>, <code>.badge--outline-gold</code>, <code>.badge--discount</code></td><td>Badges en coin des cartes produit et badge de réduction sur le prix (fond teinté, pas un aplat)</td></tr>
+				<tr><td>Badges</td><td><code>.badge--new</code>, <code>.badge--premium</code>, <code>.badge--sale</code>, <code>.badge--exclusive</code>, <code>.badge--outline-gold</code>, <code>.badge--discount</code></td><td>Badges en coin des cartes produit (<code>new</code>/<code>premium</code>/<code>sale</code> — un même produit peut cumuler les trois, voir <code>Solar_Template\Product\ProductBadges::for_product()</code>, la même source que la fiche produit) et badge de réduction sur le prix (fond teinté, pas un aplat)</td></tr>
 				<tr><td>Pills</td><td><code>.pill</code>, <code>.pill.is-active</code>, <code>.pill__remove</code></td><td>Chips de filtre et pills de catégorie, avec un bouton « × » de suppression optionnel</td></tr>
 			</tbody>
 		</table>
@@ -112,7 +112,7 @@
 
 		<h2 id="carte-produit">Carte produit</h2>
 		<p>
-			<code>template-parts/product-card.php</code> affiche une carte produit (image, badge en
+			<code>template-parts/product-card.php</code> affiche une carte produit (image, badges en
 			coin, bouton liste de souhaits, overlay « ajouter au panier » au survol, catégorie, nom,
 			prix avec prix barré et badge de réduction optionnels, swatches de couleur) à partir d'un
 			simple tableau <code>$args</code>, stylée par

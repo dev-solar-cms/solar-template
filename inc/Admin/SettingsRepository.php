@@ -7,13 +7,17 @@
  *          by Solar_Template\Database\Installer since an earlier step of the project, anticipating
  *          this admin settings screen). Every settings tab reads/writes through this class, using
  *          `{tab_slug}.{field}` keys — direct `$wpdb` access, no Contracts interface, same
- *          convention as Solar_Template\Database\Installer/Solar_Template\Newsletter\SubscriberRepository:
- *          this wraps no third-party library, only WordPress' own database API.
+ *          convention as Solar_Template\Database\Installer/Solar_Template\Newsletter\SubscriberRepository.
+ *          This class is fully static (never instantiated, unlike the other four), but shares its
+ *          table-name helper with them via Solar_Template\Support\WpdbTableTrait all the same: every
+ *          trait method takes `$wpdb` as an explicit parameter rather than reading it off `$this`.
  *
  * @package Solar_Template
  */
 
 namespace Solar_Template\Admin;
+
+use Solar_Template\Support\WpdbTableTrait;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -23,6 +27,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Reads and writes the theme's `{tab}.{field}` settings.
  */
 final class SettingsRepository {
+
+	use WpdbTableTrait;
 
 	/**
 	 * Returns the stored value for $key, or $default_value when no row exists for it yet.
@@ -34,7 +40,7 @@ final class SettingsRepository {
 	public static function get( string $key, string $default_value = '' ): string {
 		global $wpdb;
 
-		$table = $wpdb->prefix . 'solar_template_settings';
+		$table = self::prefixed_table( $wpdb, 'solar_template_settings' );
 		$value = $wpdb->get_var(
 			$wpdb->prepare( "SELECT setting_value FROM {$table} WHERE setting_key = %s", $key ) // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		);
@@ -70,13 +76,27 @@ final class SettingsRepository {
 		global $wpdb;
 
 		$wpdb->replace(
-			$wpdb->prefix . 'solar_template_settings',
+			self::prefixed_table( $wpdb, 'solar_template_settings' ),
 			array(
 				'setting_key'   => $key,
 				'setting_value' => $value,
 			),
 			array( '%s', '%s' )
 		);
+	}
+
+	/**
+	 * Sanitizes a checkbox field's raw submitted value into the theme's stored `'1'`/`'0'`
+	 * representation — a checkbox is only ever present in `$_POST` when checked, so a missing key
+	 * means unchecked. Shared by every settings tab's own `sanitize()` instead of each repeating the
+	 * same `! empty( $raw['x'] ) ? '1' : '0'` idiom independently.
+	 *
+	 * @param array<string, mixed> $raw Raw (already `wp_unslash()`-ed) POST data for the whole request.
+	 * @param string               $key Field key to read.
+	 * @return string `'1'` when checked, `'0'` otherwise.
+	 */
+	public static function sanitize_checkbox( array $raw, string $key ): string {
+		return ! empty( $raw[ $key ] ) ? '1' : '0';
 	}
 
 	/**

@@ -87,7 +87,12 @@
 			from real WooCommerce data and may not render at all: "New" as long as the product was
 			published less than <code>solar_template_product_new_badge_days</code> days ago (14 by
 			default, filterable), "Solar Premium" only when the product is marked "Featured" from the
-			edit screen (<code>WC_Product::is_featured()</code>).
+			edit screen (<code>WC_Product::is_featured()</code>), and "On Sale" only when the product
+			genuinely has an active sale price (<code>WC_Product::is_on_sale()</code>). All three show
+			together whenever they all apply — none of them suppresses another — and come from the
+			same shared method (<code>ProductBadges::for_product()</code>) the catalog/home/related-
+			products cards also use, so a given product always shows the exact same badges regardless
+			of which component renders it.
 		</p>
 		<p>
 			The stock status ("In stock"/"Out of stock"/"Available on backorder") is translated through

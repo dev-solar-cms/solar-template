@@ -3,7 +3,7 @@
  * Created: 2026-09-25 05:39 CEST
  * Role: Reusable product card template-part (template-parts/product-card.php).
  * Author: David ROMERA <d.romera.11@gmail.com>
- * Purpose: Render a single product card (image, corner badge, wishlist button, "add to cart"
+ * Purpose: Render a single product card (image, corner badges, wishlist button, "add to cart"
  *          hover overlay, category, name, price, color swatches) from a plain `$args` array, so
  *          it can be reused by the catalog grid, the "similar products" section, etc. without
  *          duplicating markup. This step wires it with fake data only: `$args` is shaped like
@@ -16,7 +16,9 @@
  * - product_id (int) real WC_Product ID, used by the wishlist toggle button's AJAX request
  * - image_url (string|null), image_alt (string)
  * - permalink (string) product page URL
- * - badge (array{type: string, label: string}|null) type is one of new|exclusive|sale
+ * - badges (array<int, array{type: string, label: string}>) type is one of new|premium|sale — see
+ *   Solar_Template\Product\ProductBadges::for_product(), the same source the product page panel
+ *   uses, so a product shows the exact same badges either way
  * - category (string), name (string)
  * - price (float|null), regular_price (float|null), currency_symbol (string)
  * - discount_percent (int|null)
@@ -36,7 +38,7 @@ $defaults = array(
 	'image_url'        => null,
 	'image_alt'        => '',
 	'permalink'        => '#',
-	'badge'            => null,
+	'badges'           => array(),
 	'category'         => '',
 	'name'             => '',
 	'price'            => null,
@@ -62,9 +64,13 @@ use Solar_Template\Support\PriceFormatter;
 			/>
 		<?php endif; ?>
 
-		<?php if ( ! empty( $product['badge']['type'] ) && ! empty( $product['badge']['label'] ) ) : ?>
-			<span class="product-card__badge badge badge--<?php echo esc_attr( $product['badge']['type'] ); ?>">
-				<?php echo esc_html( $product['badge']['label'] ); ?>
+		<?php if ( ! empty( $product['badges'] ) ) : ?>
+			<span class="product-card__badges">
+				<?php foreach ( $product['badges'] as $product_badge ) : ?>
+					<span class="badge badge--<?php echo esc_attr( $product_badge['type'] ); ?>">
+						<?php echo esc_html( $product_badge['label'] ); ?>
+					</span>
+				<?php endforeach; ?>
 			</span>
 		<?php endif; ?>
 

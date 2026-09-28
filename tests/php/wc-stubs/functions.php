@@ -60,22 +60,27 @@ if ( ! function_exists( 'get_posts' ) ) {
 if ( ! function_exists( 'wc_get_orders' ) ) {
 	global $solar_template_test_orders_by_user;
 	global $solar_template_test_wc_get_orders_calls;
-	$solar_template_test_orders_by_user      = array();
-	$solar_template_test_wc_get_orders_calls = 0;
+	global $solar_template_test_wc_get_orders_last_args;
+	$solar_template_test_orders_by_user          = array();
+	$solar_template_test_wc_get_orders_calls     = 0;
+	$solar_template_test_wc_get_orders_last_args = array();
 
 	/**
 	 * In-memory stand-in for WooCommerce's own order lookup, keyed by
 	 * $GLOBALS['solar_template_test_orders_by_user'][$customer_id]. Also counts its own calls in
-	 * $GLOBALS['solar_template_test_wc_get_orders_calls'], so a test can assert a memoized caller only
-	 * triggers it once (see Account\OrdersViewTest).
+	 * $GLOBALS['solar_template_test_wc_get_orders_calls'] (so a test can assert a memoized caller only
+	 * triggers it once, see Account\OrdersViewTest) and records the exact $args it was last called
+	 * with in $GLOBALS['solar_template_test_wc_get_orders_last_args'] (so a test can assert a caller's
+	 * own extra args reached it unchanged, see Account\CustomerOrdersTest).
 	 *
-	 * @param array $args Query args (only `customer` is read).
+	 * @param array $args Query args (only `customer` is read to select a result).
 	 * @return WC_Order[]
 	 */
 	function wc_get_orders( array $args = array() ): array {
-		global $solar_template_test_orders_by_user, $solar_template_test_wc_get_orders_calls;
+		global $solar_template_test_orders_by_user, $solar_template_test_wc_get_orders_calls, $solar_template_test_wc_get_orders_last_args;
 
 		++$solar_template_test_wc_get_orders_calls;
+		$solar_template_test_wc_get_orders_last_args = $args;
 
 		$customer_id = (int) ( $args['customer'] ?? 0 );
 

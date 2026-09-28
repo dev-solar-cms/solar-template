@@ -91,10 +91,10 @@ final class HeaderSettings implements SettingsTabInterface {
 
 		$values = array(
 			'layout'            => array_key_exists( $layout, self::LAYOUTS ) ? $layout : 'centered',
-			'mega_menu_enabled' => ! empty( $raw['mega_menu_enabled'] ) ? '1' : '0',
-			'promo_bar_enabled' => ! empty( $raw['promo_bar_enabled'] ) ? '1' : '0',
+			'mega_menu_enabled' => SettingsRepository::sanitize_checkbox( $raw, 'mega_menu_enabled' ),
+			'promo_bar_enabled' => SettingsRepository::sanitize_checkbox( $raw, 'promo_bar_enabled' ),
 			'promo_bar_text'    => isset( $raw['promo_bar_text'] ) ? sanitize_text_field( (string) $raw['promo_bar_text'] ) : '',
-			'transparent_home'  => ! empty( $raw['transparent_home'] ) ? '1' : '0',
+			'transparent_home'  => SettingsRepository::sanitize_checkbox( $raw, 'transparent_home' ),
 		);
 
 		foreach ( array_keys( self::SOCIAL_NETWORKS ) as $network ) {

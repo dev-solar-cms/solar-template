@@ -8,6 +8,8 @@
  *          compilation to a Solar_Template\Contracts\MoCompilerInterface. The database is
  *          accessed through a plain `$wpdb`-shaped object injected in the constructor, so this
  *          class can be unit tested with a lightweight fake instead of a full WordPress install.
+ *          Shares its table-name helper with 4 other `$wpdb`-backed classes via
+ *          Solar_Template\Support\WpdbTableTrait.
  *
  * @package Solar_Template
  */
@@ -16,6 +18,7 @@ namespace Solar_Template\I18n;
 
 use Solar_Template\Contracts\MoCompilerInterface;
 use Solar_Template\Contracts\TranslatorInterface;
+use Solar_Template\Support\WpdbTableTrait;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -25,6 +28,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Reads and writes the theme's translation catalog in the database, and compiles it to `.mo`.
  */
 final class DatabaseTranslator implements TranslatorInterface {
+
+	use WpdbTableTrait;
 
 	/**
 	 * Database access object (the WordPress global `$wpdb` in production).
@@ -66,7 +71,7 @@ final class DatabaseTranslator implements TranslatorInterface {
 	 * @return string
 	 */
 	private function languages_table(): string {
-		return $this->wpdb->prefix . 'solar_template_languages';
+		return self::prefixed_table( $this->wpdb, 'solar_template_languages' );
 	}
 
 	/**
@@ -75,7 +80,7 @@ final class DatabaseTranslator implements TranslatorInterface {
 	 * @return string
 	 */
 	private function translations_table(): string {
-		return $this->wpdb->prefix . 'solar_template_translations';
+		return self::prefixed_table( $this->wpdb, 'solar_template_translations' );
 	}
 
 	/**

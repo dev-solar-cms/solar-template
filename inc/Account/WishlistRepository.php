@@ -7,12 +7,15 @@
  *          Solar_Template\Database\Installer::create_wishlist_table()). Direct `$wpdb` usage
  *          rather than a Contracts interface, same convention as
  *          Solar_Template\Newsletter\SubscriberRepository: this wraps no third-party library, only
- *          WordPress' own database API.
+ *          WordPress' own database API. Shares its table-name/count-query helpers with 4 other
+ *          `$wpdb`-backed classes via Solar_Template\Support\WpdbTableTrait.
  *
  * @package Solar_Template
  */
 
 namespace Solar_Template\Account;
+
+use Solar_Template\Support\WpdbTableTrait;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -22,6 +25,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Stores and looks up a customer's wishlisted products.
  */
 final class WishlistRepository {
+
+	use WpdbTableTrait;
 
 	/**
 	 * @param object $wpdb WordPress' `$wpdb` global (untyped, same convention as
@@ -35,10 +40,7 @@ final class WishlistRepository {
 	 * @return bool
 	 */
 	public function is_wishlisted( int $user_id, int $product_id ): bool {
-		$table = $this->table_name();
-		$sql   = $this->wpdb->prepare( "SELECT COUNT(*) FROM {$table} WHERE user_id = %d AND product_id = %d", $user_id, $product_id ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-
-		return (bool) $this->wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		return (bool) self::count_where( $this->wpdb, $this->table_name(), 'user_id = %d AND product_id = %d', $user_id, $product_id );
 	}
 
 	/**
@@ -122,10 +124,7 @@ final class WishlistRepository {
 	 * @return int Number of products this customer has wishlisted.
 	 */
 	public function count_for( int $user_id ): int {
-		$table = $this->table_name();
-		$sql   = $this->wpdb->prepare( "SELECT COUNT(*) FROM {$table} WHERE user_id = %d", $user_id ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-
-		return (int) $this->wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		return self::count_where( $this->wpdb, $this->table_name(), 'user_id = %d', $user_id );
 	}
 
 	/**
@@ -143,6 +142,6 @@ final class WishlistRepository {
 	 * @return string The wishlist table name, with the site's table prefix.
 	 */
 	private function table_name(): string {
-		return $this->wpdb->prefix . 'solar_template_wishlist';
+		return self::prefixed_table( $this->wpdb, 'solar_template_wishlist' );
 	}
 }

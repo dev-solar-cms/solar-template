@@ -78,7 +78,7 @@ final class FooterSettings implements SettingsTabInterface {
 
 		return array(
 			'columns_count'      => in_array( $count, array( '2', '3', '4', '5' ), true ) ? $count : '5',
-			'newsletter_enabled' => ! empty( $raw['newsletter_enabled'] ) ? '1' : '0',
+			'newsletter_enabled' => SettingsRepository::sanitize_checkbox( $raw, 'newsletter_enabled' ),
 			'payment_icons'      => implode( ',', $icons ),
 			'copyright_text'     => isset( $raw['copyright_text'] ) ? sanitize_text_field( (string) $raw['copyright_text'] ) : '',
 		);

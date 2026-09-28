@@ -4,7 +4,10 @@
  * Role: WC_Product -> product-card mapping (Solar_Template\Catalog).
  * Author: David ROMERA <d.romera.11@gmail.com>
  * Purpose: Map a `WC_Product` to the `$args` shape expected by template-parts/product-card.php,
- *          shared by the catalog grid and the front page's featured products section.
+ *          shared by the catalog grid and the front page's featured products section. Corner badges
+ *          are resolved through Product\ProductBadges::for_product() — the same single source of
+ *          truth the product page panel uses — so a product shows exactly the same badges, in the
+ *          same order, whether it's rendered as a card or as a full product page.
  *
  * @package Solar_Template
  */
@@ -12,6 +15,7 @@
 namespace Solar_Template\Catalog;
 
 use Solar_Template\Account\WishlistRepository;
+use Solar_Template\Product\ProductBadges;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -64,14 +68,9 @@ final class ProductCardMapper {
 		$regular  = $product->get_regular_price();
 
 		$discount_percent = null;
-		$badge            = null;
 
 		if ( $product->is_on_sale() && '' !== $regular && (float) $regular > 0 ) {
 			$discount_percent = (int) round( ( ( (float) $regular - (float) $price ) / (float) $regular ) * 100 );
-			$badge            = array(
-				'type'  => 'sale',
-				'label' => __( 'On Sale', 'solar-template' ),
-			);
 		}
 
 		$categories = get_the_terms( $product->get_id(), 'product_cat' );
@@ -82,7 +81,7 @@ final class ProductCardMapper {
 			'image_url'        => $image_id ? wp_get_attachment_image_url( $image_id, 'medium' ) : null,
 			'image_alt'        => $image_id ? get_post_meta( $image_id, '_wp_attachment_image_alt', true ) : '',
 			'permalink'        => get_permalink( $product->get_id() ),
-			'badge'            => $badge,
+			'badges'           => ProductBadges::for_product( $product ),
 			'category'         => $category,
 			'name'             => $product->get_name(),
 			'price'            => '' !== $price ? (float) $price : null,

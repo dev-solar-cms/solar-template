@@ -43,9 +43,15 @@ final class ProductCardTest extends TestCase {
 				'image_url'        => 'https://example.test/product.jpg',
 				'image_alt'        => 'Engraved solar watch',
 				'permalink'        => 'https://example.test/product/solar-watch/',
-				'badge'            => array(
-					'type'  => 'new',
-					'label' => 'New',
+				'badges'           => array(
+					array(
+						'type'  => 'new',
+						'label' => 'New',
+					),
+					array(
+						'type'  => 'sale',
+						'label' => 'On Sale',
+					),
 				),
 				'category'         => 'Watches',
 				'name'             => 'Solar Watch <Gold>',
@@ -59,8 +65,9 @@ final class ProductCardTest extends TestCase {
 		);
 
 		$this->assertStringContainsString( 'src="https://example.test/product.jpg"', $html );
-		$this->assertStringContainsString( 'badge--new', $html );
+		$this->assertStringContainsString( 'product-card__badges', $html );
 		$this->assertMatchesRegularExpression( '/badge--new">\s*New\s*</', $html );
+		$this->assertMatchesRegularExpression( '/badge--sale">\s*On Sale\s*</', $html );
 		$this->assertStringContainsString( 'Watches', $html );
 		// The product name is escaped: a raw "<Gold>" must never appear unescaped.
 		$this->assertStringContainsString( 'Solar Watch &lt;Gold&gt;', $html );
@@ -75,7 +82,7 @@ final class ProductCardTest extends TestCase {
 
 	/**
 	 * A card with only the required minimum still renders without notices/errors, and skips the
-	 * optional blocks (badge, price, swatches) entirely rather than rendering them empty.
+	 * optional blocks (badges, price, swatches) entirely rather than rendering them empty.
 	 *
 	 * @return void
 	 */

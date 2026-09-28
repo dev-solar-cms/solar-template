@@ -87,7 +87,7 @@
 			<thead><tr><th>Component</th><th>Classes</th><th>Use</th></tr></thead>
 			<tbody>
 				<tr><td>Buttons</td><td><code>.btn</code>, <code>.btn--primary</code>, <code>.btn--dark</code>, <code>.btn--outline</code>, <code>.btn--outline-on-dark</code>, <code>.btn--lg</code>, <code>.btn--block</code></td><td>Primary gold CTA, dark full-width CTA, outline on a light or dark background, large/full-width modifiers</td></tr>
-				<tr><td>Badges</td><td><code>.badge--new</code>, <code>.badge--exclusive</code>, <code>.badge--sale</code>, <code>.badge--outline-gold</code>, <code>.badge--discount</code></td><td>Product card corner badges and the price discount badge (tinted background, not a solid fill)</td></tr>
+				<tr><td>Badges</td><td><code>.badge--new</code>, <code>.badge--premium</code>, <code>.badge--sale</code>, <code>.badge--exclusive</code>, <code>.badge--outline-gold</code>, <code>.badge--discount</code></td><td>Product card corner badges (<code>new</code>/<code>premium</code>/<code>sale</code> — a single product can carry all three at once, see <code>Solar_Template\Product\ProductBadges::for_product()</code>, the same source the product page uses) and the price discount badge (tinted background, not a solid fill)</td></tr>
 				<tr><td>Pills</td><td><code>.pill</code>, <code>.pill.is-active</code>, <code>.pill__remove</code></td><td>Filter chips and category pills, with an optional inline "×" remove button</td></tr>
 			</tbody>
 		</table>
@@ -109,7 +109,7 @@
 		<h2 id="product-card">Product card</h2>
 		<p>
 			<code>template-parts/product-card.php</code> renders a single product card (image,
-			corner badge, wishlist button, "add to cart" hover overlay, category, name, price with
+			corner badges, wishlist button, "add to cart" hover overlay, category, name, price with
 			an optional struck-through original price and discount badge, color swatches) from a
 			plain <code>$args</code> array, styled by <code>assets/scss/_product-card.scss</code>.
 		</p>

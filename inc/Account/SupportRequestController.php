@@ -55,12 +55,12 @@ final class SupportRequestController {
 	 */
 	public static function render_sav_page(): void {
 		$user_id = get_current_user_id();
-		$orders  = wc_get_orders(
+		$orders  = CustomerOrders::for_user(
+			$user_id,
 			array(
-				'customer' => $user_id,
-				'limit'    => -1,
-				'orderby'  => 'date',
-				'order'    => 'DESC',
+				'limit'   => -1,
+				'orderby' => 'date',
+				'order'   => 'DESC',
 			)
 		);
 

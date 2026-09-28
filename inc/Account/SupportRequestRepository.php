@@ -10,12 +10,15 @@
  *          Solar_Template\Newsletter\SubscriberRepository/Solar_Template\Account\WishlistRepository:
  *          this wraps no third-party library, only WordPress' own database API. Deliberately not a
  *          full ticketing system (no status workflow beyond open/closed) — see the design handoff's
- *          own explicit "no full ticketing system" scope note.
+ *          own explicit "no full ticketing system" scope note. Shares its table-name/count-query
+ *          helpers with 4 other `$wpdb`-backed classes via Solar_Template\Support\WpdbTableTrait.
  *
  * @package Solar_Template
  */
 
 namespace Solar_Template\Account;
+
+use Solar_Template\Support\WpdbTableTrait;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -25,6 +28,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Stores and looks up a customer's support requests.
  */
 final class SupportRequestRepository {
+
+	use WpdbTableTrait;
 
 	/**
 	 * @param object $wpdb WordPress' `$wpdb` global (untyped, same convention as
@@ -69,16 +74,13 @@ final class SupportRequestRepository {
 	 * @return int Number of this customer's requests still open.
 	 */
 	public function active_count_for( int $user_id ): int {
-		$table = $this->table_name();
-		$sql   = $this->wpdb->prepare( "SELECT COUNT(*) FROM {$table} WHERE user_id = %d AND status = %s", $user_id, 'open' ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-
-		return (int) $this->wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		return self::count_where( $this->wpdb, $this->table_name(), 'user_id = %d AND status = %s', $user_id, 'open' );
 	}
 
 	/**
 	 * @return string The support requests table name, with the site's table prefix.
 	 */
 	private function table_name(): string {
-		return $this->wpdb->prefix . 'solar_template_support_requests';
+		return self::prefixed_table( $this->wpdb, 'solar_template_support_requests' );
 	}
 }

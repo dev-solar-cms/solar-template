@@ -52,12 +52,7 @@ final class AccountDeletion {
 
 		$user_id = get_current_user_id();
 
-		foreach ( wc_get_orders(
-			array(
-				'customer' => $user_id,
-				'limit'    => -1,
-			)
-		) as $order ) {
+		foreach ( CustomerOrders::for_user( $user_id, array( 'limit' => -1 ) ) as $order ) {
 			$order->delete( true );
 		}
 

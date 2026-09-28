@@ -1,8 +1,11 @@
 // Created: 2026-09-25 05:39 CEST
 // Role: Badge component partial (assets/scss/_badges.scss).
 // Author: David ROMERA <d.romera.11@gmail.com>
-// Purpose: Corner badges shown on product cards/panels (New, Exclusive, Sale) and the price
-//          discount badge, built from the design tokens in `_tokens.scss`.
+// Purpose: Corner badges shown on product cards (New, Premium, Sale) and the price discount badge,
+//          built from the design tokens in `_tokens.scss`. The product page panel's own badges
+//          (template-parts/single-product/panel.php) use a separate, larger-scale
+//          `.product-panel__badge--*` treatment in `_product-page.scss` instead of this component
+//          directly, but read the exact same `type` values from Product\ProductBadges::for_product().
 
 @use 'tokens' as *;
 @use 'sass:color';
@@ -40,6 +43,16 @@ $badge-font-size: 9.5px;
 }
 
 .badge--outline-gold {
+	background: transparent;
+	border: 1px solid $color-gold;
+	color: $color-gold;
+}
+
+// Same gold-border treatment as the product page panel's own "Solar Premium" badge
+// (.product-panel__badge--premium in _product-page.scss) — kept as its own modifier (rather than
+// reusing .badge--outline-gold directly) so Product\ProductBadges' `type` value maps straight to a
+// CSS class without a special case.
+.badge--premium {
 	background: transparent;
 	border: 1px solid $color-gold;
 	color: $color-gold;
