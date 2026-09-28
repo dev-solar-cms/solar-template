@@ -131,6 +131,11 @@ $footer-column-link-color: rgba(255, 255, 255, 0.5);
 	color: $color-surface;
 	font-size: 13px;
 	outline: none;
+
+	&:focus-visible {
+		outline: 2px solid $color-gold;
+		outline-offset: 2px;
+	}
 }
 
 .site-footer__newsletter-submit {

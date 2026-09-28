@@ -64,14 +64,10 @@
 
 // Form
 
-.contact-form-card,
-.contact-form-success {
+.contact-form-card {
 	background: $color-surface;
 	border-radius: $radius-modal;
 	border: 1.5px solid $color-border;
-}
-
-.contact-form-card {
 	padding: 40px;
 }
 
@@ -89,7 +85,7 @@
 	margin-bottom: 20px;
 
 	&--error {
-		background: #fdeaea;
+		background: $color-error-bg;
 		color: $color-error;
 	}
 }
@@ -137,6 +133,11 @@
 		font-size: 14px;
 		background: $color-surface;
 		outline: none;
+
+		&:focus-visible {
+			outline: 2px solid $color-gold;
+			outline-offset: 2px;
+		}
 	}
 
 	select {
@@ -188,6 +189,9 @@
 }
 
 .contact-form-success {
+	background: $color-surface;
+	border-radius: $radius-modal;
+	border: 1.5px solid $color-border;
 	padding: 64px 40px;
 	text-align: center;
 }

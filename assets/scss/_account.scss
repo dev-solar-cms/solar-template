@@ -364,17 +364,17 @@
 	border-radius: $radius-pill;
 
 	&--transit {
-		background: #fef3e2;
+		background: $color-sale-bg;
 		color: $color-sale;
 	}
 
 	&--delivered {
-		background: #e8f5e9;
-		color: #2e7d32;
+		background: $color-success-bg;
+		color: $color-success;
 	}
 
 	&--cancelled {
-		background: #fdeaea;
+		background: $color-error-bg;
 		color: $color-error;
 	}
 
@@ -440,11 +440,11 @@
 	background: $color-bg;
 
 	&--transit {
-		background: #fef9f1;
+		background: $color-sale-bg-subtle;
 	}
 
 	&--delivered {
-		background: #f8fbf8;
+		background: $color-success-bg-subtle;
 	}
 }
 
@@ -764,12 +764,12 @@
 	margin-bottom: 20px;
 
 	&--success {
-		background: #e8f5e9;
-		color: #2e7d32;
+		background: $color-success-bg;
+		color: $color-success;
 	}
 
 	&--error {
-		background: #fdeaea;
+		background: $color-error-bg;
 		color: $color-error;
 	}
 }
@@ -898,7 +898,7 @@
 }
 
 .account-danger-zone {
-	border-color: #fecaca;
+	border-color: $color-error-border;
 	padding: 32px;
 }
 

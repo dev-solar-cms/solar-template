@@ -60,6 +60,11 @@
 	outline: none;
 }
 
+.home-newsletter__input:focus-visible {
+	outline: 2px solid $color-gold;
+	outline-offset: 2px;
+}
+
 .home-newsletter__input::placeholder {
 	color: rgba(255, 255, 255, 0.35);
 }

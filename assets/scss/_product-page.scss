@@ -414,6 +414,13 @@
 	font-size: 13.5px;
 	color: $color-dark;
 	outline: none;
+
+	// $color-dark rather than the already-gold border above, so the focus ring stays visually
+	// distinct against it.
+	&:focus-visible {
+		outline: 2px solid $color-dark;
+		outline-offset: 2px;
+	}
 }
 
 .product-panel__cart-form {

@@ -160,7 +160,7 @@ describe('front page: newsletter', () => {
 	});
 
 	it('colors the feedback message by success/error state', () => {
-		expect(css).toMatch(/\.home-newsletter__feedback\.is-success\s*{[^}]*color:\s*#3aa85a/);
-		expect(css).toMatch(/\.home-newsletter__feedback\.is-error\s*{[^}]*color:\s*#d64545/);
+		expect(css).toMatch(/\.home-newsletter__feedback\.is-success\s*{[^}]*color:\s*#2e7d32/);
+		expect(css).toMatch(/\.home-newsletter__feedback\.is-error\s*{[^}]*color:\s*#b53a3a/);
 	});
 });

@@ -292,6 +292,11 @@ $header-nav-height: 44px;
 	&::placeholder {
 		color: rgba(255, 255, 255, 0.35);
 	}
+
+	&:focus-visible {
+		outline: 2px solid $color-gold;
+		outline-offset: 4px;
+	}
 }
 
 .site-search-form__submit {

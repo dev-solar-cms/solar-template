@@ -48,13 +48,13 @@ describe('design system: badges', () => {
 		expect(css).toMatch(
 			/\.badge--exclusive\s*{[^}]*background:\s*var\(--solar-color-gold, #c9a96e\)/,
 		);
-		expect(css).toMatch(/\.badge--sale\s*{[^}]*background:\s*#c05a2a/);
+		expect(css).toMatch(/\.badge--sale\s*{[^}]*background:\s*#ac5125/);
 	});
 
 	it('renders the discount badge as a tinted sale color, not a solid fill', () => {
-		expect(css).toMatch(/\.badge--discount\s*{[^}]*color:\s*#c05a2a/);
+		expect(css).toMatch(/\.badge--discount\s*{[^}]*color:\s*#ac5125/);
 		expect(css).toMatch(
-			/\.badge--discount\s*{[^}]*background:\s*rgba\(192,\s*90,\s*42,\s*0\.1\)/,
+			/\.badge--discount\s*{[^}]*background:\s*rgba\(172,\s*81,\s*37,\s*0\.1\)/,
 		);
 	});
 });
@@ -106,5 +106,32 @@ describe('design system: blog card', () => {
 	it('sizes the author avatar as a 24px circle', () => {
 		expect(css).toMatch(/\.blog-card__author-avatar\s*{[^}]*width:\s*24px/);
 		expect(css).toMatch(/\.blog-card__author-avatar\s*{[^}]*border-radius:\s*50%/);
+	});
+});
+
+describe('design system: keyboard focus visibility', () => {
+	// Accessibility audit finding: these 5 text inputs (contact form, footer/home newsletter,
+	// header search overlay, product page engraving field) suppressed the browser's own focus
+	// outline (`outline: none`) without ever supplying a replacement, leaving a keyboard user with
+	// no visible indication of which field is focused. Each now gets its own `:focus-visible`
+	// outline — this test guards against the replacement being removed again without the
+	// suppression also being removed.
+	it('gives every text input a visible :focus-visible outline where the default one is suppressed', () => {
+		const selectors = [
+			'.contact-form__field input',
+			'.site-footer__newsletter-input',
+			'.site-search-form__input',
+			'.home-newsletter__input',
+			'.product-panel__engraving-input',
+		];
+
+		selectors.forEach((selector) => {
+			const escaped = selector.replace(/[.]/g, '\\.');
+			const suppressed = new RegExp(`${escaped}[^{]*{[^}]*outline:\\s*none`);
+			const restored = new RegExp(`${escaped}:focus-visible[^{]*{[^}]*outline:\\s*2px solid`);
+
+			expect(css, `${selector} should suppress the default outline`).toMatch(suppressed);
+			expect(css, `${selector} should restore a visible :focus-visible outline`).toMatch(restored);
+		});
 	});
 });

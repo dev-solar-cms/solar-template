@@ -80,6 +80,16 @@
 			Fonts, mise en file dans <code>functions.php</code> aux côtés de la feuille de style
 			compilée.
 		</p>
+		<p>
+			Un audit d'accessibilité a légèrement assombri <code>$color-muted</code>,
+			<code>$color-success</code>, <code>$color-error</code> et <code>$color-sale</code> par
+			rapport à leurs valeurs d'origine de la maquette, pour atteindre le contraste WCAG AA
+			(4.5:1) en tant que texte sur les fonds réels où le thème les utilise — sans changement
+			de rendu perceptible. Ce même audit a aussi ajouté un contour <code>:focus-visible</code>
+			visible à 5 champs de texte qui supprimaient le contour par défaut du navigateur sans
+			jamais fournir de remplacement (formulaire de contact, newsletter du pied de page et de
+			l'accueil, overlay de recherche, champ de gravure personnalisée de la fiche produit).
+		</p>
 
 		<h2 id="boutons-badges-pills">Boutons, badges et pills</h2>
 		<p>

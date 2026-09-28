@@ -682,6 +682,10 @@ final class DefaultStrings {
 				'fr_FR' => 'Votre texte de gravure (max. %d caractères)',
 				'en_US' => 'Your engraving text (max. %d characters)',
 			),
+			'Engraving text'                               => array(
+				'fr_FR' => 'Texte de gravure',
+				'en_US' => 'Engraving text',
+			),
 			'Engraving'                                    => array(
 				'fr_FR' => 'Gravure',
 				'en_US' => 'Engraving',

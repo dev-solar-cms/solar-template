@@ -21,14 +21,33 @@ $color-dark: var(--solar-color-dark, #0d0d0d); // Main text, primary buttons
 $color-gold: var(--solar-color-gold, #c9a96e); // Accent gold — badges, prices, active links, CTAs
 $color-gold-dark: #a8803e; // Gold on hover
 $color-gold-light: #ead9b8; // Light gold — subtle backgrounds
-$color-muted: #7a7672; // Secondary text, placeholders
+$color-muted: #706c68; // Secondary text, placeholders — darkened from the design handoff's own
+	// #7a7672 to reach WCAG AA contrast (4.5:1) for normal-size text against $color-bg/$color-surface
+	// (accessibility audit finding, see DECISIONS.md)
 $color-muted-light: #c5c1b8; // Future/inactive state text (checkout step indicator)
 $color-border: #e5e1d8; // Borders, separators
 $color-surface: #ffffff; // Cards, modals, inputs
 $color-hover: #f0ede7; // Hover background for light elements
-$color-success: #3aa85a; // In stock, confirmations
-$color-error: #d64545; // Errors, deletions
-$color-sale: #c05a2a; // Promotion/sale badges
+$color-success: #2e7d32; // In stock, confirmations — darkened from the design handoff's own #3aa85a
+	// to reach WCAG AA contrast (4.5:1) as text against every background it's actually paired with
+	// in the theme ($color-bg/$color-surface/$color-success-bg — accessibility audit finding, see
+	// DECISIONS.md); this was already the exact value the design handoff itself used for text on a
+	// tinted success background, now the single success color used everywhere instead of two
+	// near-identical greens
+$color-success-bg: #e8f5e9; // Tinted success background (status badges, form notices)
+$color-success-bg-subtle: #f8fbf8; // Extra-light success tint (order card headers)
+$color-error: #b53a3a; // Errors, deletions — darkened from the design handoff's own #d64545 to
+	// reach WCAG AA contrast (4.5:1) as text against every background it's actually paired with in
+	// the theme ($color-bg/$color-hover/$color-surface/$color-error-bg — accessibility audit
+	// finding, see DECISIONS.md)
+$color-error-bg: #fdeaea; // Tinted error background (status badges, form notices)
+$color-error-border: #fecaca; // Error-toned border (account settings danger zone)
+$color-sale: #ac5125; // Promotion/sale badges — darkened from the design handoff's own #c05a2a to
+	// reach WCAG AA contrast (4.5:1) as text against every background it's actually paired with in
+	// the theme ($color-bg/$color-sale-bg/$color-surface — accessibility audit finding, see
+	// DECISIONS.md)
+$color-sale-bg: #fef3e2; // Tinted sale/in-transit background (status badges)
+$color-sale-bg-subtle: #fef9f1; // Extra-light sale/in-transit tint (order card headers)
 $color-dark-nav: #0d0d0d; // Main nav background
 $color-dark-hover: #1a1a1a; // Hover state of dark (full-width/CTA) buttons
 

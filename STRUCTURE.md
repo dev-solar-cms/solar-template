@@ -815,6 +815,34 @@ solar-template/
   s'appliquent à la fois sont désormais tous affichés ensemble, dans l'ordre Nouveau → Premium →
   Promo, aucun n'en masquant un autre (décision produit explicite de David).
 
+### Vérifications transverses
+
+- **Échantillonnage de complétude fonctionnelle** : les 9 parcours les plus sensibles du thème
+  (paiement, authentification, calcul de prix, persistance de données) ont été rejoués réellement en
+  conditions HTTP (checkout `?wc-ajax=checkout`, AJAX liste de souhaits/chargement catalogue avec un
+  vrai nonce extrait de la page, détection de langue via `Accept-Language`, formulaire de contact,
+  recommande et suppression de compte) plutôt que revérifiés seulement au niveau du code — tous
+  confirmés conformes à leur comportement documenté.
+- **Tokens de couleur d'état accessibles** (`assets/scss/_tokens.scss`) : `$color-muted`/
+  `$color-success`/`$color-error`/`$color-sale` légèrement assombris par rapport à leurs valeurs
+  d'origine de la maquette pour atteindre le contraste WCAG AA (4.5:1) en tant que texte, sur chaque
+  fond réel où ils sont utilisés — trouvé par un audit d'accessibilité, corrigé sans changement de
+  rendu perceptible. `$color-success-text` (redondant avec `$color-success` une fois ce dernier
+  assombri) retiré.
+- **Visibilité du focus clavier** : 5 champs de texte (formulaire de contact, newsletter du pied de
+  page/de l'accueil, overlay de recherche, champ de gravure personnalisée) supprimaient le contour de
+  focus par défaut du navigateur (`outline: none`) sans jamais fournir de remplacement — un utilisateur
+  au clavier n'avait alors aucune indication visuelle du champ actif. Chacun a désormais son propre
+  contour `:focus-visible` (doré sur fond sombre/clair standard, sombre sur le champ de gravure déjà
+  bordé de doré par défaut, pour rester visuellement distinct).
+- **Libellé du champ de texte de gravure** (`template-parts/single-product/panel.php`) : n'avait
+  qu'un `placeholder` (qui n'est jamais un substitut valide à un label) — `aria-label` ajouté.
+- Deux constats réels non corrigés ici, documentés dans `.claude/etapes_fix/DECISIONS.md` en attente
+  d'un arbitrage design plus large : le texte doré (`$color-gold`) sur fond clair (contraste très
+  insuffisant dans au moins 2 cas confirmés, sur fond sombre ailleurs où il est conforme) et le
+  système de bordures très peu contrasté du thème (`$color-border` et dérivés), un choix esthétique
+  déjà répandu depuis le tout début du projet.
+
 ### Design system (`assets/scss/_tokens.scss`)
 
 - Toutes les valeurs de couleur, typographie, espacement et géométrie du design sont définies une

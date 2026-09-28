@@ -298,6 +298,9 @@ final class SingleProductPanelTest extends TestCase {
 		$this->assertStringContainsString( 'maxlength="20"', $with_engraving );
 		$this->assertStringContainsString( 'data-surcharge="25"', $with_engraving );
 		$this->assertStringContainsString( '25.00', $with_engraving );
+		// Accessibility: the engraving text field has no visible <label>, only a placeholder (which
+		// is not a substitute for one) — an aria-label is required instead.
+		$this->assertStringContainsString( 'aria-label="Engraving text"', $with_engraving );
 
 		$without_engraving = $this->render( array_merge( $base_args, array( 'engraving' => null ) ) );
 

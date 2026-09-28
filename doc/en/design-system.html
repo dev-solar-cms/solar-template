@@ -77,6 +77,16 @@
 			The theme loads <strong>Plus Jakarta Sans</strong> (weights 300 to 800) from Google
 			Fonts, enqueued in <code>functions.php</code> alongside the compiled stylesheet.
 		</p>
+		<p>
+			An accessibility audit slightly darkened <code>$color-muted</code>,
+			<code>$color-success</code>, <code>$color-error</code> and <code>$color-sale</code> from
+			their original design handoff values, to reach WCAG AA contrast (4.5:1) as text against
+			every real background the theme pairs them with — no perceptible rendering change. The
+			same audit also added a visible <code>:focus-visible</code> outline to 5 text fields that
+			suppressed the browser's own default outline without ever supplying a replacement
+			(contact form, footer/home newsletter, search overlay, the product page's custom
+			engraving field).
+		</p>
 
 		<h2 id="buttons-badges-pills">Buttons, badges and pills</h2>
 		<p>

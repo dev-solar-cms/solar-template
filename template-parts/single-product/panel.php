@@ -211,6 +211,7 @@ $panel = wp_parse_args(
 								class="product-panel__engraving-input"
 								maxlength="<?php echo esc_attr( (string) $panel['engraving']['max_length'] ); ?>"
 								placeholder="<?php echo esc_attr( sprintf( /* translators: %d: maximum number of characters. */ __( 'Your engraving text (max. %d characters)', 'solar-template' ), $panel['engraving']['max_length'] ) ); ?>"
+								aria-label="<?php esc_attr_e( 'Engraving text', 'solar-template' ); ?>"
 							></textarea>
 						<?php else : ?>
 							<input
@@ -219,6 +220,7 @@ $panel = wp_parse_args(
 								class="product-panel__engraving-input"
 								maxlength="<?php echo esc_attr( (string) $panel['engraving']['max_length'] ); ?>"
 								placeholder="<?php echo esc_attr( sprintf( /* translators: %d: maximum number of characters. */ __( 'Your engraving text (max. %d characters)', 'solar-template' ), $panel['engraving']['max_length'] ) ); ?>"
+								aria-label="<?php esc_attr_e( 'Engraving text', 'solar-template' ); ?>"
 							/>
 						<?php endif; ?>
 					</div>
