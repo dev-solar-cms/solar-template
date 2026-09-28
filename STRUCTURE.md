@@ -710,15 +710,33 @@ solar-template/
 ### Performance et cache
 
 - **Cache lecture-seule** (`Solar_Template\Cache\CacheInvalidator`, derrière
-  `Contracts\CacheInterface`/`Support\TransientCache`) : les requêtes WooCommerce répétées à chaque
-  affichage d'une page type (produits vedettes de l'accueil, catégories de l'accueil, produits
-  similaires d'une fiche produit, options Catégorie/Couleur/Taille/Marque de la barre de filtres du
+  `Contracts\CacheInterface`/`Support\TransientCache`) : les requêtes WooCommerce/WordPress
+  répétées à chaque affichage d'une page type (produits vedettes de l'accueil, catégories de
+  l'accueil, aperçu du blog de l'accueil, produits similaires d'une fiche produit, articles
+  similaires d'un article de blog, options Catégorie/Couleur/Taille/Marque de la barre de filtres du
   catalogue) passent par ce cache — seuls les identifiants (jamais le contenu traduit/rendu) sont
   mis en cache, pour ne jamais servir la mauvaise langue à un visiteur une fois en cache.
-  `CacheInvalidator` vide entièrement ce cache dès qu'un produit est enregistré/supprimé ou qu'un
-  terme des taxonomies pertinentes (catégories produit, attributs Couleur/Taille/Marque configurés)
-  change — une politique volontairement simple (vidage complet) plutôt qu'une invalidation fine par
-  clé.
+  `CacheInvalidator` vide entièrement ce cache dès qu'un produit **ou un article** est enregistré/
+  supprimé, ou qu'un terme des taxonomies pertinentes (catégories produit, attributs Couleur/Taille/
+  Marque configurés) change — une politique volontairement simple (vidage complet) plutôt qu'une
+  invalidation fine par clé.
+- **Résolution de l'état liste de souhaits par lot** (`Catalog\ProductCardMapper::map_many()`,
+  `Account\WishlistRepository::wishlisted_ids_for()`) : une grille de N cartes produit (catalogue,
+  accueil, produits similaires) résout l'état « dans ma liste de souhaits » de tout visiteur connecté
+  avec une seule requête groupée (`WHERE product_id IN (...)`) plutôt qu'une requête par carte —
+  `ProductCardMapper::map()` accepte désormais cet état déjà résolu en paramètre plutôt que de le
+  requêter lui-même. La page Liste de souhaits elle-même n'exécute aucune requête de ce type (chaque
+  produit y est par définition déjà dans la liste).
+- **Résolution des catégories de l'accueil par lot** (`FrontPage\Categories::terms_for_ids()`) :
+  un seul `get_terms(['include' => $ids])` plutôt qu'un `get_term()` par catégorie affichée — l'ordre
+  (par nombre de produits) déjà déterminé par le cache d'identifiants est restauré après coup,
+  puisque `get_terms()` ne le préserve pas nativement. `update_term_meta_cache` (activé par défaut
+  par `get_terms()`) précharge aussi en une seule requête le `thumbnail_id` de chaque catégorie
+  retournée.
+- **Requête « commandes du client » mémoïsée sur un rendu** (`Account\OrdersView::customer_orders()`,
+  mémoïsation locale par ID client) : la page « Mes commandes » appelle deux méthodes qui en
+  dépendaient chacune indépendamment (`tabs()`/`orders_for_tab()`) — désormais un seul
+  `wc_get_orders()` (non borné) par rendu de page plutôt que deux.
 - **Lazy loading** : chaque `<img>` du thème en dehors d'un candidat probable au LCP (hero de
   l'accueil/de l'article, image principale de la galerie produit, logo) porte `loading="lazy"`. Le
   contenu d'article passant par `the_content()` bénéficie déjà du lazy loading natif de WordPress
@@ -788,11 +806,12 @@ solar-template/
   fonctions/constantes WordPress réellement utilisées en dehors d'une installation complète
   (transients en mémoire, `ARRAY_A`...) — pas une bibliothèque de stubs du cœur WordPress. Il charge
   aussi deux petits jeux de doublures dédiés : `tests/php/wc-stubs/` (WC_Product/WC_Product_Variable/
-  WC_Cart/WC_Order_Item_Product + `wc_get_product()`, un fichier par classe pour rester conforme à la
-  même norme de code que `inc/`) et `tests/php/wp-ajax-stubs.php` (current_user_can()/
-  check_ajax_referer()/wp_send_json_error()/wp_send_json_success(), ce dernier couple levant
-  `Solar_Template\Tests\Support\WpDieException` pour simuler l'arrêt de requête de `wp_die()`). Zéro
-  avertissement/dépréciation toléré (`failOnWarning`/`failOnDeprecation` dans `phpunit.xml.dist`).
+  WC_Cart/WC_Order/WC_Order_Item_Product/WP_Term + `wc_get_product()`/`wc_get_orders()`/`get_posts()`/
+  `get_terms()`/..., un fichier par classe pour rester conforme à la même norme de code que `inc/`) et
+  `tests/php/wp-ajax-stubs.php` (current_user_can()/check_ajax_referer()/wp_send_json_error()/
+  wp_send_json_success(), ce dernier couple levant `Solar_Template\Tests\Support\WpDieException` pour
+  simuler l'arrêt de requête de `wp_die()`). Zéro avertissement/dépréciation toléré
+  (`failOnWarning`/`failOnDeprecation` dans `phpunit.xml.dist`).
 - JS : Vitest (environnement jsdom), configuré dans `vite.config.js`.
 - Cette suite automatisée ne remplace pas la vérification fonctionnelle manuelle dans
   l'environnement Docker réel (activation du thème, base de données, WooCommerce...), effectuée à

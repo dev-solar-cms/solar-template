@@ -64,7 +64,7 @@ final class ProductRelated {
 		$related_ids = self::related_ids( $product->get_id(), $limit );
 		$products    = array_filter( array_map( 'wc_get_product', $related_ids ) );
 
-		return array_map( array( ProductCardMapper::class, 'map' ), $products );
+		return ProductCardMapper::map_many( $products );
 	}
 
 	/**

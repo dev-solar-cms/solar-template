@@ -42,6 +42,30 @@ final class WishlistRepository {
 	}
 
 	/**
+	 * Batched counterpart of self::is_wishlisted(): resolves every wishlisted product among
+	 * $product_ids with a single `WHERE product_id IN (...)` query instead of one query per product —
+	 * used to map a whole grid of product cards without an unbatched query per card (see
+	 * Solar_Template\Catalog\ProductCardMapper::map_many()).
+	 *
+	 * @param int                 $user_id     Customer's user ID.
+	 * @param array<int, int>     $product_ids Product IDs to check.
+	 * @return array<int, int> The subset of $product_ids this customer has wishlisted.
+	 */
+	public function wishlisted_ids_for( int $user_id, array $product_ids ): array {
+		$product_ids = array_values( array_unique( array_map( 'intval', $product_ids ) ) );
+
+		if ( empty( $product_ids ) ) {
+			return array();
+		}
+
+		$table        = $this->table_name();
+		$placeholders = implode( ', ', array_fill( 0, count( $product_ids ), '%d' ) );
+		$sql          = $this->wpdb->prepare( "SELECT product_id FROM {$table} WHERE user_id = %d AND product_id IN ({$placeholders})", array_merge( array( $user_id ), $product_ids ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+
+		return array_map( 'intval', (array) $this->wpdb->get_col( $sql ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+	}
+
+	/**
 	 * Adds or removes $product_id from $user_id's wishlist, whichever applies.
 	 *
 	 * @param int $user_id    Customer's user ID.

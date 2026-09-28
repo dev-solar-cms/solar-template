@@ -48,13 +48,37 @@ final class FakeWpdb {
 	public int $insert_id = 0;
 
 	/**
-	 * Mimics `$wpdb->prepare()`: substitutes `%d` placeholders.
+	 * Number of times get_col() was called — lets a test assert a batched lookup ran exactly once
+	 * rather than once per row (see Catalog\ProductCardMapperTest).
+	 *
+	 * @var int
+	 */
+	public int $get_col_calls = 0;
+
+	/**
+	 * Number of times get_var() was called — lets a test assert is_wishlisted() (a single-row lookup)
+	 * never ran, e.g. on the Wishlist page itself where every product is trivially already wishlisted
+	 * (see Account\WishlistControllerTest).
+	 *
+	 * @var int
+	 */
+	public int $get_var_calls = 0;
+
+	/**
+	 * Mimics `$wpdb->prepare()`: substitutes `%d`/`%s` placeholders, in order. Accepts either a list
+	 * of variadic arguments or, matching the real `$wpdb->prepare()`'s own supported call convention,
+	 * a single array argument (used by WishlistRepository::wishlisted_ids_for() for a dynamic
+	 * `IN (...)` placeholder count).
 	 *
 	 * @param string $query SQL with placeholders.
-	 * @param mixed  ...$args Values to substitute, in order.
+	 * @param mixed  ...$args Values to substitute, in order, or a single array of them.
 	 * @return string The SQL with placeholders replaced.
 	 */
 	public function prepare( string $query, ...$args ): string {
+		if ( 1 === count( $args ) && is_array( $args[0] ) ) {
+			$args = $args[0];
+		}
+
 		$i = 0;
 
 		return preg_replace_callback(
@@ -75,6 +99,8 @@ final class FakeWpdb {
 	 * @return int
 	 */
 	public function get_var( string $query ): int {
+		++$this->get_var_calls;
+
 		if ( preg_match( '/user_id = (\d+) AND product_id = (\d+)/', $query, $matches ) ) {
 			return $this->matches( (int) $matches[1], (int) $matches[2] ) ? 1 : 0;
 		}
@@ -117,12 +143,29 @@ final class FakeWpdb {
 	}
 
 	/**
-	 * Mimics `$wpdb->get_col()` for `product_ids_for()`.
+	 * Mimics `$wpdb->get_col()` for `product_ids_for()` and `wishlisted_ids_for()`.
 	 *
 	 * @param string $query Already-prepared SQL.
 	 * @return int[]
 	 */
 	public function get_col( string $query ): array {
+		++$this->get_col_calls;
+
+		if ( preg_match( '/WHERE user_id = (\d+) AND product_id IN \(([\d, ]+)\)/', $query, $matches ) ) {
+			$user_id     = (int) $matches[1];
+			$product_ids = array_map( 'intval', array_map( 'trim', explode( ',', $matches[2] ) ) );
+
+			return array_values(
+				array_map(
+					fn( $row ) => $row['product_id'],
+					array_filter(
+						$this->rows,
+						fn( $row ) => $row['user_id'] === $user_id && in_array( $row['product_id'], $product_ids, true )
+					)
+				)
+			);
+		}
+
 		if ( preg_match( '/WHERE user_id = (\d+)/', $query, $matches ) ) {
 			$user_id = (int) $matches[1];
 

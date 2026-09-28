@@ -76,4 +76,40 @@ final class WishlistRepositoryTest extends TestCase {
 
 		$this->assertSame( array( 11, 10 ), $repository->product_ids_for( 1 ) );
 	}
+
+	/**
+	 * wishlisted_ids_for() returns only the subset of the given product IDs the user actually
+	 * wishlisted, scoped to that user, with a single query regardless of how many IDs are checked.
+	 *
+	 * @return void
+	 */
+	public function test_wishlisted_ids_for_returns_only_the_matching_subset(): void {
+		$repository = new WishlistRepository( new FakeWpdb() );
+
+		$repository->add( 1, 10 );
+		$repository->add( 1, 12 );
+		$repository->add( 2, 11 ); // Different user — must never be returned for user 1.
+
+		$this->assertSame( array( 10, 12 ), $repository->wishlisted_ids_for( 1, array( 10, 11, 12, 13 ) ) );
+	}
+
+	/**
+	 * @return void
+	 */
+	public function test_wishlisted_ids_for_returns_an_empty_array_for_an_empty_id_list(): void {
+		$repository = new WishlistRepository( new FakeWpdb() );
+
+		$this->assertSame( array(), $repository->wishlisted_ids_for( 1, array() ) );
+	}
+
+	/**
+	 * @return void
+	 */
+	public function test_wishlisted_ids_for_returns_an_empty_array_when_none_match(): void {
+		$repository = new WishlistRepository( new FakeWpdb() );
+
+		$repository->add( 1, 99 );
+
+		$this->assertSame( array(), $repository->wishlisted_ids_for( 1, array( 10, 11 ) ) );
+	}
 }

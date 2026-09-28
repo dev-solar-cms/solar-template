@@ -12,6 +12,8 @@
 namespace Solar_Template\FrontPage;
 
 use Solar_Template\Blog\PostCardMapper;
+use Solar_Template\Contracts\CacheInterface;
+use Solar_Template\Support\TransientCache;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -60,7 +62,32 @@ final class BlogPreview {
 	 * @return array<int, array> List of template-parts/blog-card.php `$args` arrays.
 	 */
 	public static function posts( int $limit = 3 ): array {
-		$posts = get_posts(
+		$posts = array_filter( array_map( 'get_post', self::post_ids( $limit ) ) );
+
+		return array_map( array( PostCardMapper::class, 'map' ), $posts );
+	}
+
+	/**
+	 * Returns the IDs of the front page's latest published blog posts, through the theme's own cache.
+	 *
+	 * Only the query's post IDs are cached (not the mapped, translated card data self::posts()
+	 * returns) — the theme is multilingual, so caching translated output would risk serving the wrong
+	 * locale once cached, same convention as Solar_Template\FrontPage\FeaturedProducts/Categories. See
+	 * Solar_Template\Cache\CacheInvalidator for when this cache is purged.
+	 *
+	 * @param int $limit Maximum number of posts to return.
+	 * @return array<int, int> Post IDs.
+	 */
+	public static function post_ids( int $limit ): array {
+		$cache = self::cache();
+		$key   = "blog_preview_post_ids_{$limit}";
+		$ids   = $cache->get( $key );
+
+		if ( is_array( $ids ) ) {
+			return $ids;
+		}
+
+		$ids = get_posts(
 			array(
 				'post_type'      => 'post',
 				'post_status'    => 'publish',
@@ -68,9 +95,19 @@ final class BlogPreview {
 				'orderby'        => 'date',
 				'order'          => 'DESC',
 				'no_found_rows'  => true,
+				'fields'         => 'ids',
 			)
 		);
 
-		return array_map( array( PostCardMapper::class, 'map' ), $posts );
+		$cache->set( $key, $ids );
+
+		return $ids;
+	}
+
+	/**
+	 * @return CacheInterface
+	 */
+	private static function cache(): CacheInterface {
+		return new TransientCache();
 	}
 }

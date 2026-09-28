@@ -41,6 +41,31 @@ class WC_Product {
 	protected array $meta = array();
 
 	/**
+	 * @var int
+	 */
+	protected int $image_id = 0;
+
+	/**
+	 * @var float|string
+	 */
+	protected $regular_price = '';
+
+	/**
+	 * @var bool
+	 */
+	protected bool $on_sale = false;
+
+	/**
+	 * @var string
+	 */
+	protected string $name = '';
+
+	/**
+	 * @var bool
+	 */
+	protected bool $visible = true;
+
+	/**
 	 * @param int $id Product ID.
 	 */
 	public function __construct( int $id = 0 ) {
@@ -84,6 +109,13 @@ class WC_Product {
 	}
 
 	/**
+	 * @return bool
+	 */
+	public function is_visible(): bool {
+		return $this->visible;
+	}
+
+	/**
 	 * @param string $key    Meta key.
 	 * @param bool   $single Ignored (this stand-in only ever stores a single value per key).
 	 * @return mixed
@@ -107,6 +139,34 @@ class WC_Product {
 	public function save(): void {}
 
 	/**
+	 * @return int
+	 */
+	public function get_image_id(): int {
+		return $this->image_id;
+	}
+
+	/**
+	 * @return float|string
+	 */
+	public function get_regular_price() {
+		return $this->regular_price;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function is_on_sale(): bool {
+		return $this->on_sale;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function get_name(): string {
+		return $this->name;
+	}
+
+	/**
 	 * Test-only helper — not part of the real WC_Product API.
 	 *
 	 * @param float|string $price Price to set directly (bypasses set_price(), used in fixture setup).
@@ -114,6 +174,56 @@ class WC_Product {
 	 */
 	public function solar_template_test_set_price( $price ): void {
 		$this->price = $price;
+	}
+
+	/**
+	 * Test-only helper — not part of the real WC_Product API.
+	 *
+	 * @param int $image_id Featured image attachment ID.
+	 * @return void
+	 */
+	public function solar_template_test_set_image_id( int $image_id ): void {
+		$this->image_id = $image_id;
+	}
+
+	/**
+	 * Test-only helper — not part of the real WC_Product API.
+	 *
+	 * @param float|string $regular_price Regular (pre-sale) price.
+	 * @return void
+	 */
+	public function solar_template_test_set_regular_price( $regular_price ): void {
+		$this->regular_price = $regular_price;
+	}
+
+	/**
+	 * Test-only helper — not part of the real WC_Product API.
+	 *
+	 * @param bool $on_sale Whether the product is on sale.
+	 * @return void
+	 */
+	public function solar_template_test_set_on_sale( bool $on_sale ): void {
+		$this->on_sale = $on_sale;
+	}
+
+	/**
+	 * Test-only helper — not part of the real WC_Product API.
+	 *
+	 * @param string $name Product name.
+	 * @return void
+	 */
+	public function solar_template_test_set_name( string $name ): void {
+		$this->name = $name;
+	}
+
+	/**
+	 * Test-only helper — not part of the real WC_Product API.
+	 *
+	 * @param bool $visible Catalog visibility state.
+	 * @return void
+	 */
+	public function solar_template_test_set_visible( bool $visible ): void {
+		$this->visible = $visible;
 	}
 
 	/**

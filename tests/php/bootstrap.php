@@ -18,6 +18,8 @@ require_once __DIR__ . '/wc-stubs/WCProductStub.php';
 require_once __DIR__ . '/wc-stubs/WCProductVariableStub.php';
 require_once __DIR__ . '/wc-stubs/WCCartStub.php';
 require_once __DIR__ . '/wc-stubs/WCOrderItemProductStub.php';
+require_once __DIR__ . '/wc-stubs/WCOrderStub.php';
+require_once __DIR__ . '/wc-stubs/WPTermStub.php';
 require_once __DIR__ . '/wc-stubs/functions.php';
 require_once __DIR__ . '/wp-ajax-stubs.php';
 

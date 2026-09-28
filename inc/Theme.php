@@ -86,7 +86,8 @@ final class Theme {
 		add_action( 'pre_get_posts', array( BlogController::class, 'exclude_featured_post' ) );
 
 		add_action( 'save_post_product', array( CacheInvalidator::class, 'flush' ) );
-		add_action( 'deleted_post', array( CacheInvalidator::class, 'flush_if_deleted_product' ) );
+		add_action( 'save_post_post', array( CacheInvalidator::class, 'flush' ) );
+		add_action( 'deleted_post', array( CacheInvalidator::class, 'flush_if_deleted_relevant_post' ) );
 		add_action( 'woocommerce_update_product', array( CacheInvalidator::class, 'flush' ) );
 		add_action( 'saved_term', array( CacheInvalidator::class, 'flush_if_relevant_term' ), 10, 3 );
 		add_action( 'delete_term', array( CacheInvalidator::class, 'flush_if_relevant_term' ), 10, 3 );

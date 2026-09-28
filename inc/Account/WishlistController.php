@@ -65,7 +65,9 @@ final class WishlistController {
 			$product = wc_get_product( $product_id );
 
 			if ( $product && $product->is_visible() ) {
-				$products[] = ProductCardMapper::map( $product );
+				// Every product here is on this customer's wishlist by definition — no per-card (or
+				// even batched) lookup needed, unlike a catalog/home/related-products grid.
+				$products[] = ProductCardMapper::map( $product, true );
 			}
 		}
 

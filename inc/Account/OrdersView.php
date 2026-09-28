@@ -151,13 +151,22 @@ final class OrdersView {
 	 * @return \WC_Order[] Every non-trashed order this customer has ever placed, newest first.
 	 */
 	private static function customer_orders( int $user_id ): array {
-		return wc_get_orders(
-			array(
-				'customer' => $user_id,
-				'limit'    => -1,
-				'orderby'  => 'date',
-				'order'    => 'DESC',
-			)
-		);
+		static $cache = array();
+
+		// self::tabs() and self::orders_for_tab() are both called on the very same page render (see
+		// woocommerce/myaccount/orders.php) — memoized per user ID so that render only ever issues
+		// this unbounded `wc_get_orders()` call once, not twice.
+		if ( ! array_key_exists( $user_id, $cache ) ) {
+			$cache[ $user_id ] = wc_get_orders(
+				array(
+					'customer' => $user_id,
+					'limit'    => -1,
+					'orderby'  => 'date',
+					'order'    => 'DESC',
+				)
+			);
+		}
+
+		return $cache[ $user_id ];
 	}
 }

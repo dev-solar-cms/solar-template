@@ -5,9 +5,10 @@
  * Author: David ROMERA <d.romera.11@gmail.com>
  * Purpose: Flush the theme's cache (Solar_Template\Support\TransientCache, behind
  *          Solar_Template\Contracts\CacheInterface) whenever WordPress/WooCommerce content that a
- *          cached read method depends on changes — products, and the terms of product categories or
- *          the catalog's configured Color/Size/Brand attribute taxonomies — so a cached page never
- *          keeps serving stale data past the next relevant save.
+ *          cached read method depends on changes — products, the terms of product categories or the
+ *          catalog's configured Color/Size/Brand attribute taxonomies, and blog posts (read by
+ *          Solar_Template\FrontPage\BlogPreview/Solar_Template\Blog\RelatedArticles) — so a cached
+ *          page never keeps serving stale data past the next relevant save.
  *
  * @package Solar_Template
  */
@@ -28,16 +29,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 final class CacheInvalidator {
 
 	/**
-	 * Flushes the theme's cache when a permanently deleted post was a product (a trashed product
-	 * already goes through `save_post_product`, which self::flush() is also hooked on directly).
+	 * Flushes the theme's cache when a permanently deleted post was a product or a blog post (a
+	 * trashed one already goes through `save_post_product`/`save_post_post`, which self::flush() is
+	 * also hooked on directly).
 	 *
 	 * @param int $post_id Deleted post ID.
 	 * @return void
 	 */
-	public static function flush_if_deleted_product( int $post_id ): void {
-		if ( 'product' === get_post_type( $post_id ) ) {
+	public static function flush_if_deleted_relevant_post( int $post_id ): void {
+		if ( self::is_relevant_post_type( (string) get_post_type( $post_id ) ) ) {
 			self::flush();
 		}
+	}
+
+	/**
+	 * Reports whether a post type is read by one of the theme's cached queries.
+	 *
+	 * @param string $post_type Post type slug.
+	 * @return bool
+	 */
+	public static function is_relevant_post_type( string $post_type ): bool {
+		return in_array( $post_type, array( 'product', 'post' ), true );
 	}
 
 	/**

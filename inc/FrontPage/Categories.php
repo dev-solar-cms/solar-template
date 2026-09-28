@@ -61,15 +61,13 @@ final class Categories {
 			return array();
 		}
 
-		$terms = array();
+		$ids = self::term_ids( $limit );
 
-		foreach ( self::term_ids( $limit ) as $term_id ) {
-			$term = get_term( $term_id, 'product_cat' );
-
-			if ( $term instanceof \WP_Term ) {
-				$terms[] = $term;
-			}
+		if ( empty( $ids ) ) {
+			return array();
 		}
+
+		$terms = self::terms_for_ids( $ids );
 
 		if ( empty( $terms ) ) {
 			return array();
@@ -88,6 +86,49 @@ final class Categories {
 			},
 			$terms
 		);
+	}
+
+	/**
+	 * Resolves $ids to their real `WP_Term` objects with a single `get_terms(['include' => $ids])`
+	 * call, instead of one `get_term()` call per ID — reordered to match $ids' own order (the
+	 * product-count order self::term_ids() already determined), since `get_terms()` does not
+	 * otherwise preserve it. `get_terms()`'s own default `update_term_meta_cache` (true) also primes
+	 * every returned term's meta in that same single query, so the `thumbnail_id` lookups in
+	 * self::categories()'s own `array_map()` below never issue a separate query per term either.
+	 *
+	 * @param array<int, int> $ids Term IDs, in the order they should be returned.
+	 * @return array<int, \WP_Term>
+	 */
+	public static function terms_for_ids( array $ids ): array {
+		$terms = get_terms(
+			array(
+				'taxonomy'   => 'product_cat',
+				'include'    => $ids,
+				'hide_empty' => false,
+			)
+		);
+
+		if ( is_wp_error( $terms ) || empty( $terms ) ) {
+			return array();
+		}
+
+		$terms_by_id = array();
+
+		foreach ( $terms as $term ) {
+			if ( $term instanceof \WP_Term ) {
+				$terms_by_id[ $term->term_id ] = $term;
+			}
+		}
+
+		$ordered_terms = array();
+
+		foreach ( $ids as $id ) {
+			if ( isset( $terms_by_id[ $id ] ) ) {
+				$ordered_terms[] = $terms_by_id[ $id ];
+			}
+		}
+
+		return $ordered_terms;
 	}
 
 	/**

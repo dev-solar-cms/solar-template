@@ -11,7 +11,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `package.json` — champ `version`
 - `.env`/`.env.example` — `SOLAR_TEMPLATE_VERSION` (jamais la source de vérité à elle seule, mais exposée pour l'écran de réglages)
 
-Version actuelle : `0.7.9`.
+Version actuelle : `0.7.10`.
 
 ## Avant une release
 
@@ -31,6 +31,26 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.7.10 — corrections de performance (requêtes N+1 et mise en cache)
+
+- L'état « liste de souhaits » d'une grille de cartes produit (catalogue, accueil, produits
+  similaires) se résout désormais avec une seule requête groupée par page, plutôt qu'une requête par
+  carte affichée — la page Liste de souhaits elle-même n'en exécute plus aucune, chaque produit y
+  étant par définition déjà dans la liste. Rendu strictement identique.
+- Les catégories de la section « Collections » de la page d'accueil se résolvent désormais avec une
+  seule requête groupée, plutôt qu'une requête par catégorie affichée (le préchargement natif de
+  WordPress qui en découle élimine aussi, au passage, une requête par catégorie pour son image de
+  vignette). Même ordre (par nombre de produits), mêmes catégories.
+- La page « Mes commandes » de l'espace client n'exécute plus qu'une seule requête de commandes non
+  bornée par rendu de page, au lieu de deux (les onglets et la liste de commandes en dépendaient
+  chacun séparément).
+- L'aperçu du blog de la page d'accueil et les articles similaires d'une fiche article passent
+  désormais par le cache du thème (déjà utilisé par les sections équivalentes du catalogue), avec un
+  nouveau déclencheur d'invalidation sur la sauvegarde/suppression d'un article — un article publié
+  ou modifié reste donc toujours reflété immédiatement dans les deux sections.
+- Suite de tests complète (PHP et JS) exécutée intégralement sur l'ensemble du projet et confirmée
+  au vert avant publication.
 
 ### 0.7.9 — durcissement sécurité et fiabilité
 

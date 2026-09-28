@@ -22,16 +22,22 @@ if ( ! have_posts() ) {
 	return;
 }
 
+$catalog_products = array();
+
 while ( have_posts() ) :
 	the_post();
 
 	$catalog_product = wc_get_product( get_the_ID() );
 
-	if ( ! $catalog_product ) {
-		continue;
+	if ( $catalog_product ) {
+		$catalog_products[] = $catalog_product;
 	}
-
-	get_template_part( 'template-parts/product-card', null, ProductCardMapper::map( $catalog_product ) );
 endwhile;
 
 wp_reset_postdata();
+
+// Mapped as one batch (not inside the loop above) so the whole page's wishlist state resolves with
+// a single query rather than one per card — see ProductCardMapper::map_many().
+foreach ( ProductCardMapper::map_many( $catalog_products ) as $card_args ) {
+	get_template_part( 'template-parts/product-card', null, $card_args );
+}

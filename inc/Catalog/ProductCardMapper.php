@@ -23,10 +23,42 @@ if ( ! defined( 'ABSPATH' ) ) {
 final class ProductCardMapper {
 
 	/**
-	 * @param \WC_Product $product Product to map.
+	 * Maps a list of products at once, resolving every product's wishlist state with a single batched
+	 * query (Account\WishlistRepository::wishlisted_ids_for()) instead of the one-query-per-card
+	 * pattern self::map() alone would produce across a grid.
+	 *
+	 * @param array<int, \WC_Product> $products Products to map.
+	 * @return array<int, array> List of template-parts/product-card.php `$args` arrays, same order as
+	 *                           $products.
+	 */
+	public static function map_many( array $products ): array {
+		if ( empty( $products ) ) {
+			return array();
+		}
+
+		$wishlisted_ids = array();
+
+		if ( is_user_logged_in() ) {
+			$product_ids    = array_map( static fn( \WC_Product $product ): int => $product->get_id(), $products );
+			$wishlisted_ids = ( new WishlistRepository( $GLOBALS['wpdb'] ) )->wishlisted_ids_for( get_current_user_id(), $product_ids );
+		}
+
+		return array_map(
+			static fn( \WC_Product $product ): array => self::map( $product, in_array( $product->get_id(), $wishlisted_ids, true ) ),
+			$products
+		);
+	}
+
+	/**
+	 * @param \WC_Product $product     Product to map.
+	 * @param bool        $in_wishlist Whether $product is on the current visitor's wishlist —
+	 *                                 resolved once per page by the caller (self::map_many() for a
+	 *                                 grid, or a value already known some other way, e.g. every
+	 *                                 product on the Wishlist page itself is trivially `true`) rather
+	 *                                 than queried again here, to avoid an unbatched query per card.
 	 * @return array See template-parts/product-card.php's documented `$args` keys.
 	 */
-	public static function map( \WC_Product $product ): array {
+	public static function map( \WC_Product $product, bool $in_wishlist ): array {
 		$image_id = $product->get_image_id();
 		$price    = $product->get_price();
 		$regular  = $product->get_regular_price();
@@ -57,9 +89,7 @@ final class ProductCardMapper {
 			'regular_price'    => '' !== $regular ? (float) $regular : null,
 			'currency_symbol'  => get_woocommerce_currency_symbol(),
 			'discount_percent' => $discount_percent,
-			'in_wishlist'      => is_user_logged_in()
-				? ( new WishlistRepository( $GLOBALS['wpdb'] ) )->is_wishlisted( get_current_user_id(), $product->get_id() )
-				: false,
+			'in_wishlist'      => $in_wishlist,
 			'swatches'         => array(),
 		);
 	}

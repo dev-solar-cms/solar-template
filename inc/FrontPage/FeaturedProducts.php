@@ -70,7 +70,7 @@ final class FeaturedProducts {
 
 		$products = array_filter( array_map( 'wc_get_product', self::product_ids( $limit ) ) );
 
-		return array_map( array( ProductCardMapper::class, 'map' ), $products );
+		return ProductCardMapper::map_many( $products );
 	}
 
 	/**

@@ -12,6 +12,9 @@
 
 namespace Solar_Template\Blog;
 
+use Solar_Template\Contracts\CacheInterface;
+use Solar_Template\Support\TransientCache;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -65,19 +68,55 @@ final class RelatedArticles {
 			return array();
 		}
 
-		$posts = get_posts(
+		$posts = array_filter( array_map( 'get_post', self::related_post_ids( $post->ID, $category_ids, $limit ) ) );
+
+		return array_map( array( PostCardMapper::class, 'map' ), $posts );
+	}
+
+	/**
+	 * Returns the given article's related post IDs, through the theme's own cache.
+	 *
+	 * Only the query's post IDs are cached, not the mapped, translated card data self::posts()
+	 * returns — same convention as Solar_Template\Product\ProductRelated for the product page's own
+	 * related products. See Solar_Template\Cache\CacheInvalidator for when this cache is purged.
+	 *
+	 * @param int             $post_id      Current article's post ID.
+	 * @param array<int, int> $category_ids Current article's category term IDs.
+	 * @param int             $limit        Maximum number of related articles to return.
+	 * @return array<int, int> Related post IDs.
+	 */
+	public static function related_post_ids( int $post_id, array $category_ids, int $limit ): array {
+		$cache = self::cache();
+		$key   = "related_article_ids_{$post_id}_{$limit}";
+		$ids   = $cache->get( $key );
+
+		if ( is_array( $ids ) ) {
+			return $ids;
+		}
+
+		$ids = get_posts(
 			array(
 				'post_type'      => 'post',
 				'post_status'    => 'publish',
 				'posts_per_page' => $limit,
-				'post__not_in'   => array( $post->ID ),
+				'post__not_in'   => array( $post_id ),
 				'category__in'   => $category_ids,
 				'orderby'        => 'date',
 				'order'          => 'DESC',
 				'no_found_rows'  => true,
+				'fields'         => 'ids',
 			)
 		);
 
-		return array_map( array( PostCardMapper::class, 'map' ), $posts );
+		$cache->set( $key, $ids );
+
+		return $ids;
+	}
+
+	/**
+	 * @return CacheInterface
+	 */
+	private static function cache(): CacheInterface {
+		return new TransientCache();
 	}
 }
