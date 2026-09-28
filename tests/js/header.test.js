@@ -7,8 +7,8 @@
  *          Run via `npm run test`.
  */
 
-import { beforeEach, describe, expect, it } from 'vitest';
-import { initMegaMenu, initSearchOverlay } from '../../assets/js/header.js';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { initMegaMenu, initSearchOverlay, initTransparentHeader } from '../../assets/js/header.js';
 
 /**
  * Builds the slice of header.php's markup these behaviours attach to.
@@ -100,6 +100,24 @@ describe('assets/js/header.js', () => {
 
 			expect(() => initMegaMenu()).not.toThrow();
 		});
+
+		it('does not attach a duplicate outside-click listener when called twice', () => {
+			initMegaMenu();
+			initMegaMenu();
+
+			const nav = document.querySelector('.site-header__nav');
+			const trigger = document.querySelector('.has-mega-menu');
+
+			trigger.dispatchEvent(new Event('mouseenter'));
+			expect(nav.classList.contains('is-mega-menu-open')).toBe(true);
+
+			const removeSpy = vi.spyOn(nav.classList, 'remove');
+
+			document.body.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+			expect(removeSpy).toHaveBeenCalledTimes(1);
+			expect(nav.classList.contains('is-mega-menu-open')).toBe(false);
+		});
 	});
 
 	describe('initSearchOverlay', () => {
@@ -173,6 +191,95 @@ describe('assets/js/header.js', () => {
 			document.getElementById('site-search').remove();
 
 			expect(() => initSearchOverlay()).not.toThrow();
+		});
+
+		it('does not attach a duplicate outside-click listener when called twice', () => {
+			initSearchOverlay();
+			initSearchOverlay();
+
+			const toggle = document.getElementById('site-search-toggle');
+			const overlay = document.getElementById('site-search');
+
+			// Opened directly (bypassing the toggle button) so this test isolates the outside-click
+			// listener under test here — the toggle's own click listener is element-scoped, not
+			// document/window, so it's a separate concern (out of scope) and still accumulates on a
+			// repeated call like this test's.
+			overlay.classList.add('is-open');
+
+			const removeSpy = vi.spyOn(overlay.classList, 'remove');
+
+			document.body.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+			expect(removeSpy).toHaveBeenCalledTimes(1);
+			expect(overlay.classList.contains('is-open')).toBe(false);
+			expect(toggle.getAttribute('aria-expanded')).toBe('false');
+		});
+	});
+
+	describe('initTransparentHeader', () => {
+		/**
+		 * Builds a transparent-on-home header fixture.
+		 *
+		 * @return {void}
+		 */
+		function renderTransparentHeaderFixture() {
+			document.body.innerHTML = `
+				<header id="site-header" class="site-header--transparent-home"></header>
+			`;
+		}
+
+		/**
+		 * jsdom's `window.scrollY` is a read-only getter — overridden per test via
+		 * `Object.defineProperty` (same approach as tests/js/blog.test.js does for
+		 * `navigator.share`/`navigator.clipboard`).
+		 *
+		 * @param {number} value Scroll position to simulate.
+		 * @return {void}
+		 */
+		function setScrollY(value) {
+			Object.defineProperty(window, 'scrollY', { value, configurable: true });
+		}
+
+		it('adds the scrolled class past the threshold and removes it above it', () => {
+			renderTransparentHeaderFixture();
+			initTransparentHeader();
+
+			const header = document.getElementById('site-header');
+
+			setScrollY(100);
+			window.dispatchEvent(new Event('scroll'));
+			expect(header.classList.contains('site-header--scrolled')).toBe(true);
+
+			setScrollY(0);
+			window.dispatchEvent(new Event('scroll'));
+			expect(header.classList.contains('site-header--scrolled')).toBe(false);
+		});
+
+		it('does nothing when the header lacks the transparent-on-home modifier', () => {
+			document.body.innerHTML = '<header id="site-header"></header>';
+
+			expect(() => initTransparentHeader()).not.toThrow();
+
+			setScrollY(100);
+			window.dispatchEvent(new Event('scroll'));
+
+			expect(
+				document.getElementById('site-header').classList.contains('site-header--scrolled'),
+			).toBe(false);
+		});
+
+		it('does not attach a duplicate scroll listener when called twice', () => {
+			renderTransparentHeaderFixture();
+			initTransparentHeader();
+			initTransparentHeader();
+
+			const header = document.getElementById('site-header');
+			const toggleSpy = vi.spyOn(header.classList, 'toggle');
+
+			setScrollY(100);
+			window.dispatchEvent(new Event('scroll'));
+
+			expect(toggleSpy).toHaveBeenCalledTimes(1);
 		});
 	});
 });

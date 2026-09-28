@@ -9,6 +9,13 @@
  *          `window.solarTemplateNewsletter`, localized by `wp_localize_script()`.
  */
 
+// Tracks each form's current `submit` handler (there may be more than one matching form on the
+// page, so a single module-level variable like assets/js/header.js/catalog.js use for their own
+// `document`/`window` listener isn't enough here) — a repeated call re-wires each form instead of
+// accumulating a second listener on it. A WeakMap rather than a plain Map so a form element
+// removed from the page can still be garbage-collected.
+const formSubmitHandlers = new WeakMap();
+
 /**
  * Wires up every `.js-newsletter-form` on the page (there may be more than one, e.g. the front
  * page section and the footer's own form). Does nothing when the required localized data is
@@ -24,10 +31,19 @@ export function initNewsletterForms() {
 	}
 
 	document.querySelectorAll('.js-newsletter-form').forEach((form) => {
-		form.addEventListener('submit', (event) => {
+		const existingHandler = formSubmitHandlers.get(form);
+
+		if (existingHandler) {
+			form.removeEventListener('submit', existingHandler);
+		}
+
+		const handler = (event) => {
 			event.preventDefault();
 			handleSubmit(form, config);
-		});
+		};
+
+		formSubmitHandlers.set(form, handler);
+		form.addEventListener('submit', handler);
 	});
 }
 

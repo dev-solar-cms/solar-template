@@ -18,6 +18,13 @@
  */
 const TRANSPARENT_HEADER_SCROLL_THRESHOLD = 40;
 
+// Tracks the listeners each function below binds directly to `document`/`window` (rather than to
+// an element scoped to the header itself), so a repeated call re-wires them instead of
+// accumulating duplicates — same convention as assets/js/catalog.js's own module-level tracking.
+let transparentHeaderScrollHandler = null;
+let megaMenuOutsideClickHandler = null;
+let searchOverlayOutsideClickHandler = null;
+
 /**
  * Wires up the transparent-on-home header: adds/removes `.site-header--scrolled` as the page
  * scrolls past TRANSPARENT_HEADER_SCROLL_THRESHOLD, in either direction. A no-op when the header
@@ -32,15 +39,19 @@ export function initTransparentHeader() {
 		return;
 	}
 
-	const updateScrolledState = () => {
+	if (transparentHeaderScrollHandler) {
+		window.removeEventListener('scroll', transparentHeaderScrollHandler);
+	}
+
+	transparentHeaderScrollHandler = () => {
 		header.classList.toggle(
 			'site-header--scrolled',
 			window.scrollY > TRANSPARENT_HEADER_SCROLL_THRESHOLD,
 		);
 	};
 
-	updateScrolledState();
-	window.addEventListener('scroll', updateScrolledState, { passive: true });
+	transparentHeaderScrollHandler();
+	window.addEventListener('scroll', transparentHeaderScrollHandler, { passive: true });
 }
 
 /**
@@ -107,11 +118,16 @@ export function initMegaMenu() {
 		}
 	});
 
-	document.addEventListener('click', (event) => {
+	if (megaMenuOutsideClickHandler) {
+		document.removeEventListener('click', megaMenuOutsideClickHandler);
+	}
+
+	megaMenuOutsideClickHandler = (event) => {
 		if (!nav.contains(event.target)) {
 			close();
 		}
-	});
+	};
+	document.addEventListener('click', megaMenuOutsideClickHandler);
 }
 
 /**
@@ -171,7 +187,11 @@ export function initSearchOverlay() {
 		}
 	});
 
-	document.addEventListener('click', (event) => {
+	if (searchOverlayOutsideClickHandler) {
+		document.removeEventListener('click', searchOverlayOutsideClickHandler);
+	}
+
+	searchOverlayOutsideClickHandler = (event) => {
 		if (
 			overlay.classList.contains('is-open') &&
 			!overlay.contains(event.target) &&
@@ -179,5 +199,6 @@ export function initSearchOverlay() {
 		) {
 			close();
 		}
-	});
+	};
+	document.addEventListener('click', searchOverlayOutsideClickHandler);
 }

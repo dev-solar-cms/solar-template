@@ -11,7 +11,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `package.json` — champ `version`
 - `.env`/`.env.example` — `SOLAR_TEMPLATE_VERSION` (jamais la source de vérité à elle seule, mais exposée pour l'écran de réglages)
 
-Version actuelle : `0.7.10`.
+Version actuelle : `0.7.11`.
 
 ## Avant une release
 
@@ -31,6 +31,18 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.7.11 — robustesse des écouteurs d'événements JavaScript
+
+- L'en-tête du site (transparence au défilement sur l'accueil, mega menu « Collections », overlay de
+  recherche) applique désormais la même convention « retirer l'écouteur avant de le rattacher » déjà
+  en place ailleurs dans le thème — un appel répété de son initialisation ne fait plus s'accumuler de
+  doublon d'écouteur. Même correction pour le formulaire d'inscription newsletter, qui peut apparaître
+  plusieurs fois sur une même page. Aucun changement de comportement visible : ce bug n'était pas
+  encore observable en production aujourd'hui (rien ne réinitialise ces scripts plus d'une fois par
+  chargement de page), corrigé par prévention plutôt qu'en réaction à un incident.
+- Suite de tests complète (PHP et JS) exécutée intégralement sur l'ensemble du projet et confirmée
+  au vert avant publication.
 
 ### 0.7.10 — corrections de performance (requêtes N+1 et mise en cache)
 

@@ -778,6 +778,12 @@ solar-template/
   (prix réellement facturé au client) disposent maintenant d'un répertoire de tests dédié
   (`tests/php/Product/`), couvrant notamment le cas combiné gravure + variation pour garantir que la
   surcharge n'est jamais cumulée sur un prix déjà ajusté.
+- **Écouteurs d'événements `document`/`window`** : `assets/js/header.js` (`initTransparentHeader`/
+  `initMegaMenu`/`initSearchOverlay`) suit désormais la même convention « retirer l'écouteur avant de
+  le rattacher » déjà en place dans `assets/js/catalog.js` — un appel répété d'une de ces fonctions ne
+  fait plus s'accumuler de doublon. `assets/js/newsletter.js` (`initNewsletterForms`) applique le même
+  principe pour ses écouteurs `submit`, portés par plusieurs éléments de formulaire plutôt que par
+  `document`/`window` — suivis via une `WeakMap` plutôt qu'une simple variable de niveau module.
 
 ### Design system (`assets/scss/_tokens.scss`)
 

@@ -92,6 +92,26 @@ describe('assets/js/newsletter.js', () => {
 		expect(input.value).toBe('jane@example.test');
 	});
 
+	it('does not attach a duplicate submit listener when called twice', async () => {
+		const fetchMock = vi.fn().mockResolvedValue({
+			json: () => Promise.resolve({ success: true, data: { message: 'Thank you!' } }),
+		});
+		vi.stubGlobal('fetch', fetchMock);
+
+		initNewsletterForms();
+		initNewsletterForms();
+
+		const form = document.querySelector('.js-newsletter-form');
+		const input = form.querySelector('input[type="email"]');
+		input.value = 'jane@example.test';
+
+		form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+		await vi.waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+		await new Promise((resolve) => setTimeout(resolve, 0));
+
+		expect(fetchMock).toHaveBeenCalledTimes(1);
+	});
+
 	it('re-enables the submit button after the request settles', async () => {
 		const fetchMock = vi.fn().mockResolvedValue({
 			json: () => Promise.resolve({ success: true, data: { message: 'Thank you!' } }),
