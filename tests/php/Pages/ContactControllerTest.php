@@ -5,7 +5,10 @@
  * Author: David ROMERA <d.romera.11@gmail.com>
  * Purpose: Assert the pure validation logic (required fields, email format, consent) and the
  *          honeypot spam check, independently of the real WordPress request-handling flow (verified
- *          manually in Docker instead, per tests/php/bootstrap.php's own purpose note).
+ *          manually in Docker instead, per tests/php/bootstrap.php's own purpose note) — including
+ *          that flow's own `wp_mail()`-failure branch (feedback_from_query() now recognizing the
+ *          distinct `mail_failed` status maybe_handle_submission() redirects with, confirmed against
+ *          a real send failure in Docker per RELEASE.md).
  *
  * @package Solar_Template
  */
@@ -104,5 +107,39 @@ final class ContactControllerTest extends TestCase {
 	 */
 	public function test_whitespace_only_honeypot_is_not_spam(): void {
 		$this->assertFalse( ContactController::is_spam( '   ' ) );
+	}
+
+	/**
+	 * @return void
+	 */
+	protected function tearDown(): void {
+		$_GET = array();
+
+		parent::tearDown();
+	}
+
+	/**
+	 * @return void
+	 */
+	public function test_feedback_from_query_recognizes_the_mail_failed_status(): void {
+		$_GET['contact'] = 'mail_failed';
+
+		$this->assertSame( 'mail_failed', ContactController::feedback_from_query() );
+	}
+
+	/**
+	 * @return void
+	 */
+	public function test_feedback_from_query_ignores_an_unknown_status(): void {
+		$_GET['contact'] = 'something-else';
+
+		$this->assertNull( ContactController::feedback_from_query() );
+	}
+
+	/**
+	 * @return void
+	 */
+	public function test_feedback_from_query_returns_null_when_absent(): void {
+		$this->assertNull( ContactController::feedback_from_query() );
 	}
 }

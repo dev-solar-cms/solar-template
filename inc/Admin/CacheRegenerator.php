@@ -43,14 +43,27 @@ final class CacheRegenerator {
 	}
 
 	/**
+	 * Builds the exact shell command self::run_build() executes, from a single fixed, escaped path —
+	 * never a request-derived value (this whole class reads no `$_POST`/`$_GET`/`$_REQUEST` at all,
+	 * see tests/php/Security/NonceTrustSweepTest.php's own sweep for the request-write side of that
+	 * same guarantee). Pure function, so it's unit tested directly (see
+	 * tests/php/Admin/CacheRegeneratorTest.php) without ever actually invoking a shell.
+	 *
+	 * @param string $theme_dir Absolute path of the theme directory to build in.
+	 * @return string
+	 */
+	public static function build_command( string $theme_dir ): string {
+		return sprintf( 'cd %s && npm run build 2>&1', escapeshellarg( $theme_dir ) );
+	}
+
+	/**
 	 * Runs `npm run build` in the theme directory.
 	 *
 	 * @return array{success: bool, message: string}
 	 */
 	private static function run_build(): array {
-		$theme_dir = get_template_directory();
-		$command   = sprintf( 'cd %s && npm run build 2>&1', escapeshellarg( $theme_dir ) );
-		$output    = shell_exec( $command ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec -- see self::is_build_tooling_available()'s own ignore comment above.
+		$command = self::build_command( get_template_directory() );
+		$output  = shell_exec( $command ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec -- see self::is_build_tooling_available()'s own ignore comment above.
 
 		// `npm run build` (Vite) writes its own success/error summary to stdout/stderr; a null
 		// `shell_exec()` return only ever means the command itself couldn't be launched at all.

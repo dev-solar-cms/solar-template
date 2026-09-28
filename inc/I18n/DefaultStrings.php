@@ -1642,6 +1642,10 @@ final class DefaultStrings {
 				'fr_FR' => 'Merci de renseigner tous les champs requis avec une adresse email valide.',
 				'en_US' => 'Please fill in every required field with a valid email address.',
 			),
+			'Something went wrong sending your message. Please try again in a moment, or reach us directly by another channel.' => array(
+				'fr_FR' => "Une erreur est survenue lors de l'envoi de votre message. Merci de réessayer dans un instant, ou de nous contacter directement par un autre moyen.",
+				'en_US' => 'Something went wrong sending your message. Please try again in a moment, or reach us directly by another channel.',
+			),
 			'Company'                                      => array(
 				'fr_FR' => 'Société',
 				'en_US' => 'Company',

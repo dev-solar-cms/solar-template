@@ -183,7 +183,9 @@
 			back to the configured default language and then the site's own language. This tab also
 			lists every active language with a download link for its already-compiled <code>.mo</code>, and a
 			drag &amp; drop zone to import a <code>.po</code>/<code>.mo</code> file (the <code>gettext/gettext</code> library, already a
-			dependency) into the same catalog the two screens below edit directly.
+			dependency) into the same catalog the two screens below edit directly. The imported file is
+			validated against its real content (not just its extension) and an explicit size cap before
+			any processing.
 		</p>
 		<p>
 			A "Manage languages →" button opens the <strong>Languages</strong> page

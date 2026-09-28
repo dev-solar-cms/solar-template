@@ -87,7 +87,10 @@
 			rejetée. La validation des champs (champs requis, format email, consentement RGPD) est une
 			fonction pure sans dépendance à WordPress, testée unitairement directement. Une soumission
 			valide envoie un email à l'administrateur du site via <code>wp_mail()</code> natif, avec
-			l'adresse du visiteur définie comme adresse de réponse (Reply-To).
+			l'adresse du visiteur définie comme adresse de réponse (Reply-To). Ce formulaire n'ayant
+			aucune persistance en base propre (le mail est la seule trace de la demande), un échec de
+			<code>wp_mail()</code> est détecté et affiché au visiteur comme un état d'erreur dédié —
+			jamais comme un faux succès — avec une trace de secours dans les logs serveur.
 		</p>
 		<p>
 			Le panneau de coordonnées (adresse, téléphone, email, horaires, réseaux sociaux, temps de

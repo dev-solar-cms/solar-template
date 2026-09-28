@@ -198,7 +198,9 @@
 			site elle-même. Cet onglet liste aussi chaque langue active avec un lien de téléchargement
 			de son <code>.mo</code> déjà compilé, et une zone de glisser-déposer pour importer un fichier <code>.po</code> ou
 			<code>.mo</code> (bibliothèque <code>gettext/gettext</code>, déjà une dépendance du thème) dans le même catalogue
-			que les deux écrans ci-dessous modifient directement.
+			que les deux écrans ci-dessous modifient directement. Le fichier importé est validé sur son
+			contenu réel (pas seulement son extension) et sur un plafond de taille explicite avant tout
+			traitement.
 		</p>
 		<p>
 			Un bouton « Gérer les langues → » ouvre la page <strong>Langues</strong>

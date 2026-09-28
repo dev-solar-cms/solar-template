@@ -86,7 +86,10 @@
 			mail — never tipping off a bot that its submission was rejected. Field validation (required
 			fields, email format, RGPD consent) is a pure function with no WordPress dependency, unit
 			tested directly. A valid submission emails the site admin via native <code>wp_mail()</code>,
-			with the visitor's own address set as the Reply-To.
+			with the visitor's own address set as the Reply-To. This form has no database persistence
+			of its own (the email is the only trace of the request), so a failed <code>wp_mail()</code>
+			call is detected and shown to the visitor as its own dedicated error state — never a false
+			success — with a fallback trace left in the server logs.
 		</p>
 		<p>
 			The store details panel (address, phone, email, hours, social links, guaranteed response

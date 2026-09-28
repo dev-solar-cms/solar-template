@@ -6,9 +6,12 @@
  * Purpose: The contact form's WordPress-hook "controller" in the DECISIONS.md MVC sense — validates
  *          and processes the plain (non-AJAX) POST submitted from page-contact.php, with a nonce
  *          plus a honeypot field as basic anti-spam, and emails the site admin via native
- *          `wp_mail()` — no third-party form plugin (DECISIONS.md §2). Field validation and the
- *          honeypot check are pure functions with no WordPress dependency, so they can be unit
- *          tested directly (see tests/php/Pages/ContactControllerTest.php).
+ *          `wp_mail()` — no third-party form plugin (DECISIONS.md §2). This form has no database
+ *          persistence of its own, so a failed `wp_mail()` call is reported to the visitor as a
+ *          distinct error state (never a false success) and logged as a fallback trace, instead of
+ *          being silently swallowed. Field validation and the honeypot check are pure functions with
+ *          no WordPress dependency, so they can be unit tested directly (see
+ *          tests/php/Pages/ContactControllerTest.php).
  *
  * @package Solar_Template
  */
@@ -80,7 +83,14 @@ final class ContactController {
 			self::redirect_with_feedback( 'error' );
 		}
 
-		self::notify_admin( $data );
+		if ( ! self::notify_admin( $data ) ) {
+			// The form has no database persistence of its own (see this class' own header docblock)
+			// — the mail *is* the only trace of the request, so a failed send must never look like a
+			// success to the visitor, and must leave at least this log line behind.
+			error_log( sprintf( 'Solar Template: contact form message from "%s" could not be emailed to the site admin.', $data['email'] ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- deliberate fallback trace for a message that has no other persistence (see this method's own comment above).
+
+			self::redirect_with_feedback( 'mail_failed' );
+		}
 
 		self::redirect_with_feedback( 'success' );
 	}
@@ -138,7 +148,7 @@ final class ContactController {
 
 		$status = sanitize_key( wp_unslash( $_GET['contact'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only feedback flag, not a state-changing request.
 
-		return in_array( $status, array( 'success', 'error' ), true ) ? $status : null;
+		return in_array( $status, array( 'success', 'error', 'mail_failed' ), true ) ? $status : null;
 	}
 
 	/**
@@ -146,9 +156,9 @@ final class ContactController {
 	 * Reply-To so a direct reply reaches them.
 	 *
 	 * @param array{first_name: string, last_name: string, email: string, subject: string, message: string} $data Validated form data.
-	 * @return void
+	 * @return bool True when `wp_mail()` reports the message was sent.
 	 */
-	private static function notify_admin( array $data ): void {
+	private static function notify_admin( array $data ): bool {
 		$subjects      = self::subjects();
 		$subject_label = $subjects[ $data['subject'] ] ?? $data['subject'];
 
@@ -161,7 +171,7 @@ final class ContactController {
 			$data['message']
 		);
 
-		wp_mail(
+		return wp_mail(
 			get_option( 'admin_email' ),
 			sprintf(
 				/* translators: %s: message subject. */

@@ -7,7 +7,10 @@
  *          "sav" My Account endpoint's content and its plain (non-AJAX) form submission handler,
  *          delegating storage to SupportRequestRepository and rendering to
  *          template-parts/account/sav.php. Notifies the site admin by native `wp_mail()` rather than
- *          a full ticketing system, per the design handoff's own explicit scope note.
+ *          a full ticketing system, per the design handoff's own explicit scope note. Unlike the
+ *          contact form, the request itself is always persisted before that notification is
+ *          attempted, so a failed `wp_mail()` call here is only logged as a fallback trace — never
+ *          reported to the customer as an error, since their request was not actually lost.
  *
  * @package Solar_Template
  */
@@ -193,7 +196,7 @@ final class SupportRequestController {
 			$message
 		);
 
-		wp_mail(
+		$sent = wp_mail(
 			get_option( 'admin_email' ),
 			sprintf(
 				/* translators: %s: request subject. */
@@ -202,6 +205,13 @@ final class SupportRequestController {
 			),
 			$body
 		);
+
+		if ( ! $sent ) {
+			// The request itself is already persisted (self::repository()->create() above) — a
+			// failed notification only means the admin isn't alerted immediately, not that the
+			// request is lost, so this is a log line rather than a visitor-facing error state.
+			error_log( sprintf( 'Solar Template: admin notification for support request "%s" (user #%d) could not be emailed.', $subject, $user->ID ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- deliberate fallback trace, see this method's own comment above.
+		}
 	}
 
 	/**

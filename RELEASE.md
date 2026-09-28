@@ -11,7 +11,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `package.json` — champ `version`
 - `.env`/`.env.example` — `SOLAR_TEMPLATE_VERSION` (jamais la source de vérité à elle seule, mais exposée pour l'écran de réglages)
 
-Version actuelle : `0.7.8`.
+Version actuelle : `0.7.9`.
 
 ## Avant une release
 
@@ -31,6 +31,36 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.7.9 — durcissement sécurité et fiabilité
+
+- Import de traductions (onglet Traductions) : un fichier `.po`/`.mo` renommé dont le contenu réel
+  n'en est pas un est désormais rejeté avant toute écriture en base ou tentative de compilation
+  (vérification du nombre magique gettext pour un `.mo`, de la structure UTF-8/`msgid` pour un `.po`)
+  ; un plafond de taille explicite (2 Mo) s'applique en plus du contrôle d'extension déjà en place.
+- Formulaire de contact : un échec d'envoi de l'email (`wp_mail()`) affiche désormais un message
+  d'erreur clair au visiteur au lieu d'un faux état de succès — ce formulaire n'ayant aucune
+  persistance en base propre, le mail était jusqu'ici la seule trace de la demande, silencieusement
+  perdue en cas d'échec. Une trace de secours est aussi journalisée côté serveur. La même détection
+  d'échec a été ajoutée à la notification admin de la demande S.A.V. de l'espace client (journalisée
+  seulement, cette demande-là restant toujours persistée en base même si sa notification échoue).
+- Revue et tests dédiés confirmant qu'aucune autre zone du thème n'écrit de données de requête sans
+  vérification de nonce locale ou déjà héritée d'un hook natif WooCommerce déjà vérifié — les deux
+  seuls cas identifiés (réglages de compte, champs d'administration de la gravure personnalisée)
+  restent volontairement sans vérification propre, chacun n'étant déclenché que par un hook natif
+  WooCommerce qui a déjà vérifié son propre nonce avant de s'exécuter ; un test automatisé balaie
+  désormais l'ensemble du code du thème pour garantir qu'aucun nouveau cas de ce type n'apparaît sans
+  revue explicite.
+- Le bouton « Régénérer le cache & les assets » n'a révélé aucune faille à l'audit (capability et
+  nonce vérifiés, commande shell construite uniquement à partir d'un chemin fixe échappé — jamais
+  d'une valeur de requête), désormais prouvé par des tests automatisés plutôt que par une seule
+  relecture manuelle.
+- Premier répertoire de tests dédié pour le calcul du prix réellement facturé au client (surcharge de
+  gravure personnalisée, résolution du prix d'une variation produit) — jusqu'ici non couvert,
+  contrairement au reste du thème — couvrant notamment le cas combiné gravure + variation pour
+  garantir l'absence de cumul incorrect.
+- Suite de tests complète (PHP et JS) exécutée intégralement sur l'ensemble du projet et confirmée
+  au vert avant publication.
 
 ### 0.7.8 — revue de cohérence globale et synchronisation des versions
 

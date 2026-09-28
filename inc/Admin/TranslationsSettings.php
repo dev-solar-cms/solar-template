@@ -32,6 +32,13 @@ final class TranslationsSettings implements SettingsTabInterface {
 	public const LANGUAGES_MENU_SLUG = 'solar-template-languages';
 
 	/**
+	 * Real max size accepted for an imported `.po`/`.mo` file — generous for any legitimate
+	 * translation catalog, well below the point where reading the whole file into memory becomes a
+	 * concern.
+	 */
+	private const MAX_IMPORT_FILE_SIZE = 2 * 1024 * 1024; // 2 MB.
+
+	/**
 	 * @inheritDoc
 	 */
 	public static function slug(): string {
@@ -351,8 +358,14 @@ final class TranslationsSettings implements SettingsTabInterface {
 			$tmp_path  = (string) $_FILES['import_file']['tmp_name'];
 			$file_name = sanitize_file_name( (string) $_FILES['import_file']['name'] );
 			$extension = strtolower( (string) pathinfo( $file_name, PATHINFO_EXTENSION ) );
+			$size      = (int) $_FILES['import_file']['size'];
 
-			if ( in_array( $extension, array( 'po', 'mo' ), true ) && self::import_file( $tmp_path, $extension, $language_code ) ) {
+			if (
+				in_array( $extension, array( 'po', 'mo' ), true )
+				&& $size > 0 && $size <= self::MAX_IMPORT_FILE_SIZE
+				&& self::file_passes_real_content_check( $tmp_path, $extension )
+				&& self::import_file( $tmp_path, $extension, $language_code )
+			) {
 				$status = 'success';
 			}
 		}
@@ -368,6 +381,49 @@ final class TranslationsSettings implements SettingsTabInterface {
 			)
 		);
 		exit;
+	}
+
+	/**
+	 * Verifies an uploaded file's real content matches the extension it claims, independently of that
+	 * extension itself (which a renamed file can trivially fake): a real gettext `.mo` file has a
+	 * fixed magic number at its very start; a real `.po` file is UTF-8 text containing at least one
+	 * `msgid` entry. Checked before any parsing/database write is attempted. Pure function operating
+	 * on a file already on disk, so it's unit tested directly with real fixture files (see
+	 * tests/php/Admin/TranslationsSettingsTest.php).
+	 *
+	 * @param string $tmp_path  Absolute path of the file to check.
+	 * @param string $extension `po` or `mo`, as claimed by the uploaded file's own name.
+	 * @return bool
+	 */
+	public static function file_passes_real_content_check( string $tmp_path, string $extension ): bool {
+		if ( ! is_readable( $tmp_path ) ) {
+			return false;
+		}
+
+		if ( 'mo' === $extension ) {
+			$handle = fopen( $tmp_path, 'rb' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- reading a real magic number off an already-uploaded temp file, no WP_Filesystem context available in this admin request handler.
+
+			if ( false === $handle ) {
+				return false;
+			}
+
+			$magic = fread( $handle, 4 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread
+			fclose( $handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
+
+			return in_array( $magic, array( "\x95\x04\x12\xde", "\xde\x12\x04\x95" ), true );
+		}
+
+		$sample = file_get_contents( $tmp_path, false, null, 0, 8192 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- see above.
+
+		if ( false === $sample || '' === trim( $sample ) ) {
+			return false;
+		}
+
+		if ( str_contains( $sample, "\0" ) || ! mb_check_encoding( $sample, 'UTF-8' ) ) {
+			return false;
+		}
+
+		return str_contains( $sample, 'msgid' );
 	}
 
 	/**

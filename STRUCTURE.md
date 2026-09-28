@@ -730,6 +730,37 @@ solar-template/
   (`Theme::defer_main_stylesheet()`, filtre `style_loader_tag`), et le script principal charge avec
   la stratégie `defer` (`wp_enqueue_script(..., array('strategy' => 'defer', ...))`).
 
+### Sécurité et fiabilité
+
+- **Import de traductions (`Solar_Template\Admin\TranslationsSettings::file_passes_real_content_check()`)** :
+  un fichier `.po`/`.mo` importé depuis l'onglet Traductions est maintenant validé sur son contenu
+  réel (nombre magique gettext pour un `.mo`, structure UTF-8 avec au moins un `msgid` pour un `.po`)
+  et un plafond de taille explicite (2 Mo), en plus du contrôle d'extension déjà en place — rejeté
+  avant toute écriture en base ou tentative de compilation.
+- **Régénération cache/build (`Solar_Template\Admin\CacheRegenerator::build_command()`)** : la
+  commande shell exécutée par le bouton « Régénérer le cache & les assets » est construite dans une
+  méthode dédiée, pure et testée unitairement, à partir d'un unique chemin fixe échappé
+  (`escapeshellarg(get_template_directory())`) — cette classe ne lit aucune valeur de requête
+  (`$_POST`/`$_GET`/`$_REQUEST`).
+- **Formulaire de contact (`Solar_Template\Pages\ContactController`)** : ce formulaire n'a aucune
+  persistance en base propre — le mail est la seule trace de la demande. L'échec de `wp_mail()` est
+  maintenant détecté et affiché au visiteur comme un état d'erreur distinct (`mail_failed`), jamais
+  comme un faux succès, avec une trace de secours (`error_log()`). La demande S.A.V. de l'espace
+  client (`Solar_Template\Account\SupportRequestController`) applique la même détection pour sa
+  propre notification admin, mais reste journalisée sans jamais faire échouer la demande elle-même
+  (déjà persistée avant l'envoi du mail).
+- **Confiance accordée aux hooks WooCommerce** : `Account\AccountSettingsFields::save_from_request()`
+  et `Product\EngravingAdminFields::save()` n'ont volontairement aucune vérification de nonce
+  propre — chacune n'est enregistrée que sur un hook natif WooCommerce
+  (`woocommerce_save_account_details`/`woocommerce_process_product_meta`) déjà vérifié par
+  WooCommerce lui-même avant d'être déclenché. `tests/php/Security/NonceTrustSweepTest.php` balaie
+  automatiquement `inc/` pour garantir qu'aucun autre fichier n'adopte silencieusement ce même
+  patron sans revue.
+- **Calcul du prix (gravure et variations)** : `Product\EngravingCart`/`Product\ProductVariations`
+  (prix réellement facturé au client) disposent maintenant d'un répertoire de tests dédié
+  (`tests/php/Product/`), couvrant notamment le cas combiné gravure + variation pour garantir que la
+  surcharge n'est jamais cumulée sur un prix déjà ajusté.
+
 ### Design system (`assets/scss/_tokens.scss`)
 
 - Toutes les valeurs de couleur, typographie, espacement et géométrie du design sont définies une
@@ -755,7 +786,12 @@ solar-template/
 
 - PHP : PHPUnit, avec un bootstrap (`tests/php/bootstrap.php`) qui ne définit que les quelques
   fonctions/constantes WordPress réellement utilisées en dehors d'une installation complète
-  (transients en mémoire, `ARRAY_A`...) — pas une bibliothèque de stubs du cœur WordPress. Zéro
+  (transients en mémoire, `ARRAY_A`...) — pas une bibliothèque de stubs du cœur WordPress. Il charge
+  aussi deux petits jeux de doublures dédiés : `tests/php/wc-stubs/` (WC_Product/WC_Product_Variable/
+  WC_Cart/WC_Order_Item_Product + `wc_get_product()`, un fichier par classe pour rester conforme à la
+  même norme de code que `inc/`) et `tests/php/wp-ajax-stubs.php` (current_user_can()/
+  check_ajax_referer()/wp_send_json_error()/wp_send_json_success(), ce dernier couple levant
+  `Solar_Template\Tests\Support\WpDieException` pour simuler l'arrêt de requête de `wp_die()`). Zéro
   avertissement/dépréciation toléré (`failOnWarning`/`failOnDeprecation` dans `phpunit.xml.dist`).
 - JS : Vitest (environnement jsdom), configuré dans `vite.config.js`.
 - Cette suite automatisée ne remplace pas la vérification fonctionnelle manuelle dans

@@ -9,7 +9,7 @@
  *
  * Expected `$args` keys:
  * - subjects (array<string, string>) subject slug => translated label
- * - feedback (string|null) 'success', 'error', or null
+ * - feedback (string|null) 'success', 'error', 'mail_failed', or null
  *
  * @package Solar_Template
  * @var array $args
@@ -48,6 +48,8 @@ $data = wp_parse_args(
 
 			<?php if ( 'error' === $data['feedback'] ) : ?>
 				<div class="contact-form__notice contact-form__notice--error"><?php esc_html_e( 'Please fill in every required field with a valid email address.', 'solar-template' ); ?></div>
+			<?php elseif ( 'mail_failed' === $data['feedback'] ) : ?>
+				<div class="contact-form__notice contact-form__notice--error"><?php esc_html_e( 'Something went wrong sending your message. Please try again in a moment, or reach us directly by another channel.', 'solar-template' ); ?></div>
 			<?php endif; ?>
 
 			<form method="post" class="contact-form">
