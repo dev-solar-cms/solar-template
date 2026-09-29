@@ -11,7 +11,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `package.json` — champ `version`
 - `.env`/`.env.example` — `SOLAR_TEMPLATE_VERSION` (jamais la source de vérité à elle seule, mais exposée pour l'écran de réglages)
 
-Version actuelle : `0.7.13`.
+Version actuelle : `0.7.14`.
 
 ## Avant une release
 
@@ -31,6 +31,21 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.7.14 — vérification visuelle du design et deux corrections de rendu
+
+- Vérification visuelle complète du thème (accueil, catalogue, fiche produit, tunnel de vente,
+  espace client, blog, pages statiques, administration du thème) comparée à ses maquettes de
+  référence — deux écarts réels trouvés et corrigés :
+  - Le panneau « Nos coordonnées » de la page Contact affichait ses quatre labels
+    (Adresse/Téléphone/Email/Horaires) sans l'icône dans un badge doré que porte la maquette —
+    icônes restaurées.
+  - La colonne de contenu de l'espace client (tableau de bord, commandes, détail de commande,
+    liste de souhaits, adresses, téléchargements, demande S.A.V., paramètres) ne recevait que 68 %
+    de la largeur qui lui était due, héritée d'une règle CSS du cœur WooCommerce jamais
+    neutralisée par le thème dans son propre contexte de grille — titres, paragraphes et tableaux
+    se cassaient anormalement sur toutes ces pages ; largeur corrigée à la source.
+- Aucun autre écart trouvé sur le reste du thème.
 
 ### 0.7.13 — contraste des couleurs et accessibilité clavier
 

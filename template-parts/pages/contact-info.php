@@ -22,8 +22,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$data = wp_parse_args( $args ?? array(), array( 'info' => array() ) );
-$info = wp_parse_args(
+$icons = ContactInfo::icons();
+$data  = wp_parse_args( $args ?? array(), array( 'info' => array() ) );
+$info  = wp_parse_args(
 	$data['info'],
 	array(
 		'address_lines' => array(),
@@ -43,24 +44,28 @@ $is_open = ContactInfo::is_currently_open( $info['schedule'] );
 		<h2 class="contact-info-card__title"><?php esc_html_e( 'Our details', 'solar-template' ); ?></h2>
 		<div class="contact-info-card__rows">
 			<div class="contact-info-row">
+				<div class="contact-info-row__icon" aria-hidden="true"><?php echo $icons['address']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- inline SVG icon markup defined by the theme itself, never user input. ?></div>
 				<div>
 					<div class="contact-info-row__label"><?php esc_html_e( 'Address', 'solar-template' ); ?></div>
 					<div class="contact-info-row__value"><?php echo wp_kses_post( implode( '<br />', array_map( 'esc_html', $info['address_lines'] ) ) ); ?></div>
 				</div>
 			</div>
 			<div class="contact-info-row">
+				<div class="contact-info-row__icon" aria-hidden="true"><?php echo $icons['phone']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- inline SVG icon markup defined by the theme itself, never user input. ?></div>
 				<div>
 					<div class="contact-info-row__label"><?php esc_html_e( 'Phone', 'solar-template' ); ?></div>
 					<a class="contact-info-row__value" href="<?php echo esc_attr( $info['phone_href'] ); ?>"><?php echo esc_html( $info['phone'] ); ?></a>
 				</div>
 			</div>
 			<div class="contact-info-row">
+				<div class="contact-info-row__icon" aria-hidden="true"><?php echo $icons['email']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- inline SVG icon markup defined by the theme itself, never user input. ?></div>
 				<div>
 					<div class="contact-info-row__label"><?php esc_html_e( 'Email', 'solar-template' ); ?></div>
 					<a class="contact-info-row__value" href="mailto:<?php echo esc_attr( $info['email'] ); ?>"><?php echo esc_html( $info['email'] ); ?></a>
 				</div>
 			</div>
 			<div class="contact-info-row">
+				<div class="contact-info-row__icon" aria-hidden="true"><?php echo $icons['hours']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- inline SVG icon markup defined by the theme itself, never user input. ?></div>
 				<div>
 					<div class="contact-info-row__label"><?php esc_html_e( 'Hours', 'solar-template' ); ?></div>
 					<div class="contact-info-row__value"><?php echo wp_kses_post( implode( '<br />', array_map( 'esc_html', $info['hours_lines'] ) ) ); ?></div>

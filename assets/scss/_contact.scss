@@ -257,6 +257,18 @@
 	align-items: flex-start;
 }
 
+.contact-info-row__icon {
+	display: flex;
+	flex-shrink: 0;
+	align-items: center;
+	justify-content: center;
+	width: 36px;
+	height: 36px;
+	color: $color-gold;
+	background: $color-bg;
+	border-radius: $radius-input;
+}
+
 .contact-info-row__label {
 	margin-bottom: 3px;
 	font-size: 13px;

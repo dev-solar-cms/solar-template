@@ -23,7 +23,15 @@
 }
 
 .account-content {
+	// WooCommerce core's own stylesheet (always loaded, never dequeued) styles this same element's
+	// core class (`.woocommerce-MyAccount-content`) with `float:right;width:68%` — `float` has no
+	// effect as a grid item, but `width:68%` does (a percentage on a grid item resolves against its
+	// own track, not its content), so every sub-page of this grid's content column was silently
+	// getting only 68% of its due track width. Reset both here rather than dequeuing that core
+	// stylesheet, which other WooCommerce markup on this page still legitimately depends on.
+	width: auto;
 	min-width: 0;
+	float: none;
 }
 
 // -------------------------------------------------------------------------------------------
