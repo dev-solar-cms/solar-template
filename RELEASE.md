@@ -11,7 +11,7 @@ Le thème suit [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 - `package.json` — champ `version`
 - `.env`/`.env.example` — `SOLAR_TEMPLATE_VERSION` (jamais la source de vérité à elle seule, mais exposée pour l'écran de réglages)
 
-Version actuelle : `0.7.14`.
+Version actuelle : `0.7.15`.
 
 ## Avant une release
 
@@ -31,6 +31,17 @@ aucune étape manuelle de tag/release n'est donc nécessaire tant que la version
 avant de pousser.
 
 ## Changelog
+
+### 0.7.15 — finalisation : métadonnées du thème et clôture de l'audit
+
+- L'en-tête de `style.css` (`Theme URI`/`Author URI`/`Description`) était encore rempli de valeurs
+  provisoires — renseigné avec les vraies informations du thème (dépôt public GitHub, description
+  réelle).
+- La page WordPress par défaut « Page d'exemple », toujours publiée, est repassée en brouillon.
+- Une référence obsolète à un ancien fichier de maquette a été corrigée dans la documentation
+  interne du projet.
+- Audit des dépendances (`composer audit`/`npm audit`) : aucune vulnérabilité trouvée.
+- Suite de tests complète (PHP et JS) rejouée intégralement et confirmée au vert avant publication.
 
 ### 0.7.14 — vérification visuelle du design et deux corrections de rendu
 

@@ -693,7 +693,7 @@ solar-template/
   scan la redétecte correctement comme non optimisée. Données de test supprimées après vérification.
 
 ### À noter
-- `template-claude-code.html` (s'il est présent à la racine) est une maquette HTML exportée, ignorée par git — à utiliser comme référence visuelle/structurelle pour construire les vrais gabarits, jamais comme code à exécuter ou copier tel quel.
+- Les maquettes de design vivent sous `.claude/design/design_handoff_solar_woocommerce/` (un fichier `.dc.html` par famille de page), ignorées par git — à utiliser comme référence visuelle/structurelle pour construire les vrais gabarits, jamais comme code à exécuter ou copier tel quel.
 - `.claude/` et `CLAUDE.md` sont exclus du dépôt via `.gitignore` (configuration locale de l'assistant, non versionnée).
 - `composer.json` définit les dépendances PHP et l'autoload PSR-4 (`composer install` requis après
   chaque clone). `package.json` définit le pipeline de build des assets (`npm install` puis
